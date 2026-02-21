@@ -85,13 +85,12 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); z-index: 100;
             display: none; justify-content: center; align-items: center;
-            opacity: 0; transition: opacity 0.3s ease; cursor: pointer;
+            opacity: 0; transition: opacity 0.3s ease;
         }
         .lightbox img {
             max-width: 90%; max-height: 80%; border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 3px solid white;
             transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
-            cursor: default;
         }
         .lightbox.active { opacity: 1; }
         .lightbox.active img { transform: scale(1); }
@@ -109,13 +108,8 @@
         }
         .bottom-sheet.open { transform: translateY(-100%); }
 
-        .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; position: relative; }
+        .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; }
         .sheet-handle { width: 45px; height: 6px; background: #e0e0e0; border-radius: 10px; margin: 0 auto; }
-        
-        /* Bouton de fermeture modale (caché sur mobile, visible sur PC) */
-        .close-btn { display: none; position: absolute; right: 25px; top: 20px; font-size: 1.8rem; color: var(--wood-brown); cursor: pointer; transition: color 0.2s; }
-        .close-btn:hover { color: var(--green-deep); }
-
         .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; touch-action: pan-y; }
         
         /* --- STYLES DES TITRES DU BOTTOM SHEET --- */
@@ -174,87 +168,12 @@
         .benefits-list { list-style: none; padding: 0; margin: 15px 0; }
         .benefits-list li { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; }
         .benefits-list i { color: var(--green-deep); }
-
-
-        /* =========================================================================
-           ADAPTATION RESPONSIVE (TABLETTES ET ORDINATEURS)
-           ========================================================================= */
-        @media (min-width: 768px) {
-            body { 
-                background-color: var(--bg-beige); /* Retire le fond noir */
-                overflow: auto; /* Permet le scroll de la page principale si besoin */
-            }
-            .phone { 
-                max-width: 100%; /* Prend toute la largeur */
-                height: 100vh;
-                box-shadow: none; /* Enlève l'ombre du "téléphone" */
-                border-radius: 0;
-            }
-
-            /* --- HEADER (Ex Menu du bas) --- */
-            .main-wrapper { flex-direction: column; }
-            .footer-nav {
-                order: -1; /* Place le menu en haut ! */
-                position: relative; 
-                padding: 15px 50px; 
-                border-top: none; 
-                border-bottom: 4px solid var(--wood-brown);
-                justify-content: center;
-                gap: 40px;
-            }
-            .menu-item { 
-                flex: 0 1 auto; 
-                flex-direction: row; /* Icône à côté du texte */
-                gap: 12px; 
-                padding: 10px 20px;
-                border-radius: 50px;
-                transition: background 0.3s ease;
-            }
-            .menu-item:hover { background: rgba(255, 255, 255, 0.15); }
-            .icon-box { margin-bottom: 0; width: auto; background: transparent; font-size: 1.4rem; }
-            .menu-item span { font-size: 1rem; }
-
-            /* --- HERO ET CONTENU --- */
-            .hero { height: 450px; background-size: cover; border-radius: 0 0 50px 50px; }
-            .rdv-card { width: auto; min-width: 350px; padding: 15px 30px; bottom: -45px; }
-            .content { padding: 80px 0 40px; }
-            .quote-text { font-size: 2.5rem; }
-
-            /* --- MODALE (Ex Bottom Sheet) --- */
-            .bottom-sheet { 
-                /* Centrage absolu au milieu de l'écran */
-                top: 50%; left: 50%; 
-                transform: translate(-50%, -50%) scale(0.9);
-                width: 700px; max-width: 90%; 
-                height: auto; max-height: 85vh; 
-                border-radius: 25px;
-                opacity: 0;
-                transition: transform 0.4s cubic-bezier(0.17, 0.84, 0.44, 1), opacity 0.4s ease;
-            }
-            .bottom-sheet.open { 
-                /* Force l'affichage centré (écrase le JS) */
-                transform: translate(-50%, -50%) scale(1) !important; 
-                opacity: 1;
-            }
-            .sheet-handle { display: none; /* Cache la barre de swipe */ }
-            .close-btn { display: block; /* Affiche la croix */ }
-
-            /* --- GALERIE PHOTOS --- */
-            .photo-slider { 
-                flex-wrap: wrap; /* Grille au lieu d'une ligne */
-                justify-content: center; 
-                gap: 30px;
-                overflow-x: visible;
-            }
-            .photo-card { flex: 0 0 240px; margin-bottom: 20px; }
-            .photo-card:hover { transform: scale(1.05) rotate(0deg); z-index: 2; } /* Petit effet sympa au survol */
-        }
     </style>
 </head>
 <body>
 
 <div class="phone">
-    <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
         <img id="lightboxImg" src="" alt="Aperçu">
     </div>
 
@@ -291,10 +210,7 @@
     </div>
 
     <div class="bottom-sheet" id="bottomSheet">
-        <div class="sheet-header">
-            <div class="sheet-handle"></div>
-            <div class="close-btn" onclick="closeSheet()"><i class="fa-solid fa-xmark"></i></div>
-        </div>
+        <div class="sheet-header"><div class="sheet-handle"></div></div>
         <div class="sheet-body" id="sheetBody"><div id="sheetContent"></div></div>
     </div>
 </div>
@@ -398,21 +314,21 @@
             text: `
                 <p style="text-align: center; margin-bottom: 20px;">Cliquez sur une photo pour l'agrandir.</p>
                 <div class="photo-slider">
-                    <div class="photo-card" onclick="openLightbox('photo1.jpg')"><img src="photo1.jpg" alt="Photo 1"></div>
-                    <div class="photo-card" onclick="openLightbox('photo2.jpg')"><img src="photo2.jpg" alt="Photo 2"></div>
-                    <div class="photo-card" onclick="openLightbox('photo3.jpg')"><img src="photo3.jpg" alt="Photo 3"></div>
-                    <div class="photo-card" onclick="openLightbox('photo4.jpg')"><img src="photo4.jpg" alt="Photo 4"></div>
-                    <div class="photo-card" onclick="openLightbox('photo5.jpg')"><img src="photo5.jpg" alt="Photo 5"></div>
-                    <div class="photo-card" onclick="openLightbox('photo6.jpg')"><img src="photo6.jpg" alt="Photo 6"></div>
-                    <div class="photo-card" onclick="openLightbox('photo7.jpg')"><img src="photo7.jpg" alt="Photo 7"></div>
-                    <div class="photo-card" onclick="openLightbox('photo8.jpg')"><img src="photo8.jpg" alt="Photo 8"></div>
-                    <div class="photo-card" onclick="openLightbox('photo9.jpg')"><img src="photo9.jpg" alt="Photo 9"></div>
-                    <div class="photo-card" onclick="openLightbox('photo10.jpg')"><img src="photo10.jpg" alt="Photo 10"></div>
-                    <div class="photo-card" onclick="openLightbox('photo11.jpg')"><img src="photo11.jpg" alt="Photo 11"></div>
-                    <div class="photo-card" onclick="openLightbox('photo12.jpg')"><img src="photo12.jpg" alt="Photo 12"></div>
-                    <div class="photo-card" onclick="openLightbox('photo13.jpg')"><img src="photo13.jpg" alt="Photo 13"></div>
-                    <div class="photo-card" onclick="openLightbox('photo14.jpg')"><img src="photo14.jpg" alt="Photo 14"></div>
-                    <div class="photo-card" onclick="openLightbox('photo15.jpg')"><img src="photo15.jpg" alt="Photo 15"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo1.jpg" alt="Photo 1"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo2.jpg" alt="Photo 2"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo3.jpg" alt="Photo 3"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo4.jpg" alt="Photo 4"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo5.jpg" alt="Photo 5"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo6.jpg" alt="Photo 6"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo7.jpg" alt="Photo 7"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo8.jpg" alt="Photo 8"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo9.jpg" alt="Photo 9"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo10.jpg" alt="Photo 10"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo11.jpg" alt="Photo 11"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo12.jpg" alt="Photo 12"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo13.jpg" alt="Photo 13"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo14.jpg" alt="Photo 14"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo15.jpg" alt="Photo 15"></div>
                 </div>`
         },
         contact: { 
@@ -445,7 +361,7 @@
         }
     };
 
-    // --- GESTION DU BOTTOM SHEET / MODALE ---
+    // --- GESTION DU BOTTOM SHEET ---
     const sheet = document.getElementById('bottomSheet');
     const overlay = document.getElementById('overlay');
     const sheetContent = document.getElementById('sheetContent');
@@ -457,21 +373,14 @@
         overlay.style.display = 'block';
         mainWrapper.classList.add('blurred');
         sheetContent.style.opacity = '1';
-        
-        // On n'applique les transitions inline que si on est sur mobile (pour éviter de casser le CSS Desktop)
-        if (window.innerWidth <= 768) {
-            sheetContent.style.transition = 'none';
-            sheet.style.transform = '';
-            sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)";
-        }
-        
+        sheetContent.style.transition = 'none';
+        sheet.style.transform = '';
+        sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)";
         setTimeout(() => { overlay.style.opacity = '1'; sheet.classList.add('open'); }, 10);
     }
 
     function closeSheet() {
-        if (window.innerWidth <= 768) {
-            sheet.style.transition = "transform 0.25s ease-in";
-        }
+        sheet.style.transition = "transform 0.25s ease-in";
         sheet.style.transform = '';
         sheet.classList.remove('open');
         overlay.style.opacity = '0';
@@ -479,12 +388,10 @@
         setTimeout(() => { overlay.style.display = 'none'; sheetContent.style.opacity = '1'; }, 250);
     }
 
-    // --- GESTION DU SWIPE (Désactivé sur grand écran) ---
     let startY = 0;
     let isDragging = false;
 
     sheet.addEventListener('touchstart', (e) => {
-        if (window.innerWidth > 768) return; // Pas de swipe sur PC
         if (sheetBody.scrollTop <= 0) {
             startY = e.touches[0].clientY;
             isDragging = true;
@@ -494,7 +401,7 @@
     }, { passive: true });
 
     sheet.addEventListener('touchmove', (e) => {
-        if (!isDragging || window.innerWidth > 768) return;
+        if (!isDragging) return;
         let diff = e.touches[0].clientY - startY;
         if (diff > 0) {
             e.preventDefault(); 
@@ -505,7 +412,7 @@
     }, { passive: false });
 
     sheet.addEventListener('touchend', (e) => {
-        if (!isDragging || window.innerWidth > 768) return;
+        if (!isDragging) return;
         isDragging = false;
         let diff = e.changedTouches[0].clientY - startY;
         if (diff > 60) {
@@ -530,10 +437,7 @@
         }, 10);
     }
 
-    function closeLightbox(event) {
-        // Empêche de fermer si on clique directement sur l'image
-        if(event.target === lightboxImg) return;
-        
+    function closeLightbox() {
         lightbox.classList.remove('active');
         setTimeout(() => {
             lightbox.style.display = 'none';
