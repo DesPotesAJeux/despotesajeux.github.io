@@ -132,7 +132,7 @@
             display: block; text-align: center; text-transform: uppercase; letter-spacing: 1px; font-size: 1.1rem;
         }
 
-        /* --- FOOTER & ICONS NOUVEAU STYLE --- */
+        /* --- FOOTER & ICONS STYLE --- */
         .footer-nav {
             position: absolute; bottom: 0; left: 0; width: 100%;
             background: var(--green-deep); display: flex; justify-content: space-around;
@@ -141,24 +141,30 @@
         }
         .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
         
+        /* Retour au style translucide mais avec la couleur marron */
         .icon-box { 
             width: 44px; height: 44px; 
             display: flex; justify-content: center; align-items: center; 
             border-radius: 14px; 
-            background: var(--wood-brown);
+            background: rgba(255, 255, 255, 0.1); /* Fond translucide */
             margin-bottom: 6px; 
-            color: #ffffff; 
-            font-size: 1.2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: transform 0.2s cubic-bezier(0.17, 0.84, 0.44, 1), background 0.2s; 
+            color: var(--wood-brown); /* Icône marron */
+            font-size: 1.5rem; /* Icône un peu plus grande */
+            transition: transform 0.2s ease, background 0.2s; 
         }
         
+        /* Effet "clic" sur mobile */
         .menu-item:active .icon-box { 
-            transform: scale(0.85); 
-            background: var(--wood-highlight); 
+            transform: scale(0.9); 
+            background: rgba(255, 255, 255, 0.2); 
         }
 
-        .menu-item span { font-weight: 700; font-size: 0.45rem; color: #ffffff; text-transform: uppercase; }
+        .menu-item span { 
+            font-weight: 700; font-size: 0.5rem; 
+            color: var(--wood-brown); /* Texte marron aussi */
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+        }
 
         /* --- UI ELEMENTS --- */
         .cal-list { display: flex; flex-direction: column; gap: 15px; margin: 20px 0; }
