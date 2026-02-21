@@ -45,7 +45,8 @@
         .hero { 
             width: 100%; 
             height: 320px;
-            background: url('hero.png') center bottom / cover no-repeat; 
+            /* CORRECTION ICI : 'center center' au lieu de 'center bottom' */
+            background: url('hero.png') center center / cover no-repeat; 
             position: relative; z-index: 1; 
         }
 
@@ -65,7 +66,7 @@
         .content {
             background: var(--bg-beige); padding: 45px 0 100px 0;
             position: relative; flex-grow: 1; 
-            overflow: hidden; /* <-- C'est ici ! Plus de scroll vertical ! */
+            overflow: hidden;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
