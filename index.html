@@ -40,11 +40,12 @@
             filter: blur(5px);
         }
 
-        /* --- BANNIÈRE HERO --- */
+        /* --- BANNIÈRE HERO (Ajustée pour le format carré) --- */
         .hero-container { width: 100%; flex-shrink: 0; background: var(--green-deep); position: relative; }
         .hero { 
-            width: 100%; height: 290px;
-            background: url('hero.png') center top / 100% auto no-repeat; 
+            width: 100%; 
+            height: 380px; /* Plus haut sur mobile pour bien voir la table */
+            background: url('hero.png') center bottom / cover no-repeat; /* Aligné vers le bas */
             position: relative; z-index: 1; 
         }
 
@@ -111,11 +112,8 @@
 
         .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; position: relative; }
         .sheet-handle { width: 45px; height: 6px; background: #e0e0e0; border-radius: 10px; margin: 0 auto; }
-        
-        /* Bouton de fermeture modale (caché sur mobile, visible sur PC) */
         .close-btn { display: none; position: absolute; right: 25px; top: 20px; font-size: 1.8rem; color: var(--wood-brown); cursor: pointer; transition: color 0.2s; }
         .close-btn:hover { color: var(--green-deep); }
-
         .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; touch-action: pan-y; }
         
         /* --- STYLES DES TITRES DU BOTTOM SHEET --- */
@@ -165,7 +163,6 @@
             box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
         }
 
-        .highlight-box { background: var(--bg-beige); padding: 15px; border-radius: 15px; border-left: 5px solid var(--wood-brown); margin: 15px 0; }
         .pricing-container { display: flex; gap: 10px; margin: 15px 0; }
         .price-card { flex: 1; background: var(--bg-beige); padding: 12px; border-radius: 15px; text-align: center; border: 2px solid transparent; }
         .price-card.featured { border-color: var(--wood-brown); background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
@@ -218,21 +215,20 @@
             .hero-container {
                 display: flex;
                 justify-content: center;
-                background: var(--bg-beige); /* Enlève le bord vert si l'image est moins large */
-                padding-top: 25px;
+                background: var(--bg-beige); 
+                padding-top: 30px;
+                padding-bottom: 10px;
             }
             .hero { 
-                height: 380px; 
                 width: 100%;
-                max-width: 900px; /* Limite la largeur pour garder l'image nette */
-                background-size: contain; /* Ajuste l'image pour qu'elle soit vue en entier (jamais coupée) */
-                background-position: center center; 
-                background-color: var(--green-deep); /* Petit fond au cas où l'image n'est pas assez large */
+                max-width: 600px; /* On limite la largeur pour avoir un beau bloc carré/vertical */
+                height: 550px; /* Assez haut pour voir tout le monde et toute la table */
+                background: url('hero.jpg') center bottom / cover no-repeat; 
                 border-radius: 30px; 
-                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             }
             .rdv-card { width: auto; min-width: 350px; padding: 15px 30px; bottom: -25px; }
-            .content { padding: 60px 0 40px; }
+            .content { padding: 50px 0 40px; }
             .quote-text { font-size: 2.5rem; }
 
             /* --- MODALE (Ex Bottom Sheet) --- */
