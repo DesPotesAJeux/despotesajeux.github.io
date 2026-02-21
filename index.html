@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Des Potes à Jeux</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-beige: #f3f1e5;
+            --text-brown: #4a4a4a;
+            --green-deep: #3a6351;
+            --wood-brown: #bc8f63; 
+            --wood-highlight: #dbb38a; 
+        }
+
+        body {
+            margin: 0; background-color: #1a1a1a;
+            display: flex; justify-content: center;
+            font-family: 'Quicksand', sans-serif;
+            color: var(--text-brown); overflow: hidden;
+            touch-action: none;
+        }
+
+        .phone {
+            width: 100%; max-width: 414px; 
+            height: 100vh; height: 100dvh;
+            background: var(--bg-beige); position: relative;
+            overflow: hidden; display: flex; flex-direction: column;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        /* --- WRAPPER POUR L'EFFET DE FLOU --- */
+        .main-wrapper {
+            display: flex; flex-direction: column; height: 100%; width: 100%;
+            transition: filter 0.4s ease;
+        }
+        .main-wrapper.blurred {
+            filter: blur(5px);
+        }
+
+        /* --- BANNIÈRE HERO --- */
+        .hero-container { width: 100%; flex-shrink: 0; background: var(--green-deep); position: relative; }
+        .hero { 
+            width: 100%; height: 290px;
+            background: url('hero.png') center top / 100% auto no-repeat; 
+            position: relative; z-index: 1; 
+        }
+
+        .rdv-card {
+            background: rgba(255, 252, 240, 0.98); width: 85%;
+            padding: 12px 15px; border-radius: 18px;
+            position: absolute; bottom: -40px; left: 50%;
+            transform: translateX(-50%); display: flex; align-items: center;
+            box-shadow: 0 10px 30px rgba(74, 60, 47, 0.15); border: 1px solid white;
+            z-index: 10;
+        }
+
+        .rdv-info p { margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--green-deep); }
+
+        /* --- CONTENU --- */
+        .content {
+            background: var(--bg-beige); padding: 60px 0 120px 0;
+            position: relative; flex-grow: 1; overflow-y: auto;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .quote-box { padding: 20px 35px; text-align: center; position: relative; }
+        .quote-text {
+            font-family: 'Shadows Into Light', cursive; font-size: 1.6rem;
+            line-height: 1.2; color: var(--green-deep); margin: 0;
+        }
+        .separator { width: 50px; height: 3px; background: var(--wood-highlight); margin: 15px auto; border-radius: 10px; opacity: 0.6; }
+
+        /* --- POLAROID & LIGHTBOX --- */
+        .photo-slider { display: flex; overflow-x: auto; gap: 20px; padding: 30px 20px; width: 100%; box-sizing: border-box; scrollbar-width: none; }
+        .photo-slider::-webkit-scrollbar { display: none; }
+        .photo-card { flex: 0 0 220px; background: white; padding: 10px 10px 35px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: rotate(-2deg); cursor: pointer; transition: transform 0.2s;}
+        .photo-card:nth-child(even) { transform: rotate(3deg); }
+        .photo-card:active { transform: scale(0.95); }
+        .photo-card img { width: 100%; height: 200px; object-fit: cover; }
+
+        .lightbox {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 100;
+            display: none; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .lightbox img {
+            max-width: 90%; max-height: 80%; border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 3px solid white;
+            transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
+        }
+        .lightbox.active { opacity: 1; }
+        .lightbox.active img { transform: scale(1); }
+
+        /* --- BOTTOM SHEET --- */
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 25; display: none; opacity: 0; transition: opacity 0.3s ease; }
+        
+        .bottom-sheet { 
+            position: absolute; 
+            top: 100%; left: 0; width: 100%; height: 85vh; 
+            background: white; z-index: 30; border-top-left-radius: 35px; border-top-right-radius: 35px; 
+            display: flex; flex-direction: column;
+            will-change: transform;
+            transition: transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1);
+        }
+        .bottom-sheet.open { transform: translateY(-100%); }
+
+        .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; }
+        .sheet-handle { width: 45px; height: 6px; background: #e0e0e0; border-radius: 10px; margin: 0 auto; }
+        .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; touch-action: pan-y; }
+        
+        /* --- STYLES DES TITRES DU BOTTOM SHEET --- */
+        #sheetContent { will-change: opacity; }
+        .sheet-content-title { 
+            font-family: 'Shadows Into Light', cursive; color: var(--green-deep); 
+            font-size: 2.6rem; margin: 10px 0 30px; text-align: center; position: relative;
+        }
+        .sheet-content-title::after {
+            content: ''; display: block; width: 50px; height: 4px;
+            background: var(--wood-brown); margin: 10px auto 0; border-radius: 5px;
+        }
+        .phase-title { 
+            font-weight: 700; color: var(--wood-brown); margin-top: 30px; margin-bottom: 10px;
+            display: block; text-align: center; text-transform: uppercase; letter-spacing: 1px; font-size: 1.1rem;
+        }
+
+        /* --- FOOTER --- */
+        .footer-nav {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: var(--green-deep); display: flex; justify-content: space-around;
+            align-items: center; padding: 10px 0 25px 0;
+            border-top: 3px solid var(--wood-brown); z-index: 20;
+        }
+        .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
+        .icon-box { width: 38px; height: 38px; display: flex; justify-content: center; align-items: center; border-radius: 10px; background: rgba(255, 255, 255, 0.1); margin-bottom: 4px; color: #ffffff; }
+        .menu-item span { font-weight: 700; font-size: 0.45rem; color: #ffffff; text-transform: uppercase; }
+
+        /* --- UI ELEMENTS (AGENDA & CONTACT) --- */
+        .cal-list { display: flex; flex-direction: column; gap: 15px; margin: 20px 0; }
+        .cal-item { 
+            display: flex; align-items: center; gap: 15px; background: var(--bg-beige); 
+            padding: 12px 20px; border-radius: 15px; border-left: 4px solid var(--wood-brown);
+        }
+        .cal-item .date { font-weight: 700; color: var(--green-deep); font-size: 1.1rem; text-transform: capitalize; }
+        .cal-item .time { font-size: 0.85rem; color: var(--text-brown); }
+        .cal-item .time a { color: var(--green-deep); text-decoration: none; border-bottom: 1px dotted var(--green-deep); font-weight: 600; }
+        
+        .contact-card { background: var(--bg-beige); padding: 20px; border-radius: 15px; margin: 20px 0; }
+        .contact-line { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .contact-line i { color: var(--wood-brown); font-size: 1.2rem; width: 20px; text-align: center; }
+        .contact-line a { color: var(--green-deep); text-decoration: none; font-weight: 700; }
+        .btn-whatsapp { 
+            background: #25D366; color: white; border: none; padding: 15px 25px; border-radius: 50px; 
+            font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; 
+            margin: 20px auto; font-family: 'Quicksand'; text-decoration: none; font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .highlight-box { background: var(--bg-beige); padding: 15px; border-radius: 15px; border-left: 5px solid var(--wood-brown); margin: 15px 0; }
+        .pricing-container { display: flex; gap: 10px; margin: 15px 0; }
+        .price-card { flex: 1; background: var(--bg-beige); padding: 12px; border-radius: 15px; text-align: center; border: 2px solid transparent; }
+        .price-card.featured { border-color: var(--wood-brown); background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .price-card h3 { font-size: 0.9rem; margin: 0; }
+        .price-card .amount { font-size: 1.6rem; font-weight: 700; color: var(--wood-brown); margin: 5px 0; }
+        .benefits-list { list-style: none; padding: 0; margin: 15px 0; }
+        .benefits-list li { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; }
+        .benefits-list i { color: var(--green-deep); }
+    </style>
+</head>
+<body>
+
+<div class="phone">
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <img id="lightboxImg" src="" alt="Aperçu">
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeSheet()"></div>
+    
+    <div class="main-wrapper" id="mainWrapper">
+        <div class="hero-container">
+            <div class="hero">
+                <div class="rdv-card">
+                    <div style="font-size: 1.5rem; margin-right: 12px;">🎲</div>
+                    <div class="rdv-info">
+                        <b style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase;">Prochain Rdv</b>
+                        <p id="next-rdv-banner">Calcul en cours...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="quote-box">
+                <p class="quote-text">"Ici on ne compte pas les points,<br>on compte les <strong>souvenirs</strong>."</p>
+                <div class="separator"></div>
+                <p style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; opacity: 0.4; line-height: 1.5;">Association loi 1901<br>Plouay • Bretagne</p>
+            </div>
+        </div>
+
+        <nav class="footer-nav">
+            <div class="menu-item" onclick="openSheet('histoire')"><div class="icon-box"><i class="fa-solid fa-book-open"></i></div><span>Histoire</span></div>
+            <div class="menu-item" onclick="openSheet('cal')"><div class="icon-box"><i class="fa-solid fa-calendar-day"></i></div><span>Agenda</span></div>
+            <div class="menu-item" onclick="openSheet('adhesion')"><div class="icon-box"><i class="fa-solid fa-user-check"></i></div><span>Adhésion</span></div>
+            <div class="menu-item" onclick="openSheet('photos')"><div class="icon-box"><i class="fa-solid fa-camera-retro"></i></div><span>Photos</span></div>
+            <div class="menu-item" onclick="openSheet('contact')"><div class="icon-box"><i class="fa-solid fa-envelope"></i></div><span>Contact</span></div>
+        </nav>
+    </div>
+
+    <div class="bottom-sheet" id="bottomSheet">
+        <div class="sheet-header"><div class="sheet-handle"></div></div>
+        <div class="sheet-body" id="sheetBody"><div id="sheetContent"></div></div>
+    </div>
+</div>
+
+<script>
+    // --- CALCUL DES DATES (Dernier vendredi du mois) ---
+    function getLastFridays() {
+        let dates = [];
+        let now = new Date();
+        let currentYear = now.getFullYear();
+        let currentMonth = now.getMonth();
+
+        for (let i = 0; i < 4; i++) {
+            let d = new Date(currentYear, currentMonth + i + 1, 0);
+            while (d.getDay() !== 5) {
+                d.setDate(d.getDate() - 1);
+            }
+            if (i === 0 && d < now) {
+                currentMonth++;
+                i--;
+                continue;
+            }
+            dates.push(d);
+        }
+        return dates;
+    }
+
+    const upcomingDates = getLastFridays();
+    const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+    
+    document.getElementById('next-rdv-banner').innerText = upcomingDates[0].toLocaleDateString('fr-FR', dateOptions);
+
+    let agendaHTML = '<div class="cal-list">';
+    upcomingDates.forEach(date => {
+        agendaHTML += `
+            <div class="cal-item">
+                <i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.5rem;"></i>
+                <div>
+                    <div class="date">${date.toLocaleDateString('fr-FR', dateOptions)}</div>
+                    <div class="time">à 20h30 • <a href="https://www.google.com/maps/search/?api=1&query=Maison+des+Associations+Plouay" target="_blank">Maison des Associations</a></div>
+                </div>
+            </div>`;
+    });
+    agendaHTML += '</div>';
+
+    // --- DONNÉES DES PAGES ---
+    const pagesData = {
+        histoire: { 
+            title: "Le Grimoire", 
+            text: `
+                <span class="phase-title">📜 Phase 1 : La Pioche Initiale</span>
+                <p style="text-align: center;">Tout a commencé dans les couloirs du travail. Entre deux dossiers, une main de cartes se cache, un plateau s'installe. Ce n'était que le début d'une stratégie qui allait changer nos vies.</p>
+                <span class="phase-title">♟️ Phase 2 : Le Coup de Maître</span>
+                <p style="text-align: center;">Le destin bascule avec l'acquisition d'un artefact légendaire : <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante. Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées entre copains.</p>
+                <span class="phase-title">🏰 Phase 3 : La Fondation</span>
+                <p style="text-align: center;">Face à l'afflux de nouveaux joueurs, le club est officiellement fondé ! Ce qui n'était qu'une réunion de bureau devient une véritable institution ludique à Plouay.</p>
+                <span class="phase-title">🚀 Phase 4 : Vers l'Infini</span>
+                <p style="text-align: center;">Le club a traversé les âges et célébré des centaines de victoires. L'aventure continue de plus belle avec vous. À vous de jouer votre prochain coup !</p>
+            `
+        },
+        cal: { 
+            title: "Agenda Ludique", 
+            text: `
+                <p style="text-align: center; color: var(--green-deep);">On se retrouve chaque <b>dernier vendredi du mois</b>. Voici les prochaines sessions :</p>
+                ${agendaHTML}
+                <p style="text-align: center; font-size:0.85rem; margin-top: 20px;">N'oubliez pas d'apporter votre bonne humeur !</p>
+            `
+        },
+        adhesion: { 
+            title: "Rejoindre l'asso", 
+            text: `
+                <p style="text-align:center;">Devenir un membre officiel des Potes à Jeux est simple et convivial !</p>
+                
+                <div style="background: #f8d7da; border: 2px solid #f5c2c7; color: #842029; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans uniquement
+                </div>
+
+                <div class="pricing-container">
+                    <div class="price-card">
+                        <h3>Solo</h3>
+                        <div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div>
+                        <p style="font-size:0.65rem; margin:0;">Aventurier solitaire</p>
+                    </div>
+                    <div class="price-card featured">
+                        <h3>Couple</h3>
+                        <div class="amount">20€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div>
+                        <p style="font-size:0.65rem; margin:0;">Le meilleur deal pour deux</p>
+                    </div>
+                </div>
+                <ul class="benefits-list" style="max-width: 280px; margin: 15px auto;">
+                    <li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Première séance offerte</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Soirée escape game</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Repas de fin d'année</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Après-midi jeux extérieurs</li>
+                </ul>
+            ` 
+        },
+        photos: {
+            title: "Souvenirs",
+            text: `
+                <p style="text-align: center; margin-bottom: 20px;">Cliquez sur une photo pour l'agrandir.</p>
+                <div class="photo-slider">
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo1.jpg" alt="Photo 1"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo2.jpg" alt="Photo 2"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo3.jpg" alt="Photo 3"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo4.jpg" alt="Photo 4"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo5.jpg" alt="Photo 5"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo6.jpg" alt="Photo 6"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo7.jpg" alt="Photo 7"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo8.jpg" alt="Photo 8"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo9.jpg" alt="Photo 9"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo10.jpg" alt="Photo 10"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo11.jpg" alt="Photo 11"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo12.jpg" alt="Photo 12"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo13.jpg" alt="Photo 13"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo14.jpg" alt="Photo 14"></div>
+                    <div class="photo-card" onclick="openLightbox(this.querySelector('img').src)"><img src="photo15.jpg" alt="Photo 15"></div>
+                </div>`
+        },
+        contact: { 
+            title: "Contact", 
+            text: `
+                <p style="text-align:center">Passez nous voir lors de nos soirées ou contactez-nous directement !</p>
+                
+                <div class="contact-card">
+                    <div class="contact-line">
+                        <i class="fa-solid fa-phone"></i>
+                        <div>
+                            <span style="font-size: 0.8rem; display: block; color: var(--text-brown);">Présidente (Julie)</span>
+                            <a href="tel:+33620031771">06 20 03 17 71</a>
+                        </div>
+                    </div>
+                    <div class="contact-line">
+                        <i class="fa-solid fa-envelope"></i>
+                        <div>
+                            <span style="font-size: 0.8rem; display: block; color: var(--text-brown);">Email</span>
+                            <a href="mailto:despotesajeux@protonmail.com" style="word-break: break-all;">despotesajeux@protonmail.com</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="https://chat.whatsapp.com/TON_LIEN_D_INVITATION" target="_blank" class="btn-whatsapp">
+                    <i class="fa-brands fa-whatsapp" style="font-size: 1.5rem;"></i>
+                    Rejoindre notre WhatsApp
+                </a>
+            ` 
+        }
+    };
+
+    // --- GESTION DU BOTTOM SHEET ---
+    const sheet = document.getElementById('bottomSheet');
+    const overlay = document.getElementById('overlay');
+    const sheetContent = document.getElementById('sheetContent');
+    const sheetBody = document.getElementById('sheetBody');
+    const mainWrapper = document.getElementById('mainWrapper');
+
+    function openSheet(key) {
+        sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
+        overlay.style.display = 'block';
+        mainWrapper.classList.add('blurred');
+        sheetContent.style.opacity = '1';
+        sheetContent.style.transition = 'none';
+        sheet.style.transform = '';
+        sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)";
+        setTimeout(() => { overlay.style.opacity = '1'; sheet.classList.add('open'); }, 10);
+    }
+
+    function closeSheet() {
+        sheet.style.transition = "transform 0.25s ease-in";
+        sheet.style.transform = '';
+        sheet.classList.remove('open');
+        overlay.style.opacity = '0';
+        mainWrapper.classList.remove('blurred');
+        setTimeout(() => { overlay.style.display = 'none'; sheetContent.style.opacity = '1'; }, 250);
+    }
+
+    let startY = 0;
+    let isDragging = false;
+
+    sheet.addEventListener('touchstart', (e) => {
+        if (sheetBody.scrollTop <= 0) {
+            startY = e.touches[0].clientY;
+            isDragging = true;
+            sheet.style.transition = "none";
+            sheetContent.style.transition = "none";
+        }
+    }, { passive: true });
+
+    sheet.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        let diff = e.touches[0].clientY - startY;
+        if (diff > 0) {
+            e.preventDefault(); 
+            sheet.style.transform = `translateY(calc(-100% + ${diff}px))`;
+            let fadeOut = 1 - (diff / 200);
+            sheetContent.style.opacity = fadeOut < 0 ? 0 : fadeOut;
+        }
+    }, { passive: false });
+
+    sheet.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        let diff = e.changedTouches[0].clientY - startY;
+        if (diff > 60) {
+            closeSheet();
+        } else {
+            sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)";
+            sheetContent.style.transition = "opacity 0.3s ease";
+            sheet.style.transform = '';
+            sheetContent.style.opacity = '1';
+        }
+    });
+
+    // --- GESTION DE LA LIGHTBOX (PHOTOS) ---
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+
+    function openLightbox(src) {
+        lightboxImg.src = src;
+        lightbox.style.display = 'flex';
+        setTimeout(() => {
+            lightbox.classList.add('active');
+        }, 10);
+    }
+
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+        setTimeout(() => {
+            lightbox.style.display = 'none';
+        }, 300);
+    }
+</script>
+</body>
+</html>
