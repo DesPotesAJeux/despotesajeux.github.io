@@ -41,18 +41,20 @@
         }
 
         /* --- BANNIÈRE HERO --- */
-        .hero-container { width: 100%; flex-shrink: 0; background: var(--green-deep); position: relative; }
+        /* Le fond devient beige pour s'intégrer au reste du site si l'image est contenue */
+        .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
         .hero { 
             width: 100%; 
-            height: 320px; /* Réduit pour éviter le scroll vertical sur mobile */
-            background: url('hero.png') center bottom / cover no-repeat; 
+            height: 360px;
+            /* L'astuce magique : CONTAIN force l'affichage de 100% de l'image sans rogner */
+            background: url('hero.png') center top / contain no-repeat; 
             position: relative; z-index: 1; 
         }
 
         .rdv-card {
             background: rgba(255, 252, 240, 0.98); width: 85%;
             padding: 12px 15px; border-radius: 18px;
-            position: absolute; bottom: -25px; /* Remonté */
+            position: absolute; bottom: -20px;
             left: 50%;
             transform: translateX(-50%); display: flex; align-items: center;
             box-shadow: 0 10px 30px rgba(74, 60, 47, 0.15); border: 1px solid white;
@@ -63,8 +65,9 @@
 
         /* --- CONTENU --- */
         .content {
-            background: var(--bg-beige); padding: 45px 0 100px 0; /* Espacements réduits pour remonter la citation */
-            position: relative; flex-grow: 1; overflow-y: auto;
+            background: var(--bg-beige); padding: 45px 0 100px 0;
+            position: relative; flex-grow: 1; 
+            overflow: hidden; /* Empêche le défilement fantôme */
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
@@ -141,29 +144,27 @@
         }
         .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
         
-        /* STYLE DES ICONES EN BOIS */
         .icon-box { 
             width: 44px; height: 44px; 
             display: flex; justify-content: center; align-items: center; 
             border-radius: 14px; 
-            background: var(--wood-brown); /* Fond couleur bois */
+            background: var(--wood-brown);
             margin-bottom: 6px; 
-            color: #ffffff; /* Icône blanche pour le contraste */
+            color: #ffffff; 
             font-size: 1.3rem; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.25); /* Ombre portée pour le relief */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.25);
             transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); 
         }
         
-        /* Effet "clic pressé" sur mobile */
         .menu-item:active .icon-box { 
-            transform: scale(0.92) translateY(2px); /* S'enfonce légèrement */
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3); /* L'ombre diminue */
-            filter: brightness(0.9); /* Devient légèrement plus sombre */
+            transform: scale(0.92) translateY(2px); 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3); 
+            filter: brightness(0.9); 
         }
 
         .menu-item span { 
             font-weight: 700; font-size: 0.5rem; 
-            color: #ffffff; /* Texte blanc aussi */
+            color: #ffffff; 
             text-transform: uppercase; 
             letter-spacing: 0.5px;
         }
@@ -206,7 +207,7 @@
             body { background-color: var(--bg-beige); overflow: auto; }
             .phone { max-width: 100%; height: 100vh; box-shadow: none; border-radius: 0; }
 
-            /* --- HEADER (Ex Menu du bas) --- */
+            /* --- HEADER --- */
             .main-wrapper { flex-direction: column; }
             .footer-nav {
                 order: -1; 
@@ -234,22 +235,22 @@
                 margin-bottom: 0; 
                 width: 40px; height: 40px; 
                 border-radius: 50%; 
-                /* Sur PC, on garde le style bois défini plus haut */
             }
             .menu-item span { font-size: 0.9rem; }
 
-            /* --- HERO --- */
+            /* --- HERO (PC) --- */
             .hero-container {
                 display: flex; justify-content: center; background: var(--bg-beige); 
                 padding-top: 30px; padding-bottom: 10px;
             }
             .hero { 
-                width: 100%; max-width: 600px; height: 550px; 
-                background: url('hero.png') center bottom / cover no-repeat; 
+                width: 100%; 
+                max-width: 550px; height: 550px; /* Carré parfait : aucune coupe d'image ! */
+                background: url('hero.png') center center / cover no-repeat; 
                 border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             }
             .rdv-card { width: auto; min-width: 350px; padding: 15px 30px; bottom: -25px; }
-            .content { padding: 50px 0 40px; }
+            .content { padding: 50px 0 40px; overflow: hidden; }
             .quote-text { font-size: 2.5rem; }
 
             /* --- MODALE --- */
