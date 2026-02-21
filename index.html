@@ -40,20 +40,20 @@
             filter: blur(5px);
         }
 
-        /* --- BANNIÈRE HERO --- */
+        /* --- BANNIÈRE HERO (Ajustée pour le format carré) --- */
         .hero-container { width: 100%; flex-shrink: 0; background: var(--green-deep); position: relative; }
         .hero { 
             width: 100%; 
-            height: 320px; /* Réduit pour éviter le scroll vertical sur mobile */
-            background: url('hero.png') center bottom / cover no-repeat; 
+            height: 380px; /* Plus haut sur mobile pour bien voir la table */
+            /* CORRECTION ICI : l'extension est bien .png */
+            background: url('hero.png') center bottom / cover no-repeat; /* Aligné vers le bas */
             position: relative; z-index: 1; 
         }
 
         .rdv-card {
             background: rgba(255, 252, 240, 0.98); width: 85%;
             padding: 12px 15px; border-radius: 18px;
-            position: absolute; bottom: -25px; /* Remonté */
-            left: 50%;
+            position: absolute; bottom: -40px; left: 50%;
             transform: translateX(-50%); display: flex; align-items: center;
             box-shadow: 0 10px 30px rgba(74, 60, 47, 0.15); border: 1px solid white;
             z-index: 10;
@@ -63,7 +63,7 @@
 
         /* --- CONTENU --- */
         .content {
-            background: var(--bg-beige); padding: 45px 0 100px 0; /* Espacements réduits pour remonter la citation */
+            background: var(--bg-beige); padding: 60px 0 120px 0;
             position: relative; flex-grow: 1; overflow-y: auto;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
@@ -132,41 +132,18 @@
             display: block; text-align: center; text-transform: uppercase; letter-spacing: 1px; font-size: 1.1rem;
         }
 
-        /* --- FOOTER & ICONS STYLE --- */
+        /* --- FOOTER --- */
         .footer-nav {
             position: absolute; bottom: 0; left: 0; width: 100%;
             background: var(--green-deep); display: flex; justify-content: space-around;
-            align-items: center; padding: 15px 0 25px 0; 
+            align-items: center; padding: 10px 0 25px 0;
             border-top: 3px solid var(--wood-brown); z-index: 20;
         }
         .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
-        
-        /* Retour au style translucide mais avec la couleur marron */
-        .icon-box { 
-            width: 44px; height: 44px; 
-            display: flex; justify-content: center; align-items: center; 
-            border-radius: 14px; 
-            background: rgba(255, 255, 255, 0.1); /* Fond translucide */
-            margin-bottom: 6px; 
-            color: var(--wood-brown); /* Icône marron */
-            font-size: 1.5rem; /* Icône un peu plus grande */
-            transition: transform 0.2s ease, background 0.2s; 
-        }
-        
-        /* Effet "clic" sur mobile */
-        .menu-item:active .icon-box { 
-            transform: scale(0.9); 
-            background: rgba(255, 255, 255, 0.2); 
-        }
+        .icon-box { width: 38px; height: 38px; display: flex; justify-content: center; align-items: center; border-radius: 10px; background: rgba(255, 255, 255, 0.1); margin-bottom: 4px; color: #ffffff; }
+        .menu-item span { font-weight: 700; font-size: 0.45rem; color: #ffffff; text-transform: uppercase; }
 
-        .menu-item span { 
-            font-weight: 700; font-size: 0.5rem; 
-            color: var(--wood-brown); /* Texte marron aussi */
-            text-transform: uppercase; 
-            letter-spacing: 0.5px;
-        }
-
-        /* --- UI ELEMENTS --- */
+        /* --- UI ELEMENTS (AGENDA & CONTACT) --- */
         .cal-list { display: flex; flex-direction: column; gap: 15px; margin: 20px 0; }
         .cal-item { 
             display: flex; align-items: center; gap: 15px; background: var(--bg-beige); 
@@ -201,8 +178,16 @@
            ADAPTATION RESPONSIVE (TABLETTES ET ORDINATEURS)
            ========================================================================= */
         @media (min-width: 768px) {
-            body { background-color: var(--bg-beige); overflow: auto; }
-            .phone { max-width: 100%; height: 100vh; box-shadow: none; border-radius: 0; }
+            body { 
+                background-color: var(--bg-beige); 
+                overflow: auto; 
+            }
+            .phone { 
+                max-width: 100%; 
+                height: 100vh;
+                box-shadow: none; 
+                border-radius: 0;
+            }
 
             /* --- HEADER (Ex Menu du bas) --- */
             .main-wrapper { flex-direction: column; }
@@ -213,53 +198,65 @@
                 border-top: none; 
                 border-bottom: 4px solid var(--wood-brown);
                 justify-content: center;
-                gap: 20px;
+                gap: 40px;
             }
             .menu-item { 
                 flex: 0 1 auto; 
                 flex-direction: row; 
                 gap: 12px; 
-                padding: 8px 25px 8px 8px; 
+                padding: 10px 20px;
                 border-radius: 50px;
-                background: rgba(255, 255, 255, 0.05); 
-                transition: background 0.3s ease, transform 0.2s cubic-bezier(0.17, 0.84, 0.44, 1);
+                transition: background 0.3s ease;
             }
-            .menu-item:hover { 
-                background: rgba(255, 255, 255, 0.15); 
-                transform: translateY(-3px); 
-            }
-            .icon-box { 
-                margin-bottom: 0; 
-                width: 40px; height: 40px; 
-                border-radius: 50%; 
-            }
-            .menu-item span { font-size: 0.9rem; }
+            .menu-item:hover { background: rgba(255, 255, 255, 0.15); }
+            .icon-box { margin-bottom: 0; width: auto; background: transparent; font-size: 1.4rem; }
+            .menu-item span { font-size: 1rem; }
 
-            /* --- HERO --- */
+            /* --- CORRECTION BANNIERE HERO PC --- */
             .hero-container {
-                display: flex; justify-content: center; background: var(--bg-beige); 
-                padding-top: 30px; padding-bottom: 10px;
+                display: flex;
+                justify-content: center;
+                background: var(--bg-beige); 
+                padding-top: 30px;
+                padding-bottom: 10px;
             }
             .hero { 
-                width: 100%; max-width: 600px; height: 550px; 
+                width: 100%;
+                max-width: 600px; /* On limite la largeur pour avoir un beau bloc carré/vertical */
+                height: 550px; /* Assez haut pour voir tout le monde et toute la table */
+                /* CORRECTION ICI AUSSI : l'extension est bien .png */
                 background: url('hero.png') center bottom / cover no-repeat; 
-                border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+                border-radius: 30px; 
+                box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             }
             .rdv-card { width: auto; min-width: 350px; padding: 15px 30px; bottom: -25px; }
             .content { padding: 50px 0 40px; }
             .quote-text { font-size: 2.5rem; }
 
-            /* --- MODALE --- */
+            /* --- MODALE (Ex Bottom Sheet) --- */
             .bottom-sheet { 
-                top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
-                width: 700px; max-width: 90%; height: auto; max-height: 85vh; 
-                border-radius: 25px; opacity: 0;
+                top: 50%; left: 50%; 
+                transform: translate(-50%, -50%) scale(0.9);
+                width: 700px; max-width: 90%; 
+                height: auto; max-height: 85vh; 
+                border-radius: 25px;
+                opacity: 0;
                 transition: transform 0.4s cubic-bezier(0.17, 0.84, 0.44, 1), opacity 0.4s ease;
             }
-            .bottom-sheet.open { transform: translate(-50%, -50%) scale(1) !important; opacity: 1; }
+            .bottom-sheet.open { 
+                transform: translate(-50%, -50%) scale(1) !important; 
+                opacity: 1;
+            }
             .sheet-handle { display: none; }
             .close-btn { display: block; }
-            .photo-slider { flex-wrap: wrap; justify-content: center; gap: 30px; overflow-x: visible; }
+
+            /* --- GALERIE PHOTOS --- */
+            .photo-slider { 
+                flex-wrap: wrap; 
+                justify-content: center; 
+                gap: 30px;
+                overflow-x: visible;
+            }
             .photo-card { flex: 0 0 240px; margin-bottom: 20px; }
             .photo-card:hover { transform: scale(1.05) rotate(0deg); z-index: 2; } 
         }
@@ -314,6 +311,7 @@
 </div>
 
 <script>
+    // --- CALCUL DES DATES (Dernier vendredi du mois) ---
     function getLastFridays() {
         let dates = [];
         let now = new Date();
@@ -353,6 +351,7 @@
     });
     agendaHTML += '</div>';
 
+    // --- DONNÉES DES PAGES ---
     const pagesData = {
         histoire: { 
             title: "Le Grimoire", 
@@ -457,6 +456,7 @@
         }
     };
 
+    // --- GESTION DU BOTTOM SHEET / MODALE ---
     const sheet = document.getElementById('bottomSheet');
     const overlay = document.getElementById('overlay');
     const sheetContent = document.getElementById('sheetContent');
@@ -489,6 +489,7 @@
         setTimeout(() => { overlay.style.display = 'none'; sheetContent.style.opacity = '1'; }, 250);
     }
 
+    // --- GESTION DU SWIPE ---
     let startY = 0;
     let isDragging = false;
 
@@ -527,6 +528,7 @@
         }
     });
 
+    // --- GESTION DE LA LIGHTBOX (PHOTOS) ---
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightboxImg');
 
