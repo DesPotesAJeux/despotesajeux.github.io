@@ -160,35 +160,39 @@
         .cal-item .time a { color: var(--green-deep); text-decoration: none; border-bottom: 1px dotted var(--green-deep); font-weight: 600; }
         
         /* --- ONGLET CONTACT --- */
-        .contact-person { display: flex; align-items: center; gap: 15px; padding: 12px 0; }
+        .contact-person { display: flex; align-items: center; gap: 15px; padding: 12px 0; width: 100%; box-sizing: border-box; }
         .contact-person .avatar { width: 48px; height: 48px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; flex-shrink: 0; }
         .contact-person .avatar.mail-icon { background: var(--wood-brown); }
         .contact-person .avatar.fb-icon { background: var(--fb-blue); }
-        .contact-person .person-details { flex-grow: 1; }
-        .contact-person .person-details h4 { margin: 0; color: var(--green-deep); font-size: 1.15rem; }
-        .contact-person .person-details span { font-size: 0.75rem; color: var(--text-brown); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8;}
+        
+        .contact-person .person-details { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .contact-person .person-details h4 { margin: 0; color: var(--green-deep); font-size: 1.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .contact-person .person-details span { font-size: 0.75rem; color: var(--text-brown); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
         /* Boutons d'action unifiés et parfaitement alignés */
         .call-btn { 
             background: var(--green-deep); 
             color: white; 
             text-decoration: none; 
-            width: 120px; /* Taille fixe pour tous les boutons */
-            height: 40px; /* Hauteur fixe */
+            width: 130px; /* Taille fixe pour que tous soient identiques */
+            height: 42px; /* Hauteur harmonisée */
             border-radius: 50px; 
             font-weight: 700; 
             font-size: 0.85rem; 
-            display: inline-flex; /* Centrage interne parfait */
+            display: flex; /* Centrage interne parfait */
             align-items: center; 
             justify-content: center; 
             gap: 8px; 
             transition: transform 0.2s; 
             box-shadow: 0 4px 10px rgba(58, 99, 81, 0.2); 
             flex-shrink: 0; /* Empêche l'écrasement */
+            margin-left: auto; /* Aligne rigoureusement à droite */
+            box-sizing: border-box;
         }
         .call-btn:active { transform: scale(0.95); }
         .call-btn.mail-btn { background: var(--wood-brown); box-shadow: 0 4px 10px rgba(188, 143, 99, 0.2); }
         .call-btn.fb-btn { background: var(--fb-blue); box-shadow: 0 4px 10px rgba(24, 119, 242, 0.2); }
+        
         .contact-divider { border: 0; height: 2px; background: rgba(0,0,0,0.04); margin: 5px 0; border-radius: 2px; }
 
         /* BOUTON WHATSAPP ANIMÉ */
@@ -272,8 +276,8 @@
 
         <nav class="footer-nav">
             <div class="menu-item" onclick="openSheet('histoire')"><div class="icon-box"><i class="fa-solid fa-book-open"></i></div><span>Histoire</span></div>
-            <div class="menu-item" onclick="openSheet('cal')"><div class="icon-box"><i class="fa-solid fa-calendar-day"></i></div><span>Agenda</span></div>
             <div class="menu-item" onclick="openSheet('adhesion')"><div class="icon-box"><i class="fa-solid fa-user-check"></i></div><span>Adhésion</span></div>
+            <div class="menu-item" onclick="openSheet('cal')"><div class="icon-box"><i class="fa-solid fa-calendar-day"></i></div><span>Agenda</span></div>
             <div class="menu-item" onclick="openSheet('photos')"><div class="icon-box"><i class="fa-solid fa-camera-retro"></i></div><span>Photos</span></div>
             <div class="menu-item" onclick="openSheet('contact')"><div class="icon-box"><i class="fa-solid fa-envelope"></i></div><span>Contact</span></div>
         </nav>
