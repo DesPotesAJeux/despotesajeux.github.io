@@ -139,7 +139,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.03); 
         }
 
-        /* --- HISTOIRE (Design 2 lignes) --- */
+        /* --- HISTOIRE (Design 2 lignes, forcé sur 1 ligne pour le titre) --- */
         .phase-label {
             font-size: 0.8rem; font-weight: 700; color: var(--wood-brown); 
             text-transform: uppercase; letter-spacing: 2px; 
@@ -148,12 +148,19 @@
         .phase-label.first { margin-top: 5px; }
         
         .phase-title { 
-            font-family: 'Quicksand', sans-serif; color: var(--green-deep); font-size: 1.25rem; font-weight: 700;
+            font-family: 'Quicksand', sans-serif; color: var(--green-deep); 
+            font-size: 1.1rem; /* Taille légèrement réduite pour tout faire tenir */
+            font-weight: 700;
             text-align: center; margin: 0 0 15px; 
-            display: flex; align-items: center; justify-content: center; gap: 12px; 
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            white-space: nowrap; /* Empêche le passage à la ligne */
         }
-        .phase-title::before, .phase-title::after { content: ''; flex-grow: 1; height: 2px; background: var(--wood-highlight); opacity: 0.5; max-width: 40px; border-radius: 2px; }
-        .phase-icon { font-size: 1.3rem; color: var(--wood-brown); }
+        .phase-title::before, .phase-title::after { 
+            content: ''; flex-grow: 1; height: 2px; background: var(--wood-highlight); 
+            opacity: 0.5; max-width: 40px; min-width: 15px; /* Assure que les traits restent visibles */
+            border-radius: 2px; 
+        }
+        .phase-icon { font-size: 1.2rem; color: var(--wood-brown); }
         .grimoire-text { text-align: center; line-height: 1.6; font-size: 0.95rem; margin-top: 0; }
 
         /* --- FOOTER --- */
