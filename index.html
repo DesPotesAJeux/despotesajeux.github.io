@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YPHH9PELKY');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Des Potes à Jeux</title>
@@ -41,12 +49,10 @@
         }
 
         /* --- BANNIÈRE HERO --- */
-        /* Le fond devient beige pour s'intégrer au reste du site si l'image est contenue */
         .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
         .hero { 
             width: 100%; 
             height: 360px;
-            /* L'astuce magique : CONTAIN force l'affichage de 100% de l'image sans rogner */
             background: url('hero.png') center top / contain no-repeat; 
             position: relative; z-index: 1; 
         }
@@ -67,7 +73,7 @@
         .content {
             background: var(--bg-beige); padding: 45px 0 100px 0;
             position: relative; flex-grow: 1; 
-            overflow: hidden; /* Empêche le défilement fantôme */
+            overflow: hidden; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
@@ -120,7 +126,6 @@
         .close-btn:hover { color: var(--green-deep); }
         .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; touch-action: pan-y; }
         
-        /* --- STYLES DES TITRES DU BOTTOM SHEET --- */
         #sheetContent { will-change: opacity; }
         .sheet-content-title { 
             font-family: 'Shadows Into Light', cursive; color: var(--green-deep); 
@@ -200,64 +205,30 @@
         .benefits-list i { color: var(--green-deep); }
 
 
-        /* =========================================================================
-           ADAPTATION RESPONSIVE (TABLETTES ET ORDINATEURS)
-           ========================================================================= */
+        /* --- ADAPTATION RESPONSIVE --- */
         @media (min-width: 768px) {
             body { background-color: var(--bg-beige); overflow: auto; }
             .phone { max-width: 100%; height: 100vh; box-shadow: none; border-radius: 0; }
-
-            /* --- HEADER --- */
             .main-wrapper { flex-direction: column; }
             .footer-nav {
-                order: -1; 
-                position: relative; 
-                padding: 15px 50px; 
-                border-top: none; 
-                border-bottom: 4px solid var(--wood-brown);
-                justify-content: center;
-                gap: 20px;
+                order: -1; position: relative; padding: 15px 50px; border-top: none; 
+                border-bottom: 4px solid var(--wood-brown); justify-content: center; gap: 20px;
             }
             .menu-item { 
-                flex: 0 1 auto; 
-                flex-direction: row; 
-                gap: 12px; 
-                padding: 8px 25px 8px 8px; 
-                border-radius: 50px;
-                background: rgba(255, 255, 255, 0.05); 
-                transition: background 0.3s ease, transform 0.2s cubic-bezier(0.17, 0.84, 0.44, 1);
+                flex: 0 1 auto; flex-direction: row; gap: 12px; padding: 8px 25px 8px 8px; border-radius: 50px;
+                background: rgba(255, 255, 255, 0.05); transition: background 0.3s ease, transform 0.2s cubic-bezier(0.17, 0.84, 0.44, 1);
             }
-            .menu-item:hover { 
-                background: rgba(255, 255, 255, 0.15); 
-                transform: translateY(-3px); 
-            }
-            .icon-box { 
-                margin-bottom: 0; 
-                width: 40px; height: 40px; 
-                border-radius: 50%; 
-            }
+            .menu-item:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-3px); }
+            .icon-box { margin-bottom: 0; width: 40px; height: 40px; border-radius: 50%; }
             .menu-item span { font-size: 0.9rem; }
-
-            /* --- HERO (PC) --- */
-            .hero-container {
-                display: flex; justify-content: center; background: var(--bg-beige); 
-                padding-top: 30px; padding-bottom: 10px;
-            }
-            .hero { 
-                width: 100%; 
-                max-width: 550px; height: 550px; /* Carré parfait : aucune coupe d'image ! */
-                background: url('hero.png') center center / cover no-repeat; 
-                border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            }
+            .hero-container { display: flex; justify-content: center; background: var(--bg-beige); padding-top: 30px; padding-bottom: 10px; }
+            .hero { width: 100%; max-width: 550px; height: 550px; background: url('hero.png') center center / cover no-repeat; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
             .rdv-card { width: auto; min-width: 350px; padding: 15px 30px; bottom: -25px; }
             .content { padding: 50px 0 40px; overflow: hidden; }
             .quote-text { font-size: 2.5rem; }
-
-            /* --- MODALE --- */
             .bottom-sheet { 
                 top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
-                width: 700px; max-width: 90%; height: auto; max-height: 85vh; 
-                border-radius: 25px; opacity: 0;
+                width: 700px; max-width: 90%; height: auto; max-height: 85vh; border-radius: 25px; opacity: 0;
                 transition: transform 0.4s cubic-bezier(0.17, 0.84, 0.44, 1), opacity 0.4s ease;
             }
             .bottom-sheet.open { transform: translate(-50%, -50%) scale(1) !important; opacity: 1; }
@@ -341,7 +312,6 @@
 
     const upcomingDates = getLastFridays();
     const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
-    
     document.getElementById('next-rdv-banner').innerText = upcomingDates[0].toLocaleDateString('fr-FR', dateOptions);
 
     let agendaHTML = '<div class="cal-list">';
@@ -364,40 +334,29 @@
                 <span class="phase-title">📜 Phase 1 : La Pioche Initiale (2014)</span>
                 <p style="text-align: center;">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>. Très vite, le virus se transmet et les premières soirées jeux s'organisent chez les uns et les autres. Ce n'était que le début d'une longue aventure ludique.</p>
                 <span class="phase-title">♟️ Phase 2 : Le Coup de Maître (2015)</span>
-                <p style="text-align: center;">L'aventure prend une nouvelle dimension avec l'acquisition du classique Agricola. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante ! Très vite, 7 Wonders rejoint la table pour des parties endiablées, et de fil en aiguille, notre bibliothèque commence à déborder de nouvelles boîtes de jeux. La machine était lancée !</p>
+                <p style="text-align: center;">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante ! Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées, et de fil en aiguille, notre bibliothèque commence à déborder de nouvelles boîtes de jeux. La machine était lancée !</p>
                 <span class="phase-title">🏰 Phase 3 : La Fondation (2019)</span>
                 <p style="text-align: center;">Animés par l'envie de partager notre passion (et nos boîtes de jeux !) avec d'autres joueurs, nous sommes quatre amis à franchir le pas. Le club des "Potes à Jeux" naît officiellement. La petite tablée grandit pour devenir une véritable institution ludique à Plouay.</p>
                 <span class="phase-title">🚀 Phase 4 : L'Envolée (2026)</span>
-                <p style="text-align: center;">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. Le club continue de traverser les âges, et l'aventure ne fait que continuer avec vous !</p>          `
+                <p style="text-align: center;">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. Le club continue de traverser les âges, et l'aventure ne fait que continuer avec vous !</p>`
         },
         cal: { 
             title: "Agenda Ludique", 
             text: `
                 <p style="text-align: center; color: var(--green-deep);">On se retrouve chaque <b>dernier vendredi du mois</b>. Voici les prochaines sessions :</p>
                 ${agendaHTML}
-                <p style="text-align: center; font-size:0.85rem; margin-top: 20px;">N'oubliez pas d'apporter votre bonne humeur !</p>
-            `
+                <p style="text-align: center; font-size:0.85rem; margin-top: 20px;">N'oubliez pas d'apporter votre bonne humeur !</p>`
         },
         adhesion: { 
             title: "Rejoindre l'asso", 
             text: `
                 <p style="text-align:center;">Devenir un membre officiel des Potes à Jeux est simple et convivial !</p>
-                
                 <div style="background: #f8d7da; border: 2px solid #f5c2c7; color: #842029; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;">
                     <i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans uniquement
                 </div>
-
                 <div class="pricing-container">
-                    <div class="price-card">
-                        <h3>Solo</h3>
-                        <div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div>
-                        <p style="font-size:0.65rem; margin:0;">Aventurier solitaire</p>
-                    </div>
-                    <div class="price-card featured">
-                        <h3>Couple</h3>
-                        <div class="amount">20€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div>
-                        <p style="font-size:0.65rem; margin:0;">Le meilleur deal pour deux</p>
-                    </div>
+                    <div class="price-card"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div>
+                    <div class="price-card featured"><div class="amount">20€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Couple</p></div>
                 </div>
                 <ul class="benefits-list" style="max-width: 280px; margin: 15px auto;">
                     <li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li>
@@ -405,58 +364,38 @@
                     <li><i class="fa-solid fa-circle-check"></i> Soirée escape game</li>
                     <li><i class="fa-solid fa-circle-check"></i> Repas de fin d'année</li>
                     <li><i class="fa-solid fa-circle-check"></i> Après-midi jeux extérieurs</li>
-                </ul>
-            ` 
+                </ul>` 
         },
         photos: {
             title: "Souvenirs",
             text: `
                 <p style="text-align: center; margin-bottom: 20px;">Cliquez sur une photo pour l'agrandir.</p>
                 <div class="photo-slider">
-                    <div class="photo-card" onclick="openLightbox('photo1.jpg')"><img src="photo1.jpg" alt="Photo 1"></div>
-                    <div class="photo-card" onclick="openLightbox('photo2.jpg')"><img src="photo2.jpg" alt="Photo 2"></div>
-                    <div class="photo-card" onclick="openLightbox('photo3.jpg')"><img src="photo3.jpg" alt="Photo 3"></div>
-                    <div class="photo-card" onclick="openLightbox('photo4.jpg')"><img src="photo4.jpg" alt="Photo 4"></div>
-                    <div class="photo-card" onclick="openLightbox('photo5.jpg')"><img src="photo5.jpg" alt="Photo 5"></div>
-                    <div class="photo-card" onclick="openLightbox('photo6.jpg')"><img src="photo6.jpg" alt="Photo 6"></div>
-                    <div class="photo-card" onclick="openLightbox('photo7.jpg')"><img src="photo7.jpg" alt="Photo 7"></div>
-                    <div class="photo-card" onclick="openLightbox('photo8.jpg')"><img src="photo8.jpg" alt="Photo 8"></div>
-                    <div class="photo-card" onclick="openLightbox('photo9.jpg')"><img src="photo9.jpg" alt="Photo 9"></div>
-                    <div class="photo-card" onclick="openLightbox('photo10.jpg')"><img src="photo10.jpg" alt="Photo 10"></div>
-                    <div class="photo-card" onclick="openLightbox('photo11.jpg')"><img src="photo11.jpg" alt="Photo 11"></div>
-                    <div class="photo-card" onclick="openLightbox('photo12.jpg')"><img src="photo12.jpg" alt="Photo 12"></div>
-                    <div class="photo-card" onclick="openLightbox('photo13.jpg')"><img src="photo13.jpg" alt="Photo 13"></div>
-                    <div class="photo-card" onclick="openLightbox('photo14.jpg')"><img src="photo14.jpg" alt="Photo 14"></div>
-                    <div class="photo-card" onclick="openLightbox('photo15.jpg')"><img src="photo15.jpg" alt="Photo 15"></div>
+                    <div class="photo-card" onclick="openLightbox('photo1.jpg')"><img src="photo1.jpg" alt="1"></div>
+                    <div class="photo-card" onclick="openLightbox('photo2.jpg')"><img src="photo2.jpg" alt="2"></div>
+                    <div class="photo-card" onclick="openLightbox('photo3.jpg')"><img src="photo3.jpg" alt="3"></div>
+                    <div class="photo-card" onclick="openLightbox('photo4.jpg')"><img src="photo4.jpg" alt="4"></div>
+                    <div class="photo-card" onclick="openLightbox('photo5.jpg')"><img src="photo5.jpg" alt="5"></div>
+                    <div class="photo-card" onclick="openLightbox('photo6.jpg')"><img src="photo6.jpg" alt="6"></div>
+                    <div class="photo-card" onclick="openLightbox('photo7.jpg')"><img src="photo7.jpg" alt="7"></div>
+                    <div class="photo-card" onclick="openLightbox('photo8.jpg')"><img src="photo8.jpg" alt="8"></div>
+                    <div class="photo-card" onclick="openLightbox('photo9.jpg')"><img src="photo9.jpg" alt="9"></div>
+                    <div class="photo-card" onclick="openLightbox('photo10.jpg')"><img src="photo10.jpg" alt="10"></div>
+                    <div class="photo-card" onclick="openLightbox('photo11.jpg')"><img src="photo11.jpg" alt="11"></div>
+                    <div class="photo-card" onclick="openLightbox('photo12.jpg')"><img src="photo12.jpg" alt="12"></div>
+                    <div class="photo-card" onclick="openLightbox('photo13.jpg')"><img src="photo13.jpg" alt="13"></div>
+                    <div class="photo-card" onclick="openLightbox('photo14.jpg')"><img src="photo14.jpg" alt="14"></div>
+                    <div class="photo-card" onclick="openLightbox('photo15.jpg')"><img src="photo15.jpg" alt="15"></div>
                 </div>`
         },
         contact: { 
             title: "Contact", 
             text: `
-                <p style="text-align:center">Passez nous voir lors de nos soirées ou contactez-nous directement !</p>
-                
                 <div class="contact-card">
-                    <div class="contact-line">
-                        <i class="fa-solid fa-phone"></i>
-                        <div>
-                            <span style="font-size: 0.8rem; display: block; color: var(--text-brown);">Présidente (Julie)</span>
-                            <a href="tel:+33620031771">06 20 03 17 71</a>
-                        </div>
-                    </div>
-                    <div class="contact-line">
-                        <i class="fa-solid fa-envelope"></i>
-                        <div>
-                            <span style="font-size: 0.8rem; display: block; color: var(--text-brown);">Email</span>
-                            <a href="mailto:despotesajeux@protonmail.com" style="word-break: break-all;">despotesajeux@protonmail.com</a>
-                        </div>
-                    </div>
+                    <div class="contact-line"><i class="fa-solid fa-phone"></i><div><a href="tel:+33620031771">06 20 03 17 71</a></div></div>
+                    <div class="contact-line"><i class="fa-solid fa-envelope"></i><div><a href="mailto:despotesajeux@protonmail.com">despotesajeux@protonmail.com</a></div></div>
                 </div>
-
-                <a href="https://chat.whatsapp.com/TON_LIEN_D_INVITATION" target="_blank" class="btn-whatsapp">
-                    <i class="fa-brands fa-whatsapp" style="font-size: 1.5rem;"></i>
-                    Rejoindre notre WhatsApp
-                </a>
-            ` 
+                <a href="https://chat.whatsapp.com/TON_LIEN_D_INVITATION" target="_blank" class="btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>` 
         }
     };
 
@@ -471,20 +410,16 @@
         overlay.style.display = 'block';
         mainWrapper.classList.add('blurred');
         sheetContent.style.opacity = '1';
-        
         if (window.innerWidth <= 768) {
             sheetContent.style.transition = 'none';
             sheet.style.transform = '';
             sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)";
         }
-        
         setTimeout(() => { overlay.style.opacity = '1'; sheet.classList.add('open'); }, 10);
     }
 
     function closeSheet() {
-        if (window.innerWidth <= 768) {
-            sheet.style.transition = "transform 0.25s ease-in";
-        }
+        if (window.innerWidth <= 768) { sheet.style.transition = "transform 0.25s ease-in"; }
         sheet.style.transform = '';
         sheet.classList.remove('open');
         overlay.style.opacity = '0';
@@ -494,7 +429,6 @@
 
     let startY = 0;
     let isDragging = false;
-
     sheet.addEventListener('touchstart', (e) => {
         if (window.innerWidth > 768) return; 
         if (sheetBody.scrollTop <= 0) {
@@ -504,7 +438,6 @@
             sheetContent.style.transition = "none";
         }
     }, { passive: true });
-
     sheet.addEventListener('touchmove', (e) => {
         if (!isDragging || window.innerWidth > 768) return;
         let diff = e.touches[0].clientY - startY;
@@ -515,14 +448,11 @@
             sheetContent.style.opacity = fadeOut < 0 ? 0 : fadeOut;
         }
     }, { passive: false });
-
     sheet.addEventListener('touchend', (e) => {
         if (!isDragging || window.innerWidth > 768) return;
         isDragging = false;
         let diff = e.changedTouches[0].clientY - startY;
-        if (diff > 60) {
-            closeSheet();
-        } else {
+        if (diff > 60) { closeSheet(); } else {
             sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)";
             sheetContent.style.transition = "opacity 0.3s ease";
             sheet.style.transform = '';
@@ -532,22 +462,15 @@
 
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightboxImg');
-
     function openLightbox(src) {
         lightboxImg.src = src;
         lightbox.style.display = 'flex';
-        setTimeout(() => {
-            lightbox.classList.add('active');
-        }, 10);
+        setTimeout(() => { lightbox.classList.add('active'); }, 10);
     }
-
     function closeLightbox(event) {
         if(event.target === lightboxImg) return;
-        
         lightbox.classList.remove('active');
-        setTimeout(() => {
-            lightbox.style.display = 'none';
-        }, 300);
+        setTimeout(() => { lightbox.style.display = 'none'; }, 300);
     }
 </script>
 </body>
