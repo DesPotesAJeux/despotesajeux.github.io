@@ -102,21 +102,19 @@
         
         .lightbox-img-container {
             width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;
-            transition: transform 0.2s ease-out; /* Fluidité du swipe général */
+            transition: transform 0.2s ease-out; 
             transform-origin: center center;
         }
 
         .lightbox img { 
             max-width: 100%; max-height: 100%; object-fit: contain; 
             transform: scale(0.9); opacity: 0; transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
-            /* Important pour le zoom */
             will-change: transform;
         }
         
         .lightbox.active { opacity: 1; }
         .lightbox.active img { transform: scale(1); opacity: 1; }
         
-        /* Boutons de la Lightbox */
         .lightbox-controls {
             position: absolute; top: 25px; right: 25px; display: flex; gap: 15px; z-index: 110;
         }
@@ -131,13 +129,14 @@
         /* --- BOTTOM SHEET --- */
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 25; display: none; opacity: 0; transition: opacity 0.3s ease; }
         .bottom-sheet { 
-            position: absolute; top: 100%; left: 0; width: 100%; height: 85vh; 
+            position: absolute; top: 100%; left: 0; width: 100%; 
+            height: auto; max-height: 85vh; min-height: 40vh;
             background: white; z-index: 30; border-top-left-radius: 35px; border-top-right-radius: 35px; 
             display: flex; flex-direction: column; will-change: transform;
             transition: transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1);
         }
         .bottom-sheet.open { transform: translateY(-100%); }
-        .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; }
+        .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; cursor: grab; }
         .sheet-handle { width: 45px; height: 6px; background: #e0e0e0; border-radius: 10px; margin: 0 auto; }
         .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; -webkit-overflow-scrolling: touch; }
         
@@ -221,7 +220,6 @@
 <div class="phone">
     <div class="lightbox" id="lightbox">
         <div class="lightbox-controls">
-            <a href="#" id="downloadBtn" class="lightbox-btn" download><i class="fa-solid fa-download"></i></a>
             <div class="lightbox-btn" onclick="closeLightboxForce()"><i class="fa-solid fa-xmark"></i></div>
         </div>
         
@@ -338,7 +336,7 @@
         adhesion: { 
             title: "Rejoindre l'asso", 
             text: `<div class="panel-card">
-                <p style="text-align:center; margin-top:0;">Devenir membre est simple et convivial !</p>
+                <p style="text-align:center; margin-top:0;">Devenir un membre officiel des Potes à Jeux est simple et convivial !</p>
                 <div style="background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.2); color: #dc3545; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans</div>
                 <div class="pricing-container">
                     <div class="price-card featured"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div>
@@ -415,24 +413,33 @@
             sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)";
         }
         
-        setTimeout(() => { sheet.classList.add('open'); }, 10);
+        setTimeout(() => { 
+            overlay.style.opacity = '1';
+            sheet.classList.add('open'); 
+        }, 10);
 
-        // Ajoute la page à l'historique du téléphone (pour le bouton retour)
+        // Pousse l'état "sheet" dans l'historique
         if (!history.state || history.state.type !== 'sheet') {
             history.pushState({ type: 'sheet' }, '');
         }
     }
 
-    function closeSheet(fromHistory = false) {
+    function hideSheetDOM() {
         if (window.innerWidth <= 768) { sheet.style.transition = "transform 0.25s ease-in"; }
         sheet.style.transform = '';
         sheet.classList.remove('open'); 
-        overlay.style.display = 'none'; 
+        overlay.style.opacity = '0';
         mainWrapper.classList.remove('blurred');
+        setTimeout(() => { overlay.style.display = 'none'; }, 250);
+    }
+
+    function closeSheet() {
+        if (!sheet.classList.contains('open')) return;
         
-        // Gère proprement l'historique (sans remonter indéfiniment)
-        if (fromHistory !== true && history.state && history.state.type === 'sheet') {
-            history.back();
+        if (history.state && history.state.type === 'sheet') {
+            history.back(); // Cela déclenchera hideSheetDOM() via popstate
+        } else {
+            hideSheetDOM();
         }
     }
 
@@ -449,7 +456,7 @@
         if (sheetBody.scrollTop <= 0) { 
             startY = e.touches[0].clientY; 
             isDragging = true; 
-            sheet.style.transition = 'none'; 
+            sheet.style.transition = 'none'; // Suit parfaitement le doigt (plus de freeze)
         } 
     }, { passive: true });
 
@@ -467,24 +474,23 @@
         isDragging = false; 
         let diff = e.changedTouches[0].clientY - startY; 
         
+        // Remet l'animation au moment du relâchement
         sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; 
         
         if (diff > 100) {
-            closeSheet();
+            closeSheet(); // Ferme si on a assez glissé
         } else {
-            sheet.style.transform = ''; 
+            sheet.style.transform = ''; // Remonte sinon
         } 
     });
 
     // ==========================================
-    // LIGHTBOX: ZOOM, SWIPE, DOWNLOAD
+    // LIGHTBOX: ZOOM, SWIPE (SANS DOWNLOAD)
     // ==========================================
     const lb = document.getElementById('lightbox');
     const lbContainer = document.getElementById('lbContainer');
     const lbImg = document.getElementById('lightboxImg');
-    const downloadBtn = document.getElementById('downloadBtn');
 
-    // Variables pour le Zoom (Pinch)
     let currentScale = 1;
     let initialDistance = null;
     let isZooming = false;
@@ -493,10 +499,8 @@
 
     function openLightbox(src) { 
         lbImg.src = src; 
-        downloadBtn.href = src; // Met à jour le lien de téléchargement
-        
         lb.style.display = 'flex'; 
-        resetZoom(); // Remet le zoom à 0 quand on ouvre une nouvelle photo
+        resetZoom(); 
 
         setTimeout(() => lb.classList.add('active'), 10); 
         
@@ -504,41 +508,55 @@
         currentGallery = Array.from(imgs).map(i => i.getAttribute('src')); 
         currentPhotoIndex = currentGallery.indexOf(src); 
         
+        // Pousse l'état "lightbox" SUR l'état "sheet"
         if (!history.state || history.state.type !== 'lightbox') {
             history.pushState({type: 'lightbox'}, ''); 
         }
     }
 
-    function closeLightboxForce(fromHistory = false) { 
-        if (lb.classList.contains('active')) {
-            lb.classList.remove('active'); 
-            setTimeout(() => {
-                lb.style.display='none';
-                resetZoom();
-            }, 300); 
-            
-            if (fromHistory !== true && history.state && history.state.type === 'lightbox') {
-                history.back();
-            }
+    function hideLightboxDOM() {
+        lb.classList.remove('active'); 
+        setTimeout(() => {
+            lb.style.display='none';
+            resetZoom();
+        }, 300);
+    }
+
+    function closeLightboxForce() {
+        if (!lb.classList.contains('active')) return;
+        
+        // Si on a l'historique "lightbox", faire retour déclenchera popstate (qui cachera le DOM de la photo) 
+        // ET on restera sur le BottomSheet !
+        if (history.state && history.state.type === 'lightbox') {
+            history.back(); 
+        } else {
+            hideLightboxDOM();
         }
     }
 
-    // Gestion du bouton précédent du téléphone (Android/iOS Swipe)
+    function closeLightbox(event) {
+        if(event.target === lbImg) return;
+        closeLightboxForce();
+    }
+
+    // Capture le bouton RETOUR physique d'Android / iOS Swipe Edge
     window.addEventListener('popstate', (e) => {
+        // 1. Si la Lightbox est ouverte, c'est elle qu'on ferme d'abord
         if (lb.classList.contains('active')) {
-            closeLightboxForce(true); 
-        } else if (sheet.classList.contains('open')) {
-            closeSheet(true); 
+            hideLightboxDOM(); 
+        } 
+        // 2. Sinon, si c'est le Bottom Sheet qui est ouvert, on ferme le Bottom Sheet
+        else if (sheet.classList.contains('open')) {
+            hideSheetDOM(); 
         }
     });
 
-    // Clic sur l'arrière-plan noir de la lightbox (ferme si on n'est pas zoomé)
+    // Clic sur l'arrière-plan noir de la lightbox
     lbContainer.addEventListener('click', (e) => {
         if(e.target !== lbImg && currentScale === 1) closeLightboxForce();
     });
 
-    // --- LOGIQUE PINCH-TO-ZOOM ET PANNING ---
-
+    // --- PINCH TO ZOOM & PAN ---
     function getDistance(touches) {
         return Math.hypot(touches[0].pageX - touches[1].pageX, touches[0].pageY - touches[1].pageY);
     }
@@ -551,11 +569,9 @@
 
     lbContainer.addEventListener('touchstart', (e) => {
         if (e.touches.length === 2) {
-            // Début du pincement
             isZooming = true;
             initialDistance = getDistance(e.touches);
         } else if (e.touches.length === 1) {
-            // Début du drag (pan) ou swipe normal
             lastPosX = e.touches[0].clientX;
             lastPosY = e.touches[0].clientY;
         }
@@ -563,31 +579,24 @@
 
     lbContainer.addEventListener('touchmove', (e) => {
         if (e.touches.length === 2) {
-            // En cours de pincement (Zoom)
             e.preventDefault();
             const currentDistance = getDistance(e.touches);
             const scaleChange = currentDistance / initialDistance;
-            
-            // Applique le zoom avec une limite min(1) et max(4)
             currentScale = Math.min(Math.max(1, currentScale * scaleChange), 4);
             lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`;
             initialDistance = currentDistance;
             
         } else if (e.touches.length === 1) {
-            // En cours de glissement (Pan)
             let currentX = e.touches[0].clientX;
             let currentY = e.touches[0].clientY;
             
             if (currentScale > 1) {
-                // Si on est zoomé, on déplace l'image (Pan)
                 e.preventDefault();
                 posX += (currentX - lastPosX) / currentScale;
                 posY += (currentY - lastPosY) / currentScale;
                 lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`;
             } else if (!isZooming) {
-                // Si on n'est PAS zoomé, on prépare le SWIPE (gauche/droite) pour changer de photo
                 let diffX = currentX - lastPosX;
-                // Effet visuel du swipe de la galerie
                 lbContainer.style.transform = `translateX(${diffX}px)`; 
             }
             
@@ -597,24 +606,18 @@
     }, {passive: false});
 
     lbContainer.addEventListener('touchend', (e) => {
-        if (e.touches.length < 2) {
-            isZooming = false;
-        }
+        if (e.touches.length < 2) { isZooming = false; }
         
-        // Si on n'est pas zoomé, on gère le changement de photo au relâchement
         if (currentScale === 1) {
             let diffX = parseInt(lbContainer.style.transform.replace('translateX(', '').replace('px)', '') || 0);
             
             if (diffX > 70 && currentGallery.length > 1) {
-                // Swipe vers la Droite (Précédent)
                 currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length;
                 changePhoto();
             } else if (diffX < -70 && currentGallery.length > 1) {
-                // Swipe vers la Gauche (Suivant)
                 currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length;
                 changePhoto();
             } else {
-                // Rebond (pas assez glissé)
                 lbContainer.style.transform = `translateX(0px)`;
             }
         }
@@ -622,11 +625,10 @@
 
     function changePhoto() {
         lbImg.style.opacity = 0;
-        lbContainer.style.transform = `translateX(0px)`; // Remet le container au centre
+        lbContainer.style.transform = `translateX(0px)`; 
         setTimeout(() => { 
             let newSrc = currentGallery[currentPhotoIndex];
             lbImg.src = newSrc; 
-            downloadBtn.href = newSrc; // Met à jour le lien de téléchargement
             lbImg.style.opacity = 1; 
         }, 150);
     }
