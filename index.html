@@ -21,7 +21,7 @@
             --green-deep: #3a6351;
             --wood-brown: #bc8f63; 
             --wood-highlight: #dbb38a;
-            --fb-blue: #1877F2; /* Nouvelle couleur pour FB */
+            --fb-blue: #1877F2;
         }
 
         body {
@@ -40,20 +40,17 @@
             box-shadow: 0 0 50px rgba(0,0,0,0.5);
         }
 
-        /* --- WRAPPER POUR L'EFFET DE FLOU --- */
+        /* --- WRAPPER --- */
         .main-wrapper {
             display: flex; flex-direction: column; height: 100%; width: 100%;
             transition: filter 0.4s ease;
         }
-        .main-wrapper.blurred {
-            filter: blur(5px);
-        }
+        .main-wrapper.blurred { filter: blur(5px); }
 
         /* --- BANNIÈRE HERO --- */
         .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
         .hero { 
-            width: 100%; 
-            height: 360px;
+            width: 100%; height: 360px;
             background: url('hero.png') center top / contain no-repeat; 
             position: relative; z-index: 1; 
         }
@@ -61,8 +58,7 @@
         .rdv-card {
             background: rgba(255, 252, 240, 0.98); width: 85%;
             padding: 12px 15px; border-radius: 18px;
-            position: absolute; bottom: -20px;
-            left: 50%;
+            position: absolute; bottom: -20px; left: 50%;
             transform: translateX(-50%); display: flex; align-items: center;
             box-shadow: 0 10px 30px rgba(74, 60, 47, 0.15); border: 1px solid white;
             z-index: 10;
@@ -75,20 +71,16 @@
         /* --- CONTENU --- */
         .content {
             background: var(--bg-beige); padding: 45px 0 100px 0;
-            position: relative; flex-grow: 1; 
-            overflow: hidden; 
+            position: relative; flex-grow: 1; overflow: hidden; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
         .quote-box { padding: 20px 35px; text-align: center; position: relative; }
-        .quote-text {
-            font-family: 'Shadows Into Light', cursive; font-size: 1.6rem;
-            line-height: 1.2; color: var(--green-deep); margin: 0;
-        }
+        .quote-text { font-family: 'Shadows Into Light', cursive; font-size: 1.6rem; line-height: 1.2; color: var(--green-deep); margin: 0; }
         .separator { width: 50px; height: 3px; background: var(--wood-highlight); margin: 15px auto; border-radius: 10px; opacity: 0.6; }
 
         /* --- POLAROID & LIGHTBOX --- */
-        .photo-slider { display: flex; overflow-x: auto; gap: 20px; padding: 30px 20px; width: 100%; box-sizing: border-box; scrollbar-width: none; }
+        .photo-slider { display: flex; overflow-x: auto; gap: 20px; padding: 15px 20px 30px; width: 100%; box-sizing: border-box; scrollbar-width: none; }
         .photo-slider::-webkit-scrollbar { display: none; }
         .photo-card { flex: 0 0 220px; background: white; padding: 10px 10px 35px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: rotate(-2deg); cursor: pointer; transition: transform 0.2s;}
         .photo-card:nth-child(even) { transform: rotate(3deg); }
@@ -97,16 +89,10 @@
 
         .lightbox {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 100;
-            display: none; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.85); z-index: 100; display: none; justify-content: center; align-items: center;
             opacity: 0; transition: opacity 0.3s ease; cursor: pointer;
         }
-        .lightbox img {
-            max-width: 90%; max-height: 80%; border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 3px solid white;
-            transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
-            cursor: default;
-        }
+        .lightbox img { max-width: 90%; max-height: 80%; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 3px solid white; transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); cursor: default; }
         .lightbox.active { opacity: 1; }
         .lightbox.active img { transform: scale(1); }
 
@@ -114,11 +100,9 @@
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 25; display: none; opacity: 0; transition: opacity 0.3s ease; }
         
         .bottom-sheet { 
-            position: absolute; 
-            top: 100%; left: 0; width: 100%; height: 85vh; 
+            position: absolute; top: 100%; left: 0; width: 100%; height: 85vh; 
             background: white; z-index: 30; border-top-left-radius: 35px; border-top-right-radius: 35px; 
-            display: flex; flex-direction: column;
-            will-change: transform;
+            display: flex; flex-direction: column; will-change: transform;
             transition: transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1);
         }
         .bottom-sheet.open { transform: translateY(-100%); }
@@ -130,49 +114,33 @@
         .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; touch-action: pan-y; }
         
         #sheetContent { will-change: opacity; }
-        .sheet-content-title { 
-            font-family: 'Shadows Into Light', cursive; color: var(--green-deep); 
-            font-size: 2.6rem; margin: 10px 0 30px; text-align: center; position: relative;
-        }
-        .sheet-content-title::after {
-            content: ''; display: block; width: 50px; height: 4px;
-            background: var(--wood-brown); margin: 10px auto 0; border-radius: 5px;
+        .sheet-content-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 2.6rem; margin: 10px 0 30px; text-align: center; position: relative; }
+        .sheet-content-title::after { content: ''; display: block; width: 50px; height: 4px; background: var(--wood-brown); margin: 10px auto 0; border-radius: 5px; }
+
+        /* --- ENCADRÉ GLOBAL (Contacts, Adhésion, Photos) --- */
+        .panel-card { 
+            background: var(--bg-beige); 
+            padding: 20px; 
+            border-radius: 20px; 
+            margin: 20px 0; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03); 
         }
 
-        /* --- NOUVEAUX STYLES GRIMOIRE VIEILLI --- */
+        /* --- GRIMOIRE --- */
         .grimoire-paper {
-            /* Fond légèrement plus jaune à l'intérieur */
             background-color: #fffaf0; 
-            /* Astuce CSS pour créer des bords irréguliers et gondolés */
             border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
             padding: 35px 25px;
-            /* Combinaison d'ombres pour l'effet vieilli et la profondeur */
-            box-shadow: 
-                0 5px 15px rgba(0,0,0,0.1), /* Ombre externe */
-                inset 0 0 30px rgba(188, 143, 99, 0.3), /* Ombre interne "vieilli" forte */
-                inset 0 0 5px rgba(74, 60, 47, 0.2); /* Définition du bord */
-            margin-bottom: 20px;
-            position: relative;
-            /* Légère texture papier via un dégradé subtil */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1), inset 0 0 30px rgba(188, 143, 99, 0.3), inset 0 0 5px rgba(74, 60, 47, 0.2);
+            margin-bottom: 20px; position: relative;
             background-image: linear-gradient(to bottom right, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0) 100%);
         }
-        
-        .phase-title {
-            font-family: 'Shadows Into Light', cursive; 
-            color: var(--wood-brown); font-size: 1.5rem;
-            text-align: center; margin: 35px 0 15px;
-            display: flex; align-items: center; justify-content: center; gap: 15px;
-        }
+        .phase-title { font-family: 'Shadows Into Light', cursive; color: var(--wood-brown); font-size: 1.5rem; text-align: center; margin: 35px 0 15px; display: flex; align-items: center; justify-content: center; gap: 15px; }
         .phase-title::before, .phase-title::after { content: ''; flex-grow: 1; height: 2px; background: var(--wood-highlight); opacity: 0.5; max-width: 40px; border-radius: 2px; }
-        
-        .phase-icon {
-            font-size: 1.8rem; color: var(--green-deep);
-            filter: drop-shadow(1px 2px 1px rgba(188, 143, 99, 0.5));
-        }
+        .phase-icon { font-size: 1.8rem; color: var(--green-deep); filter: drop-shadow(1px 2px 1px rgba(188, 143, 99, 0.5)); }
         .grimoire-text { text-align: center; line-height: 1.6; font-size: 0.95rem; }
 
-
-        /* --- FOOTER & ICONS STYLE --- */
+        /* --- FOOTER --- */
         .footer-nav {
             position: absolute; bottom: 0; left: 0; width: 100%;
             background: var(--green-deep); display: flex; justify-content: space-around;
@@ -180,92 +148,70 @@
             border-top: 3px solid var(--wood-brown); z-index: 20;
         }
         .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
-        
-        .icon-box { 
-            width: 44px; height: 44px; 
-            display: flex; justify-content: center; align-items: center; 
-            border-radius: 14px; 
-            background: var(--wood-brown);
-            margin-bottom: 6px; 
-            color: #ffffff; 
-            font-size: 1.3rem; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.25);
-            transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); 
-        }
-        
-        .menu-item:active .icon-box { 
-            transform: scale(0.92) translateY(2px); 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3); 
-            filter: brightness(0.9); 
-        }
-
-        .menu-item span { 
-            font-weight: 700; font-size: 0.5rem; 
-            color: #ffffff; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px;
-        }
+        .icon-box { width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; border-radius: 14px; background: var(--wood-brown); margin-bottom: 6px; color: #ffffff; font-size: 1.3rem; box-shadow: 0 4px 8px rgba(0,0,0,0.25); transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); }
+        .menu-item:active .icon-box { transform: scale(0.92) translateY(2px); box-shadow: 0 1px 3px rgba(0,0,0,0.3); filter: brightness(0.9); }
+        .menu-item span { font-weight: 700; font-size: 0.5rem; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
 
         /* --- UI ELEMENTS --- */
         .cal-list { display: flex; flex-direction: column; gap: 15px; margin: 20px 0; }
-        .cal-item { 
-            display: flex; align-items: center; gap: 15px; background: var(--bg-beige); 
-            padding: 12px 20px; border-radius: 15px; border-left: 4px solid var(--wood-brown);
-        }
+        .cal-item { display: flex; align-items: center; gap: 15px; background: var(--bg-beige); padding: 12px 20px; border-radius: 15px; border-left: 4px solid var(--wood-brown); }
         .cal-item .date { font-weight: 700; color: var(--green-deep); font-size: 1.1rem; text-transform: capitalize; }
         .cal-item .time { font-size: 0.85rem; color: var(--text-brown); }
         .cal-item .time a { color: var(--green-deep); text-decoration: none; border-bottom: 1px dotted var(--green-deep); font-weight: 600; }
         
-        /* --- STYLES ONGLET CONTACT MIS À JOUR --- */
-        .contact-card { background: var(--bg-beige); padding: 15px 20px; border-radius: 20px; margin: 20px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+        /* --- ONGLET CONTACT --- */
         .contact-person { display: flex; align-items: center; gap: 15px; padding: 12px 0; }
         .contact-person .avatar { width: 48px; height: 48px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; flex-shrink: 0; }
-        
-        /* Couleurs spécifiques contact */
         .contact-person .avatar.mail-icon { background: var(--wood-brown); }
         .contact-person .avatar.fb-icon { background: var(--fb-blue); }
-
         .contact-person .person-details { flex-grow: 1; }
         .contact-person .person-details h4 { margin: 0; color: var(--green-deep); font-size: 1.15rem; }
         .contact-person .person-details span { font-size: 0.75rem; color: var(--text-brown); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8;}
         
-        /* Boutons d'action contact */
-        .call-btn { background: var(--green-deep); color: white; text-decoration: none; padding: 10px 18px; border-radius: 50px; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; transition: transform 0.2s; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.2); }
+        /* Boutons d'action unifiés et parfaitement alignés */
+        .call-btn { 
+            background: var(--green-deep); 
+            color: white; 
+            text-decoration: none; 
+            width: 120px; /* Taille fixe pour tous les boutons */
+            height: 40px; /* Hauteur fixe */
+            border-radius: 50px; 
+            font-weight: 700; 
+            font-size: 0.85rem; 
+            display: inline-flex; /* Centrage interne parfait */
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+            transition: transform 0.2s; 
+            box-shadow: 0 4px 10px rgba(58, 99, 81, 0.2); 
+            flex-shrink: 0; /* Empêche l'écrasement */
+        }
         .call-btn:active { transform: scale(0.95); }
         .call-btn.mail-btn { background: var(--wood-brown); box-shadow: 0 4px 10px rgba(188, 143, 99, 0.2); }
         .call-btn.fb-btn { background: var(--fb-blue); box-shadow: 0 4px 10px rgba(24, 119, 242, 0.2); }
-
         .contact-divider { border: 0; height: 2px; background: rgba(0,0,0,0.04); margin: 5px 0; border-radius: 2px; }
 
-        /* --- NOUVEAU BOUTON WHATSAPP ANIMÉ --- */
+        /* BOUTON WHATSAPP ANIMÉ */
         @keyframes pulse-green {
             0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); transform: scale(1); }
             70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); transform: scale(1.02); }
             100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); transform: scale(1); }
         }
-
         .btn-whatsapp { 
-            background: #25D366; color: white; border: none; 
-            padding: 18px 30px; /* Plus grand */
-            border-radius: 50px; 
+            background: #25D366; color: white; border: none; padding: 18px 30px; border-radius: 50px; 
             font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px; 
-            margin: 30px auto 10px; /* Marge ajustée */
-            font-family: 'Quicksand'; text-decoration: none; 
-            font-size: 1.1rem;
-            /* Animation de pulsation */
-            animation: pulse-green 2s infinite;
-            transition: all 0.3s ease;
+            margin: 30px auto 10px; font-family: 'Quicksand'; text-decoration: none; font-size: 1.1rem;
+            animation: pulse-green 2s infinite; transition: all 0.3s ease;
         }
-        /* Arrêter l'animation au survol/clic pour ne pas gêner */
         .btn-whatsapp:hover, .btn-whatsapp:active { animation: none; transform: scale(0.98); box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4); }
 
-
+        /* --- ADHESION --- */
         .pricing-container { display: flex; gap: 10px; margin: 15px 0; }
-        .price-card { flex: 1; background: var(--bg-beige); padding: 12px; border-radius: 15px; text-align: center; border: 2px solid transparent; }
-        .price-card.featured { border-color: var(--wood-brown); background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .price-card { flex: 1; background: #ffffff; padding: 12px; border-radius: 15px; text-align: center; border: 2px solid transparent; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .price-card.featured { border-color: var(--wood-brown); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
         .price-card h3 { font-size: 0.9rem; margin: 0; }
         .price-card .amount { font-size: 1.6rem; font-weight: 700; color: var(--wood-brown); margin: 5px 0; }
-        .benefits-list { list-style: none; padding: 0; margin: 15px 0; }
+        .benefits-list { list-style: none; padding: 0; margin: 15px 0 0 0; }
         .benefits-list li { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; }
         .benefits-list i { color: var(--green-deep); }
 
@@ -274,14 +220,8 @@
             body { background-color: var(--bg-beige); overflow: auto; }
             .phone { max-width: 100%; height: 100vh; box-shadow: none; border-radius: 0; }
             .main-wrapper { flex-direction: column; }
-            .footer-nav {
-                order: -1; position: relative; padding: 15px 50px; border-top: none; 
-                border-bottom: 4px solid var(--wood-brown); justify-content: center; gap: 20px;
-            }
-            .menu-item { 
-                flex: 0 1 auto; flex-direction: row; gap: 12px; padding: 8px 25px 8px 8px; border-radius: 50px;
-                background: rgba(255, 255, 255, 0.05); transition: background 0.3s ease, transform 0.2s cubic-bezier(0.17, 0.84, 0.44, 1);
-            }
+            .footer-nav { order: -1; position: relative; padding: 15px 50px; border-top: none; border-bottom: 4px solid var(--wood-brown); justify-content: center; gap: 20px; }
+            .menu-item { flex: 0 1 auto; flex-direction: row; gap: 12px; padding: 8px 25px 8px 8px; border-radius: 50px; background: rgba(255, 255, 255, 0.05); transition: background 0.3s ease, transform 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); }
             .menu-item:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-3px); }
             .icon-box { margin-bottom: 0; width: 40px; height: 40px; border-radius: 50%; }
             .menu-item span { font-size: 0.9rem; }
@@ -290,11 +230,7 @@
             .rdv-card { width: auto; min-width: 350px; padding: 15px 30px; bottom: -25px; }
             .content { padding: 50px 0 40px; overflow: hidden; }
             .quote-text { font-size: 2.5rem; }
-            .bottom-sheet { 
-                top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
-                width: 700px; max-width: 90%; height: auto; max-height: 85vh; border-radius: 25px; opacity: 0;
-                transition: transform 0.4s cubic-bezier(0.17, 0.84, 0.44, 1), opacity 0.4s ease;
-            }
+            .bottom-sheet { top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 700px; max-width: 90%; height: auto; max-height: 85vh; border-radius: 25px; opacity: 0; transition: transform 0.4s cubic-bezier(0.17, 0.84, 0.44, 1), opacity 0.4s ease; }
             .bottom-sheet.open { transform: translate(-50%, -50%) scale(1) !important; opacity: 1; }
             .sheet-handle { display: none; }
             .close-btn { display: block; }
@@ -353,7 +289,6 @@
 </div>
 
 <script>
-    // Logique 100% automatique : récupère le dernier vendredi du mois en cours, ou des mois suivants si la date est passée
     function getNextLastFridays() {
         let dates = [];
         let now = new Date();
@@ -361,12 +296,10 @@
         let currentMonth = now.getMonth();
 
         while (dates.length < 4) {
-            let d = new Date(currentYear, currentMonth + 1, 0); // Dernier jour du mois
+            let d = new Date(currentYear, currentMonth + 1, 0); 
             while (d.getDay() !== 5) {
-                d.setDate(d.getDate() - 1); // Recule jusqu'au vendredi
+                d.setDate(d.getDate() - 1); 
             }
-            
-            // On considère que le rdv est passé après vendredi 23h59
             let checkDate = new Date(d);
             checkDate.setHours(23, 59, 59);
 
@@ -381,17 +314,14 @@
     const upcomingDates = getNextLastFridays();
     const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
     
-    // Formatage avec majuscule
     let rawDate = upcomingDates[0].toLocaleDateString('fr-FR', dateOptions);
     let capitalizedDate = rawDate.charAt(0).toUpperCase() + rawDate.slice(1);
 
-    // Injection automatique dans la bannière avec Heure et Lieu
     document.getElementById('next-rdv-banner').innerHTML = `
         ${capitalizedDate} à 20h30<br>
         <a href="https://www.google.com/maps/search/?api=1&query=Maison+des+associations+Plouay" target="_blank">📍 <span class="underline">Maison des Associations</span></a>
     `;
 
-    // Génération de l'agenda
     let agendaHTML = '<div class="cal-list">';
     upcomingDates.forEach(date => {
         let formattedAgendaDate = date.toLocaleDateString('fr-FR', dateOptions);
@@ -447,48 +377,52 @@
         adhesion: { 
             title: "Rejoindre l'asso", 
             text: `
-                <p style="text-align:center;">Devenir un membre officiel des Potes à Jeux est simple et convivial !</p>
-                <div style="background: #f8d7da; border: 2px solid #f5c2c7; color: #842029; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;">
-                    <i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans uniquement
-                </div>
-                <div class="pricing-container">
-                    <div class="price-card"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div>
-                    <div class="price-card featured"><div class="amount">20€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Couple</p></div>
-                </div>
-                <ul class="benefits-list" style="max-width: 280px; margin: 15px auto;">
-                    <li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li>
-                    <li><i class="fa-solid fa-circle-check"></i> Première séance offerte</li>
-                    <li><i class="fa-solid fa-circle-check"></i> Soirée escape game</li>
-                    <li><i class="fa-solid fa-circle-check"></i> Repas de fin d'année</li>
-                    <li><i class="fa-solid fa-circle-check"></i> Après-midi jeux extérieurs</li>
-                </ul>` 
+                <div class="panel-card">
+                    <p style="text-align:center; margin-top:0;">Devenir un membre officiel des Potes à Jeux est simple et convivial !</p>
+                    <div style="background: rgba(220, 53, 69, 0.1); border: 2px solid rgba(220, 53, 69, 0.2); color: #dc3545; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans
+                    </div>
+                    <div class="pricing-container">
+                        <div class="price-card"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div>
+                        <div class="price-card featured"><div class="amount">20€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Couple</p></div>
+                    </div>
+                    <ul class="benefits-list" style="max-width: 280px; margin: 15px auto 0;">
+                        <li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Première séance offerte</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Soirée escape game</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Repas de fin d'année</li>
+                        <li><i class="fa-solid fa-circle-check"></i> Après-midi jeux extérieurs</li>
+                    </ul>
+                </div>` 
         },
         photos: {
             title: "Souvenirs",
             text: `
-                <p style="text-align: center; margin-bottom: 20px;">Cliquez sur une photo pour l'agrandir.</p>
-                <div class="photo-slider">
-                    <div class="photo-card" onclick="openLightbox('photo1.jpg')"><img src="photo1.jpg" alt="1"></div>
-                    <div class="photo-card" onclick="openLightbox('photo2.jpg')"><img src="photo2.jpg" alt="2"></div>
-                    <div class="photo-card" onclick="openLightbox('photo3.jpg')"><img src="photo3.jpg" alt="3"></div>
-                    <div class="photo-card" onclick="openLightbox('photo4.jpg')"><img src="photo4.jpg" alt="4"></div>
-                    <div class="photo-card" onclick="openLightbox('photo5.jpg')"><img src="photo5.jpg" alt="5"></div>
-                    <div class="photo-card" onclick="openLightbox('photo6.jpg')"><img src="photo6.jpg" alt="6"></div>
-                    <div class="photo-card" onclick="openLightbox('photo7.jpg')"><img src="photo7.jpg" alt="7"></div>
-                    <div class="photo-card" onclick="openLightbox('photo8.jpg')"><img src="photo8.jpg" alt="8"></div>
-                    <div class="photo-card" onclick="openLightbox('photo9.jpg')"><img src="photo9.jpg" alt="9"></div>
-                    <div class="photo-card" onclick="openLightbox('photo10.jpg')"><img src="photo10.jpg" alt="10"></div>
-                    <div class="photo-card" onclick="openLightbox('photo11.jpg')"><img src="photo11.jpg" alt="11"></div>
-                    <div class="photo-card" onclick="openLightbox('photo12.jpg')"><img src="photo12.jpg" alt="12"></div>
-                    <div class="photo-card" onclick="openLightbox('photo13.jpg')"><img src="photo13.jpg" alt="13"></div>
-                    <div class="photo-card" onclick="openLightbox('photo14.jpg')"><img src="photo14.jpg" alt="14"></div>
-                    <div class="photo-card" onclick="openLightbox('photo15.jpg')"><img src="photo15.jpg" alt="15"></div>
+                <div class="panel-card" style="padding-left: 0; padding-right: 0;">
+                    <p style="text-align: center; margin-top: 0; padding: 0 20px;">Cliquez sur une photo pour l'agrandir.</p>
+                    <div class="photo-slider">
+                        <div class="photo-card" onclick="openLightbox('photo1.jpg')"><img src="photo1.jpg" alt="1"></div>
+                        <div class="photo-card" onclick="openLightbox('photo2.jpg')"><img src="photo2.jpg" alt="2"></div>
+                        <div class="photo-card" onclick="openLightbox('photo3.jpg')"><img src="photo3.jpg" alt="3"></div>
+                        <div class="photo-card" onclick="openLightbox('photo4.jpg')"><img src="photo4.jpg" alt="4"></div>
+                        <div class="photo-card" onclick="openLightbox('photo5.jpg')"><img src="photo5.jpg" alt="5"></div>
+                        <div class="photo-card" onclick="openLightbox('photo6.jpg')"><img src="photo6.jpg" alt="6"></div>
+                        <div class="photo-card" onclick="openLightbox('photo7.jpg')"><img src="photo7.jpg" alt="7"></div>
+                        <div class="photo-card" onclick="openLightbox('photo8.jpg')"><img src="photo8.jpg" alt="8"></div>
+                        <div class="photo-card" onclick="openLightbox('photo9.jpg')"><img src="photo9.jpg" alt="9"></div>
+                        <div class="photo-card" onclick="openLightbox('photo10.jpg')"><img src="photo10.jpg" alt="10"></div>
+                        <div class="photo-card" onclick="openLightbox('photo11.jpg')"><img src="photo11.jpg" alt="11"></div>
+                        <div class="photo-card" onclick="openLightbox('photo12.jpg')"><img src="photo12.jpg" alt="12"></div>
+                        <div class="photo-card" onclick="openLightbox('photo13.jpg')"><img src="photo13.jpg" alt="13"></div>
+                        <div class="photo-card" onclick="openLightbox('photo14.jpg')"><img src="photo14.jpg" alt="14"></div>
+                        <div class="photo-card" onclick="openLightbox('photo15.jpg')"><img src="photo15.jpg" alt="15"></div>
+                    </div>
                 </div>`
         },
         contact: { 
             title: "Nous Contacter", 
             text: `
-                <div class="contact-card">
+                <div class="panel-card">
                     <div class="contact-person">
                         <div class="avatar"><i class="fa-solid fa-user"></i></div>
                         <div class="person-details">
@@ -504,7 +438,7 @@
                         <div class="avatar mail-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
                         <div class="person-details">
                             <h4>Email</h4>
-                            <span>Pour toute question</span>
+                            <span>Une question ?</span>
                         </div>
                         <a href="mailto:despotesajeux@protonmail.com" class="call-btn mail-btn"><i class="fa-solid fa-paper-plane"></i> Écrire</a>
                     </div>
@@ -522,7 +456,7 @@
                 </div>
 
                 <a href="https://chat.whatsapp.com/GE6whGWavky2alGNskA5yL?mode=gi_t" target="_blank" class="btn-whatsapp">
-                    <i class="fa-brands fa-whatsapp" style="font-size: 1.4rem;"></i>
+                    <i class="fa-brands fa-whatsapp" style="font-size: 1.6rem;"></i>
                     <span>Clique ici pour venir papoter sur WhatsApp !</span>
                 </a>` 
         }
