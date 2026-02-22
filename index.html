@@ -86,21 +86,7 @@
         .quote-text { font-family: 'Shadows Into Light', cursive; font-size: 1.6rem; line-height: 1.2; color: var(--green-deep); margin: 0; }
         .separator { width: 50px; height: 3px; background: var(--wood-highlight); margin: 15px auto; border-radius: 10px; opacity: 0.6; }
 
-        /* --- POLAROID & LIGHTBOX PLEIN ÉCRAN --- */
-        /* Mise à jour pour gérer deux sliders */
-        .photo-section-title {
-            text-align: center; color: var(--green-deep); font-family: 'Shadows Into Light', cursive;
-            font-size: 1.8rem; margin: 15px 0 0 0; padding-top: 10px; border-top: 1px dashed rgba(0,0,0,0.1);
-        }
-        .photo-section-title.first { border-top: none; padding-top: 0; }
-        
-        .photo-slider { display: flex; overflow-x: auto; gap: 20px; padding: 15px 20px 30px; width: 100%; box-sizing: border-box; scrollbar-width: none; }
-        .photo-slider::-webkit-scrollbar { display: none; }
-        .photo-card { flex: 0 0 220px; background: white; padding: 10px 10px 35px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: rotate(-2deg); cursor: pointer; transition: transform 0.2s;}
-        .photo-card:nth-child(even) { transform: rotate(3deg); }
-        .photo-card:active { transform: scale(0.95); }
-        .photo-card img { width: 100%; height: 200px; object-fit: cover; }
-
+        /* --- LIGHTBOX PLEIN ÉCRAN --- */
         .lightbox {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center;
@@ -146,7 +132,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.03); 
         }
 
-        /* --- HISTOIRE (Traits sur "Phase X" au lieu du titre) --- */
+        /* --- HISTOIRE --- */
         .phase-label {
             font-size: 0.8rem; font-weight: 700; color: var(--wood-brown); 
             text-transform: uppercase; letter-spacing: 2px; 
@@ -154,7 +140,6 @@
             display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         .phase-label.first { margin-top: 5px; }
-        /* Les traits sont maintenant ici */
         .phase-label::before, .phase-label::after { 
             content: ''; flex-grow: 1; height: 1px; background: var(--wood-highlight); 
             opacity: 0.8; max-width: 30px; min-width: 10px; 
@@ -162,12 +147,43 @@
         
         .phase-title { 
             font-family: 'Quicksand', sans-serif; color: var(--green-deep); 
-            font-size: 1.2rem; font-weight: 700;
+            font-size: 1.1rem; font-weight: 700;
             text-align: center; margin: 0 0 15px; 
             display: flex; align-items: center; justify-content: center; gap: 10px; 
+            white-space: nowrap; 
         }
         .phase-icon { font-size: 1.2rem; color: var(--wood-brown); }
         .grimoire-text { text-align: center; line-height: 1.6; font-size: 0.95rem; margin-top: 0; }
+
+        /* --- GRILLES PHOTOS (Style Google Photos) --- */
+        .photo-section-title {
+            text-align: center; color: var(--green-deep); font-family: 'Shadows Into Light', cursive;
+            font-size: 1.8rem; margin: 15px 0 10px 0; padding-top: 20px; border-top: 1px dashed rgba(0,0,0,0.1);
+        }
+        .photo-section-title.first { border-top: none; padding-top: 10px; margin-top: 5px; }
+        
+        .photo-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); /* 3 colonnes parfaites */
+            gap: 3px; /* Espacement minime comme sur mobile */
+            padding: 0 3px 20px; 
+        }
+        .photo-grid-item { 
+            position: relative; 
+            width: 100%; 
+            aspect-ratio: 1 / 1; /* Forcer le carré parfait */
+            cursor: pointer; 
+            overflow: hidden; 
+            background: #ddd; /* Couleur de chargement */
+            border-radius: 2px; /* Coins à peine arrondis */
+        }
+        .photo-grid-item img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: transform 0.3s ease; 
+        }
+        .photo-grid-item:active img { transform: scale(1.08); } /* Petit effet zoom au clic */
 
         /* --- FOOTER --- */
         .footer-nav {
@@ -209,7 +225,6 @@
         .contact-person .avatar.fb-icon { background: var(--fb-blue); }
         .contact-person .avatar.wa-icon { background: var(--wa-green); }
         
-        /* Correction : min-width pour forcer l'affichage entier de Facebook/WhatsApp */
         .contact-top h4 { margin: 0; color: var(--green-deep); font-size: 1.1rem; flex-grow: 1; min-width: 80px; }
         
         .contact-bottom { width: 100%; padding-top: 8px; text-align: left; }
@@ -257,9 +272,8 @@
             .bottom-sheet.open { transform: translate(-50%, -50%) scale(1) !important; opacity: 1; }
             .sheet-handle { display: none; }
             .close-btn { display: block; }
-            .photo-slider { flex-wrap: wrap; justify-content: center; gap: 30px; overflow-x: visible; }
-            .photo-card { flex: 0 0 240px; margin-bottom: 20px; }
-            .photo-card:hover { transform: scale(1.05) rotate(0deg); z-index: 2; } 
+            
+            .photo-grid { grid-template-columns: repeat(4, 1fr); padding: 0 20px 20px; }
         }
     </style>
 </head>
@@ -346,6 +360,7 @@
         <a href="https://www.google.com/maps/search/?api=1&query=Maison+des+associations+Plouay" target="_blank">📍 <span class="underline">Maison des Associations</span></a>
     `;
 
+    // Génération de l'agenda
     let agendaHTML = '<div class="cal-list">';
     upcomingDates.forEach(date => {
         let formattedAgendaDate = date.toLocaleDateString('fr-FR', dateOptions);
@@ -428,25 +443,33 @@
         photos: {
             title: "Souvenirs",
             text: `
-                <div class="panel-card" style="padding-left: 0; padding-right: 0;">
+                <div class="panel-card" style="padding-left: 0; padding-right: 0; padding-bottom: 0; overflow: hidden;">
+                    <p style="text-align: center; margin-top: 0; padding: 0 20px 10px; font-size: 0.9rem;">Cliquez sur une photo pour l'agrandir.</p>
                     
-                    <h3 class="photo-section-title first">Les Soirées</h3>
-                    <p style="text-align: center; margin-top: 0; padding: 0 20px; font-size: 0.85rem;">Cliquez sur une photo pour l'agrandir.</p>
-                    <div class="photo-slider">
-                        <div class="photo-card" onclick="openLightbox('soiree1.jpg')"><img src="soiree1.jpg" alt="Soirée 1"></div>
-                        <div class="photo-card" onclick="openLightbox('soiree2.jpg')"><img src="soiree2.jpg" alt="Soirée 2"></div>
-                        <div class="photo-card" onclick="openLightbox('soiree3.jpg')"><img src="soiree3.jpg" alt="Soirée 3"></div>
-                        <div class="photo-card" onclick="openLightbox('soiree4.jpg')"><img src="soiree4.jpg" alt="Soirée 4"></div>
-                        <div class="photo-card" onclick="openLightbox('soiree5.jpg')"><img src="soiree5.jpg" alt="Soirée 5"></div>
+                    <h3 class="photo-section-title first">Les Sorties</h3>
+                    <div class="photo-grid">
+                        <div class="photo-grid-item" onclick="openLightbox('sortie1.jpg')"><img src="sortie1.jpg" alt="Sortie"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('sortie2.jpg')"><img src="sortie2.jpg" alt="Sortie"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('sortie3.jpg')"><img src="sortie3.jpg" alt="Sortie"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('sortie4.jpg')"><img src="sortie4.jpg" alt="Sortie"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('sortie5.jpg')"><img src="sortie5.jpg" alt="Sortie"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('sortie6.jpg')"><img src="sortie6.jpg" alt="Sortie"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('sortie7.jpg')"><img src="sortie7.jpg" alt="Sortie"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('sortie8.jpg')"><img src="sortie8.jpg" alt="Sortie"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('sortie9.jpg')"><img src="sortie9.jpg" alt="Sortie"></div>
                     </div>
 
                     <h3 class="photo-section-title">Les Jeux</h3>
-                    <div class="photo-slider">
-                        <div class="photo-card" onclick="openLightbox('jeu1.jpg')"><img src="jeu1.jpg" alt="Jeu 1"></div>
-                        <div class="photo-card" onclick="openLightbox('jeu2.jpg')"><img src="jeu2.jpg" alt="Jeu 2"></div>
-                        <div class="photo-card" onclick="openLightbox('jeu3.jpg')"><img src="jeu3.jpg" alt="Jeu 3"></div>
-                        <div class="photo-card" onclick="openLightbox('jeu4.jpg')"><img src="jeu4.jpg" alt="Jeu 4"></div>
-                        <div class="photo-card" onclick="openLightbox('jeu5.jpg')"><img src="jeu5.jpg" alt="Jeu 5"></div>
+                    <div class="photo-grid">
+                        <div class="photo-grid-item" onclick="openLightbox('jeu1.jpg')"><img src="jeu1.jpg" alt="Jeu"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('jeu2.jpg')"><img src="jeu2.jpg" alt="Jeu"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('jeu3.jpg')"><img src="jeu3.jpg" alt="Jeu"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('jeu4.jpg')"><img src="jeu4.jpg" alt="Jeu"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('jeu5.jpg')"><img src="jeu5.jpg" alt="Jeu"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('jeu6.jpg')"><img src="jeu6.jpg" alt="Jeu"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('jeu7.jpg')"><img src="jeu7.jpg" alt="Jeu"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('jeu8.jpg')"><img src="jeu8.jpg" alt="Jeu"></div>
+                        <div class="photo-grid-item" onclick="openLightbox('jeu9.jpg')"><img src="jeu9.jpg" alt="Jeu"></div>
                     </div>
                 </div>`
         },
