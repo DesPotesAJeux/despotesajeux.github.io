@@ -126,6 +126,18 @@
             text-decoration: none;
         }
 
+        /* Indicateurs de défilement (Flèches) */
+        .lightbox-nav {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6); font-size: 2rem;
+            padding: 20px; z-index: 110; cursor: pointer;
+            transition: color 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .lightbox-nav:active { color: rgba(255, 255, 255, 1); }
+        .lightbox-nav.prev { left: 0; }
+        .lightbox-nav.next { right: 0; }
+
         /* --- BOTTOM SHEET --- */
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 25; display: none; opacity: 0; transition: opacity 0.3s ease; }
         .bottom-sheet { 
@@ -161,7 +173,7 @@
         .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 2px; }
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
 
-        /* --- CONTACTS --- */
+        /* --- CONTACTS & LUDOTHÈQUES --- */
         .contact-person { display: flex; flex-direction: column; padding: 10px 12px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
         .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
         .contact-person .avatar { width: 38px; height: 38px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; overflow: hidden;}
@@ -212,6 +224,7 @@
             .footer-nav { order: -1; position: relative; padding: 15px 50px; border-top: none; border-bottom: 4px solid var(--wood-brown); justify-content: center; gap: 20px; }
             .bottom-sheet { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); height: auto; max-height: 85vh; width: 700px; border-radius: 25px; opacity: 0; display: none; }
             .bottom-sheet.open { display: flex; opacity: 1; transform: translate(-50%, -50%); }
+            .lightbox-nav:hover { color: rgba(255, 255, 255, 1); } /* Hover only on desktop */
         }
     </style>
 </head>
@@ -219,6 +232,10 @@
 
 <div class="phone">
     <div class="lightbox" id="lightbox">
+        
+        <div class="lightbox-nav prev" id="lbNavPrev" onclick="changePhotoDir('prev')"><i class="fa-solid fa-chevron-left"></i></div>
+        <div class="lightbox-nav next" id="lbNavNext" onclick="changePhotoDir('next')"><i class="fa-solid fa-chevron-right"></i></div>
+        
         <div class="lightbox-controls">
             <div class="lightbox-btn" onclick="closeLightboxForce()"><i class="fa-solid fa-xmark"></i></div>
         </div>
@@ -327,7 +344,7 @@
                 <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante ! Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées.</p>
                 
                 <div class="phase-label">Phase 3</div><div class="phase-title"><i class="fa-brands fa-fort-awesome phase-icon"></i><span>La Fondation (2019)</span></div>
-                <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. Des Potes à Jeux naît officiellement. La petite tablée s'agrandit peu à peu pour accueillir de nouveaux joueurs de Plouay.</p>
+                <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. L'association "Des Potes à Jeux" naît officiellement. La petite tablée s'agrandit peu à peu pour accueillir de nouveaux joueurs de Plouay.</p>
                 
                 <div class="phase-label">Phase 4</div><div class="phase-title"><i class="fa-solid fa-rocket phase-icon"></i><span>L'Envolée (2026)</span></div>
                 <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. L'aventure ne fait que continuer avec vous !</p>
@@ -336,7 +353,7 @@
         adhesion: { 
             title: "Rejoindre l'asso", 
             text: `<div class="panel-card">
-                <p style="text-align:center; margin-top:0;">Devenir un membre officiel des Potes à Jeux est simple et convivial !</p>
+                <p style="text-align:center; margin-top:0;">Devenir membre est simple et convivial !</p>
                 <div style="background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.2); color: #dc3545; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans</div>
                 <div class="pricing-container">
                     <div class="price-card featured"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div>
@@ -485,11 +502,13 @@
     });
 
     // ==========================================
-    // LIGHTBOX: ZOOM, SWIPE (SANS DOWNLOAD)
+    // LIGHTBOX: ZOOM, SWIPE, ET FLECHES
     // ==========================================
     const lb = document.getElementById('lightbox');
     const lbContainer = document.getElementById('lbContainer');
     const lbImg = document.getElementById('lightboxImg');
+    const lbNavPrev = document.getElementById('lbNavPrev');
+    const lbNavNext = document.getElementById('lbNavNext');
 
     let currentScale = 1;
     let initialDistance = null;
@@ -507,6 +526,15 @@
         const imgs = document.querySelectorAll('.photo-grid img'); 
         currentGallery = Array.from(imgs).map(i => i.getAttribute('src')); 
         currentPhotoIndex = currentGallery.indexOf(src); 
+        
+        // Afficher ou cacher les flèches directionnelles si 1 seule ou plusieurs photos
+        if (currentGallery.length > 1) {
+            lbNavPrev.style.display = 'flex';
+            lbNavNext.style.display = 'flex';
+        } else {
+            lbNavPrev.style.display = 'none';
+            lbNavNext.style.display = 'none';
+        }
         
         // Pousse l'état "lightbox" SUR l'état "sheet"
         if (!history.state || history.state.type !== 'lightbox') {
@@ -533,11 +561,15 @@
     }
 
     function closeLightbox(event) {
+        // Clic sur l'image = pas de fermeture
         if(event.target === lbImg) return;
+        // Clic sur les flèches directionnelles = pas de fermeture
+        if(event.target.closest('.lightbox-nav')) return;
+        
         closeLightboxForce();
     }
 
-    // Capture le bouton RETOUR physique d'Android / iOS Swipe Edge
+    // Gestion du bouton précédent du téléphone (Android/iOS Swipe Edge)
     window.addEventListener('popstate', (e) => {
         // 1. Si la Lightbox est ouverte, c'est elle qu'on ferme d'abord
         if (lb.classList.contains('active')) {
@@ -566,6 +598,9 @@
     }
 
     lbContainer.addEventListener('touchstart', (e) => {
+        // Eviter que le zoom ne démarre si on clique sur les flèches
+        if(e.target.closest('.lightbox-nav')) return; 
+
         if (e.touches.length === 2) {
             isZooming = true;
             initialDistance = getDistance(e.touches);
@@ -594,7 +629,6 @@
                 posY += (currentY - lastPosY) / currentScale;
                 lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`;
             } else if (!isZooming) {
-                // Seulement swiper horizontalement si l'image n'est pas zoomée
                 let diffX = currentX - lastPosX;
                 lbContainer.style.transform = `translateX(${diffX}px)`; 
             }
@@ -611,18 +645,25 @@
             let diffX = parseInt(lbContainer.style.transform.replace('translateX(', '').replace('px)', '') || 0);
             
             if (diffX > 70 && currentGallery.length > 1) {
-                currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length;
-                changePhoto();
+                changePhotoDir('prev');
             } else if (diffX < -70 && currentGallery.length > 1) {
-                currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length;
-                changePhoto();
+                changePhotoDir('next');
             } else {
                 lbContainer.style.transform = `translateX(0px)`;
             }
         }
     });
 
-    function changePhoto() {
+    // Fonction unifiée pour changer de photo (Swipe ou Clic)
+    function changePhotoDir(dir) {
+        if (currentGallery.length <= 1) return;
+
+        if (dir === 'next') {
+            currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length;
+        } else {
+            currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length;
+        }
+
         lbImg.style.opacity = 0;
         lbContainer.style.transform = `translateX(0px)`; 
         setTimeout(() => { 
