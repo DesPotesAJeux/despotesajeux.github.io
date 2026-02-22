@@ -23,6 +23,7 @@
             --wood-highlight: #dbb38a;
             --fb-blue: #1877F2;
             --wa-green: #25D366; 
+            --myludo-color: #2c3e50; /* Nouvelle couleur pour les ludothèques */
         }
 
         body {
@@ -75,7 +76,7 @@
         .rdv-info a { color: var(--green-deep); text-decoration: none; font-weight: 600; font-size: 0.8rem; }
         .rdv-info a .underline { text-decoration: underline; }
 
-        /* --- CONTENU --- */
+        /* --- CONTENU & BOUTON ACCUEIL --- */
         .content {
             background: var(--bg-beige); padding: 45px 0 100px 0;
             position: relative; flex-grow: 1; overflow: hidden; 
@@ -85,6 +86,17 @@
         .quote-box { padding: 20px 35px; text-align: center; position: relative; }
         .quote-text { font-family: 'Shadows Into Light', cursive; font-size: 1.6rem; line-height: 1.2; color: var(--green-deep); margin: 0; }
         .separator { width: 50px; height: 3px; background: var(--wood-highlight); margin: 15px auto; border-radius: 10px; opacity: 0.6; }
+
+        /* BOUTON LUDOTHÈQUE SUR L'ACCUEIL */
+        .btn-ludotheque {
+            background: var(--wood-brown);
+            color: white; border: none; padding: 12px 25px; border-radius: 50px;
+            font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 1rem;
+            display: flex; align-items: center; gap: 10px; margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(188, 143, 99, 0.3);
+            cursor: pointer; transition: transform 0.2s;
+        }
+        .btn-ludotheque:active { transform: scale(0.95); }
 
         /* --- LIGHTBOX PLEIN ÉCRAN --- */
         .lightbox {
@@ -155,35 +167,17 @@
         .phase-icon { font-size: 1.2rem; color: var(--wood-brown); }
         .grimoire-text { text-align: center; line-height: 1.6; font-size: 0.95rem; margin-top: 0; }
 
-        /* --- GRILLES PHOTOS (Style Google Photos) --- */
+        /* --- GRILLES PHOTOS --- */
         .photo-section-title {
             text-align: center; color: var(--green-deep); font-family: 'Shadows Into Light', cursive;
             font-size: 1.8rem; margin: 15px 0 10px 0; padding-top: 20px; border-top: 1px dashed rgba(0,0,0,0.1);
         }
         .photo-section-title.first { border-top: none; padding-top: 10px; margin-top: 5px; }
         
-        .photo-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); /* 3 colonnes parfaites */
-            gap: 3px; /* Espacement minime comme sur mobile */
-            padding: 0 3px 20px; 
-        }
-        .photo-grid-item { 
-            position: relative; 
-            width: 100%; 
-            aspect-ratio: 1 / 1; /* Forcer le carré parfait */
-            cursor: pointer; 
-            overflow: hidden; 
-            background: #ddd; /* Couleur de chargement */
-            border-radius: 2px; /* Coins à peine arrondis */
-        }
-        .photo-grid-item img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            transition: transform 0.3s ease; 
-        }
-        .photo-grid-item:active img { transform: scale(1.08); } /* Petit effet zoom au clic */
+        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 0 3px 20px; }
+        .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 2px; }
+        .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+        .photo-grid-item:active img { transform: scale(1.08); }
 
         /* --- FOOTER --- */
         .footer-nav {
@@ -209,7 +203,7 @@
         .cal-item .time { font-size: 0.8rem; color: var(--text-brown); line-height: 1.4; }
         .cal-item .time a { color: var(--green-deep); text-decoration: underline; font-weight: 600; }
         
-        /* --- ONGLET CONTACT --- */
+        /* --- ONGLETS CONTACT & MYLUDO --- */
         .contact-person { 
             display: flex; flex-direction: column; padding: 12px 15px; 
             width: 100%; box-sizing: border-box; background: #ffffff;
@@ -224,6 +218,7 @@
         .contact-person .avatar.mail-icon { background: var(--wood-brown); }
         .contact-person .avatar.fb-icon { background: var(--fb-blue); }
         .contact-person .avatar.wa-icon { background: var(--wa-green); }
+        .contact-person .avatar.ludo-icon { background: var(--myludo-color); }
         
         .contact-top h4 { margin: 0; color: var(--green-deep); font-size: 1.1rem; flex-grow: 1; min-width: 80px; }
         
@@ -242,6 +237,7 @@
         .call-btn.mail-btn { background: var(--wood-brown); box-shadow: 0 4px 10px rgba(188, 143, 99, 0.2); }
         .call-btn.fb-btn { background: var(--fb-blue); box-shadow: 0 4px 10px rgba(24, 119, 242, 0.2); }
         .call-btn.wa-btn { background: var(--wa-green); box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2); }
+        .call-btn.ludo-btn { background: var(--myludo-color); box-shadow: 0 4px 10px rgba(44, 62, 80, 0.2); }
 
         /* --- ADHESION --- */
         .pricing-container { display: flex; gap: 10px; margin: 15px 0; }
@@ -305,6 +301,10 @@
                 <p class="quote-text">"Ici on ne compte pas les points,<br>on compte les <strong>souvenirs</strong>."</p>
                 <div class="separator"></div>
                 <p style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; opacity: 0.4; line-height: 1.5;">Association loi 1901<br>Plouay • Bretagne</p>
+                
+                <button class="btn-ludotheque" onclick="openSheet('ludotheque')">
+                    <i class="fa-solid fa-dice-d20"></i> Découvrir nos jeux
+                </button>
             </div>
         </div>
 
@@ -360,7 +360,6 @@
         <a href="https://www.google.com/maps/search/?api=1&query=Maison+des+associations+Plouay" target="_blank">📍 <span class="underline">Maison des Associations</span></a>
     `;
 
-    // Génération de l'agenda
     let agendaHTML = '<div class="cal-list">';
     upcomingDates.forEach(date => {
         let formattedAgendaDate = date.toLocaleDateString('fr-FR', dateOptions);
@@ -521,6 +520,39 @@
                         </div>
                     </div>
                 </div>` 
+        },
+        /* --- NOUVEL ONGLET LUDOTHÈQUE VIA LE BOUTON ACCUEIL --- */
+        ludotheque: {
+            title: "Nos Ludothèques",
+            text: `
+                <div class="panel-card">
+                    <p style="text-align: center; margin-top: 0; font-size: 0.95rem; line-height: 1.5;">
+                        Envie de savoir à quoi on joue ? Jetez un œil aux collections de nos membres sur <b>Myludo</b> pour préparer nos prochaines parties !
+                    </p>
+
+                    <div class="contact-person">
+                        <div class="contact-top">
+                            <div class="avatar ludo-icon"><i class="fa-solid fa-dice"></i></div>
+                            <h4>Jeux de Julie</h4>
+                            <a href="TON_LIEN_MYLUDO_ICI" target="_blank" class="call-btn ludo-btn"><i class="fa-solid fa-eye"></i> Voir</a>
+                        </div>
+                        <div class="contact-bottom">
+                            <span>Collection personnelle sur Myludo</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-person">
+                        <div class="contact-top">
+                            <div class="avatar ludo-icon"><i class="fa-solid fa-puzzle-piece"></i></div>
+                            <h4>Jeux du Club</h4>
+                            <a href="TON_LIEN_MYLUDO_ICI" target="_blank" class="call-btn ludo-btn"><i class="fa-solid fa-eye"></i> Voir</a>
+                        </div>
+                        <div class="contact-bottom">
+                            <span>Liste des jeux partagés</span>
+                        </div>
+                    </div>
+                </div>
+            `
         }
     };
 
