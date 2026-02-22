@@ -39,7 +39,6 @@
             box-shadow: 0 0 50px rgba(0,0,0,0.5);
         }
 
-        /* --- WRAPPER POUR L'EFFET DE FLOU --- */
         .main-wrapper {
             display: flex; flex-direction: column; height: 100%; width: 100%;
             transition: filter 0.4s ease;
@@ -48,7 +47,6 @@
             filter: blur(5px);
         }
 
-        /* --- BANNIÈRE HERO --- */
         .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
         .hero { 
             width: 100%; 
@@ -69,7 +67,6 @@
 
         .rdv-info p { margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--green-deep); }
 
-        /* --- CONTENU --- */
         .content {
             background: var(--bg-beige); padding: 45px 0 100px 0;
             position: relative; flex-grow: 1; 
@@ -84,7 +81,6 @@
         }
         .separator { width: 50px; height: 3px; background: var(--wood-highlight); margin: 15px auto; border-radius: 10px; opacity: 0.6; }
 
-        /* --- POLAROID & LIGHTBOX --- */
         .photo-slider { display: flex; overflow-x: auto; gap: 20px; padding: 30px 20px; width: 100%; box-sizing: border-box; scrollbar-width: none; }
         .photo-slider::-webkit-scrollbar { display: none; }
         .photo-card { flex: 0 0 220px; background: white; padding: 10px 10px 35px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: rotate(-2deg); cursor: pointer; transition: transform 0.2s;}
@@ -107,7 +103,6 @@
         .lightbox.active { opacity: 1; }
         .lightbox.active img { transform: scale(1); }
 
-        /* --- BOTTOM SHEET --- */
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 25; display: none; opacity: 0; transition: opacity 0.3s ease; }
         
         .bottom-sheet { 
@@ -140,7 +135,6 @@
             display: block; text-align: center; text-transform: uppercase; letter-spacing: 1px; font-size: 1.1rem;
         }
 
-        /* --- FOOTER & ICONS STYLE --- */
         .footer-nav {
             position: absolute; bottom: 0; left: 0; width: 100%;
             background: var(--green-deep); display: flex; justify-content: space-around;
@@ -174,7 +168,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* --- UI ELEMENTS --- */
         .cal-list { display: flex; flex-direction: column; gap: 15px; margin: 20px 0; }
         .cal-item { 
             display: flex; align-items: center; gap: 15px; background: var(--bg-beige); 
@@ -204,8 +197,6 @@
         .benefits-list li { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; }
         .benefits-list i { color: var(--green-deep); }
 
-
-        /* --- ADAPTATION RESPONSIVE --- */
         @media (min-width: 768px) {
             body { background-color: var(--bg-beige); overflow: auto; }
             .phone { max-width: 100%; height: 100vh; box-shadow: none; border-radius: 0; }
@@ -289,31 +280,44 @@
 </div>
 
 <script>
-    function getLastFridays() {
+    // --- LOGIQUE DE CALCUL AUTOMATIQUE DES DATES ---
+    function getNextLastFridays() {
         let dates = [];
         let now = new Date();
-        let currentYear = now.getFullYear();
-        let currentMonth = now.getMonth();
+        // Pour tester si on est déjà après 20h30 le vendredi en question, 
+        // on peut ajuster la logique, mais ici on reste sur la date simple.
+        
+        let year = now.getFullYear();
+        let month = now.getMonth();
 
-        for (let i = 0; i < 4; i++) {
-            let d = new Date(currentYear, currentMonth + i + 1, 0);
+        while (dates.length < 5) {
+            // Aller au dernier jour du mois testé
+            let d = new Date(year, month + 1, 0);
+            // Reculer jusqu'au vendredi (5)
             while (d.getDay() !== 5) {
                 d.setDate(d.getDate() - 1);
             }
-            if (i === 0 && d < now) {
-                currentMonth++;
-                i--;
-                continue;
+            
+            // Si cette date est aujourd'hui ou dans le futur, on l'ajoute
+            // (On remet l'heure à 23h59 pour inclure le vendredi même si on consulte le site le matin)
+            let checkDate = new Date(d);
+            checkDate.setHours(23, 59, 59);
+
+            if (checkDate >= now) {
+                dates.push(new Date(d));
             }
-            dates.push(d);
+            month++;
         }
         return dates;
     }
 
-    const upcomingDates = getLastFridays();
+    const upcomingDates = getNextLastFridays();
     const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+
+    // MAJ automatique de la bannière d'accueil
     document.getElementById('next-rdv-banner').innerText = upcomingDates[0].toLocaleDateString('fr-FR', dateOptions);
 
+    // Génération de l'agenda HTML
     let agendaHTML = '<div class="cal-list">';
     upcomingDates.forEach(date => {
         agendaHTML += `
@@ -332,13 +336,13 @@
             title: "Le Grimoire", 
             text: `
                 <span class="phase-title">📜 Phase 1 : La Pioche Initiale (2014)</span>
-                <p style="text-align: center;">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>. Très vite, le virus se transmet et les premières soirées jeux s'organisent chez les uns et les autres. Ce n'était que le début d'une longue aventure ludique.</p>
+                <p style="text-align: center;">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>. Très vite, le virus se transmet et les premières soirées jeux s'organisent chez les uns et les autres.</p>
                 <span class="phase-title">♟️ Phase 2 : Le Coup de Maître (2015)</span>
-                <p style="text-align: center;">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante ! Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées, et de fil en aiguille, notre bibliothèque commence à déborder de nouvelles boîtes de jeux. La machine était lancée !</p>
+                <p style="text-align: center;">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées.</p>
                 <span class="phase-title">🏰 Phase 3 : La Fondation (2019)</span>
-                <p style="text-align: center;">Animés par l'envie de partager notre passion (et nos boîtes de jeux !) avec d'autres joueurs, nous sommes quatre amis à franchir le pas. Le club des "Potes à Jeux" naît officiellement. La petite tablée grandit pour devenir une véritable institution ludique à Plouay.</p>
+                <p style="text-align: center;">Le club des "Potes à Jeux" naît officiellement à Plouay, fondé par quatre amis passionnés.</p>
                 <span class="phase-title">🚀 Phase 4 : L'Envolée (2026)</span>
-                <p style="text-align: center;">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. Le club continue de traverser les âges, et l'aventure ne fait que continuer avec vous !</p>`
+                <p style="text-align: center;">Aujourd'hui, une solide base de fidèles s'est créée avec une <b>vingtaine d'adhérents</b>.</p>`
         },
         cal: { 
             title: "Agenda Ludique", 
@@ -352,7 +356,7 @@
             text: `
                 <p style="text-align:center;">Devenir un membre officiel des Potes à Jeux est simple et convivial !</p>
                 <div style="background: #f8d7da; border: 2px solid #f5c2c7; color: #842029; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;">
-                    <i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans uniquement
+                    <i class="fa-solid fa-triangle-exclamation"></i> Réservé aux plus de 18 ans
                 </div>
                 <div class="pricing-container">
                     <div class="price-card"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div>
@@ -363,30 +367,11 @@
                     <li><i class="fa-solid fa-circle-check"></i> Première séance offerte</li>
                     <li><i class="fa-solid fa-circle-check"></i> Soirée escape game</li>
                     <li><i class="fa-solid fa-circle-check"></i> Repas de fin d'année</li>
-                    <li><i class="fa-solid fa-circle-check"></i> Après-midi jeux extérieurs</li>
                 </ul>` 
         },
         photos: {
             title: "Souvenirs",
-            text: `
-                <p style="text-align: center; margin-bottom: 20px;">Cliquez sur une photo pour l'agrandir.</p>
-                <div class="photo-slider">
-                    <div class="photo-card" onclick="openLightbox('photo1.jpg')"><img src="photo1.jpg" alt="1"></div>
-                    <div class="photo-card" onclick="openLightbox('photo2.jpg')"><img src="photo2.jpg" alt="2"></div>
-                    <div class="photo-card" onclick="openLightbox('photo3.jpg')"><img src="photo3.jpg" alt="3"></div>
-                    <div class="photo-card" onclick="openLightbox('photo4.jpg')"><img src="photo4.jpg" alt="4"></div>
-                    <div class="photo-card" onclick="openLightbox('photo5.jpg')"><img src="photo5.jpg" alt="5"></div>
-                    <div class="photo-card" onclick="openLightbox('photo6.jpg')"><img src="photo6.jpg" alt="6"></div>
-                    <div class="photo-card" onclick="openLightbox('photo7.jpg')"><img src="photo7.jpg" alt="7"></div>
-                    <div class="photo-card" onclick="openLightbox('photo8.jpg')"><img src="photo8.jpg" alt="8"></div>
-                    <div class="photo-card" onclick="openLightbox('photo9.jpg')"><img src="photo9.jpg" alt="9"></div>
-                    <div class="photo-card" onclick="openLightbox('photo10.jpg')"><img src="photo10.jpg" alt="10"></div>
-                    <div class="photo-card" onclick="openLightbox('photo11.jpg')"><img src="photo11.jpg" alt="11"></div>
-                    <div class="photo-card" onclick="openLightbox('photo12.jpg')"><img src="photo12.jpg" alt="12"></div>
-                    <div class="photo-card" onclick="openLightbox('photo13.jpg')"><img src="photo13.jpg" alt="13"></div>
-                    <div class="photo-card" onclick="openLightbox('photo14.jpg')"><img src="photo14.jpg" alt="14"></div>
-                    <div class="photo-card" onclick="openLightbox('photo15.jpg')"><img src="photo15.jpg" alt="15"></div>
-                </div>`
+            text: `<p style="text-align: center; margin-bottom: 20px;">Cliquez sur une photo pour l'agrandir.</p><div class="photo-slider">${Array.from({length: 15}, (_, i) => `<div class="photo-card" onclick="openLightbox('photo${i+1}.jpg')"><img src="photo${i+1}.jpg" alt="${i+1}"></div>`).join('')}</div>`
         },
         contact: { 
             title: "Contact", 
@@ -395,7 +380,7 @@
                     <div class="contact-line"><i class="fa-solid fa-phone"></i><div><a href="tel:+33620031771">06 20 03 17 71</a></div></div>
                     <div class="contact-line"><i class="fa-solid fa-envelope"></i><div><a href="mailto:despotesajeux@protonmail.com">despotesajeux@protonmail.com</a></div></div>
                 </div>
-                <a href="https://chat.whatsapp.com/TON_LIEN_D_INVITATION" target="_blank" class="btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>` 
+                <a href="https://chat.whatsapp.com/GE6whGWavky2alGNskA5yL" target="_blank" class="btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>` 
         }
     };
 
@@ -411,7 +396,6 @@
         mainWrapper.classList.add('blurred');
         sheetContent.style.opacity = '1';
         if (window.innerWidth <= 768) {
-            sheetContent.style.transition = 'none';
             sheet.style.transform = '';
             sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)";
         }
@@ -420,13 +404,13 @@
 
     function closeSheet() {
         if (window.innerWidth <= 768) { sheet.style.transition = "transform 0.25s ease-in"; }
-        sheet.style.transform = '';
         sheet.classList.remove('open');
         overlay.style.opacity = '0';
         mainWrapper.classList.remove('blurred');
-        setTimeout(() => { overlay.style.display = 'none'; sheetContent.style.opacity = '1'; }, 250);
+        setTimeout(() => { overlay.style.display = 'none'; }, 250);
     }
 
+    // Gestion du swipe pour fermer
     let startY = 0;
     let isDragging = false;
     sheet.addEventListener('touchstart', (e) => {
@@ -435,7 +419,6 @@
             startY = e.touches[0].clientY;
             isDragging = true;
             sheet.style.transition = "none";
-            sheetContent.style.transition = "none";
         }
     }, { passive: true });
     sheet.addEventListener('touchmove', (e) => {
@@ -444,19 +427,15 @@
         if (diff > 0) {
             e.preventDefault(); 
             sheet.style.transform = `translateY(calc(-100% + ${diff}px))`;
-            let fadeOut = 1 - (diff / 200);
-            sheetContent.style.opacity = fadeOut < 0 ? 0 : fadeOut;
         }
     }, { passive: false });
     sheet.addEventListener('touchend', (e) => {
         if (!isDragging || window.innerWidth > 768) return;
         isDragging = false;
         let diff = e.changedTouches[0].clientY - startY;
-        if (diff > 60) { closeSheet(); } else {
+        if (diff > 80) { closeSheet(); } else {
             sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)";
-            sheetContent.style.transition = "opacity 0.3s ease";
             sheet.style.transform = '';
-            sheetContent.style.opacity = '1';
         }
     });
 
