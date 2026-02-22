@@ -160,13 +160,28 @@
         .cal-item .time a { color: var(--green-deep); text-decoration: none; border-bottom: 1px dotted var(--green-deep); font-weight: 600; }
         
         /* --- ONGLET CONTACT --- */
-        .contact-person { display: flex; align-items: center; gap: 15px; padding: 12px 0; width: 100%; box-sizing: border-box; }
-        .contact-person .avatar { width: 48px; height: 48px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; flex-shrink: 0; }
+        /* Les éléments de contact ont maintenant le même encadré que les cartes de prix ! */
+        .contact-person { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            padding: 12px 15px; 
+            width: 100%; 
+            box-sizing: border-box; 
+            background: #ffffff;
+            border: 2px solid var(--wood-brown);
+            border-radius: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .contact-person:last-child { margin-bottom: 0; }
+
+        .contact-person .avatar { width: 42px; height: 42px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; flex-shrink: 0; }
         .contact-person .avatar.mail-icon { background: var(--wood-brown); }
         .contact-person .avatar.fb-icon { background: var(--fb-blue); }
         
         .contact-person .person-details { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .contact-person .person-details h4 { margin: 0; color: var(--green-deep); font-size: 1.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .contact-person .person-details h4 { margin: 0; color: var(--green-deep); font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .contact-person .person-details span { font-size: 0.75rem; color: var(--text-brown); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
         /* Boutons d'action unifiés et parfaitement alignés */
@@ -193,8 +208,6 @@
         .call-btn.mail-btn { background: var(--wood-brown); box-shadow: 0 4px 10px rgba(188, 143, 99, 0.2); }
         .call-btn.fb-btn { background: var(--fb-blue); box-shadow: 0 4px 10px rgba(24, 119, 242, 0.2); }
         
-        .contact-divider { border: 0; height: 2px; background: rgba(0,0,0,0.04); margin: 5px 0; border-radius: 2px; }
-
         /* BOUTON WHATSAPP ANIMÉ */
         @keyframes pulse-green {
             0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); transform: scale(1); }
@@ -387,7 +400,7 @@
                         <i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans
                     </div>
                     <div class="pricing-container">
-                        <div class="price-card"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div>
+                        <div class="price-card featured"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div>
                         <div class="price-card featured"><div class="amount">20€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Couple</p></div>
                     </div>
                     <ul class="benefits-list" style="max-width: 280px; margin: 15px auto 0;">
@@ -436,8 +449,6 @@
                         <a href="tel:+33620031771" class="call-btn"><i class="fa-solid fa-phone"></i> Appeler</a>
                     </div>
                     
-                    <hr class="contact-divider">
-                    
                     <div class="contact-person">
                         <div class="avatar mail-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
                         <div class="person-details">
@@ -446,8 +457,6 @@
                         </div>
                         <a href="mailto:despotesajeux@protonmail.com" class="call-btn mail-btn"><i class="fa-solid fa-paper-plane"></i> Écrire</a>
                     </div>
-
-                    <hr class="contact-divider">
 
                     <div class="contact-person">
                         <div class="avatar fb-icon"><i class="fa-brands fa-facebook-f"></i></div>
