@@ -22,7 +22,7 @@
             --wood-brown: #bc8f63; 
             --wood-highlight: #dbb38a;
             --fb-blue: #1877F2;
-            --wa-green: #25D366; /* Couleur officielle WhatsApp */
+            --wa-green: #25D366; 
         }
 
         body {
@@ -123,7 +123,7 @@
         .sheet-content-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 2.6rem; margin: 10px 0 30px; text-align: center; position: relative; }
         .sheet-content-title::after { content: ''; display: block; width: 50px; height: 4px; background: var(--wood-brown); margin: 10px auto 0; border-radius: 5px; }
 
-        /* --- ENCADRÉ GLOBAL (Histoire, Contacts, Adhésion, Photos) --- */
+        /* --- ENCADRÉ GLOBAL (Histoire, Agenda, Contacts, Adhésion, Photos) --- */
         .panel-card { 
             background: var(--bg-beige); 
             padding: 20px; 
@@ -150,9 +150,15 @@
         .menu-item:active .icon-box { transform: scale(0.92) translateY(2px); box-shadow: 0 1px 3px rgba(0,0,0,0.3); filter: brightness(0.9); }
         .menu-item span { font-weight: 700; font-size: 0.5rem; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* --- UI ELEMENTS --- */
+        /* --- UI ELEMENTS (Agenda) --- */
         .cal-list { display: flex; flex-direction: column; gap: 15px; margin: 20px 0; }
-        .cal-item { display: flex; align-items: center; gap: 15px; background: var(--bg-beige); padding: 12px 20px; border-radius: 15px; border-left: 4px solid var(--wood-brown); }
+        .cal-item { 
+            display: flex; align-items: center; gap: 15px; 
+            background: #ffffff; /* Fond blanc pour ressortir sur le beige */
+            padding: 12px 20px; border-radius: 15px; 
+            border-left: 4px solid var(--wood-brown); 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
         .cal-item .date { font-weight: 700; color: var(--green-deep); font-size: 1.1rem; text-transform: capitalize; }
         .cal-item .time { font-size: 0.85rem; color: var(--text-brown); }
         .cal-item .time a { color: var(--green-deep); text-decoration: none; border-bottom: 1px dotted var(--green-deep); font-weight: 600; }
@@ -181,11 +187,9 @@
         
         .contact-top h4 { margin: 0; color: var(--green-deep); font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; }
         
-        /* Descriptions sous les icônes */
         .contact-bottom { width: 100%; padding-top: 8px; text-align: left; }
         .contact-bottom span { font-size: 0.75rem; color: var(--text-brown); font-weight: 600; opacity: 0.9; display: block; }
 
-        /* Boutons d'action réduits et alignés */
         .call-btn { 
             background: var(--green-deep); 
             color: white; 
@@ -208,8 +212,6 @@
         .call-btn.mail-btn { background: var(--wood-brown); box-shadow: 0 4px 10px rgba(188, 143, 99, 0.2); }
         .call-btn.fb-btn { background: var(--fb-blue); box-shadow: 0 4px 10px rgba(24, 119, 242, 0.2); }
         .call-btn.wa-btn { background: var(--wa-green); box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2); }
-
-        .contact-divider { border: 0; height: 2px; background: rgba(0,0,0,0.04); margin: 5px 0; border-radius: 2px; }
 
         /* --- ADHESION --- */
         .pricing-container { display: flex; gap: 10px; margin: 15px 0; }
@@ -377,9 +379,11 @@
         cal: { 
             title: "Agenda Ludique", 
             text: `
-                <p style="text-align: center; color: var(--green-deep);">On se retrouve chaque <b>dernier vendredi du mois</b>. Voici les prochaines sessions :</p>
-                ${agendaHTML}
-                <p style="text-align: center; font-size:0.85rem; margin-top: 20px;">N'oubliez pas d'apporter votre bonne humeur !</p>`
+                <div class="panel-card">
+                    <p style="text-align: center; color: var(--green-deep); margin-top: 0;">On se retrouve chaque <b>dernier vendredi du mois</b>. Voici les prochaines sessions :</p>
+                    ${agendaHTML}
+                    <p style="text-align: center; font-size:0.85rem; margin-bottom: 0;">N'oubliez pas d'apporter votre bonne humeur !</p>
+                </div>`
         },
         adhesion: { 
             title: "Rejoindre l'asso", 
