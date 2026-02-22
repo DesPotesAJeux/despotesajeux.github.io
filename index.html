@@ -27,30 +27,29 @@
             margin: 0; background-color: #1a1a1a;
             display: flex; justify-content: center;
             font-family: 'Quicksand', sans-serif;
-            color: var(--text-brown); overflow: hidden;
-            touch-action: none;
+            color: var(--text-brown);
         }
 
         .phone {
             width: 100%; max-width: 414px; 
-            height: 100vh; height: 100dvh;
+            min-height: 100vh; min-height: 100dvh;
             background: var(--bg-beige); position: relative;
-            overflow: hidden; display: flex; flex-direction: column;
+            display: flex; flex-direction: column;
             box-shadow: 0 0 50px rgba(0,0,0,0.5);
         }
 
+        /* --- WRAPPER --- */
         .main-wrapper {
-            display: flex; flex-direction: column; height: 100%; width: 100%;
+            display: flex; flex-direction: column; flex-grow: 1;
             transition: filter 0.4s ease;
+            padding-bottom: 90px; /* Espace pour le footer fixe */
         }
-        .main-wrapper.blurred {
-            filter: blur(5px);
-        }
+        .main-wrapper.blurred { filter: blur(5px); }
 
+        /* --- HERO --- */
         .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
         .hero { 
-            width: 100%; 
-            height: 360px;
+            width: 100%; height: 360px;
             background: url('hero.png') center top / contain no-repeat; 
             position: relative; z-index: 1; 
         }
@@ -58,8 +57,7 @@
         .rdv-card {
             background: rgba(255, 252, 240, 0.98); width: 85%;
             padding: 12px 15px; border-radius: 18px;
-            position: absolute; bottom: -20px;
-            left: 50%;
+            position: absolute; bottom: -20px; left: 50%;
             transform: translateX(-50%); display: flex; align-items: center;
             box-shadow: 0 10px 30px rgba(74, 60, 47, 0.15); border: 1px solid white;
             z-index: 10;
@@ -67,167 +65,65 @@
 
         .rdv-info p { margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--green-deep); }
 
+        /* --- CONTENU --- */
         .content {
-            background: var(--bg-beige); padding: 45px 0 100px 0;
-            position: relative; flex-grow: 1; 
-            overflow: hidden; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 60px 0 20px;
+            display: flex; flex-direction: column; align-items: center;
         }
 
-        .quote-box { padding: 20px 35px; text-align: center; position: relative; }
+        .quote-box { padding: 20px 35px; text-align: center; }
         .quote-text {
             font-family: 'Shadows Into Light', cursive; font-size: 1.6rem;
             line-height: 1.2; color: var(--green-deep); margin: 0;
         }
         .separator { width: 50px; height: 3px; background: var(--wood-highlight); margin: 15px auto; border-radius: 10px; opacity: 0.6; }
 
-        .photo-slider { display: flex; overflow-x: auto; gap: 20px; padding: 30px 20px; width: 100%; box-sizing: border-box; scrollbar-width: none; }
-        .photo-slider::-webkit-scrollbar { display: none; }
-        .photo-card { flex: 0 0 220px; background: white; padding: 10px 10px 35px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: rotate(-2deg); cursor: pointer; transition: transform 0.2s;}
-        .photo-card:nth-child(even) { transform: rotate(3deg); }
-        .photo-card:active { transform: scale(0.95); }
-        .photo-card img { width: 100%; height: 200px; object-fit: cover; }
-
-        .lightbox {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 100;
-            display: none; justify-content: center; align-items: center;
-            opacity: 0; transition: opacity 0.3s ease; cursor: pointer;
-        }
-        .lightbox img {
-            max-width: 90%; max-height: 80%; border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 3px solid white;
-            transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
-            cursor: default;
-        }
-        .lightbox.active { opacity: 1; }
-        .lightbox.active img { transform: scale(1); }
-
-        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 25; display: none; opacity: 0; transition: opacity 0.3s ease; }
-        
-        .bottom-sheet { 
-            position: absolute; 
-            top: 100%; left: 0; width: 100%; height: 85vh; 
-            background: white; z-index: 30; border-top-left-radius: 35px; border-top-right-radius: 35px; 
-            display: flex; flex-direction: column;
-            will-change: transform;
-            transition: transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1);
-        }
-        .bottom-sheet.open { transform: translateY(-100%); }
-
-        .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; position: relative; }
-        .sheet-handle { width: 45px; height: 6px; background: #e0e0e0; border-radius: 10px; margin: 0 auto; }
-        .close-btn { display: none; position: absolute; right: 25px; top: 20px; font-size: 1.8rem; color: var(--wood-brown); cursor: pointer; transition: color 0.2s; }
-        .close-btn:hover { color: var(--green-deep); }
-        .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; touch-action: pan-y; }
-        
-        #sheetContent { will-change: opacity; }
-        .sheet-content-title { 
-            font-family: 'Shadows Into Light', cursive; color: var(--green-deep); 
-            font-size: 2.6rem; margin: 10px 0 30px; text-align: center; position: relative;
-        }
-        .sheet-content-title::after {
-            content: ''; display: block; width: 50px; height: 4px;
-            background: var(--wood-brown); margin: 10px auto 0; border-radius: 5px;
-        }
-        .phase-title { 
-            font-weight: 700; color: var(--wood-brown); margin-top: 30px; margin-bottom: 10px;
-            display: block; text-align: center; text-transform: uppercase; letter-spacing: 1px; font-size: 1.1rem;
-        }
-
+        /* --- FOOTER FIXE --- */
         .footer-nav {
-            position: absolute; bottom: 0; left: 0; width: 100%;
+            position: fixed; bottom: 0; width: 100%; max-width: 414px;
             background: var(--green-deep); display: flex; justify-content: space-around;
-            align-items: center; padding: 15px 0 25px 0; 
+            align-items: center; padding: 12px 0 20px 0; 
             border-top: 3px solid var(--wood-brown); z-index: 20;
         }
         .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
-        
         .icon-box { 
-            width: 44px; height: 44px; 
-            display: flex; justify-content: center; align-items: center; 
-            border-radius: 14px; 
-            background: var(--wood-brown);
-            margin-bottom: 6px; 
-            color: #ffffff; 
-            font-size: 1.3rem; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.25);
-            transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); 
+            width: 42px; height: 42px; display: flex; justify-content: center; align-items: center; 
+            border-radius: 12px; background: var(--wood-brown); margin-bottom: 4px; 
+            color: #ffffff; font-size: 1.2rem; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
-        
-        .menu-item:active .icon-box { 
-            transform: scale(0.92) translateY(2px); 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3); 
-            filter: brightness(0.9); 
-        }
+        .menu-item span { font-weight: 700; font-size: 0.55rem; color: #ffffff; text-transform: uppercase; }
 
-        .menu-item span { 
-            font-weight: 700; font-size: 0.5rem; 
-            color: #ffffff; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px;
+        /* --- BOTTOM SHEET --- */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 25; display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .bottom-sheet { 
+            position: fixed; bottom: -100%; left: 0; width: 100%; height: 85vh; 
+            background: white; z-index: 30; border-top-left-radius: 30px; border-top-right-radius: 30px; 
+            display: flex; flex-direction: column; transition: bottom 0.5s cubic-bezier(0.17, 0.84, 0.44, 1);
+            max-width: 414px; left: 50%; transform: translateX(-50%);
         }
+        .bottom-sheet.open { bottom: 0; }
 
-        .cal-list { display: flex; flex-direction: column; gap: 15px; margin: 20px 0; }
-        .cal-item { 
-            display: flex; align-items: center; gap: 15px; background: var(--bg-beige); 
-            padding: 12px 20px; border-radius: 15px; border-left: 4px solid var(--wood-brown);
-        }
-        .cal-item .date { font-weight: 700; color: var(--green-deep); font-size: 1.1rem; text-transform: capitalize; }
-        .cal-item .time { font-size: 0.85rem; color: var(--text-brown); }
-        .cal-item .time a { color: var(--green-deep); text-decoration: none; border-bottom: 1px dotted var(--green-deep); font-weight: 600; }
+        .sheet-header { width: 100%; padding: 15px 0; flex-shrink: 0; }
+        .sheet-handle { width: 40px; height: 5px; background: #e0e0e0; border-radius: 10px; margin: 0 auto; }
+        .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; -webkit-overflow-scrolling: touch; }
+        .sheet-content-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 2.4rem; text-align: center; margin: 10px 0; }
+
+        /* --- UI ELEMENTS (Calendrier, etc) --- */
+        .cal-list { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+        .cal-item { display: flex; align-items: center; gap: 15px; background: var(--bg-beige); padding: 12px; border-radius: 15px; border-left: 4px solid var(--wood-brown); }
+        .cal-item .date { font-weight: 700; color: var(--green-deep); text-transform: capitalize; }
         
         .contact-card { background: var(--bg-beige); padding: 20px; border-radius: 15px; margin: 20px 0; }
-        .contact-line { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
-        .contact-line i { color: var(--wood-brown); font-size: 1.2rem; width: 20px; text-align: center; }
-        .contact-line a { color: var(--green-deep); text-decoration: none; font-weight: 700; }
-        .btn-whatsapp { 
-            background: #25D366; color: white; border: none; padding: 15px 25px; border-radius: 50px; 
-            font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; 
-            margin: 20px auto; font-family: 'Quicksand'; text-decoration: none; font-size: 1.1rem;
-            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
-        }
+        .btn-whatsapp { background: #25D366; color: white; padding: 15px; border-radius: 50px; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; font-weight: 700; margin-top: 10px;}
 
-        .pricing-container { display: flex; gap: 10px; margin: 15px 0; }
-        .price-card { flex: 1; background: var(--bg-beige); padding: 12px; border-radius: 15px; text-align: center; border: 2px solid transparent; }
-        .price-card.featured { border-color: var(--wood-brown); background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .price-card h3 { font-size: 0.9rem; margin: 0; }
-        .price-card .amount { font-size: 1.6rem; font-weight: 700; color: var(--wood-brown); margin: 5px 0; }
-        .benefits-list { list-style: none; padding: 0; margin: 15px 0; }
-        .benefits-list li { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; }
-        .benefits-list i { color: var(--green-deep); }
+        /* --- LIGHTBOX --- */
+        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s; }
+        .lightbox.active { opacity: 1; display: flex; }
+        .lightbox img { max-width: 90%; max-height: 80%; border: 3px solid white; border-radius: 10px; }
 
         @media (min-width: 768px) {
-            body { background-color: var(--bg-beige); overflow: auto; }
-            .phone { max-width: 100%; height: 100vh; box-shadow: none; border-radius: 0; }
-            .main-wrapper { flex-direction: column; }
-            .footer-nav {
-                order: -1; position: relative; padding: 15px 50px; border-top: none; 
-                border-bottom: 4px solid var(--wood-brown); justify-content: center; gap: 20px;
-            }
-            .menu-item { 
-                flex: 0 1 auto; flex-direction: row; gap: 12px; padding: 8px 25px 8px 8px; border-radius: 50px;
-                background: rgba(255, 255, 255, 0.05); transition: background 0.3s ease, transform 0.2s cubic-bezier(0.17, 0.84, 0.44, 1);
-            }
-            .menu-item:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-3px); }
-            .icon-box { margin-bottom: 0; width: 40px; height: 40px; border-radius: 50%; }
-            .menu-item span { font-size: 0.9rem; }
-            .hero-container { display: flex; justify-content: center; background: var(--bg-beige); padding-top: 30px; padding-bottom: 10px; }
-            .hero { width: 100%; max-width: 550px; height: 550px; background: url('hero.png') center center / cover no-repeat; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
-            .rdv-card { width: auto; min-width: 350px; padding: 15px 30px; bottom: -25px; }
-            .content { padding: 50px 0 40px; overflow: hidden; }
-            .quote-text { font-size: 2.5rem; }
-            .bottom-sheet { 
-                top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
-                width: 700px; max-width: 90%; height: auto; max-height: 85vh; border-radius: 25px; opacity: 0;
-                transition: transform 0.4s cubic-bezier(0.17, 0.84, 0.44, 1), opacity 0.4s ease;
-            }
-            .bottom-sheet.open { transform: translate(-50%, -50%) scale(1) !important; opacity: 1; }
-            .sheet-handle { display: none; }
-            .close-btn { display: block; }
-            .photo-slider { flex-wrap: wrap; justify-content: center; gap: 30px; overflow-x: visible; }
-            .photo-card { flex: 0 0 240px; margin-bottom: 20px; }
-            .photo-card:hover { transform: scale(1.05) rotate(0deg); z-index: 2; } 
+            .footer-nav, .bottom-sheet { max-width: 700px; }
+            .phone { max-width: 700px; }
         }
     </style>
 </head>
@@ -271,41 +167,23 @@
     </div>
 
     <div class="bottom-sheet" id="bottomSheet">
-        <div class="sheet-header">
-            <div class="sheet-handle"></div>
-            <div class="close-btn" onclick="closeSheet()"><i class="fa-solid fa-xmark"></i></div>
-        </div>
+        <div class="sheet-header"><div class="sheet-handle"></div></div>
         <div class="sheet-body" id="sheetBody"><div id="sheetContent"></div></div>
     </div>
 </div>
 
 <script>
-    // --- LOGIQUE DE CALCUL AUTOMATIQUE DES DATES ---
+    // --- CALCUL DATE AUTO ---
     function getNextLastFridays() {
         let dates = [];
         let now = new Date();
-        // Pour tester si on est déjà après 20h30 le vendredi en question, 
-        // on peut ajuster la logique, mais ici on reste sur la date simple.
-        
         let year = now.getFullYear();
         let month = now.getMonth();
-
         while (dates.length < 5) {
-            // Aller au dernier jour du mois testé
             let d = new Date(year, month + 1, 0);
-            // Reculer jusqu'au vendredi (5)
-            while (d.getDay() !== 5) {
-                d.setDate(d.getDate() - 1);
-            }
-            
-            // Si cette date est aujourd'hui ou dans le futur, on l'ajoute
-            // (On remet l'heure à 23h59 pour inclure le vendredi même si on consulte le site le matin)
-            let checkDate = new Date(d);
-            checkDate.setHours(23, 59, 59);
-
-            if (checkDate >= now) {
-                dates.push(new Date(d));
-            }
+            while (d.getDay() !== 5) { d.setDate(d.getDate() - 1); }
+            let checkDate = new Date(d); checkDate.setHours(23, 59, 59);
+            if (checkDate >= now) { dates.push(new Date(d)); }
             month++;
         }
         return dates;
@@ -313,144 +191,47 @@
 
     const upcomingDates = getNextLastFridays();
     const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
-
-    // MAJ automatique de la bannière d'accueil
     document.getElementById('next-rdv-banner').innerText = upcomingDates[0].toLocaleDateString('fr-FR', dateOptions);
 
-    // Génération de l'agenda HTML
-    let agendaHTML = '<div class="cal-list">';
-    upcomingDates.forEach(date => {
-        agendaHTML += `
-            <div class="cal-item">
-                <i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.5rem;"></i>
-                <div>
-                    <div class="date">${date.toLocaleDateString('fr-FR', dateOptions)}</div>
-                    <div class="time">à 20h30 • <a href="https://www.google.com/maps/search/?api=1&query=Maison+des+Associations+Plouay" target="_blank">Maison des Associations</a></div>
-                </div>
-            </div>`;
-    });
-    agendaHTML += '</div>';
+    let agendaHTML = '<div class="cal-list">' + upcomingDates.map(date => `
+        <div class="cal-item">
+            <i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.2rem;"></i>
+            <div>
+                <div class="date">${date.toLocaleDateString('fr-FR', dateOptions)}</div>
+                <div class="time" style="font-size:0.8rem;">à 20h30 • Maison des Assos</div>
+            </div>
+        </div>`).join('') + '</div>';
 
     const pagesData = {
-        histoire: { 
-            title: "Le Grimoire", 
-            text: `
-                <span class="phase-title">📜 Phase 1 : La Pioche Initiale (2014)</span>
-                <p style="text-align: center;">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>. Très vite, le virus se transmet et les premières soirées jeux s'organisent chez les uns et les autres.</p>
-                <span class="phase-title">♟️ Phase 2 : Le Coup de Maître (2015)</span>
-                <p style="text-align: center;">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées.</p>
-                <span class="phase-title">🏰 Phase 3 : La Fondation (2019)</span>
-                <p style="text-align: center;">Le club des "Potes à Jeux" naît officiellement à Plouay, fondé par quatre amis passionnés.</p>
-                <span class="phase-title">🚀 Phase 4 : L'Envolée (2026)</span>
-                <p style="text-align: center;">Aujourd'hui, une solide base de fidèles s'est créée avec une <b>vingtaine d'adhérents</b>.</p>`
-        },
-        cal: { 
-            title: "Agenda Ludique", 
-            text: `
-                <p style="text-align: center; color: var(--green-deep);">On se retrouve chaque <b>dernier vendredi du mois</b>. Voici les prochaines sessions :</p>
-                ${agendaHTML}
-                <p style="text-align: center; font-size:0.85rem; margin-top: 20px;">N'oubliez pas d'apporter votre bonne humeur !</p>`
-        },
-        adhesion: { 
-            title: "Rejoindre l'asso", 
-            text: `
-                <p style="text-align:center;">Devenir un membre officiel des Potes à Jeux est simple et convivial !</p>
-                <div style="background: #f8d7da; border: 2px solid #f5c2c7; color: #842029; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;">
-                    <i class="fa-solid fa-triangle-exclamation"></i> Réservé aux plus de 18 ans
-                </div>
-                <div class="pricing-container">
-                    <div class="price-card"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div>
-                    <div class="price-card featured"><div class="amount">20€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Couple</p></div>
-                </div>
-                <ul class="benefits-list" style="max-width: 280px; margin: 15px auto;">
-                    <li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li>
-                    <li><i class="fa-solid fa-circle-check"></i> Première séance offerte</li>
-                    <li><i class="fa-solid fa-circle-check"></i> Soirée escape game</li>
-                    <li><i class="fa-solid fa-circle-check"></i> Repas de fin d'année</li>
-                </ul>` 
-        },
-        photos: {
-            title: "Souvenirs",
-            text: `<p style="text-align: center; margin-bottom: 20px;">Cliquez sur une photo pour l'agrandir.</p><div class="photo-slider">${Array.from({length: 15}, (_, i) => `<div class="photo-card" onclick="openLightbox('photo${i+1}.jpg')"><img src="photo${i+1}.jpg" alt="${i+1}"></div>`).join('')}</div>`
-        },
-        contact: { 
-            title: "Contact", 
-            text: `
-                <div class="contact-card">
-                    <div class="contact-line"><i class="fa-solid fa-phone"></i><div><a href="tel:+33620031771">06 20 03 17 71</a></div></div>
-                    <div class="contact-line"><i class="fa-solid fa-envelope"></i><div><a href="mailto:despotesajeux@protonmail.com">despotesajeux@protonmail.com</a></div></div>
-                </div>
-                <a href="https://chat.whatsapp.com/GE6whGWavky2alGNskA5yL" target="_blank" class="btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>` 
-        }
+        histoire: { title: "Le Grimoire", text: `<p style="text-align:center">Club né en 2019 à Plouay. Passionnés de jeux de société modernes, nous partageons nos boîtes et nos rires chaque mois.</p>` },
+        cal: { title: "Agenda", text: `<p style="text-align:center">Chaque dernier vendredi du mois :</p>${agendaHTML}` },
+        adhesion: { title: "Adhésion", text: `<div style="text-align:center"><p>15€ / an (Solo)<br>20€ / an (Couple)</p><p style="font-size:0.8rem">Première séance découverte offerte !</p></div>` },
+        photos: { title: "Photos", text: `<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">${Array.from({length: 6}, (_, i) => `<img src="photo${i+1}.jpg" onclick="openLightbox(this.src)" style="width:100%; border-radius:10px;">`).join('')}</div>` },
+        contact: { title: "Contact", text: `<div class="contact-card"><p>📞 06 20 03 17 71</p><p>📧 despotesajeux@protonmail.com</p></div><a href="https://chat.whatsapp.com/GE6whGWavky2alGNskA5yL" target="_blank" class="btn-whatsapp">Rejoindre le WhatsApp</a>` }
     };
 
-    const sheet = document.getElementById('bottomSheet');
-    const overlay = document.getElementById('overlay');
-    const sheetContent = document.getElementById('sheetContent');
-    const sheetBody = document.getElementById('sheetBody');
-    const mainWrapper = document.getElementById('mainWrapper');
-
     function openSheet(key) {
-        sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
-        overlay.style.display = 'block';
-        mainWrapper.classList.add('blurred');
-        sheetContent.style.opacity = '1';
-        if (window.innerWidth <= 768) {
-            sheet.style.transform = '';
-            sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)";
-        }
-        setTimeout(() => { overlay.style.opacity = '1'; sheet.classList.add('open'); }, 10);
+        document.getElementById('sheetContent').innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('mainWrapper').classList.add('blurred');
+        setTimeout(() => { 
+            document.getElementById('overlay').style.opacity = '1'; 
+            document.getElementById('bottomSheet').classList.add('open');
+        }, 10);
     }
 
     function closeSheet() {
-        if (window.innerWidth <= 768) { sheet.style.transition = "transform 0.25s ease-in"; }
-        sheet.classList.remove('open');
-        overlay.style.opacity = '0';
-        mainWrapper.classList.remove('blurred');
-        setTimeout(() => { overlay.style.display = 'none'; }, 250);
+        document.getElementById('bottomSheet').classList.remove('open');
+        document.getElementById('overlay').style.opacity = '0';
+        document.getElementById('mainWrapper').classList.remove('blurred');
+        setTimeout(() => { document.getElementById('overlay').style.display = 'none'; }, 300);
     }
 
-    // Gestion du swipe pour fermer
-    let startY = 0;
-    let isDragging = false;
-    sheet.addEventListener('touchstart', (e) => {
-        if (window.innerWidth > 768) return; 
-        if (sheetBody.scrollTop <= 0) {
-            startY = e.touches[0].clientY;
-            isDragging = true;
-            sheet.style.transition = "none";
-        }
-    }, { passive: true });
-    sheet.addEventListener('touchmove', (e) => {
-        if (!isDragging || window.innerWidth > 768) return;
-        let diff = e.touches[0].clientY - startY;
-        if (diff > 0) {
-            e.preventDefault(); 
-            sheet.style.transform = `translateY(calc(-100% + ${diff}px))`;
-        }
-    }, { passive: false });
-    sheet.addEventListener('touchend', (e) => {
-        if (!isDragging || window.innerWidth > 768) return;
-        isDragging = false;
-        let diff = e.changedTouches[0].clientY - startY;
-        if (diff > 80) { closeSheet(); } else {
-            sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)";
-            sheet.style.transform = '';
-        }
-    });
-
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
     function openLightbox(src) {
-        lightboxImg.src = src;
-        lightbox.style.display = 'flex';
-        setTimeout(() => { lightbox.classList.add('active'); }, 10);
+        document.getElementById('lightboxImg').src = src;
+        document.getElementById('lightbox').classList.add('active');
     }
-    function closeLightbox(event) {
-        if(event.target === lightboxImg) return;
-        lightbox.classList.remove('active');
-        setTimeout(() => { lightbox.style.display = 'none'; }, 300);
-    }
+    function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
 </script>
 </body>
 </html>
