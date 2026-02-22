@@ -164,6 +164,17 @@
         .phase-title { font-family: 'Quicksand', sans-serif; color: var(--green-deep); font-size: 1.1rem; font-weight: 700; text-align: center; margin: 0 0 15px; display: flex; align-items: center; justify-content: center; gap: 10px; white-space: nowrap; }
         .phase-icon { font-size: 1.2rem; color: var(--wood-brown); }
         .grimoire-text { text-align: center; line-height: 1.6; font-size: 0.95rem; margin-top: 0; }
+        
+        /* Bouton Article de journal */
+        .btn-article {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(188, 143, 99, 0.15); color: var(--wood-brown);
+            border: 1px solid var(--wood-brown); border-radius: 50px;
+            padding: 6px 15px; font-size: 0.8rem; font-weight: 700;
+            cursor: pointer; transition: all 0.2s; margin-top: 10px;
+            text-decoration: none;
+        }
+        .btn-article:active { transform: scale(0.95); background: rgba(188, 143, 99, 0.25); }
 
         /* --- PHOTOS --- */
         .photo-section-title { text-align: center; color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 15px 0 10px 0; padding-top: 20px; border-top: 1px dashed rgba(0,0,0,0.1); }
@@ -343,7 +354,12 @@
                 <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante ! Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées.</p>
                 
                 <div class="phase-label">Phase 3</div><div class="phase-title"><i class="fa-brands fa-fort-awesome phase-icon"></i><span>La Fondation (2019)</span></div>
-                <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. L'association "Des Potes à Jeux" naît officiellement. La petite tablée s'agrandit peu à peu pour accueillir de nouveaux joueurs de Plouay.</p>
+                <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. L'association <b>Des Potes à Jeux</b> naît officiellement. La petite tablée s'agrandit peu à peu pour accueillir de nouveaux joueurs de Plouay.</p>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="btn-article" onclick="openLightbox('article_journal.jpg', true)">
+                        <i class="fa-solid fa-newspaper"></i> Voir l'article de journal
+                    </button>
+                </div>
                 
                 <div class="phase-label">Phase 4</div><div class="phase-title"><i class="fa-solid fa-rocket phase-icon"></i><span>L'Envolée (2026)</span></div>
                 <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. L'aventure ne fait que continuer avec vous !</p>
@@ -352,7 +368,7 @@
         adhesion: { 
             title: "Rejoindre l'asso", 
             text: `<div class="panel-card">
-                <p style="text-align:center; margin-top:0;">Devenir un membre officiel des Potes à Jeux est simple et convivial !</p>
+                <p style="text-align:center; margin-top:0;">Devenir membre est simple et convivial !</p>
                 <div style="background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.2); color: #dc3545; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans</div>
                 <div class="pricing-container">
                     <div class="price-card featured"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div>
@@ -462,7 +478,7 @@
     overlay.onclick = () => closeSheet();
 
     // ==========================================
-    // SCROLLING FLUIDE (SWIPE DOWN SUR LE VOLET)
+    // NOUVEAU SCROLLING FLUIDE (SWIPE DOWN)
     // ==========================================
     let startY = 0; 
     let isDragging = false;
@@ -490,17 +506,18 @@
         isDragging = false; 
         let diff = e.changedTouches[0].clientY - startY; 
         
+        // Remet l'animation au moment du relâchement
         sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; 
         
         if (diff > 100) {
-            closeSheet(); 
+            closeSheet();
         } else {
             sheet.style.transform = ''; 
         } 
     });
 
     // ==========================================
-    // LIGHTBOX: ZOOM, SWIPE (CORRIGÉ), ET FLÈCHES
+    // LIGHTBOX: ZOOM, SWIPE, ET FLÈCHES
     // ==========================================
     const lb = document.getElementById('lightbox');
     const lbContainer = document.getElementById('lbContainer');
@@ -514,28 +531,34 @@
     let posX = 0, posY = 0;
     let lastPanX = 0, lastPanY = 0;
     
-    // NOUVELLES VARIABLES POUR LE SWIPE CORRECT
     let swipeStartX = 0; 
     let currentSwipeX = 0; 
 
-    function openLightbox(src) { 
+    // isSingleImage = true si on ouvre l'article de journal qui ne fait pas partie de la galerie
+    function openLightbox(src, isSingleImage = false) { 
         lbImg.src = src; 
         lb.style.display = 'flex'; 
         resetZoom(); 
 
         setTimeout(() => lb.classList.add('active'), 10); 
         
-        const imgs = document.querySelectorAll('.photo-grid img'); 
-        currentGallery = Array.from(imgs).map(i => i.getAttribute('src')); 
-        currentPhotoIndex = currentGallery.indexOf(src); 
-        
-        // Afficher ou cacher les flèches directionnelles si 1 seule ou plusieurs photos
-        if (currentGallery.length > 1) {
-            lbNavPrev.style.display = 'flex';
-            lbNavNext.style.display = 'flex';
-        } else {
+        if (isSingleImage) {
+            currentGallery = [src];
+            currentPhotoIndex = 0;
             lbNavPrev.style.display = 'none';
             lbNavNext.style.display = 'none';
+        } else {
+            const imgs = document.querySelectorAll('.photo-grid img'); 
+            currentGallery = Array.from(imgs).map(i => i.getAttribute('src')); 
+            currentPhotoIndex = currentGallery.indexOf(src); 
+            
+            if (currentGallery.length > 1) {
+                lbNavPrev.style.display = 'flex';
+                lbNavNext.style.display = 'flex';
+            } else {
+                lbNavPrev.style.display = 'none';
+                lbNavNext.style.display = 'none';
+            }
         }
         
         // Pousse l'état "lightbox" SUR l'état "sheet"
@@ -570,9 +593,11 @@
 
     // Gestion du bouton précédent du téléphone (Android/iOS Swipe Edge)
     window.addEventListener('popstate', (e) => {
+        // 1. Si la Lightbox est ouverte, c'est elle qu'on ferme d'abord
         if (lb.classList.contains('active')) {
             hideLightboxDOM(); 
         } 
+        // 2. Sinon, si c'est le Bottom Sheet qui est ouvert, on ferme le Bottom Sheet
         else if (sheet.classList.contains('open')) {
             hideSheetDOM(); 
         }
@@ -603,7 +628,6 @@
             lastPanX = e.touches[0].clientX;
             lastPanY = e.touches[0].clientY;
             
-            // Capture le point de départ exact pour le Swipe photo
             swipeStartX = e.touches[0].clientX; 
             currentSwipeX = 0;
         }
@@ -630,10 +654,10 @@
                 lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`;
                 lastPanX = currentX;
                 lastPanY = currentY;
-            } else if (!isZooming) {
-                // Swipe gauche/droite entre les photos
+            } else if (!isZooming && currentGallery.length > 1) {
+                // Swipe gauche/droite entre les photos (uniquement si galerie > 1)
                 e.preventDefault(); // Bloque le "retour arrière" natif du navigateur
-                currentSwipeX = currentX - swipeStartX; // Calcul depuis le point d'origine
+                currentSwipeX = currentX - swipeStartX; 
                 lbContainer.style.transform = `translateX(${currentSwipeX}px)`; 
             }
         }
@@ -642,11 +666,10 @@
     lbContainer.addEventListener('touchend', (e) => {
         if (e.touches.length < 2) { isZooming = false; }
         
-        if (currentScale === 1) {
-            // Utilise la vraie distance calculée
-            if (currentSwipeX > 70 && currentGallery.length > 1) {
+        if (currentScale === 1 && currentGallery.length > 1) {
+            if (currentSwipeX > 70) {
                 changePhotoDir('prev');
-            } else if (currentSwipeX < -70 && currentGallery.length > 1) {
+            } else if (currentSwipeX < -70) {
                 changePhotoDir('next');
             } else {
                 lbContainer.style.transform = `translateX(0px)`;
