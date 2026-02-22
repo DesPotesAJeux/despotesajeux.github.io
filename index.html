@@ -23,7 +23,7 @@
             --wood-highlight: #dbb38a;
             --fb-blue: #1877F2;
             --wa-green: #25D366; 
-            --myludo-color: #2980b9; /* Bleu officiel Myludo */
+            --myludo-color: #2c3e50; 
         }
 
         body {
@@ -52,7 +52,8 @@
         /* --- BANNIÈRE HERO --- */
         .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
         .hero { 
-            width: 100%; height: 360px;
+            width: 100%; 
+            height: 42vh; min-height: 250px; max-height: 340px;
             background: url('hero.png') center center / cover no-repeat; 
             position: relative; z-index: 1; 
             -webkit-user-select: none; user-select: none;
@@ -129,26 +130,25 @@
 
         /* --- PHOTOS --- */
         .photo-section-title { text-align: center; color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 15px 0 10px 0; padding-top: 20px; border-top: 1px dashed rgba(0,0,0,0.1); }
+        .photo-section-title.first { border-top: none; padding-top: 10px; margin-top: 5px; }
         .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 0 3px 20px; }
         .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 2px; }
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
 
-        /* --- CONTACTS & LUDOTHEQUES --- */
+        /* --- CONTACTS & LUDOTHÈQUES --- */
         .contact-person { display: flex; flex-direction: column; padding: 12px 15px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 15px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
-        .contact-person .avatar { width: 40px; height: 40px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; overflow: hidden; }
+        .contact-person .avatar { width: 40px; height: 40px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; overflow: hidden;}
         .contact-person .avatar.mail-icon { background: var(--wood-brown); }
         .contact-person .avatar.fb-icon { background: var(--fb-blue); }
         .contact-person .avatar.wa-icon { background: var(--wa-green); }
         
-        /* Style spécifique pour l'icône Myludo (fond blanc + image) */
         .contact-person .avatar.ludo-icon { background: #ffffff; border: 1px solid rgba(0,0,0,0.1); box-sizing: border-box; }
         .contact-person .avatar.ludo-icon img { width: 24px; height: 24px; border-radius: 4px; }
         
         .contact-top h4 { margin: 0; color: var(--green-deep); font-size: 1.1rem; flex-grow: 1; min-width: 80px; }
         .contact-bottom { width: 100%; padding-top: 8px; text-align: left; }
         .contact-bottom span { font-size: 0.75rem; color: var(--text-brown); font-weight: 600; opacity: 0.9; display: block; }
-        
         .call-btn { background: var(--green-deep); color: white; text-decoration: none; width: 100px; height: 34px; border-radius: 50px; font-weight: 700; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 6px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.2); }
         .call-btn.mail-btn { background: var(--wood-brown); }
         .call-btn.fb-btn { background: var(--fb-blue); }
@@ -171,6 +171,7 @@
         .cal-item .time { font-size: 0.8rem; color: var(--text-brown); line-height: 1.4; }
         .cal-item .time a { color: var(--green-deep); text-decoration: underline; font-weight: 600; }
 
+        /* --- FOOTER --- */
         .footer-nav { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--green-deep); display: flex; justify-content: space-around; align-items: center; padding: 15px 0 25px 0; border-top: 3px solid var(--wood-brown); z-index: 20; }
         .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
         .icon-box { width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; border-radius: 14px; background: var(--wood-brown); margin-bottom: 6px; color: #ffffff; font-size: 1.3rem; box-shadow: 0 4px 8px rgba(0,0,0,0.25); transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); }
@@ -213,9 +214,11 @@
             <div class="quote-box">
                 <p class="quote-text">"Ici on ne compte pas les points,<br>on compte les <strong>souvenirs</strong>."</p>
                 <div class="separator"></div>
+                
                 <button class="btn-ludotheque" onclick="openSheet('ludotheque')">
                     <i class="fa-solid fa-dice-d20"></i> Découvrir nos jeux
                 </button>
+                
                 <p style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; opacity: 0.4; margin-top: 5px;">
                     Association loi 1901 • Plouay • Bretagne
                 </p>
@@ -240,9 +243,11 @@
 <script>
     const NB_PHOTOS_SORTIES = 19; 
     const NB_PHOTOS_JEUX = 20;    
+    
     let currentGallery = [];
     let currentPhotoIndex = 0;
 
+    // --- CALCUL PROCHAIN RDV ---
     function getNextLastFridays() {
         let dates = [];
         let now = new Date();
@@ -261,11 +266,12 @@
     const upcomingDates = getNextLastFridays();
     const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
     let rawDate = upcomingDates[0].toLocaleDateString('fr-FR', dateOptions);
-    document.getElementById('next-rdv-banner').innerHTML = `${rawDate.charAt(0).toUpperCase() + rawDate.slice(1)} 20h30<br><a href="https://maps.app.goo.gl/YourMapID" target="_blank">📍 <span class="underline">Maison des Associations</span></a>`;
+    document.getElementById('next-rdv-banner').innerHTML = `${rawDate.charAt(0).toUpperCase() + rawDate.slice(1)} 20h30<br><a href="https://www.google.com/maps/search/?api=1&query=Maison+des+associations+Plouay" target="_blank">📍 <span class="underline">Maison des Associations</span></a>`;
 
+    // --- GENERATION HTML (Agenda & Photos) ---
     let agendaHTML = '<div class="cal-list">' + upcomingDates.map(date => {
         let formatted = date.toLocaleDateString('fr-FR', dateOptions);
-        return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem; flex-shrink:0;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="https://maps.app.goo.gl/YourMapID" target="_blank">Maison des Associations</a></div></div></div>`;
+        return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem; flex-shrink:0;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="https://www.google.com/maps/search/?api=1&query=Maison+des+associations+Plouay" target="_blank">Maison des Associations</a></div></div></div>`;
     }).join('') + '</div>';
 
     let photosSortiesHTML = '<div class="photo-grid">';
@@ -276,6 +282,7 @@
     for(let i=1; i<=NB_PHOTOS_JEUX; i++) { photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('jeu${i}.jpg')"><img src="jeu${i}.jpg" loading="lazy"></div>`; }
     photosJeuxHTML += '</div>';
 
+    // --- DONNEES DES ONGLETS ---
     const pagesData = {
         histoire: { 
             title: "Le Grimoire", 
@@ -293,11 +300,11 @@
         adhesion: { 
             title: "Rejoindre l'asso", 
             text: `<div class="panel-card">
-                <p style="text-align:center; margin-top:0;">Devenir un membre officiel des Potes à Jeux est simple et convivial !</p>
+                <p style="text-align:center; margin-top:0;">Devenir membre est simple et convivial !</p>
                 <div style="background: rgba(220, 53, 69, 0.1); border: 2px solid rgba(220, 53, 69, 0.2); color: #dc3545; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans</div>
                 <div class="pricing-container">
-                    <div class="price-card featured"><div class="amount">15€</div><p>Solo / an</p></div>
-                    <div class="price-card featured"><div class="amount">20€</div><p>Couple / an</p></div>
+                    <div class="price-card featured"><div class="amount">15€</div><p style="font-size:0.65rem; margin:0;">Solo / an</p></div>
+                    <div class="price-card featured"><div class="amount">20€</div><p style="font-size:0.65rem; margin:0;">Couple / an</p></div>
                 </div>
                 <ul class="benefits-list" style="max-width: 280px; margin: 15px auto 0;">
                     <li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li>
@@ -316,33 +323,35 @@
                 <p style="text-align: center; font-size:0.8rem; margin-bottom: 0;">N'oubliez pas d'apporter votre bonne humeur !</p>
             </div>` 
         },
-        photos: { title: "Souvenirs", text: `<div class="panel-card" style="padding:0;"><h3 class="photo-section-title first">Les Sorties</h3>${photosSortiesHTML}<h3 class="photo-section-title">Les Jeux</h3>${photosJeuxHTML}</div>` },
+        photos: { 
+            title: "Souvenirs", 
+            text: `<div class="panel-card" style="padding-left: 0; padding-right: 0; padding-bottom: 0; overflow: hidden;">
+                <p style="text-align: center; margin-top: 0; padding: 0 20px 10px; font-size: 0.9rem;">Cliquez sur une photo pour l'agrandir.</p>
+                <h3 class="photo-section-title first">Les Sorties</h3>${photosSortiesHTML}
+                <h3 class="photo-section-title">Les Jeux</h3>${photosJeuxHTML}
+            </div>` 
+        },
         contact: { 
             title: "Nous Contacter", 
             text: `<div class="panel-card">
                 <div class="contact-person"><div class="contact-top"><div class="avatar"><i class="fa-solid fa-user"></i></div><h4>Julie</h4><a href="tel:+33620031771" class="call-btn">Appeler</a></div><div class="contact-bottom"><span>Présidente de l'association</span></div></div>
                 <div class="contact-person"><div class="contact-top"><div class="avatar mail-icon"><i class="fa-solid fa-envelope-open-text"></i></div><h4>Email</h4><a href="mailto:despotesajeux@protonmail.com" class="call-btn mail-btn">Écrire</a></div><div class="contact-bottom"><span>Pour toute question ou demande</span></div></div>
-                <div class="contact-person"><div class="contact-top"><div class="avatar fb-icon"><i class="fa-brands fa-facebook-f"></i></div><h4>Facebook</h4><a href="https://www.facebook.com/groups/despotesajeux/" target="_blank" class="call-btn fb-btn">Rejoindre</a></div><div class="contact-bottom"><span>Pour suivre la communauté</span></div></div>
+                <div class="contact-person"><div class="contact-top"><div class="avatar fb-icon"><i class="fa-brands fa-facebook-f"></i></div><h4>Facebook</h4><a href="https://www.facebook.com/groups/despotesajeux/" target="_blank" class="call-btn fb-btn">Rejoindre</a></div><div class="contact-bottom"><span>Pour suivre la communauté en ligne</span></div></div>
                 <div class="contact-person"><div class="contact-top"><div class="avatar wa-icon"><i class="fa-brands fa-whatsapp"></i></div><h4>WhatsApp</h4><a href="https://chat.whatsapp.com/GE6whGWavky2alGNskA5yL?mode=gi_t" target="_blank" class="call-btn wa-btn">Papoter</a></div><div class="contact-bottom"><span>Rejoindre le groupe de discussion</span></div></div>
             </div>` 
         },
         ludotheque: { 
             title: "Nos Ludothèques", 
             text: `<div class="panel-card">
-                <p style="text-align: center; margin-top: 0; font-size: 0.95rem; line-height: 1.5;">Retrouvez les collections de nos membres sur <b>Myludo</b> !</p>
-                
-                <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Le Club</h4><a href="https://www.myludo.fr/#!/profil/des-potes-a-jeux-38379" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Liste des jeux partagés</span></div></div>
-                
-                <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Julie</h4><a href="https://www.myludo.fr/#!/profil/julie-despotesajeux-39328" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Julie</span></div></div>
+                <p style="text-align: center; margin-top: 0; font-size: 0.95rem; line-height: 1.5;">Collections de nos membres sur <b>Myludo</b>.</p>
                 
                 <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Ronan</h4><a href="https://www.myludo.fr/#!/profil/ronan-29-67622" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Ronan</span></div></div>
-
+                
                 <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sébastien</h4><a href="https://www.myludo.fr/#!/profil/sebastien-g-107305" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Sébastien</span></div></div>
-
+                
                 <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Stéphane</h4><a href="https://www.myludo.fr/#!/profil/stephane-rio-26496" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Stéphane</span></div></div>
-
+                
                 <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sylvain</h4><a href="https://www.myludo.fr/#!/profil/sylvain-bedouet-64234" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Sylvain</span></div></div>
-
             </div>` 
         }
     };
@@ -353,33 +362,55 @@
     const sheetBody = document.getElementById('sheetBody');
     const mainWrapper = document.getElementById('mainWrapper');
 
+    // ==========================================
+    // LOGIQUE NAVIGATION & BOUTON RETOUR ANDROID
+    // ==========================================
     function openSheet(key) {
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
-        overlay.style.display = 'block'; mainWrapper.classList.add('blurred');
+        overlay.style.display = 'block'; 
+        mainWrapper.classList.add('blurred');
         
         if (window.innerWidth <= 768) {
             sheet.style.transition = 'none';
             sheet.style.transform = '';
+            // Force la refonte pour éviter les clignotements
+            void sheet.offsetWidth; 
             sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)";
         }
         
-        setTimeout(() => { overlay.style.opacity = '1'; sheet.classList.add('open'); }, 10);
+        setTimeout(() => { sheet.classList.add('open'); }, 10);
+
+        // Ajoute la page à l'historique du téléphone (pour le bouton retour)
+        if (!history.state || history.state.type !== 'sheet') {
+            history.pushState({ type: 'sheet' }, '');
+        }
     }
 
-    function closeSheet() {
+    function closeSheet(fromHistory = false) {
         if (window.innerWidth <= 768) { sheet.style.transition = "transform 0.25s ease-in"; }
-        sheet.classList.remove('open'); overlay.style.opacity = '0'; mainWrapper.classList.remove('blurred');
-        setTimeout(() => { overlay.style.display = 'none'; sheet.style.transform = ''; }, 250);
+        sheet.style.transform = '';
+        sheet.classList.remove('open'); 
+        overlay.style.display = 'none'; 
+        mainWrapper.classList.remove('blurred');
+        
+        // Gère proprement l'historique (sans remonter indéfiniment)
+        if (fromHistory !== true && history.state && history.state.type === 'sheet') {
+            history.back();
+        }
     }
 
-    overlay.onclick = closeSheet;
+    // ==========================================
+    // NOUVEAU SCROLLING FLUIDE (SWIPE DOWN)
+    // ==========================================
+    let startY = 0; 
+    let isDragging = false;
 
-    // --- LOGIQUE SWIPE DOWN FLUIDE ---
-    let startY = 0; let isDragging = false;
     sheet.addEventListener('touchstart', (e) => { 
         if (window.innerWidth > 768) return; 
         if (sheetBody.scrollTop <= 0) { 
-            startY = e.touches[0].clientY; isDragging = true; sheet.style.transition = 'none'; 
+            startY = e.touches[0].clientY; 
+            isDragging = true; 
+            sheet.style.transition = 'none'; // Suit parfaitement le doigt (plus de freeze)
         } 
     }, { passive: true });
 
@@ -396,33 +427,74 @@
         if (!isDragging || window.innerWidth > 768) return; 
         isDragging = false; 
         let diff = e.changedTouches[0].clientY - startY; 
-        sheet.style.transition = "transform 0.4s cubic-bezier(0.17, 0.84, 0.44, 1)"; 
-        if (diff > 100) closeSheet(); else sheet.style.transform = ''; 
+        
+        // Remet l'animation au moment du relâchement
+        sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; 
+        
+        if (diff > 100) {
+            closeSheet(); // Ferme si on a assez glissé
+        } else {
+            sheet.style.transform = ''; // Remonte sinon
+        } 
     });
 
-    // --- LIGHTBOX ---
+    // ==========================================
+    // LIGHTBOX ET SWIPE PHOTOS
+    // ==========================================
     const lb = document.getElementById('lightbox');
     const lbImg = document.getElementById('lightboxImg');
+
     function openLightbox(src) { 
         lbImg.src = src; lb.style.display = 'flex'; 
         setTimeout(() => lb.classList.add('active'), 10); 
+        
         const imgs = document.querySelectorAll('.photo-grid img'); 
         currentGallery = Array.from(imgs).map(i => i.getAttribute('src')); 
         currentPhotoIndex = currentGallery.indexOf(src); 
-        history.pushState({modal: 'lb'}, ''); 
+        
+        if (!history.state || history.state.type !== 'lightbox') {
+            history.pushState({type: 'lightbox'}, ''); 
+        }
     }
-    function closeLightboxForce() { lb.classList.remove('active'); setTimeout(() => lb.style.display='none', 300); if(history.state?.modal === 'lb') history.back(); }
-    window.onpopstate = () => { lb.classList.remove('active'); setTimeout(() => lb.style.display='none', 300); };
+
+    function closeLightboxForce(fromHistory = false) { 
+        if (lb.classList.contains('active')) {
+            lb.classList.remove('active'); 
+            setTimeout(() => lb.style.display='none', 300); 
+            if (fromHistory !== true && history.state && history.state.type === 'lightbox') {
+                history.back();
+            }
+        }
+    }
+
+    function closeLightbox(event) {
+        if(event.target === lbImg) return;
+        closeLightboxForce();
+    }
+
+    // Gestion du bouton précédent du téléphone (Android/iOS Swipe)
+    window.addEventListener('popstate', (e) => {
+        if (lb.classList.contains('active')) {
+            closeLightboxForce(true); 
+        } else if (sheet.classList.contains('open')) {
+            closeSheet(true); 
+        }
+    });
     
+    // Swipe gauche/droite pour les photos
     let lbStartX = 0;
-    lb.ontouchstart = (e) => lbStartX = e.touches[0].clientX;
-    lb.ontouchend = (e) => {
+    lb.addEventListener('touchstart', e => { lbStartX = e.touches[0].clientX; }, {passive: true});
+    lb.addEventListener('touchend', e => {
         let diff = lbStartX - e.changedTouches[0].clientX;
         if (Math.abs(diff) > 50 && currentGallery.length > 1) {
             currentPhotoIndex = (currentPhotoIndex + (diff > 0 ? 1 : -1) + currentGallery.length) % currentGallery.length;
-            lbImg.style.opacity = 0; setTimeout(() => { lbImg.src = currentGallery[currentPhotoIndex]; lbImg.style.opacity = 1; }, 150);
+            lbImg.style.opacity = 0; 
+            setTimeout(() => { 
+                lbImg.src = currentGallery[currentPhotoIndex]; 
+                lbImg.style.opacity = 1; 
+            }, 150);
         }
-    };
+    }, {passive: true});
 </script>
 </body>
 </html>
