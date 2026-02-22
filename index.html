@@ -42,19 +42,18 @@
             box-shadow: 0 0 50px rgba(0,0,0,0.5);
         }
 
-        /* --- WRAPPER --- */
         .main-wrapper {
             display: flex; flex-direction: column; height: 100%; width: 100%;
             transition: filter 0.4s ease;
         }
         .main-wrapper.blurred { filter: blur(5px); }
 
-        /* --- BANNIÈRE HERO --- */
+        /* --- HERO --- */
         .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
         .hero { 
-            width: 100%; 
-            height: 42vh; min-height: 250px; max-height: 340px;
-            background: url('hero.png') center center / cover no-repeat; 
+            width: 100%; height: 360px;
+            /* Top center ancrera le haut de l'image pour qu'il ne soit pas coupé, cover remplit sans marges */
+            background: url('hero.png') top center / cover no-repeat; 
             position: relative; z-index: 1; 
             -webkit-user-select: none; user-select: none;
             -webkit-touch-callout: none; pointer-events: none;
@@ -107,7 +106,9 @@
         /* --- BOTTOM SHEET --- */
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 25; display: none; opacity: 0; transition: opacity 0.3s ease; }
         .bottom-sheet { 
-            position: absolute; top: 100%; left: 0; width: 100%; height: 85vh; 
+            position: absolute; top: 100%; left: 0; width: 100%; 
+            /* Hauteur dynamique pour éviter le scrolling inutile */
+            height: auto; max-height: 85vh; min-height: 40vh;
             background: white; z-index: 30; border-top-left-radius: 35px; border-top-right-radius: 35px; 
             display: flex; flex-direction: column; will-change: transform;
             transition: transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1);
@@ -142,10 +143,8 @@
         .contact-person .avatar.mail-icon { background: var(--wood-brown); }
         .contact-person .avatar.fb-icon { background: var(--fb-blue); }
         .contact-person .avatar.wa-icon { background: var(--wa-green); }
-        
         .contact-person .avatar.ludo-icon { background: #ffffff; border: 1px solid rgba(0,0,0,0.1); box-sizing: border-box; }
         .contact-person .avatar.ludo-icon img { width: 24px; height: 24px; border-radius: 4px; }
-        
         .contact-top h4 { margin: 0; color: var(--green-deep); font-size: 1.1rem; flex-grow: 1; min-width: 80px; }
         .contact-bottom { width: 100%; padding-top: 8px; text-align: left; }
         .contact-bottom span { font-size: 0.75rem; color: var(--text-brown); font-weight: 600; opacity: 0.9; display: block; }
@@ -153,12 +152,13 @@
         .call-btn.mail-btn { background: var(--wood-brown); }
         .call-btn.fb-btn { background: var(--fb-blue); }
         .call-btn.wa-btn { background: var(--wa-green); }
-        .call-btn.ludo-btn { background: var(--myludo-color); box-shadow: 0 4px 10px rgba(41, 128, 185, 0.2); }
+        .call-btn.ludo-btn { background: var(--myludo-color); }
 
         /* --- ADHESION & AGENDA --- */
         .pricing-container { display: flex; gap: 10px; margin: 15px 0; }
-        .price-card { flex: 1; background: #ffffff; padding: 12px; border-radius: 15px; text-align: center; border: 2px solid transparent; }
+        .price-card { flex: 1; background: #ffffff; padding: 12px; border-radius: 15px; text-align: center; border: 2px solid transparent; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
         .price-card.featured { border-color: var(--wood-brown); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .price-card h3 { font-size: 0.9rem; margin: 0; }
         .price-card .amount { font-size: 1.6rem; font-weight: 700; color: var(--wood-brown); margin: 5px 0; }
         .benefits-list { list-style: none; padding: 0; margin: 15px 0 0 0; }
         .benefits-list li { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; }
@@ -214,11 +214,9 @@
             <div class="quote-box">
                 <p class="quote-text">"Ici on ne compte pas les points,<br>on compte les <strong>souvenirs</strong>."</p>
                 <div class="separator"></div>
-                
                 <button class="btn-ludotheque" onclick="openSheet('ludotheque')">
                     <i class="fa-solid fa-dice-d20"></i> Découvrir nos jeux
                 </button>
-                
                 <p style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; opacity: 0.4; margin-top: 5px;">
                     Association loi 1901 • Plouay • Bretagne
                 </p>
@@ -243,11 +241,9 @@
 <script>
     const NB_PHOTOS_SORTIES = 19; 
     const NB_PHOTOS_JEUX = 20;    
-    
     let currentGallery = [];
     let currentPhotoIndex = 0;
 
-    // --- CALCUL PROCHAIN RDV ---
     function getNextLastFridays() {
         let dates = [];
         let now = new Date();
@@ -268,10 +264,9 @@
     let rawDate = upcomingDates[0].toLocaleDateString('fr-FR', dateOptions);
     document.getElementById('next-rdv-banner').innerHTML = `${rawDate.charAt(0).toUpperCase() + rawDate.slice(1)} 20h30<br><a href="https://www.google.com/maps/search/?api=1&query=Maison+des+associations+Plouay" target="_blank">📍 <span class="underline">Maison des Associations</span></a>`;
 
-    // --- GENERATION HTML (Agenda & Photos) ---
     let agendaHTML = '<div class="cal-list">' + upcomingDates.map(date => {
         let formatted = date.toLocaleDateString('fr-FR', dateOptions);
-        return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem; flex-shrink:0;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="https://www.google.com/maps/search/?api=1&query=Maison+des+associations+Plouay" target="_blank">Maison des Associations</a></div></div></div>`;
+        return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem; flex-shrink:0;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">à 20h30 • <a href="https://www.google.com/maps/search/?api=1&query=Maison+des+associations+Plouay" target="_blank">Maison des Associations</a></div></div></div>`;
     }).join('') + '</div>';
 
     let photosSortiesHTML = '<div class="photo-grid">';
@@ -282,29 +277,28 @@
     for(let i=1; i<=NB_PHOTOS_JEUX; i++) { photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('jeu${i}.jpg')"><img src="jeu${i}.jpg" loading="lazy"></div>`; }
     photosJeuxHTML += '</div>';
 
-    // --- DONNEES DES ONGLETS ---
     const pagesData = {
         histoire: { 
             title: "Le Grimoire", 
             text: `<div class="panel-card">
-                <div class="phase-label first">Phase 1</div><div class="phase-title"><span>La Pioche (2014)</span></div>
+                <div class="phase-title" style="margin-top: 10px;"><i class="fa-solid fa-scroll phase-icon"></i><span>Phase 1 : La Pioche (2014)</span></div>
                 <p class="grimoire-text">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>. Très vite, le virus se transmet et les premières soirées jeux s'organisent chez les uns et les autres.</p>
-                <div class="phase-label">Phase 2</div><div class="phase-title"><span>Le Coup de Maître (2015)</span></div>
+                <div class="phase-title" style="margin-top: 40px;"><i class="fa-solid fa-chess-rook phase-icon"></i><span>Phase 2 : Le Coup de Maître (2015)</span></div>
                 <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante ! Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées.</p>
-                <div class="phase-label">Phase 3</div><div class="phase-title"><span>La Fondation (2019)</span></div>
-                <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. L'association des "Potes à Jeux" naît officiellement. La petite tablée s'agrandit peu à peu pour accueillir de nouveaux joueurs de Plouay.</p>
-                <div class="phase-label">Phase 4</div><div class="phase-title"><span>L'Envolée (2026)</span></div>
-                <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. L'aventure ne fait que continuer avec vous !</p>
+                <div class="phase-title" style="margin-top: 40px;"><i class="fa-brands fa-fort-awesome phase-icon"></i><span>Phase 3 : La Fondation (2019)</span></div>
+                <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. Le club des "Potes à Jeux" naît officiellement. La petite tablée grandit pour devenir une véritable institution ludique à Plouay.</p>
+                <div class="phase-title" style="margin-top: 40px;"><i class="fa-solid fa-rocket phase-icon"></i><span>Phase 4 : L'Envolée (2026)</span></div>
+                <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. Le club continue de traverser les âges, et l'aventure ne fait que continuer avec vous !</p>
             </div>`
         },
         adhesion: { 
             title: "Rejoindre l'asso", 
             text: `<div class="panel-card">
-                <p style="text-align:center; margin-top:0;">Devenir membre est simple et convivial !</p>
+                <p style="text-align:center; margin-top:0;">Devenir un membre officiel des Potes à Jeux est simple et convivial !</p>
                 <div style="background: rgba(220, 53, 69, 0.1); border: 2px solid rgba(220, 53, 69, 0.2); color: #dc3545; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans</div>
                 <div class="pricing-container">
-                    <div class="price-card featured"><div class="amount">15€</div><p style="font-size:0.65rem; margin:0;">Solo / an</p></div>
-                    <div class="price-card featured"><div class="amount">20€</div><p style="font-size:0.65rem; margin:0;">Couple / an</p></div>
+                    <div class="price-card featured"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div>
+                    <div class="price-card featured"><div class="amount">20€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Couple</p></div>
                 </div>
                 <ul class="benefits-list" style="max-width: 280px; margin: 15px auto 0;">
                     <li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li>
@@ -326,7 +320,6 @@
         photos: { 
             title: "Souvenirs", 
             text: `<div class="panel-card" style="padding-left: 0; padding-right: 0; padding-bottom: 0; overflow: hidden;">
-                <p style="text-align: center; margin-top: 0; padding: 0 20px 10px; font-size: 0.9rem;">Cliquez sur une photo pour l'agrandir.</p>
                 <h3 class="photo-section-title first">Les Sorties</h3>${photosSortiesHTML}
                 <h3 class="photo-section-title">Les Jeux</h3>${photosJeuxHTML}
             </div>` 
@@ -352,6 +345,7 @@
                 <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Stéphane</h4><a href="https://www.myludo.fr/#!/profil/stephane-rio-26496" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Stéphane</span></div></div>
                 
                 <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sylvain</h4><a href="https://www.myludo.fr/#!/profil/sylvain-bedouet-64234" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Sylvain</span></div></div>
+
             </div>` 
         }
     };
@@ -363,12 +357,11 @@
     const mainWrapper = document.getElementById('mainWrapper');
 
     // ==========================================
-    // LOGIQUE NAVIGATION & BOUTON RETOUR ANDROID
+    // LOGIQUE NAVIGATION (History + Bouton Retour)
     // ==========================================
     function openSheet(key) {
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
-        overlay.style.display = 'block'; 
-        mainWrapper.classList.add('blurred');
+        overlay.style.display = 'block'; mainWrapper.classList.add('blurred');
         
         if (window.innerWidth <= 768) {
             sheet.style.transition = 'none';
@@ -380,7 +373,6 @@
         
         setTimeout(() => { sheet.classList.add('open'); }, 10);
 
-        // Ajoute la page à l'historique du téléphone (pour le bouton retour)
         if (!history.state || history.state.type !== 'sheet') {
             history.pushState({ type: 'sheet' }, '');
         }
@@ -393,14 +385,15 @@
         overlay.style.display = 'none'; 
         mainWrapper.classList.remove('blurred');
         
-        // Gère proprement l'historique (sans remonter indéfiniment)
         if (fromHistory !== true && history.state && history.state.type === 'sheet') {
             history.back();
         }
     }
 
+    overlay.onclick = () => closeSheet();
+
     // ==========================================
-    // NOUVEAU SCROLLING FLUIDE (SWIPE DOWN)
+    // LOGIQUE SWIPE DOWN FLUIDE (Vraie Sensation Mobile)
     // ==========================================
     let startY = 0; 
     let isDragging = false;
@@ -410,7 +403,7 @@
         if (sheetBody.scrollTop <= 0) { 
             startY = e.touches[0].clientY; 
             isDragging = true; 
-            sheet.style.transition = 'none'; // Suit parfaitement le doigt (plus de freeze)
+            sheet.style.transition = 'none'; 
         } 
     }, { passive: true });
 
@@ -428,13 +421,12 @@
         isDragging = false; 
         let diff = e.changedTouches[0].clientY - startY; 
         
-        // Remet l'animation au moment du relâchement
         sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; 
         
         if (diff > 100) {
-            closeSheet(); // Ferme si on a assez glissé
+            closeSheet();
         } else {
-            sheet.style.transform = ''; // Remonte sinon
+            sheet.style.transform = ''; 
         } 
     });
 
