@@ -31,7 +31,6 @@
             display: flex; justify-content: center;
             font-family: 'Quicksand', sans-serif;
             color: var(--text-brown); overflow: hidden;
-            touch-action: manipulation;
         }
 
         .phone {
@@ -48,6 +47,7 @@
         }
         .main-wrapper.blurred { filter: blur(5px); }
 
+        /* --- HERO --- */
         .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
         .hero { 
             width: 100%; height: 360px;
@@ -70,6 +70,7 @@
         .rdv-info a { color: var(--green-deep); text-decoration: none; font-weight: 600; font-size: 0.8rem; }
         .rdv-info a .underline { text-decoration: underline; }
 
+        /* --- CONTENU --- */
         .content {
             background: var(--bg-beige); padding: 45px 0 100px 0;
             position: relative; flex-grow: 1; overflow: hidden; 
@@ -87,7 +88,9 @@
             display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
             box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); cursor: pointer; transition: transform 0.2s;
         }
+        .btn-ludotheque:active { transform: scale(0.95); }
 
+        /* --- LIGHTBOX --- */
         .lightbox {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center;
@@ -98,6 +101,7 @@
         .lightbox.active img { transform: scale(1); }
         .lightbox-close { position: absolute; top: 25px; right: 25px; color: #ffffff; font-size: 1.8rem; background: rgba(0,0,0,0.6); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 110; cursor: pointer; }
 
+        /* --- BOTTOM SHEET --- */
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 25; display: none; opacity: 0; transition: opacity 0.3s ease; }
         .bottom-sheet { 
             position: absolute; top: 100%; left: 0; width: 100%; height: 85vh; 
@@ -106,7 +110,7 @@
             transition: transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1);
         }
         .bottom-sheet.open { transform: translateY(-100%); }
-        .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; cursor: grab; }
+        .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; }
         .sheet-handle { width: 45px; height: 6px; background: #e0e0e0; border-radius: 10px; margin: 0 auto; }
         .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; -webkit-overflow-scrolling: touch; }
         .sheet-content-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 2.6rem; margin: 10px 0 30px; text-align: center; position: relative; }
@@ -114,42 +118,40 @@
 
         .panel-card { background: var(--bg-beige); padding: 20px; border-radius: 20px; margin: 20px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
 
+        /* --- HISTOIRE --- */
         .phase-label { font-size: 0.8rem; font-weight: 700; color: var(--wood-brown); text-transform: uppercase; letter-spacing: 2px; margin: 35px 0 5px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .phase-label.first { margin-top: 5px; }
         .phase-label::before, .phase-label::after { content: ''; flex-grow: 1; height: 1px; background: var(--wood-highlight); opacity: 0.8; max-width: 30px; min-width: 10px; }
         .phase-title { font-family: 'Quicksand', sans-serif; color: var(--green-deep); font-size: 1.2rem; font-weight: 700; text-align: center; margin: 0 0 15px; display: flex; align-items: center; justify-content: center; gap: 10px; white-space: nowrap; }
         .grimoire-text { text-align: center; line-height: 1.6; font-size: 0.95rem; margin-top: 0; }
 
+        /* --- PHOTOS --- */
         .photo-section-title { text-align: center; color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 15px 0 10px 0; padding-top: 20px; border-top: 1px dashed rgba(0,0,0,0.1); }
         .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 0 3px 20px; }
         .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 2px; }
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
 
+        /* --- CONTACTS (ORIGINAL LOOK) --- */
+        .contact-person { display: flex; flex-direction: column; padding: 12px 15px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 15px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
+        .contact-person .avatar { width: 40px; height: 40px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; }
+        .contact-person .avatar.mail-icon { background: var(--wood-brown); }
+        .contact-person .avatar.fb-icon { background: var(--fb-blue); }
+        .contact-person .avatar.wa-icon { background: var(--wa-green); }
+        .contact-person .avatar.ludo-icon { background: var(--myludo-color); }
+        .contact-top h4 { margin: 0; color: var(--green-deep); font-size: 1.1rem; flex-grow: 1; min-width: 80px; }
+        .contact-bottom { width: 100%; padding-top: 8px; text-align: left; }
+        .contact-bottom span { font-size: 0.75rem; color: var(--text-brown); font-weight: 600; opacity: 0.9; display: block; }
+        .call-btn { background: var(--green-deep); color: white; text-decoration: none; width: 100px; height: 34px; border-radius: 50px; font-weight: 700; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 6px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.2); }
+        .call-btn.mail-btn { background: var(--wood-brown); }
+        .call-btn.fb-btn { background: var(--fb-blue); }
+        .call-btn.wa-btn { background: var(--wa-green); }
+
+        /* --- FOOTER --- */
         .footer-nav { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--green-deep); display: flex; justify-content: space-around; align-items: center; padding: 15px 0 25px 0; border-top: 3px solid var(--wood-brown); z-index: 20; }
         .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
         .icon-box { width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; border-radius: 14px; background: var(--wood-brown); margin-bottom: 6px; color: #ffffff; font-size: 1.3rem; box-shadow: 0 4px 8px rgba(0,0,0,0.25); transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); }
         .menu-item span { font-weight: 700; font-size: 0.5rem; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .contact-person { display: flex; flex-direction: column; padding: 12px 15px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 15px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
-        .contact-person .avatar { width: 40px; height: 40px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; }
-        .contact-top h4 { margin: 0; color: var(--green-deep); font-size: 1.1rem; flex-grow: 1; min-width: 80px; }
-        .contact-bottom span { font-size: 0.75rem; color: var(--text-brown); font-weight: 600; opacity: 0.9; display: block; }
-        .call-btn { background: var(--green-deep); color: white; text-decoration: none; width: 100px; height: 34px; border-radius: 50px; font-weight: 700; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 6px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.2); }
-
-        .cal-list { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; } 
-        .cal-item { display: flex; align-items: center; gap: 12px; background: #ffffff; padding: 10px 15px; border-radius: 12px; border-left: 4px solid var(--wood-brown); box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-        .cal-item .date { font-weight: 700; color: var(--green-deep); font-size: 1rem; text-transform: capitalize; margin-bottom: 2px; }
-        .cal-item .time { font-size: 0.8rem; color: var(--text-brown); line-height: 1.4; }
-        .cal-item .time a { color: var(--green-deep); text-decoration: underline; font-weight: 600; }
-
-        .pricing-container { display: flex; gap: 10px; margin: 15px 0; }
-        .price-card { flex: 1; background: #ffffff; padding: 12px; border-radius: 15px; text-align: center; border: 2px solid transparent; }
-        .price-card.featured { border-color: var(--wood-brown); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-        .price-card .amount { font-size: 1.6rem; font-weight: 700; color: var(--wood-brown); margin: 5px 0; }
-        .benefits-list { list-style: none; padding: 0; margin: 15px 0 0 0; }
-        .benefits-list li { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; }
-        .benefits-list i { color: var(--green-deep); }
 
         @media (min-width: 768px) {
             body { background-color: var(--bg-beige); overflow: auto; }
@@ -215,7 +217,6 @@
 <script>
     const NB_PHOTOS_SORTIES = 19; 
     const NB_PHOTOS_JEUX = 20;    
-
     let currentGallery = [];
     let currentPhotoIndex = 0;
 
@@ -237,11 +238,11 @@
     const upcomingDates = getNextLastFridays();
     const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
     let rawDate = upcomingDates[0].toLocaleDateString('fr-FR', dateOptions);
-    document.getElementById('next-rdv-banner').innerHTML = `${rawDate.charAt(0).toUpperCase() + rawDate.slice(1)} 20h30<br><a href="http://google.com/maps" target="_blank">📍 <span class="underline">Maison des Associations</span></a>`;
+    document.getElementById('next-rdv-banner').innerHTML = `${rawDate.charAt(0).toUpperCase() + rawDate.slice(1)} 20h30<br><a href="http://googleusercontent.com/maps.google.com/4" target="_blank">📍 <span class="underline">Maison des Associations</span></a>`;
 
     let agendaHTML = '<div class="cal-list">' + upcomingDates.map(date => {
         let formatted = date.toLocaleDateString('fr-FR', dateOptions);
-        return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="http://google.com/maps" target="_blank">Maison des Associations</a></div></div></div>`;
+        return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="http://googleusercontent.com/maps.google.com/4" target="_blank">Maison des Associations</a></div></div></div>`;
     }).join('') + '</div>';
 
     let photosSortiesHTML = '<div class="photo-grid">';
@@ -256,13 +257,13 @@
         histoire: { 
             title: "Le Grimoire", 
             text: `<div class="panel-card">
-                <div class="phase-label first">Phase 1</div><div class="phase-title"><i class="fa-solid fa-scroll"></i><span>La Pioche (2014)</span></div>
+                <div class="phase-label first">Phase 1</div><div class="phase-title"><span>La Pioche (2014)</span></div>
                 <p class="grimoire-text">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>. Très vite, le virus se transmet et les premières soirées jeux s'organisent chez les uns et les autres.</p>
-                <div class="phase-label">Phase 2</div><div class="phase-title"><i class="fa-solid fa-chess-rook"></i><span>Le Coup de Maître (2015)</span></div>
+                <div class="phase-label">Phase 2</div><div class="phase-title"><span>Le Coup de Maître (2015)</span></div>
                 <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante ! Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées.</p>
-                <div class="phase-label">Phase 3</div><div class="phase-title"><i class="fa-brands fa-fort-awesome"></i><span>La Fondation (2019)</span></div>
+                <div class="phase-label">Phase 3</div><div class="phase-title"><span>La Fondation (2019)</span></div>
                 <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. L'association des "Potes à Jeux" naît officiellement. La petite tablée s'agrandit peu à peu pour accueillir de nouveaux joueurs de Plouay.</p>
-                <div class="phase-label">Phase 4</div><div class="phase-title"><i class="fa-solid fa-rocket"></i><span>L'Envolée (2026)</span></div>
+                <div class="phase-label">Phase 4</div><div class="phase-title"><span>L'Envolée (2026)</span></div>
                 <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. L'aventure ne fait que continuer avec vous !</p>
             </div>`
         },
@@ -298,8 +299,8 @@
             title: "Nos Ludothèques", 
             text: `<div class="panel-card">
                 <p style="text-align: center; margin-top: 0; font-size: 0.95rem; line-height: 1.5;">Collections de nos membres sur <b>Myludo</b>.</p>
-                <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><i class="fa-solid fa-dice"></i></div><h4>Julie</h4><a href="#" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
-                <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><i class="fa-solid fa-puzzle-piece"></i></div><h4>Le Club</h4><a href="#" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
+                <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><i class="fa-solid fa-dice"></i></div><h4>Julie</h4><a href="LIEN_JULIE" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
+                <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><i class="fa-solid fa-puzzle-piece"></i></div><h4>Le Club</h4><a href="LIEN_CLUB" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
             </div>` 
         }
     };
@@ -321,35 +322,33 @@
         setTimeout(() => { overlay.style.display = 'none'; sheet.style.transform = ''; }, 400);
     }
 
-    overlay.onclick = closeSheet;
-
-    // --- SWIPE DOWN POUR FERMER (Logic du code 2) ---
-    let startY = 0; let currentY = 0; let isDragging = false;
-    sheet.addEventListener('touchstart', (e) => { 
-        if (sheetBody.scrollTop > 0) return; 
-        startY = e.touches[0].clientY; isDragging = true; sheet.style.transition = 'none'; 
+    // --- LOGIQUE SWIPE DOWN FLUIDE ---
+    let startY = 0;
+    let isDragging = false;
+    sheet.addEventListener('touchstart', (e) => {
+        if (sheetBody.scrollTop <= 0) {
+            startY = e.touches[0].clientY;
+            isDragging = true;
+            sheet.style.transition = "none";
+        }
     }, { passive: true });
 
-    sheet.addEventListener('touchmove', (e) => { 
-        if (!isDragging) return; 
-        currentY = e.touches[0].clientY;
-        let diff = currentY - startY; 
-        if (diff > 0) { 
-            e.preventDefault(); 
-            sheet.style.transform = `translateY(calc(-100% + ${diff}px))`; 
-        } 
+    sheet.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        let diff = e.touches[0].clientY - startY;
+        if (diff > 0) {
+            e.preventDefault();
+            sheet.style.transform = `translateY(calc(-100% + ${diff}px))`;
+        }
     }, { passive: false });
 
-    sheet.addEventListener('touchend', (e) => { 
-        if (!isDragging) return; 
-        isDragging = false; 
-        let diff = currentY - startY; 
-        sheet.style.transition = "transform 0.4s cubic-bezier(0.17, 0.84, 0.44, 1)"; 
-        if (diff > 120) {
-            closeSheet();
-        } else {
-            sheet.style.transform = ''; 
-        }
+    sheet.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        let diff = e.changedTouches[0].clientY - startY;
+        sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)";
+        if (diff > 120) closeSheet();
+        else sheet.style.transform = '';
     });
 
     // --- LIGHTBOX ---
