@@ -79,7 +79,7 @@
         .quote-text { font-family: 'Shadows Into Light', cursive; font-size: 1.6rem; line-height: 1.2; color: var(--green-deep); margin: 0; }
         .separator { width: 50px; height: 3px; background: var(--wood-highlight); margin: 15px auto; border-radius: 10px; opacity: 0.6; }
 
-        /* --- POLAROID & LIGHTBOX --- */
+        /* --- POLAROID & LIGHTBOX PLEIN ÉCRAN --- */
         .photo-slider { display: flex; overflow-x: auto; gap: 20px; padding: 15px 20px 30px; width: 100%; box-sizing: border-box; scrollbar-width: none; }
         .photo-slider::-webkit-scrollbar { display: none; }
         .photo-card { flex: 0 0 220px; background: white; padding: 10px 10px 35px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: rotate(-2deg); cursor: pointer; transition: transform 0.2s;}
@@ -89,10 +89,17 @@
 
         .lightbox {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 100; display: none; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.95); /* Fond presque noir pour bien voir la photo */
+            z-index: 100; display: none; justify-content: center; align-items: center;
             opacity: 0; transition: opacity 0.3s ease; cursor: pointer;
         }
-        .lightbox img { max-width: 90%; max-height: 80%; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 3px solid white; transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); cursor: default; }
+        /* Image plein écran sans bordure pour le téléchargement */
+        .lightbox img { 
+            width: 100%; height: 100%; 
+            object-fit: contain; 
+            transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); 
+            cursor: default; 
+        }
         .lightbox.active { opacity: 1; }
         .lightbox.active img { transform: scale(1); }
 
@@ -117,7 +124,7 @@
         .sheet-content-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 2.6rem; margin: 10px 0 30px; text-align: center; position: relative; }
         .sheet-content-title::after { content: ''; display: block; width: 50px; height: 4px; background: var(--wood-brown); margin: 10px auto 0; border-radius: 5px; }
 
-        /* --- ENCADRÉ GLOBAL (Contacts, Adhésion, Photos) --- */
+        /* --- ENCADRÉ GLOBAL (Histoire, Contacts, Adhésion, Photos) --- */
         .panel-card { 
             background: var(--bg-beige); 
             padding: 20px; 
@@ -130,9 +137,9 @@
         .grimoire-paper {
             background-color: #fffaf0; 
             border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-            padding: 35px 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1), inset 0 0 30px rgba(188, 143, 99, 0.3), inset 0 0 5px rgba(74, 60, 47, 0.2);
-            margin-bottom: 20px; position: relative;
+            padding: 30px 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05), inset 0 0 30px rgba(188, 143, 99, 0.2), inset 0 0 5px rgba(74, 60, 47, 0.1);
+            position: relative;
             background-image: linear-gradient(to bottom right, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0) 100%);
         }
         .phase-title { font-family: 'Shadows Into Light', cursive; color: var(--wood-brown); font-size: 1.5rem; text-align: center; margin: 35px 0 15px; display: flex; align-items: center; justify-content: center; gap: 15px; }
@@ -159,55 +166,56 @@
         .cal-item .time { font-size: 0.85rem; color: var(--text-brown); }
         .cal-item .time a { color: var(--green-deep); text-decoration: none; border-bottom: 1px dotted var(--green-deep); font-weight: 600; }
         
-        /* --- ONGLET CONTACT --- */
-        /* Les éléments de contact ont maintenant le même encadré que les cartes de prix ! */
+        /* --- ONGLET CONTACT MODIFIÉ --- */
         .contact-person { 
             display: flex; 
-            align-items: center; 
-            gap: 12px; 
+            flex-direction: column; 
             padding: 12px 15px; 
             width: 100%; 
             box-sizing: border-box; 
             background: #ffffff;
             border: 2px solid var(--wood-brown);
             border-radius: 15px;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
         .contact-person:last-child { margin-bottom: 0; }
 
-        .contact-person .avatar { width: 42px; height: 42px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; flex-shrink: 0; }
+        .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
+        
+        .contact-person .avatar { width: 40px; height: 40px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; }
         .contact-person .avatar.mail-icon { background: var(--wood-brown); }
         .contact-person .avatar.fb-icon { background: var(--fb-blue); }
         
-        .contact-person .person-details { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .contact-person .person-details h4 { margin: 0; color: var(--green-deep); font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .contact-person .person-details span { font-size: 0.75rem; color: var(--text-brown); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .contact-top h4 { margin: 0; color: var(--green-deep); font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; }
         
-        /* Boutons d'action unifiés et parfaitement alignés */
+        /* Descriptions sous les icônes */
+        .contact-bottom { width: 100%; padding-top: 8px; text-align: left; }
+        .contact-bottom span { font-size: 0.75rem; color: var(--text-brown); font-weight: 600; opacity: 0.9; display: block; }
+
+        /* Boutons d'action réduits et alignés */
         .call-btn { 
             background: var(--green-deep); 
             color: white; 
             text-decoration: none; 
-            width: 130px; /* Taille fixe pour que tous soient identiques */
-            height: 42px; /* Hauteur harmonisée */
+            width: 100px; /* Réduit */
+            height: 34px; /* Réduit */
             border-radius: 50px; 
             font-weight: 700; 
-            font-size: 0.85rem; 
-            display: flex; /* Centrage interne parfait */
+            font-size: 0.75rem; /* Plus petit */
+            display: flex; 
             align-items: center; 
             justify-content: center; 
-            gap: 8px; 
+            gap: 6px; 
             transition: transform 0.2s; 
             box-shadow: 0 4px 10px rgba(58, 99, 81, 0.2); 
-            flex-shrink: 0; /* Empêche l'écrasement */
-            margin-left: auto; /* Aligne rigoureusement à droite */
+            flex-shrink: 0; 
             box-sizing: border-box;
         }
         .call-btn:active { transform: scale(0.95); }
         .call-btn.mail-btn { background: var(--wood-brown); box-shadow: 0 4px 10px rgba(188, 143, 99, 0.2); }
         .call-btn.fb-btn { background: var(--fb-blue); box-shadow: 0 4px 10px rgba(24, 119, 242, 0.2); }
-        
+
         /* BOUTON WHATSAPP ANIMÉ */
         @keyframes pulse-green {
             0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); transform: scale(1); }
@@ -261,7 +269,7 @@
 
 <div class="phone">
     <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-        <img id="lightboxImg" src="" alt="Aperçu">
+        <img id="lightboxImg" src="" alt="Aperçu plein écran">
     </div>
 
     <div class="overlay" id="overlay" onclick="closeSheet()"></div>
@@ -358,30 +366,32 @@
         histoire: { 
             title: "Le Grimoire", 
             text: `
-                <div class="grimoire-paper">
-                    <div class="phase-title">
-                        <i class="fa-solid fa-scroll phase-icon"></i>
-                        <span>Phase 1 : La Pioche (2014)</span>
+                <div class="panel-card">
+                    <div class="grimoire-paper">
+                        <div class="phase-title">
+                            <i class="fa-solid fa-scroll phase-icon"></i>
+                            <span>Phase 1 : La Pioche (2014)</span>
+                        </div>
+                        <p class="grimoire-text">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>. Très vite, le virus se transmet et les premières soirées jeux s'organisent chez les uns et les autres. Ce n'était que le début d'une longue aventure ludique.</p>
+                        
+                        <div class="phase-title" style="margin-top: 40px;">
+                            <i class="fa-solid fa-chess-rook phase-icon"></i>
+                            <span>Phase 2 : Le Coup de Maître (2015)</span>
+                        </div>
+                        <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante ! Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées.</p>
+                        
+                        <div class="phase-title" style="margin-top: 40px;">
+                            <i class="fa-brands fa-fort-awesome phase-icon"></i>
+                            <span>Phase 3 : La Fondation (2019)</span>
+                        </div>
+                        <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. Le club des "Potes à Jeux" naît officiellement. La petite tablée grandit pour devenir une véritable institution ludique à Plouay.</p>
+                        
+                        <div class="phase-title" style="margin-top: 40px;">
+                            <i class="fa-solid fa-rocket phase-icon"></i>
+                            <span>Phase 4 : L'Envolée (2026)</span>
+                        </div>
+                        <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. Le club continue de traverser les âges, et l'aventure ne fait que continuer avec vous !</p>
                     </div>
-                    <p class="grimoire-text">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>. Très vite, le virus se transmet et les premières soirées jeux s'organisent chez les uns et les autres. Ce n'était que le début d'une longue aventure ludique.</p>
-                    
-                    <div class="phase-title" style="margin-top: 40px;">
-                        <i class="fa-solid fa-chess-rook phase-icon"></i>
-                        <span>Phase 2 : Le Coup de Maître (2015)</span>
-                    </div>
-                    <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante ! Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées. La machine était lancée !</p>
-                    
-                    <div class="phase-title" style="margin-top: 40px;">
-                        <i class="fa-brands fa-fort-awesome phase-icon"></i>
-                        <span>Phase 3 : La Fondation (2019)</span>
-                    </div>
-                    <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. Le club des "Potes à Jeux" naît officiellement. La petite tablée grandit pour devenir une véritable institution ludique à Plouay.</p>
-                    
-                    <div class="phase-title" style="margin-top: 40px;">
-                        <i class="fa-solid fa-rocket phase-icon"></i>
-                        <span>Phase 4 : L'Envolée (2026)</span>
-                    </div>
-                    <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. Le club continue de traverser les âges, et l'aventure ne fait que continuer avec vous !</p>
                 </div>`
         },
         cal: { 
@@ -441,30 +451,36 @@
             text: `
                 <div class="panel-card">
                     <div class="contact-person">
-                        <div class="avatar"><i class="fa-solid fa-user"></i></div>
-                        <div class="person-details">
+                        <div class="contact-top">
+                            <div class="avatar"><i class="fa-solid fa-user"></i></div>
                             <h4>Julie</h4>
-                            <span>Présidente</span>
+                            <a href="tel:+33620031771" class="call-btn"><i class="fa-solid fa-phone"></i> Appeler</a>
                         </div>
-                        <a href="tel:+33620031771" class="call-btn"><i class="fa-solid fa-phone"></i> Appeler</a>
+                        <div class="contact-bottom">
+                            <span>Présidente de l'association</span>
+                        </div>
                     </div>
                     
                     <div class="contact-person">
-                        <div class="avatar mail-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
-                        <div class="person-details">
+                        <div class="contact-top">
+                            <div class="avatar mail-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
                             <h4>Email</h4>
-                            <span>Une question ?</span>
+                            <a href="mailto:despotesajeux@protonmail.com" class="call-btn mail-btn"><i class="fa-solid fa-paper-plane"></i> Écrire</a>
                         </div>
-                        <a href="mailto:despotesajeux@protonmail.com" class="call-btn mail-btn"><i class="fa-solid fa-paper-plane"></i> Écrire</a>
+                        <div class="contact-bottom">
+                            <span>Pour toute question ou demande</span>
+                        </div>
                     </div>
 
                     <div class="contact-person">
-                        <div class="avatar fb-icon"><i class="fa-brands fa-facebook-f"></i></div>
-                        <div class="person-details">
+                        <div class="contact-top">
+                            <div class="avatar fb-icon"><i class="fa-brands fa-facebook-f"></i></div>
                             <h4>Facebook</h4>
-                            <span>La communauté</span>
+                            <a href="https://www.facebook.com/groups/despotesajeux/" target="_blank" class="call-btn fb-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Rejoindre</a>
                         </div>
-                        <a href="https://www.facebook.com/groups/despotesajeux/" target="_blank" class="call-btn fb-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Rejoindre</a>
+                        <div class="contact-bottom">
+                            <span>Pour suivre la communauté en ligne</span>
+                        </div>
                     </div>
                 </div>
 
