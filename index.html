@@ -151,20 +151,23 @@
         .menu-item span { font-weight: 700; font-size: 0.5rem; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
 
         /* --- UI ELEMENTS (Agenda optimisé) --- */
-        .cal-list { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; } /* Gap réduit */
+        .cal-list { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; } 
         .cal-item { 
             display: flex; align-items: center; gap: 12px; 
             background: #ffffff; 
-            padding: 10px 15px; /* Padding réduit */
+            padding: 10px 15px; 
             border-radius: 12px; 
             border-left: 4px solid var(--wood-brown); 
             box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
-        .cal-content { flex-grow: 1; overflow: hidden; } /* Conteneur de droite pour gérer le dépassement */
+        .cal-content { flex-grow: 1; overflow: hidden; } 
         .cal-item .date { font-weight: 700; color: var(--green-deep); font-size: 1rem; text-transform: capitalize; margin-bottom: 2px; }
-        /* time forcé sur une seule ligne avec ellipsis (...) si trop long */
-        .cal-item .time { font-size: 0.8rem; color: var(--text-brown); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .cal-item .time a { color: var(--green-deep); text-decoration: none; border-bottom: 1px dotted var(--green-deep); font-weight: 600; }
+        
+        /* Correction : Suppression du nowrap, le texte passe sur 2 lignes proprement */
+        .cal-item .time { font-size: 0.8rem; color: var(--text-brown); line-height: 1.4; }
+        
+        /* Correction : Soulignement explicite pour le lien */
+        .cal-item .time a { color: var(--green-deep); text-decoration: underline; font-weight: 600; }
         
         /* --- ONGLET CONTACT --- */
         .contact-person { 
@@ -334,7 +337,7 @@
         <a href="https://www.google.com/maps/search/?api=1&query=Maison+des+associations+Plouay" target="_blank">📍 <span class="underline">Maison des Associations</span></a>
     `;
 
-    // Génération de l'agenda avec la nouvelle structure `.cal-content` pour forcer les 2 lignes
+    // Génération de l'agenda avec le texte sur 2 lignes sans "..."
     let agendaHTML = '<div class="cal-list">';
     upcomingDates.forEach(date => {
         let formattedAgendaDate = date.toLocaleDateString('fr-FR', dateOptions);
