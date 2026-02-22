@@ -52,8 +52,7 @@
         /* --- BANNIÈRE HERO --- */
         .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
         .hero { 
-            width: 100%; 
-            height: 42vh; min-height: 250px; max-height: 340px;
+            width: 100%; height: 360px;
             background: url('hero.png') center top / cover no-repeat; 
             position: relative; z-index: 1; 
             -webkit-user-select: none; user-select: none;
@@ -117,14 +116,12 @@
         .sheet-handle { width: 45px; height: 6px; background: #e0e0e0; border-radius: 10px; margin: 0 auto; }
         .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; -webkit-overflow-scrolling: touch; }
         
-        /* Réduction de la marge du titre pour gagner de la place (anti-scroll) */
         .sheet-content-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 2.4rem; margin: 5px 0 20px; text-align: center; position: relative; }
         .sheet-content-title::after { content: ''; display: block; width: 50px; height: 4px; background: var(--wood-brown); margin: 10px auto 0; border-radius: 5px; }
 
-        /* Réduction du padding général pour gagner de la place */
         .panel-card { background: var(--bg-beige); padding: 15px; border-radius: 20px; margin: 15px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
 
-        /* --- HISTOIRE (Sur 2 lignes comme demandé) --- */
+        /* --- HISTOIRE --- */
         .phase-label { font-size: 0.8rem; font-weight: 700; color: var(--wood-brown); text-transform: uppercase; letter-spacing: 2px; margin: 30px 0 5px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .phase-label.first { margin-top: 5px; }
         .phase-label::before, .phase-label::after { content: ''; flex-grow: 1; height: 1px; background: var(--wood-highlight); opacity: 0.8; max-width: 30px; min-width: 10px; }
@@ -140,7 +137,7 @@
         .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 2px; }
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
 
-        /* --- CONTACTS & LUDOTHÈQUES (Ajusté pour éviter l'ascenseur) --- */
+        /* --- CONTACTS & LUDOTHÈQUES --- */
         .contact-person { display: flex; flex-direction: column; padding: 10px 12px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
         .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
         .contact-person .avatar { width: 38px; height: 38px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; overflow: hidden;}
@@ -158,7 +155,7 @@
         .call-btn.mail-btn { background: var(--wood-brown); }
         .call-btn.fb-btn { background: var(--fb-blue); }
         .call-btn.wa-btn { background: var(--wa-green); }
-        .call-btn.ludo-btn { background: var(--myludo-color); }
+        .call-btn.ludo-btn { background: var(--myludo-color); box-shadow: 0 4px 10px rgba(41, 128, 185, 0.2); }
 
         /* --- ADHESION --- */
         .pricing-container { display: flex; gap: 10px; margin: 15px 0; }
@@ -273,24 +270,13 @@
     const upcomingDates = getNextLastFridays();
     const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
     let rawDate = upcomingDates[0].toLocaleDateString('fr-FR', dateOptions);
-    document.getElementById('next-rdv-banner').innerHTML = `${rawDate.charAt(0).toUpperCase() + rawDate.slice(1)} 20h30<br><a href="https://www.google.com/maps/search/?api=1&query=Maison+des+associations+Plouay" target="_blank">📍 <span class="underline">Maison des Associations</span></a>`;
+    document.getElementById('next-rdv-banner').innerHTML = `${rawDate.charAt(0).toUpperCase() + rawDate.slice(1)} 20h30<br><a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank">📍 <span class="underline">Maison des Associations</span></a>`;
 
-    // --- GENERATION HTML (Agenda multi-lignes & Photos) ---
-    let agendaHTML = '<div class="cal-list">';
-    upcomingDates.forEach(date => {
-        let formattedAgendaDate = date.toLocaleDateString('fr-FR', dateOptions);
-        let capAgendaDate = formattedAgendaDate.charAt(0).toUpperCase() + formattedAgendaDate.slice(1);
-        agendaHTML += `
-            <div class="cal-item">
-                <i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem; flex-shrink: 0;"></i>
-                <div class="cal-content">
-                    <div class="date">${capAgendaDate}</div>
-                    <div class="time">20h30 • <a href="https://www.google.com/maps/search/?api=1&query=Maison+des+associations+Plouay" target="_blank">Maison des Associations</a></div>
-                </div>
-            </div>`;
-    });
-    agendaHTML += '</div>';
-
+    // --- GENERATION HTML (Agenda & Photos) ---
+    let agendaHTML = '<div class="cal-list">' + upcomingDates.map(date => {
+        let formatted = date.toLocaleDateString('fr-FR', dateOptions);
+        return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem; flex-shrink:0;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank">Maison des Associations</a></div></div></div>`;
+    }).join('') + '</div>';
 
     let photosSortiesHTML = '<div class="photo-grid">';
     for(let i=1; i<=NB_PHOTOS_SORTIES; i++) { photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('sortie${i}.jpg')"><img src="sortie${i}.jpg" loading="lazy"></div>`; }
@@ -305,27 +291,23 @@
         histoire: { 
             title: "Le Grimoire", 
             text: `<div class="panel-card">
-                <div class="phase-label first">Phase 1</div>
-                <div class="phase-title"><i class="fa-solid fa-scroll phase-icon"></i><span>La Pioche (2014)</span></div>
+                <div class="phase-label first">Phase 1</div><div class="phase-title"><i class="fa-solid fa-scroll phase-icon"></i><span>La Pioche (2014)</span></div>
                 <p class="grimoire-text">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>. Très vite, le virus se transmet et les premières soirées jeux s'organisent chez les uns et les autres.</p>
                 
-                <div class="phase-label">Phase 2</div>
-                <div class="phase-title"><i class="fa-solid fa-chess-rook phase-icon"></i><span>Le Coup de Maître (2015)</span></div>
+                <div class="phase-label">Phase 2</div><div class="phase-title"><i class="fa-solid fa-chess-rook phase-icon"></i><span>Le Coup de Maître (2015)</span></div>
                 <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante ! Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées.</p>
                 
-                <div class="phase-label">Phase 3</div>
-                <div class="phase-title"><i class="fa-brands fa-fort-awesome phase-icon"></i><span>La Fondation (2019)</span></div>
+                <div class="phase-label">Phase 3</div><div class="phase-title"><i class="fa-brands fa-fort-awesome phase-icon"></i><span>La Fondation (2019)</span></div>
                 <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. L'association des "Potes à Jeux" naît officiellement. La petite tablée s'agrandit peu à peu pour accueillir de nouveaux joueurs de Plouay.</p>
                 
-                <div class="phase-label">Phase 4</div>
-                <div class="phase-title"><i class="fa-solid fa-rocket phase-icon"></i><span>L'Envolée (2026)</span></div>
+                <div class="phase-label">Phase 4</div><div class="phase-title"><i class="fa-solid fa-rocket phase-icon"></i><span>L'Envolée (2026)</span></div>
                 <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. L'aventure ne fait que continuer avec vous !</p>
             </div>`
         },
         adhesion: { 
             title: "Rejoindre l'asso", 
             text: `<div class="panel-card">
-                <p style="text-align:center; margin-top:0;">Devenir membre est simple et convivial !</p>
+                <p style="text-align:center; margin-top:0;">Devenir un membre officiel des Potes à Jeux est simple et convivial !</p>
                 <div style="background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.2); color: #dc3545; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans</div>
                 <div class="pricing-container">
                     <div class="price-card featured"><div class="amount">15€</div><p style="font-size:0.65rem; margin:0;">Solo / an</p></div>
@@ -423,11 +405,10 @@
         }
     }
 
-    // Cliquer sur le fond gris ferme le menu
-    overlay.addEventListener('click', () => closeSheet());
+    overlay.onclick = () => closeSheet();
 
     // ==========================================
-    // NOUVEAU SCROLLING FLUIDE (SWIPE DOWN)
+    // LOGIQUE SWIPE DOWN FLUIDE
     // ==========================================
     let startY = 0; 
     let isDragging = false;
@@ -437,7 +418,7 @@
         if (sheetBody.scrollTop <= 0) { 
             startY = e.touches[0].clientY; 
             isDragging = true; 
-            sheet.style.transition = 'none'; // Suit parfaitement le doigt (plus de freeze)
+            sheet.style.transition = 'none'; 
         } 
     }, { passive: true });
 
@@ -455,13 +436,12 @@
         isDragging = false; 
         let diff = e.changedTouches[0].clientY - startY; 
         
-        // Remet l'animation au moment du relâchement
         sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; 
         
         if (diff > 100) {
-            closeSheet(); // Ferme si on a assez glissé
+            closeSheet();
         } else {
-            sheet.style.transform = ''; // Remonte sinon
+            sheet.style.transform = ''; 
         } 
     });
 
