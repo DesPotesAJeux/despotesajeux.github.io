@@ -23,7 +23,7 @@
             --wood-highlight: #dbb38a;
             --fb-blue: #1877F2;
             --wa-green: #25D366; 
-            --myludo-color: #2c3e50; /* Nouvelle couleur pour les ludothèques */
+            --myludo-color: #2c3e50; 
         }
 
         body {
@@ -51,11 +51,11 @@
         /* --- BANNIÈRE HERO --- */
         .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
         .hero { 
-            width: 100%; height: 360px;
+            width: 100%; 
+            height: 42vh; min-height: 250px; max-height: 340px; 
             background: url('hero.png') center top / contain no-repeat; 
             position: relative; z-index: 1; 
             
-            /* -- PROTECTION ANTI-COPIE -- */
             -webkit-user-select: none;
             user-select: none;
             -webkit-touch-callout: none;
@@ -78,22 +78,23 @@
 
         /* --- CONTENU & BOUTON ACCUEIL --- */
         .content {
-            background: var(--bg-beige); padding: 45px 0 100px 0;
+            background: var(--bg-beige); 
+            padding: 35px 0 90px 0; 
             position: relative; flex-grow: 1; overflow: hidden; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        .quote-box { padding: 20px 35px; text-align: center; position: relative; }
-        .quote-text { font-family: 'Shadows Into Light', cursive; font-size: 1.6rem; line-height: 1.2; color: var(--green-deep); margin: 0; }
-        .separator { width: 50px; height: 3px; background: var(--wood-highlight); margin: 15px auto; border-radius: 10px; opacity: 0.6; }
+        .quote-box { padding: 15px 30px; text-align: center; position: relative; display: flex; flex-direction: column; align-items: center; }
+        .quote-text { font-family: 'Shadows Into Light', cursive; font-size: 1.5rem; line-height: 1.2; color: var(--green-deep); margin: 0; }
+        .separator { width: 50px; height: 3px; background: var(--wood-highlight); margin: 12px auto; border-radius: 10px; opacity: 0.6; }
 
-        /* BOUTON LUDOTHÈQUE SUR L'ACCUEIL */
         .btn-ludotheque {
-            background: var(--wood-brown);
-            color: white; border: none; padding: 12px 25px; border-radius: 50px;
-            font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 1rem;
-            display: flex; align-items: center; gap: 10px; margin-top: 15px;
-            box-shadow: 0 5px 15px rgba(188, 143, 99, 0.3);
+            background: var(--wood-brown); 
+            color: white; border: none; 
+            padding: 10px 20px; border-radius: 50px;
+            font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.85rem;
+            display: flex; align-items: center; gap: 8px; margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3);
             cursor: pointer; transition: transform 0.2s;
         }
         .btn-ludotheque:active { transform: scale(0.95); }
@@ -104,7 +105,14 @@
             background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center;
             opacity: 0; transition: opacity 0.3s ease; cursor: pointer;
         }
-        .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); cursor: default; }
+        .lightbox img { 
+            max-width: 100%; max-height: 100%; object-fit: contain; 
+            transform: scale(0.9); 
+            /* Ajout d'une transition sur l'opacité pour le swipe */
+            transition: transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1), opacity 0.2s ease; 
+            cursor: default; 
+            opacity: 1;
+        }
         .lightbox.active { opacity: 1; }
         .lightbox.active img { transform: scale(1); }
         
@@ -327,6 +335,14 @@
 </div>
 
 <script>
+    const NB_PHOTOS_SORTIES = 18; 
+    const NB_PHOTOS_JEUX = 6;    
+
+    // --- VARIABLES POUR LA NAVIGATION PHOTOS ---
+    let currentGallery = [];
+    let currentPhotoIndex = 0;
+
+    // --- Calcul Prochain RDV ---
     function getNextLastFridays() {
         let dates = [];
         let now = new Date();
@@ -335,15 +351,9 @@
 
         while (dates.length < 4) {
             let d = new Date(currentYear, currentMonth + 1, 0); 
-            while (d.getDay() !== 5) {
-                d.setDate(d.getDate() - 1); 
-            }
-            let checkDate = new Date(d);
-            checkDate.setHours(23, 59, 59);
-
-            if (checkDate >= now) {
-                dates.push(new Date(d));
-            }
+            while (d.getDay() !== 5) { d.setDate(d.getDate() - 1); }
+            let checkDate = new Date(d); checkDate.setHours(23, 59, 59);
+            if (checkDate >= now) { dates.push(new Date(d)); }
             currentMonth++;
         }
         return dates;
@@ -360,6 +370,7 @@
         <a href="https://www.google.com/maps/search/?api=1&query=Maison+des+associations+Plouay" target="_blank">📍 <span class="underline">Maison des Associations</span></a>
     `;
 
+    // --- Génération de l'agenda ---
     let agendaHTML = '<div class="cal-list">';
     upcomingDates.forEach(date => {
         let formattedAgendaDate = date.toLocaleDateString('fr-FR', dateOptions);
@@ -375,6 +386,18 @@
     });
     agendaHTML += '</div>';
 
+    // --- Génération Dynamique des Grilles Photos ---
+    let photosSortiesHTML = '';
+    for(let i = 1; i <= NB_PHOTOS_SORTIES; i++) {
+        photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('sortie${i}.jpg')"><img src="sortie${i}.jpg" alt="Sortie ${i}" loading="lazy"></div>`;
+    }
+
+    let photosJeuxHTML = '';
+    for(let i = 1; i <= NB_PHOTOS_JEUX; i++) {
+        photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('jeu${i}.jpg')"><img src="jeu${i}.jpg" alt="Jeu ${i}" loading="lazy"></div>`;
+    }
+
+    // --- Données des Pages ---
     const pagesData = {
         histoire: { 
             title: "Le Grimoire", 
@@ -447,28 +470,12 @@
                     
                     <h3 class="photo-section-title first">Les Sorties</h3>
                     <div class="photo-grid">
-                        <div class="photo-grid-item" onclick="openLightbox('sortie1.jpg')"><img src="sortie1.jpg" alt="Sortie"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('sortie2.jpg')"><img src="sortie2.jpg" alt="Sortie"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('sortie3.jpg')"><img src="sortie3.jpg" alt="Sortie"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('sortie4.jpg')"><img src="sortie4.jpg" alt="Sortie"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('sortie5.jpg')"><img src="sortie5.jpg" alt="Sortie"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('sortie6.jpg')"><img src="sortie6.jpg" alt="Sortie"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('sortie7.jpg')"><img src="sortie7.jpg" alt="Sortie"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('sortie8.jpg')"><img src="sortie8.jpg" alt="Sortie"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('sortie9.jpg')"><img src="sortie9.jpg" alt="Sortie"></div>
+                        ${photosSortiesHTML}
                     </div>
 
                     <h3 class="photo-section-title">Les Jeux</h3>
                     <div class="photo-grid">
-                        <div class="photo-grid-item" onclick="openLightbox('jeu1.jpg')"><img src="jeu1.jpg" alt="Jeu"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('jeu2.jpg')"><img src="jeu2.jpg" alt="Jeu"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('jeu3.jpg')"><img src="jeu3.jpg" alt="Jeu"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('jeu4.jpg')"><img src="jeu4.jpg" alt="Jeu"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('jeu5.jpg')"><img src="jeu5.jpg" alt="Jeu"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('jeu6.jpg')"><img src="jeu6.jpg" alt="Jeu"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('jeu7.jpg')"><img src="jeu7.jpg" alt="Jeu"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('jeu8.jpg')"><img src="jeu8.jpg" alt="Jeu"></div>
-                        <div class="photo-grid-item" onclick="openLightbox('jeu9.jpg')"><img src="jeu9.jpg" alt="Jeu"></div>
+                        ${photosJeuxHTML}
                     </div>
                 </div>`
         },
@@ -521,7 +528,6 @@
                     </div>
                 </div>` 
         },
-        /* --- NOUVEL ONGLET LUDOTHÈQUE VIA LE BOUTON ACCUEIL --- */
         ludotheque: {
             title: "Nos Ludothèques",
             text: `
@@ -584,19 +590,20 @@
         setTimeout(() => { overlay.style.display = 'none'; sheetContent.style.opacity = '1'; }, 250);
     }
 
+    // --- GESTION DU BOTTOM SHEET (SWIPE DOWN) ---
     let startY = 0;
-    let isDragging = false;
+    let isDraggingSheet = false;
     sheet.addEventListener('touchstart', (e) => {
         if (window.innerWidth > 768) return; 
         if (sheetBody.scrollTop <= 0) {
             startY = e.touches[0].clientY;
-            isDragging = true;
+            isDraggingSheet = true;
             sheet.style.transition = "none";
             sheetContent.style.transition = "none";
         }
     }, { passive: true });
     sheet.addEventListener('touchmove', (e) => {
-        if (!isDragging || window.innerWidth > 768) return;
+        if (!isDraggingSheet || window.innerWidth > 768) return;
         let diff = e.touches[0].clientY - startY;
         if (diff > 0) {
             e.preventDefault(); 
@@ -606,8 +613,8 @@
         }
     }, { passive: false });
     sheet.addEventListener('touchend', (e) => {
-        if (!isDragging || window.innerWidth > 768) return;
-        isDragging = false;
+        if (!isDraggingSheet || window.innerWidth > 768) return;
+        isDraggingSheet = false;
         let diff = e.changedTouches[0].clientY - startY;
         if (diff > 60) { closeSheet(); } else {
             sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)";
@@ -617,13 +624,27 @@
         }
     });
 
+    // --- GESTION DE LA LIGHTBOX (OUVERTURE / FERMETURE / SWIPE) ---
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightboxImg');
     
     function openLightbox(src) {
+        // Construit la galerie dynamiquement pour le swipe
+        const images = document.querySelectorAll('.photo-grid img');
+        currentGallery = Array.from(images).map(img => img.getAttribute('src'));
+        currentPhotoIndex = currentGallery.indexOf(src);
+        
+        // Sécurité si l'image n'est pas dans la liste
+        if(currentPhotoIndex === -1) { currentGallery = [src]; currentPhotoIndex = 0; }
+
         lightboxImg.src = src;
         lightbox.style.display = 'flex';
         setTimeout(() => { lightbox.classList.add('active'); }, 10);
+        
+        // Pousse un état dans l'historique pour le bouton "Retour" Android
+        if (!history.state || history.state.modal !== 'lightbox') {
+            history.pushState({ modal: 'lightbox' }, '');
+        }
     }
     
     function closeLightbox(event) {
@@ -632,9 +653,59 @@
     }
     
     function closeLightboxForce() {
-        lightbox.classList.remove('active');
-        setTimeout(() => { lightbox.style.display = 'none'; }, 300);
+        if (lightbox.classList.contains('active')) {
+            lightbox.classList.remove('active');
+            setTimeout(() => { lightbox.style.display = 'none'; }, 300);
+            
+            // Si on a fermé à la main, on enlève l'état d'historique 
+            if (history.state && history.state.modal === 'lightbox') {
+                history.go(-1);
+            }
+        }
     }
+
+    // Capture le bouton "Retour" physique du téléphone
+    window.addEventListener('popstate', (e) => {
+        if (lightbox.classList.contains('active')) {
+            lightbox.classList.remove('active');
+            setTimeout(() => { lightbox.style.display = 'none'; }, 300);
+        }
+    });
+
+    // Changer d'image (avec petit fondu)
+    function changeLightboxImage(direction) {
+        if (currentGallery.length <= 1) return;
+        
+        if (direction === 'next') {
+            currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length;
+        } else {
+            currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length;
+        }
+        
+        lightboxImg.style.opacity = '0';
+        setTimeout(() => {
+            lightboxImg.src = currentGallery[currentPhotoIndex];
+            lightboxImg.style.opacity = '1';
+        }, 150);
+    }
+
+    // Gestion du swipe Gauche/Droite sur la photo
+    let swipeStartX = 0;
+    lightbox.addEventListener('touchstart', e => {
+        swipeStartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+
+    lightbox.addEventListener('touchend', e => {
+        let swipeEndX = e.changedTouches[0].screenX;
+        let diff = swipeStartX - swipeEndX;
+        
+        if (diff > 50) {
+            changeLightboxImage('next'); // Glissé vers la gauche -> photo suivante
+        } else if (diff < -50) {
+            changeLightboxImage('prev'); // Glissé vers la droite -> photo précédente
+        }
+    }, {passive: true});
+
 </script>
 </body>
 </html>
