@@ -31,6 +31,7 @@
             display: flex; justify-content: center;
             font-family: 'Quicksand', sans-serif;
             color: var(--text-brown); overflow: hidden;
+            touch-action: manipulation;
         }
 
         .phone {
@@ -50,7 +51,8 @@
         /* --- HERO --- */
         .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
         .hero { 
-            width: 100%; height: 360px;
+            width: 100%; 
+            height: 42vh; min-height: 250px; max-height: 340px;
             background: url('hero.png') center center / cover no-repeat; 
             position: relative; z-index: 1; 
             -webkit-user-select: none; user-select: none;
@@ -88,7 +90,6 @@
             display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
             box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); cursor: pointer; transition: transform 0.2s;
         }
-        .btn-ludotheque:active { transform: scale(0.95); }
 
         /* --- LIGHTBOX --- */
         .lightbox {
@@ -107,7 +108,7 @@
             position: absolute; top: 100%; left: 0; width: 100%; height: 85vh; 
             background: white; z-index: 30; border-top-left-radius: 35px; border-top-right-radius: 35px; 
             display: flex; flex-direction: column; will-change: transform;
-            transition: transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1);
+            transition: transform 0.4s cubic-bezier(0.17, 0.84, 0.44, 1);
         }
         .bottom-sheet.open { transform: translateY(-100%); }
         .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; }
@@ -129,25 +130,27 @@
         .photo-section-title { text-align: center; color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 15px 0 10px 0; padding-top: 20px; border-top: 1px dashed rgba(0,0,0,0.1); }
         .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 0 3px 20px; }
         .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 2px; }
-        .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+        .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* --- CONTACTS (ORIGINAL LOOK) --- */
+        /* --- CONTACTS (ORIGINAL DESIGN) --- */
         .contact-person { display: flex; flex-direction: column; padding: 12px 15px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 15px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
         .contact-person .avatar { width: 40px; height: 40px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; }
         .contact-person .avatar.mail-icon { background: var(--wood-brown); }
         .contact-person .avatar.fb-icon { background: var(--fb-blue); }
         .contact-person .avatar.wa-icon { background: var(--wa-green); }
-        .contact-person .avatar.ludo-icon { background: var(--myludo-color); }
         .contact-top h4 { margin: 0; color: var(--green-deep); font-size: 1.1rem; flex-grow: 1; min-width: 80px; }
         .contact-bottom { width: 100%; padding-top: 8px; text-align: left; }
         .contact-bottom span { font-size: 0.75rem; color: var(--text-brown); font-weight: 600; opacity: 0.9; display: block; }
         .call-btn { background: var(--green-deep); color: white; text-decoration: none; width: 100px; height: 34px; border-radius: 50px; font-weight: 700; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 6px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.2); }
-        .call-btn.mail-btn { background: var(--wood-brown); }
-        .call-btn.fb-btn { background: var(--fb-blue); }
-        .call-btn.wa-btn { background: var(--wa-green); }
 
-        /* --- FOOTER --- */
+        /* --- AGENDA --- */
+        .cal-list { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; } 
+        .cal-item { display: flex; align-items: center; gap: 12px; background: #ffffff; padding: 10px 15px; border-radius: 12px; border-left: 4px solid var(--wood-brown); box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .cal-item .date { font-weight: 700; color: var(--green-deep); font-size: 1rem; text-transform: capitalize; margin-bottom: 2px; }
+        .cal-item .time { font-size: 0.8rem; color: var(--text-brown); line-height: 1.4; }
+        .cal-item .time a { color: var(--green-deep); text-decoration: underline; font-weight: 600; }
+
         .footer-nav { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--green-deep); display: flex; justify-content: space-around; align-items: center; padding: 15px 0 25px 0; border-top: 3px solid var(--wood-brown); z-index: 20; }
         .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
         .icon-box { width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; border-radius: 14px; background: var(--wood-brown); margin-bottom: 6px; color: #ffffff; font-size: 1.3rem; box-shadow: 0 4px 8px rgba(0,0,0,0.25); transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); }
@@ -238,11 +241,11 @@
     const upcomingDates = getNextLastFridays();
     const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
     let rawDate = upcomingDates[0].toLocaleDateString('fr-FR', dateOptions);
-    document.getElementById('next-rdv-banner').innerHTML = `${rawDate.charAt(0).toUpperCase() + rawDate.slice(1)} 20h30<br><a href="http://googleusercontent.com/maps.google.com/4" target="_blank">📍 <span class="underline">Maison des Associations</span></a>`;
+    document.getElementById('next-rdv-banner').innerHTML = `${rawDate.charAt(0).toUpperCase() + rawDate.slice(1)} 20h30<br><a href="http://googleusercontent.com/maps.google.com/5" target="_blank">📍 <span class="underline">Maison des Associations</span></a>`;
 
     let agendaHTML = '<div class="cal-list">' + upcomingDates.map(date => {
         let formatted = date.toLocaleDateString('fr-FR', dateOptions);
-        return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="http://googleusercontent.com/maps.google.com/4" target="_blank">Maison des Associations</a></div></div></div>`;
+        return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="http://googleusercontent.com/maps.google.com/5" target="_blank">Maison des Associations</a></div></div></div>`;
     }).join('') + '</div>';
 
     let photosSortiesHTML = '<div class="photo-grid">';
@@ -299,8 +302,8 @@
             title: "Nos Ludothèques", 
             text: `<div class="panel-card">
                 <p style="text-align: center; margin-top: 0; font-size: 0.95rem; line-height: 1.5;">Collections de nos membres sur <b>Myludo</b>.</p>
-                <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><i class="fa-solid fa-dice"></i></div><h4>Julie</h4><a href="LIEN_JULIE" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
-                <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><i class="fa-solid fa-puzzle-piece"></i></div><h4>Le Club</h4><a href="LIEN_CLUB" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
+                <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><i class="fa-solid fa-dice"></i></div><h4>Julie</h4><a href="https://www.myludo.fr/#!/profil/julie-despotesajeux-39328" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
+                <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><i class="fa-solid fa-puzzle-piece"></i></div><h4>Le Club</h4><a href="https://www.myludo.fr/#!/profil/des-potes-a-jeux-38379" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
             </div>` 
         }
     };
@@ -322,33 +325,31 @@
         setTimeout(() => { overlay.style.display = 'none'; sheet.style.transform = ''; }, 400);
     }
 
-    // --- LOGIQUE SWIPE DOWN FLUIDE ---
-    let startY = 0;
-    let isDragging = false;
-    sheet.addEventListener('touchstart', (e) => {
-        if (sheetBody.scrollTop <= 0) {
-            startY = e.touches[0].clientY;
-            isDragging = true;
-            sheet.style.transition = "none";
-        }
+    overlay.onclick = closeSheet;
+
+    // --- LOGIQUE SWIPE DOWN FLUIDE (FIXED) ---
+    let startY = 0; let isDragging = false;
+    sheet.addEventListener('touchstart', (e) => { 
+        if (sheetBody.scrollTop <= 0) { 
+            startY = e.touches[0].clientY; isDragging = true; sheet.style.transition = 'none'; 
+        } 
     }, { passive: true });
 
-    sheet.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        let diff = e.touches[0].clientY - startY;
-        if (diff > 0) {
-            e.preventDefault();
-            sheet.style.transform = `translateY(calc(-100% + ${diff}px))`;
-        }
+    sheet.addEventListener('touchmove', (e) => { 
+        if (!isDragging) return; 
+        let diff = e.touches[0].clientY - startY; 
+        if (diff > 0) { 
+            e.preventDefault(); 
+            sheet.style.transform = `translateY(calc(-100% + ${diff}px))`; 
+        } 
     }, { passive: false });
 
-    sheet.addEventListener('touchend', (e) => {
-        if (!isDragging) return;
-        isDragging = false;
-        let diff = e.changedTouches[0].clientY - startY;
-        sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)";
-        if (diff > 120) closeSheet();
-        else sheet.style.transform = '';
+    sheet.addEventListener('touchend', (e) => { 
+        if (!isDragging) return; 
+        isDragging = false; 
+        let diff = e.changedTouches[0].clientY - startY; 
+        sheet.style.transition = "transform 0.4s cubic-bezier(0.17, 0.84, 0.44, 1)"; 
+        if (diff > 100) closeSheet(); else sheet.style.transform = ''; 
     });
 
     // --- LIGHTBOX ---
