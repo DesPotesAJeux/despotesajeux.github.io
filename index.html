@@ -136,7 +136,7 @@
             transition: transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1);
         }
         .bottom-sheet.open { transform: translateY(-100%); }
-        .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; cursor: grab; }
+        .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; }
         .sheet-handle { width: 45px; height: 6px; background: #e0e0e0; border-radius: 10px; margin: 0 auto; }
         .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; -webkit-overflow-scrolling: touch; }
         
@@ -161,7 +161,7 @@
         .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 2px; }
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
 
-        /* --- CONTACTS & LUDOTHÈQUES --- */
+        /* --- CONTACTS --- */
         .contact-person { display: flex; flex-direction: column; padding: 10px 12px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
         .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
         .contact-person .avatar { width: 38px; height: 38px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; overflow: hidden;}
@@ -456,7 +456,7 @@
         if (sheetBody.scrollTop <= 0) { 
             startY = e.touches[0].clientY; 
             isDragging = true; 
-            sheet.style.transition = 'none'; // Suit parfaitement le doigt (plus de freeze)
+            sheet.style.transition = 'none'; 
         } 
     }, { passive: true });
 
@@ -478,9 +478,9 @@
         sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; 
         
         if (diff > 100) {
-            closeSheet(); // Ferme si on a assez glissé
+            closeSheet();
         } else {
-            sheet.style.transform = ''; // Remonte sinon
+            sheet.style.transform = ''; 
         } 
     });
 
@@ -522,11 +522,9 @@
         }, 300);
     }
 
-    function closeLightboxForce() {
+    function closeLightboxForce(fromHistory = false) { 
         if (!lb.classList.contains('active')) return;
         
-        // Si on a l'historique "lightbox", faire retour déclenchera popstate (qui cachera le DOM de la photo) 
-        // ET on restera sur le BottomSheet !
         if (history.state && history.state.type === 'lightbox') {
             history.back(); 
         } else {
@@ -596,6 +594,7 @@
                 posY += (currentY - lastPosY) / currentScale;
                 lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`;
             } else if (!isZooming) {
+                // Seulement swiper horizontalement si l'image n'est pas zoomée
                 let diffX = currentX - lastPosX;
                 lbContainer.style.transform = `translateX(${diffX}px)`; 
             }
