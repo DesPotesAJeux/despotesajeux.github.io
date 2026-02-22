@@ -47,18 +47,13 @@
         }
         .main-wrapper.blurred { filter: blur(5px); }
 
-        /* --- RETOUR BANNIÈRE HERO ORIGINALE --- */
         .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
         .hero { 
-            width: 100%; 
-            height: 360px; /* Retour à la taille fixe d'origine */
+            width: 100%; height: 360px;
             background: url('hero.png') center top / contain no-repeat; 
             position: relative; z-index: 1; 
-            
-            -webkit-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
-            pointer-events: none;
+            -webkit-user-select: none; user-select: none;
+            -webkit-touch-callout: none; pointer-events: none;
         }
 
         .rdv-card {
@@ -67,38 +62,31 @@
             position: absolute; bottom: -20px; left: 50%;
             transform: translateX(-50%); display: flex; align-items: center;
             box-shadow: 0 10px 30px rgba(74, 60, 47, 0.15); border: 1px solid white;
-            z-index: 10;
-            pointer-events: auto;
+            z-index: 10; pointer-events: auto;
         }
 
         .rdv-info p { margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--green-deep); line-height: 1.3; }
         .rdv-info a { color: var(--green-deep); text-decoration: none; font-weight: 600; font-size: 0.8rem; }
         .rdv-info a .underline { text-decoration: underline; }
 
-        /* --- CONTENU --- */
         .content {
             background: var(--bg-beige); padding: 45px 0 100px 0;
             position: relative; flex-grow: 1; overflow: hidden; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        .quote-box { padding: 20px 35px; text-align: center; position: relative; display: flex; flex-direction: column; align-items: center; }
-        .quote-text { font-family: 'Shadows Into Light', cursive; font-size: 1.6rem; line-height: 1.2; color: var(--green-deep); margin: 0; }
-        .separator { width: 50px; height: 3px; background: var(--wood-highlight); margin: 15px auto; border-radius: 10px; opacity: 0.6; }
+        .quote-box { padding: 15px 30px; text-align: center; position: relative; display: flex; flex-direction: column; align-items: center; }
+        .quote-text { font-family: 'Shadows Into Light', cursive; font-size: 1.5rem; line-height: 1.2; color: var(--green-deep); margin: 0; }
+        .separator { width: 50px; height: 3px; background: var(--wood-highlight); margin: 12px auto; border-radius: 10px; opacity: 0.6; }
 
-        /* BOUTON LUDOTHÈQUE POSITIONNÉ SOUS LE TRAIT */
         .btn-ludotheque {
-            background: var(--wood-brown); 
-            color: white; border: none; 
+            background: var(--wood-brown); color: white; border: none; 
             padding: 8px 18px; border-radius: 50px;
             font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.8rem;
             display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
-            box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3);
-            cursor: pointer; transition: transform 0.2s;
+            box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); cursor: pointer; transition: transform 0.2s;
         }
-        .btn-ludotheque:active { transform: scale(0.95); }
 
-        /* --- LIGHTBOX --- */
         .lightbox {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center;
@@ -109,44 +97,41 @@
         .lightbox.active img { transform: scale(1); }
         .lightbox-close { position: absolute; top: 25px; right: 25px; color: #ffffff; font-size: 1.8rem; background: rgba(0,0,0,0.6); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 110; cursor: pointer; }
 
-        /* --- BOTTOM SHEET --- */
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 25; display: none; opacity: 0; transition: opacity 0.3s ease; }
-        .bottom-sheet { position: absolute; top: 100%; left: 0; width: 100%; height: 85vh; background: white; z-index: 30; border-top-left-radius: 35px; border-top-right-radius: 35px; display: flex; flex-direction: column; will-change: transform; transition: transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1); }
+        .bottom-sheet { 
+            position: absolute; top: 100%; left: 0; width: 100%; height: 85vh; 
+            background: white; z-index: 30; border-top-left-radius: 35px; border-top-right-radius: 35px; 
+            display: flex; flex-direction: column; will-change: transform;
+            transition: transform 0.4s cubic-bezier(0.17, 0.84, 0.44, 1);
+        }
         .bottom-sheet.open { transform: translateY(-100%); }
-        .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; position: relative; }
+        .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; position: relative; cursor: grab; }
         .sheet-handle { width: 45px; height: 6px; background: #e0e0e0; border-radius: 10px; margin: 0 auto; }
-        .close-btn { display: none; position: absolute; right: 25px; top: 20px; font-size: 1.8rem; color: var(--wood-brown); cursor: pointer; transition: color 0.2s; }
-        .close-btn:hover { color: var(--green-deep); }
         .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; touch-action: pan-y; }
         .sheet-content-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 2.6rem; margin: 10px 0 30px; text-align: center; position: relative; }
         .sheet-content-title::after { content: ''; display: block; width: 50px; height: 4px; background: var(--wood-brown); margin: 10px auto 0; border-radius: 5px; }
 
         .panel-card { background: var(--bg-beige); padding: 20px; border-radius: 20px; margin: 20px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
 
+        /* --- STYLES HISTOIRE --- */
         .phase-label { font-size: 0.8rem; font-weight: 700; color: var(--wood-brown); text-transform: uppercase; letter-spacing: 2px; margin: 35px 0 5px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .phase-label.first { margin-top: 5px; }
         .phase-label::before, .phase-label::after { content: ''; flex-grow: 1; height: 1px; background: var(--wood-highlight); opacity: 0.8; max-width: 30px; min-width: 10px; }
         .phase-title { font-family: 'Quicksand', sans-serif; color: var(--green-deep); font-size: 1.2rem; font-weight: 700; text-align: center; margin: 0 0 15px; display: flex; align-items: center; justify-content: center; gap: 10px; white-space: nowrap; }
-        .phase-icon { font-size: 1.2rem; color: var(--wood-brown); }
         .grimoire-text { text-align: center; line-height: 1.6; font-size: 0.95rem; margin-top: 0; }
 
+        /* --- STYLES PHOTOS --- */
         .photo-section-title { text-align: center; color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 15px 0 10px 0; padding-top: 20px; border-top: 1px dashed rgba(0,0,0,0.1); }
-        .photo-section-title.first { border-top: none; padding-top: 10px; margin-top: 5px; }
         .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 0 3px 20px; }
         .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 2px; }
-        .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+        .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; }
 
+        /* --- FOOTER NAV --- */
         .footer-nav { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--green-deep); display: flex; justify-content: space-around; align-items: center; padding: 15px 0 25px 0; border-top: 3px solid var(--wood-brown); z-index: 20; }
         .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
         .icon-box { width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; border-radius: 14px; background: var(--wood-brown); margin-bottom: 6px; color: #ffffff; font-size: 1.3rem; box-shadow: 0 4px 8px rgba(0,0,0,0.25); transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); }
         .menu-item span { font-weight: 700; font-size: 0.5rem; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .cal-list { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; } 
-        .cal-item { display: flex; align-items: center; gap: 12px; background: #ffffff; padding: 10px 15px; border-radius: 12px; border-left: 4px solid var(--wood-brown); box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-        .cal-item .date { font-weight: 700; color: var(--green-deep); font-size: 1rem; text-transform: capitalize; margin-bottom: 2px; }
-        .cal-item .time { font-size: 0.8rem; color: var(--text-brown); line-height: 1.4; }
-        .cal-item .time a { color: var(--green-deep); text-decoration: underline; font-weight: 600; }
-        
+        /* --- CONTACT CARDS --- */
         .contact-person { display: flex; flex-direction: column; padding: 12px 15px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 15px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
         .contact-person .avatar { width: 40px; height: 40px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; }
@@ -156,35 +141,26 @@
         .contact-top h4 { margin: 0; color: var(--green-deep); font-size: 1.1rem; flex-grow: 1; min-width: 80px; }
         .contact-bottom { width: 100%; padding-top: 8px; text-align: left; }
         .contact-bottom span { font-size: 0.75rem; color: var(--text-brown); font-weight: 600; opacity: 0.9; display: block; }
-        .call-btn { background: var(--green-deep); color: white; text-decoration: none; width: 100px; height: 34px; border-radius: 50px; font-weight: 700; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 6px; transition: transform 0.2s; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.2); flex-shrink: 0; box-sizing: border-box; }
+        .call-btn { background: var(--green-deep); color: white; text-decoration: none; width: 100px; height: 34px; border-radius: 50px; font-weight: 700; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.2); flex-shrink: 0; }
         .call-btn.mail-btn { background: var(--wood-brown); }
         .call-btn.fb-btn { background: var(--fb-blue); }
         .call-btn.wa-btn { background: var(--wa-green); }
 
-        .pricing-container { display: flex; gap: 10px; margin: 15px 0; }
-        .price-card { flex: 1; background: #ffffff; padding: 12px; border-radius: 15px; text-align: center; border: 2px solid transparent; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-        .price-card.featured { border-color: var(--wood-brown); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-        .price-card .amount { font-size: 1.6rem; font-weight: 700; color: var(--wood-brown); margin: 5px 0; }
-        .benefits-list { list-style: none; padding: 0; margin: 15px 0 0 0; }
-        .benefits-list li { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; }
-        .benefits-list i { color: var(--green-deep); }
+        /* --- CALENDRIER --- */
+        .cal-list { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; } 
+        .cal-item { display: flex; align-items: center; gap: 12px; background: #ffffff; padding: 10px 15px; border-radius: 12px; border-left: 4px solid var(--wood-brown); box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .cal-content { flex-grow: 1; overflow: hidden; } 
+        .cal-item .date { font-weight: 700; color: var(--green-deep); font-size: 1rem; text-transform: capitalize; margin-bottom: 2px; }
+        .cal-item .time { font-size: 0.8rem; color: var(--text-brown); line-height: 1.4; }
+        .cal-item .time a { color: var(--green-deep); text-decoration: underline; font-weight: 600; }
 
         @media (min-width: 768px) {
             body { background-color: var(--bg-beige); overflow: auto; }
             .phone { max-width: 100%; height: 100vh; box-shadow: none; border-radius: 0; }
-            .main-wrapper { flex-direction: column; }
+            .hero { width: 100%; max-width: 550px; height: 550px; background-position: center; border-radius: 30px; margin: 20px auto; }
             .footer-nav { order: -1; position: relative; padding: 15px 50px; border-top: none; border-bottom: 4px solid var(--wood-brown); justify-content: center; gap: 20px; }
-            .menu-item { flex: 0 1 auto; flex-direction: row; gap: 12px; padding: 8px 25px 8px 8px; border-radius: 50px; background: rgba(255, 255, 255, 0.05); }
-            .menu-item span { font-size: 0.9rem; }
-            .hero { width: 100%; max-width: 550px; height: 550px; background: url('hero.png') center center / cover no-repeat; border-radius: 30px; }
-            .rdv-card { width: auto; min-width: 350px; padding: 15px 30px; bottom: -25px; }
-            .content { padding: 50px 0 40px; overflow: hidden; }
-            .quote-text { font-size: 2.5rem; }
-            .bottom-sheet { top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 700px; max-width: 90%; height: auto; max-height: 85vh; border-radius: 25px; opacity: 0; transition: transform 0.4s cubic-bezier(0.17, 0.84, 0.44, 1), opacity 0.4s ease; }
-            .bottom-sheet.open { transform: translate(-50%, -50%) scale(1) !important; opacity: 1; }
-            .sheet-handle { display: none; }
-            .close-btn { display: block; }
-            .photo-grid { grid-template-columns: repeat(4, 1fr); padding: 0 20px 20px; }
+            .bottom-sheet { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); height: auto; max-height: 85vh; width: 700px; border-radius: 25px; transition: opacity 0.3s; opacity: 0; display: none; }
+            .bottom-sheet.open { display: flex; opacity: 1; transform: translate(-50%, -50%); }
         }
     </style>
 </head>
@@ -199,7 +175,7 @@
     <div class="overlay" id="overlay" onclick="closeSheet()"></div>
     
     <div class="main-wrapper" id="mainWrapper">
-        <div class="hero-container" oncontextmenu="return false;">
+        <div class="hero-container">
             <div class="hero">
                 <div class="rdv-card">
                     <div style="font-size: 1.5rem; margin-right: 12px;">🎲</div>
@@ -215,12 +191,10 @@
             <div class="quote-box">
                 <p class="quote-text">"Ici on ne compte pas les points,<br>on compte les <strong>souvenirs</strong>."</p>
                 <div class="separator"></div>
-                
                 <button class="btn-ludotheque" onclick="openSheet('ludotheque')">
                     <i class="fa-solid fa-dice-d20"></i> Découvrir nos jeux
                 </button>
-
-                <p style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; opacity: 0.4; line-height: 1.5;">
+                <p style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; opacity: 0.4; margin-top: 10px;">
                     Association loi 1901 • Plouay • Bretagne
                 </p>
             </div>
@@ -236,21 +210,20 @@
     </div>
 
     <div class="bottom-sheet" id="bottomSheet">
-        <div class="sheet-header">
-            <div class="sheet-handle"></div>
-            <div class="close-btn" onclick="closeSheet()"><i class="fa-solid fa-xmark"></i></div>
-        </div>
+        <div class="sheet-header"><div class="sheet-handle"></div></div>
         <div class="sheet-body" id="sheetBody"><div id="sheetContent"></div></div>
     </div>
 </div>
 
 <script>
+    // --- CONFIGURATION PHOTOS ---
     const NB_PHOTOS_SORTIES = 18; 
     const NB_PHOTOS_JEUX = 9;    
 
     let currentGallery = [];
     let currentPhotoIndex = 0;
 
+    // --- LOGIQUE DATES AUTO ---
     function getNextLastFridays() {
         let dates = [];
         let now = new Date();
@@ -265,63 +238,35 @@
         }
         return dates;
     }
-
     const upcomingDates = getNextLastFridays();
     const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
     let rawDate = upcomingDates[0].toLocaleDateString('fr-FR', dateOptions);
-    let capitalizedDate = rawDate.charAt(0).toUpperCase() + rawDate.slice(1);
+    document.getElementById('next-rdv-banner').innerHTML = `${rawDate.charAt(0).toUpperCase() + rawDate.slice(1)} 20h30<br><a href="https://maps.app.goo.gl/YourLink" target="_blank">📍 <span class="underline">Maison des Associations</span></a>`;
 
-    document.getElementById('next-rdv-banner').innerHTML = `
-        ${capitalizedDate} à 20h30<br>
-        <a href="https://www.google.com/maps/search/?api=1&query=Maison+des+associations+Plouay" target="_blank">📍 <span class="underline">Maison des Associations</span></a>
-    `;
-
+    // --- AGENDA HTML ---
     let agendaHTML = '<div class="cal-list">' + upcomingDates.map(date => {
         let formatted = date.toLocaleDateString('fr-FR', dateOptions);
-        return `
-            <div class="cal-item">
-                <i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem; flex-shrink: 0;"></i>
-                <div class="cal-content">
-                    <div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div>
-                    <div class="time">20h30 • <a href="https://www.google.com/maps/search/?api=1&query=Maison+des+associations+Plouay" target="_blank">Maison des Associations</a></div>
-                </div>
-            </div>`;
+        return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="https://maps.app.goo.gl/YourLink" target="_blank">Maison des Associations</a></div></div></div>`;
     }).join('') + '</div>';
 
-    let photosSortiesHTML = '';
-    for(let i = 1; i <= NB_PHOTOS_SORTIES; i++) {
-        photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('sortie${i}.jpg')"><img src="sortie${i}.jpg" alt="Sortie ${i}" loading="lazy"></div>`;
-    }
-    let photosJeuxHTML = '';
-    for(let i = 1; i <= NB_PHOTOS_JEUX; i++) {
-        photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('jeu${i}.jpg')"><img src="jeu${i}.jpg" alt="Jeu ${i}" loading="lazy"></div>`;
-    }
+    // --- GRILLES PHOTOS ---
+    let photosSortiesHTML = '<div class="photo-grid">';
+    for(let i=1; i<=NB_PHOTOS_SORTIES; i++) { photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('sortie${i}.jpg')"><img src="sortie${i}.jpg" loading="lazy"></div>`; }
+    photosSortiesHTML += '</div>';
+    let photosJeuxHTML = '<div class="photo-grid">';
+    for(let i=1; i<=NB_PHOTOS_JEUX; i++) { photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('jeu${i}.jpg')"><img src="jeu${i}.jpg" loading="lazy"></div>`; }
+    photosJeuxHTML += '</div>';
 
     const pagesData = {
-        histoire: { 
-            title: "Le Grimoire", 
-            text: `<div class="panel-card">
-                <div class="phase-label first">Phase 1</div>
-                <div class="phase-title"><i class="fa-solid fa-scroll phase-icon"></i><span>La Pioche (2014)</span></div>
-                <p class="grimoire-text">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>. Très vite, le virus se transmet et les premières soirées jeux s'organisent chez les uns et les autres.</p>
-                <div class="phase-label">Phase 2</div>
-                <div class="phase-title"><i class="fa-solid fa-chess-rook phase-icon"></i><span>Le Coup de Maître (2015)</span></div>
-                <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante ! Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées.</p>
-                <div class="phase-label">Phase 3</div>
-                <div class="phase-title"><i class="fa-brands fa-fort-awesome phase-icon"></i><span>La Fondation (2019)</span></div>
-                <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. L'association des "Potes à Jeux" naît officiellement. La petite tablée s'agrandit peu à peu pour accueillir de nouveaux joueurs de Plouay et des environs.</p>
-                <div class="phase-label">Phase 4</div>
-                <div class="phase-title"><i class="fa-solid fa-rocket phase-icon"></i><span>L'Envolée (2026)</span></div>
-                <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. L'association continue de traverser les âges, et l'aventure ne fait que continuer avec vous !</p>
-            </div>`
-        },
-        cal: { title: "Agenda Ludique", text: `<div class="panel-card"><p style="text-align: center; color: var(--green-deep); margin-top: 0; font-size: 0.95rem;">On se retrouve chaque <b>dernier vendredi du mois</b>.</p>${agendaHTML}<p style="text-align: center; font-size:0.8rem; margin-bottom: 0;">N'oubliez pas d'apporter votre bonne humeur !</p></div>` },
-        adhesion: { title: "Rejoindre l'asso", text: `<div class="panel-card"><p style="text-align:center; margin-top:0;">Devenir un membre officiel des Potes à Jeux est simple et convivial !</p><div style="background: rgba(220, 53, 69, 0.1); border: 2px solid rgba(220, 53, 69, 0.2); color: #dc3545; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans</div><div class="pricing-container"><div class="price-card featured"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div><div class="price-card featured"><div class="amount">20€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Couple</p></div></div><ul class="benefits-list" style="max-width: 280px; margin: 15px auto 0;"><li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li><li><i class="fa-solid fa-circle-check"></i> Première séance offerte</li><li><i class="fa-solid fa-circle-check"></i> Soirée escape game</li><li><i class="fa-solid fa-circle-check"></i> Repas de fin d'année</li></ul></div>` },
-        photos: { title: "Souvenirs", text: `<div class="panel-card" style="padding-left: 0; padding-right: 0; padding-bottom: 0; overflow: hidden;"><p style="text-align: center; margin-top: 0; padding: 0 20px 10px; font-size: 0.9rem;">Cliquez sur une photo pour l'agrandir.</p><h3 class="photo-section-title first">Les Sorties</h3><div class="photo-grid">${photosSortiesHTML}</div><h3 class="photo-section-title">Les Jeux</h3><div class="photo-grid">${photosJeuxHTML}</div></div>` },
-        contact: { title: "Nous Contacter", text: `<div class="panel-card"><div class="contact-person"><div class="contact-top"><div class="avatar"><i class="fa-solid fa-user"></i></div><h4>Julie</h4><a href="tel:+33620031771" class="call-btn"><i class="fa-solid fa-phone"></i> Appeler</a></div><div class="contact-bottom"><span>Présidente de l'association</span></div></div><div class="contact-person"><div class="contact-top"><div class="avatar mail-icon"><i class="fa-solid fa-envelope-open-text"></i></div><h4>Email</h4><a href="mailto:despotesajeux@protonmail.com" class="call-btn mail-btn"><i class="fa-solid fa-paper-plane"></i> Écrire</a></div><div class="contact-bottom"><span>Pour toute question ou demande</span></div></div><div class="contact-person"><div class="contact-top"><div class="avatar fb-icon"><i class="fa-brands fa-facebook-f"></i></div><h4>Facebook</h4><a href="https://www.facebook.com/groups/despotesajeux/" target="_blank" class="call-btn fb-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Rejoindre</a></div><div class="contact-bottom"><span>Pour suivre la communauté en ligne</span></div></div><div class="contact-person"><div class="contact-top"><div class="avatar wa-icon"><i class="fa-brands fa-whatsapp"></i></div><h4>WhatsApp</h4><a href="https://chat.whatsapp.com/GE6whGWavky2alGNskA5yL?mode=gi_t" target="_blank" class="call-btn wa-btn"><i class="fa-solid fa-comment-dots"></i> Papoter</a></div><div class="contact-bottom"><span>Rejoindre le groupe de discussion</span></div></div></div>` },
-        ludotheque: { title: "Nos Ludothèques", text: `<div class="panel-card"><p style="text-align: center; margin-top: 0; font-size: 0.95rem; line-height: 1.5;">Collections de nos membres sur <b>Myludo</b>.</p><div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><i class="fa-solid fa-dice"></i></div><h4>Julie</h4><a href="#" target="_blank" class="call-btn ludo-btn"><i class="fa-solid fa-eye"></i> Voir</a></div></div><div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><i class="fa-solid fa-puzzle-piece"></i></div><h4>Le Club</h4><a href="#" target="_blank" class="call-btn ludo-btn"><i class="fa-solid fa-eye"></i> Voir</a></div></div></div>` }
+        histoire: { title: "Le Grimoire", text: `<div class="panel-card"><div class="phase-label first">Phase 1</div><div class="phase-title"><span>La Pioche (2014)</span></div><p class="grimoire-text">Début de l'aventure...</p><div class="phase-label">Phase 2</div><div class="phase-title"><span>Le Coup de Maître (2015)</span></div><p class="grimoire-text">Développement...</p></div>` },
+        adhesion: { title: "Rejoindre l'asso", text: `<div class="panel-card"><div class="pricing-container"><div class="price-card featured"><div class="amount">15€</div><p>Solo</p></div><div class="price-card featured"><div class="amount">20€</div><p>Couple</p></div></div></div>` },
+        cal: { title: "Agenda Ludique", text: `<div class="panel-card">${agendaHTML}</div>` },
+        photos: { title: "Souvenirs", text: `<div class="panel-card" style="padding:0;"><h3 class="photo-section-title first">Les Sorties</h3>${photosSortiesHTML}<h3 class="photo-section-title">Les Jeux</h3>${photosJeuxHTML}</div>` },
+        contact: { title: "Nous Contacter", text: `<div class="panel-card"><div class="contact-person"><div class="contact-top"><div class="avatar"><i class="fa-solid fa-user"></i></div><h4>Julie</h4><a href="tel:+33620031771" class="call-btn">Appeler</a></div><div class="contact-bottom"><span>Présidente</span></div></div><a href="https://chat.whatsapp.com/GE6whGWavky2alGNskA5yL?mode=gi_t" target="_blank" class="call-btn wa-btn" style="width:100%; height:45px; margin-top:15px; font-size:1rem;">Rejoindre le WhatsApp</a></div>` },
+        ludotheque: { title: "Ludothèques", text: `<div class="panel-card"><div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><i class="fa-solid fa-dice"></i></div><h4>Julie</h4><a href="#" target="_blank" class="call-btn ludo-btn">Voir</a></div></div></div>` }
     };
 
+    // --- LOGIQUE SWIPE & FERMETURE ---
     const sheet = document.getElementById('bottomSheet');
     const overlay = document.getElementById('overlay');
     const sheetContent = document.getElementById('sheetContent');
@@ -332,61 +277,68 @@
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
         overlay.style.display = 'block';
         mainWrapper.classList.add('blurred');
-        sheetContent.style.opacity = '1';
-        if (window.innerWidth <= 768) {
-            sheet.style.transform = '';
-            sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)";
-        }
         setTimeout(() => { overlay.style.opacity = '1'; sheet.classList.add('open'); }, 10);
     }
 
     function closeSheet() {
-        if (window.innerWidth <= 768) { sheet.style.transition = "transform 0.25s ease-in"; }
         sheet.classList.remove('open');
         overlay.style.opacity = '0';
         mainWrapper.classList.remove('blurred');
-        setTimeout(() => { overlay.style.display = 'none'; }, 250);
+        setTimeout(() => { overlay.style.display = 'none'; }, 400);
     }
 
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
-    
-    function openLightbox(src) {
-        const images = document.querySelectorAll('.photo-grid img');
-        currentGallery = Array.from(images).map(img => img.getAttribute('src'));
-        currentPhotoIndex = currentGallery.indexOf(src);
-        lightboxImg.src = src;
-        lightbox.style.display = 'flex';
-        setTimeout(() => { lightbox.classList.add('active'); }, 10);
-        if (!history.state || history.state.modal !== 'lightbox') { history.pushState({ modal: 'lightbox' }, ''); }
-    }
-    
-    function closeLightboxForce() {
-        if (lightbox.classList.contains('active')) {
-            lightbox.classList.remove('active');
-            setTimeout(() => { lightbox.style.display = 'none'; }, 300);
-            if (history.state && history.state.modal === 'lightbox') { history.go(-1); }
-        }
-    }
+    let startY = 0;
+    let currentY = 0;
+    let isDragging = false;
 
-    window.addEventListener('popstate', (e) => {
-        if (lightbox.classList.contains('active')) {
-            lightbox.classList.remove('active');
-            setTimeout(() => { lightbox.style.display = 'none'; }, 300);
+    sheet.addEventListener('touchstart', (e) => {
+        if (sheetBody.scrollTop > 0) return;
+        startY = e.touches[0].clientY;
+        isDragging = true;
+        sheet.style.transition = 'none';
+    }, { passive: true });
+
+    sheet.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        currentY = e.touches[0].clientY;
+        let diff = currentY - startY;
+        if (diff > 0) {
+            sheet.style.transform = `translateY(calc(-100% + ${diff}px))`;
         }
+    }, { passive: true });
+
+    sheet.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        let diff = currentY - startY;
+        sheet.style.transition = "transform 0.4s cubic-bezier(0.17, 0.84, 0.44, 1)";
+        if (diff > 100) { closeSheet(); setTimeout(()=> {sheet.style.transform = '';}, 400); } 
+        else { sheet.style.transform = ''; }
     });
 
-    let swipeStartX = 0;
-    lightbox.addEventListener('touchstart', e => { swipeStartX = e.changedTouches[0].screenX; }, {passive: true});
-    lightbox.addEventListener('touchend', e => {
-        let diff = swipeStartX - e.changedTouches[0].screenX;
+    // --- LIGHTBOX GALLERY ---
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lightboxImg');
+    function openLightbox(src) {
+        lbImg.src = src; lb.style.display = 'flex';
+        setTimeout(() => lb.classList.add('active'), 10);
+        const allImgs = document.querySelectorAll('.photo-grid img');
+        currentGallery = Array.from(allImgs).map(i => i.src);
+        currentPhotoIndex = currentGallery.indexOf(src);
+        history.pushState({modal: 'lb'}, '');
+    }
+    function closeLightboxForce() { lb.classList.remove('active'); setTimeout(() => lb.style.display='none', 300); }
+    window.onpopstate = () => closeLightboxForce();
+    
+    let lbStartX = 0;
+    lb.ontouchstart = (e) => lbStartX = e.touches[0].clientX;
+    lb.ontouchend = (e) => {
+        let diff = lbStartX - e.changedTouches[0].clientX;
         if (Math.abs(diff) > 50) {
             currentPhotoIndex = (currentPhotoIndex + (diff > 0 ? 1 : -1) + currentGallery.length) % currentGallery.length;
-            lightboxImg.style.opacity = '0';
-            setTimeout(() => { lightboxImg.src = currentGallery[currentPhotoIndex]; lightboxImg.style.opacity = '1'; }, 150);
+            lbImg.style.opacity = 0; setTimeout(() => { lbImg.src = currentGallery[currentPhotoIndex]; lbImg.style.opacity = 1; }, 150);
         }
-    }, {passive: true});
-
+    };
 </script>
 </body>
 </html>
