@@ -42,22 +42,24 @@
         /* --- BACKGROUND GÉNÉRAL --- */
         body {
             margin: 0; 
-            background-color: #1a1a1a; /* Fond mobile par défaut */
-            display: flex; justify-content: center; align-items: center; /* Centré pour le PC */
+            background-color: #1a1a1a;
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; /* CORRECTION ICI : Aligné en haut par défaut pour mobile */
             font-family: 'Quicksand', sans-serif;
             color: var(--text-brown); overflow: hidden;
             touch-action: manipulation;
-            min-height: 100vh;
+            height: 100vh; /* Force la hauteur exacte sur mobile */
         }
 
         /* --- CONTENEUR TYPE "TELEPHONE" (Base Mobile) --- */
         .phone {
             width: 100%; max-width: 414px; 
-            height: 100vh; height: 100dvh;
+            height: 100%; /* Prend toute la hauteur du body */
             background: var(--bg-beige); position: relative;
             overflow: hidden; display: flex; flex-direction: column;
             box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            transition: all 0.4s ease; /* Transition douce si on redimensionne */
+            transition: all 0.4s ease;
         }
 
         /* --- WRAPPER --- */
@@ -168,7 +170,7 @@
 
         .panel-card { background: var(--bg-beige); padding: 15px; border-radius: 20px; margin: 15px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
 
-        /* STYLES INTERNES (Histoire, Prix, etc.) - Inchangés */
+        /* STYLES INTERNES (Histoire, Prix, etc.) */
         .phase-label { font-size: 0.8rem; font-weight: 700; color: var(--wood-brown); text-transform: uppercase; letter-spacing: 2px; margin: 30px 0 5px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .phase-label.first { margin-top: 5px; }
         .phase-label::before, .phase-label::after { content: ''; flex-grow: 1; height: 1px; background: var(--wood-highlight); opacity: 0.8; max-width: 30px; min-width: 10px; }
@@ -221,36 +223,38 @@
 
 
         /* ============================================== */
-        /* --- VERSION PC (DESKTOP) : Le grand changement --- */
+        /* --- VERSION PC (DESKTOP) --- */
         /* ============================================== */
         @media (min-width: 768px) {
             
-            /* 1. On met un beau fond flouté sur le PC */
+            /* 1. On remet le centrage pour PC uniquement */
             body {
+                align-items: center; /* Centré verticalement sur PC */
                 background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('hero.png') center / cover no-repeat;
                 backdrop-filter: blur(10px);
                 overflow: auto;
                 padding: 20px;
                 box-sizing: border-box;
+                min-height: 100vh;
             }
 
             /* 2. Le téléphone devient une "Carte" Large */
             .phone { 
-                max-width: 1000px; /* Beaucoup plus large */
+                max-width: 1000px; 
                 height: 80vh; min-height: 600px;
                 border-radius: 30px; 
                 box-shadow: 0 20px 50px rgba(0,0,0,0.4);
             }
 
-            /* 3. On utilise CSS Grid pour séparer l'image du contenu */
+            /* 3. Grid Layout */
             .main-wrapper {
                 display: grid;
-                grid-template-columns: 1.1fr 0.9fr; /* 55% image, 45% menu */
-                grid-template-rows: 1fr auto; /* Le menu nav prend sa place en bas ou au milieu */
+                grid-template-columns: 1.1fr 0.9fr; 
+                grid-template-rows: 1fr auto; 
                 height: 100%;
             }
 
-            /* 4. L'image Hero prend toute la colonne de gauche */
+            /* 4. Hero */
             .hero-container {
                 grid-column: 1; grid-row: 1 / span 2;
                 height: 100%; width: 100%;
@@ -259,15 +263,13 @@
                 width: 100%; height: 100%; max-width: none; margin: 0; border-radius: 0;
                 background-position: center center;
             }
-
-            /* La carte RDV un peu plus grosse et stylée sur PC */
             .rdv-card {
                 bottom: 40px; width: 80%; padding: 20px;
                 background: rgba(255, 252, 240, 0.95);
                 backdrop-filter: blur(5px);
             }
 
-            /* 5. Le contenu (Citation + Bouton) va en haut à droite */
+            /* 5. Contenu */
             .content {
                 grid-column: 2; grid-row: 1;
                 padding: 40px;
@@ -275,7 +277,7 @@
                 align-items: center;
             }
 
-            /* 6. Le Menu devient une Grille de boutons au lieu d'une barre */
+            /* 6. Menu PC */
             .footer-nav { 
                 grid-column: 2; grid-row: 2;
                 position: relative; 
@@ -283,12 +285,10 @@
                 background: transparent; border: none; 
                 padding: 0 40px 40px 40px; 
                 display: grid; 
-                grid-template-columns: repeat(3, 1fr); /* 3 colonnes de boutons */
+                grid-template-columns: repeat(3, 1fr); 
                 gap: 20px;
                 justify-content: center;
             }
-
-            /* Transformation des icônes en "Cartes boutons" */
             .menu-item { 
                 background: #fff; 
                 padding: 15px 5px; 
@@ -300,21 +300,14 @@
                 transform: translateY(-5px);
                 box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             }
-            .icon-box {
-                width: 50px; height: 50px; font-size: 1.5rem; margin-bottom: 8px;
-            }
-            .menu-item span {
-                color: var(--text-brown);
-                font-size: 0.7rem;
-                font-weight: 800;
-            }
+            .icon-box { width: 50px; height: 50px; font-size: 1.5rem; margin-bottom: 8px; }
+            .menu-item span { color: var(--text-brown); font-size: 0.7rem; font-weight: 800; }
 
-            /* 7. La fenêtre modale (Bottom Sheet) */
-            /* Elle apparaît comme une pop-up au centre */
+            /* 7. Modal PC */
             .bottom-sheet { 
-                position: absolute; /* Reste absolute par rapport au .phone */
+                position: absolute; 
                 top: 50%; left: 50%; 
-                transform: translate(-50%, -50%) scale(0.9); /* Départ un peu petit pour l'anim */
+                transform: translate(-50%, -50%) scale(0.9);
                 width: 600px; max-width: 90%;
                 height: auto; max-height: 90%;
                 border-radius: 25px; 
@@ -323,10 +316,9 @@
             }
             .bottom-sheet.open { 
                 display: flex; opacity: 1; 
-                transform: translate(-50%, -50%) scale(1); /* Arrivée taille normale */
+                transform: translate(-50%, -50%) scale(1);
             }
-            .sheet-handle { display: none; /* Pas besoin de poignée sur PC */ }
-
+            .sheet-handle { display: none; }
             .lightbox-nav:hover { color: rgba(255, 255, 255, 1); }
         }
     </style>
