@@ -45,12 +45,12 @@
             background-color: #1a1a1a;
             display: flex; 
             justify-content: center; 
-            align-items: flex-start; /* Important pour éviter la barre noire mobile */
+            align-items: flex-start; 
             font-family: 'Quicksand', sans-serif;
             color: var(--text-brown); overflow: hidden;
             touch-action: manipulation;
             height: 100vh; 
-            height: 100dvh; /* Hauteur dynamique pour mobile */
+            height: 100dvh; 
         }
 
         /* --- CONTENEUR TYPE "TELEPHONE" (Base Mobile) --- */
@@ -95,9 +95,9 @@
 
         /* --- CONTENU --- */
         .content {
-            background: var(--bg-beige); padding: 45px 0 20px 0; /* Réduit le padding bas car le menu n'est plus absolute */
+            background: var(--bg-beige); padding: 45px 0 20px 0; 
             position: relative; 
-            flex-grow: 1; /* Prend tout l'espace restant */
+            flex-grow: 1; 
             overflow: hidden; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
@@ -218,17 +218,17 @@
         .cal-item .time { font-size: 0.8rem; color: var(--text-brown); line-height: 1.4; }
         .cal-item .time a { color: var(--green-deep); text-decoration: underline; font-weight: 600; }
 
-        /* --- FOOTER (Navigation) - CORRIGÉ POUR MOBILE --- */
+        /* --- FOOTER (Navigation) --- */
         .footer-nav { 
-            position: relative; /* On change absolute en relative */
+            position: relative; 
             width: 100%; 
             background: var(--green-deep); 
             display: flex; justify-content: space-around; align-items: center; 
             padding: 15px 0;
-            padding-bottom: max(15px, env(safe-area-inset-bottom)); /* Protection iPhone */
+            padding-bottom: max(15px, env(safe-area-inset-bottom)); 
             border-top: 3px solid var(--wood-brown); 
             z-index: 20; 
-            flex-shrink: 0; /* Empêche le menu d'être écrasé */
+            flex-shrink: 0;
         }
         .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
         .icon-box { width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; border-radius: 14px; background: var(--wood-brown); margin-bottom: 6px; color: #ffffff; font-size: 1.3rem; box-shadow: 0 4px 8px rgba(0,0,0,0.25); transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); }
@@ -241,7 +241,7 @@
         @media (min-width: 768px) {
             
             body {
-                align-items: center; /* Centré verticalement sur PC */
+                align-items: center; 
                 background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('hero.png') center / cover no-repeat;
                 backdrop-filter: blur(10px);
                 overflow: auto;
@@ -251,7 +251,7 @@
             }
 
             .phone { 
-                max-width: 1000px; 
+                max-width: 1200px; /* ÉLARGISSEMENT ICI (1000px -> 1200px) */
                 height: 80vh; min-height: 600px;
                 border-radius: 30px; 
                 box-shadow: 0 20px 50px rgba(0,0,0,0.4);
@@ -259,7 +259,8 @@
 
             .main-wrapper {
                 display: grid;
-                grid-template-columns: 1.1fr 0.9fr; 
+                /* RATIO MODIFIÉ POUR L'IMAGE (1.5fr pour l'image, 1fr pour le contenu) */
+                grid-template-columns: 1.5fr 1fr; 
                 grid-template-rows: 1fr auto; 
                 height: 100%;
             }
@@ -270,6 +271,7 @@
             }
             .hero {
                 width: 100%; height: 100%; max-width: none; margin: 0; border-radius: 0;
+                /* Ajout de background-position pour assurer le centrage */
                 background-position: center center;
             }
             .rdv-card {
