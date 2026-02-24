@@ -24,9 +24,14 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Des Potes à Jeux</title>
+    
+    <title>Des Potes à Jeux - Association de Jeux de Société à Plouay</title>
+    <meta name="description" content="Rejoignez l'association Des Potes à Jeux à Plouay ! Soirées jeux de société conviviales.">
+    <meta property="og:image" content="https://despotesajeux.github.io/hero.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
         :root {
             --bg-beige: #f3f1e5;
@@ -37,8 +42,8 @@
             --fb-blue: #1877F2;
             --wa-green: #25D366; 
             --myludo-color: #2c3e50; 
-            --gold-game: #f1c40f;
-            --president-color: #e67e22; /* Nouvelle couleur pour la présidente */
+            --gold-game: #d4af37; /* Or plus classe, moins jaune vif */
+            --president-color: #e67e22;
         }
 
         body {
@@ -74,7 +79,7 @@
             -webkit-touch-callout: none; pointer-events: none;
         }
 
-        /* --- ZONE JEU (PANNEAU EN BOIS) --- */
+        /* --- ZONE JEU --- */
         .hero-hitbox {
             position: absolute; top: 10%; left: 10%; width: 45%; height: 35%; 
             z-index: 15; cursor: pointer; pointer-events: auto;
@@ -151,7 +156,7 @@
 
         .game-modal-content {
             width: 85%; max-width: 350px;
-            /* Changement ici pour fond beige et bordure bois */
+            /* Fond beige et bordure bois */
             background: var(--bg-beige); 
             border: 4px solid var(--wood-brown);
             border-radius: 20px; padding: 25px 20px;
@@ -162,18 +167,24 @@
         .game-modal-backdrop.visible .game-modal-content { transform: scale(1); opacity: 1; }
         .game-modal-content h3 { color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 0 0 15px; }
         
-        /* Styles spécifiques pour l'effet "Whaou" */
-        .trophy-anim { font-size: 3.5rem; margin-bottom: 10px; animation: trophy-bounce 1s infinite alternate; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); }
-        @keyframes trophy-bounce { from { transform: translateY(0) scale(1); } to { transform: translateY(-10px) scale(1.1); } }
+        /* --- STYLES VICTOIRE --- */
+        .victory-icon { 
+            font-size: 3rem; color: var(--gold-game); margin-bottom: 5px; 
+            animation: fadeIn 1s ease; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .victory-title { 
+            font-family: 'Shadows Into Light', cursive; font-size: 2.2rem; 
+            color: var(--wood-brown); margin: 0 0 10px 0; font-weight: bold; 
+        }
         
-        .victory-title { font-family: 'Shadows Into Light', cursive; font-size: 2.2rem; color: var(--wood-brown); margin: 5px 0; font-weight: bold; }
-        
-        .victory-stats { width: 100%; margin: 10px 0 20px; }
+        .victory-stats { width: 100%; margin: 5px 0 20px; }
         .victory-message { 
-            font-size: 1rem; color: var(--green-deep); 
+            font-size: 0.95rem; color: var(--green-deep); 
             font-style: italic; background: rgba(255,255,255,0.6); 
-            padding: 10px; border-radius: 10px; margin-top: 10px;
-            border: 1px dashed var(--wood-brown);
+            padding: 12px; border-radius: 10px; margin-top: 15px;
+            border: 1px dashed var(--wood-brown); box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
         
         .game-desc-box {
@@ -208,7 +219,7 @@
         /* Confettis */
         .confetti { position: fixed; width: 10px; height: 10px; background-color: #f00; z-index: 400; top: -10px; pointer-events: none; opacity: 0; }
 
-        /* --- LIGHTBOX & UI --- */
+        /* --- LIGHTBOX --- */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
         .lightbox-img-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease-out; transform-origin: center center; }
         .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; transform: scale(0.9); opacity: 0; transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); will-change: transform; }
@@ -516,8 +527,8 @@
         setTimeout(() => {
             const modal = document.getElementById('modalContent');
             modal.innerHTML = `
-                <div class="trophy-anim">🏆</div>
-                <h3 class="victory-title">Gagné !</h3>
+                <div class="victory-icon"><i class="fa-solid fa-medal"></i></div>
+                <h3 class="victory-title">Félicitations !</h3>
                 <div class="victory-stats">
                     <div style="font-size:1.2rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div>
                     <div style="font-size:1.5rem; color:#2c3e50; margin: 5px 0;">${rank}</div>
@@ -571,10 +582,11 @@
         let check = generateChecksum(finalGameData.rawMs);
         let siteUrl = "https://despotesajeux.github.io/";
         
-        let text = `🏆 *DÉFI DES POTES À JEUX* 🏆%0A%0A` +
-                   `🪧 *Panneau trouvé par ${pseudo} !*%0A` +
-                   `⏱️ Temps : *${finalGameData.time}*%0A` +
-                   `🏅 Rang N°${finalGameData.rankNumber} : *${finalGameData.rank}*%0A` +
+        let text = `🎲 *DÉFI DES POTES À JEUX* 🎲%0A%0A` +
+                   `🕵️ J'ai trouvé les 10 dés cachés !%0A%0A` +
+                   `👤 *Joueur :* ${pseudo}%0A` +
+                   `⏱️ *Temps :* ${finalGameData.time}%0A` +
+                   `🏅 *Rang N°${finalGameData.rankNumber} :* ${finalGameData.rank}%0A` +
                    `📝 _"${finalGameData.message}"_%0A%0A` +
                    `Tu penses faire mieux ? Tente ta chance ici :%0A` +
                    `👉 ${siteUrl}%0A%0A` +
@@ -706,7 +718,6 @@
     function openSheet(key) {
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
         
-        // --- INJECTION DYNAMIQUE DES OEUFS (Seulement si jeu actif) ---
         if(gameStarted && gameState[key].total > gameState[key].found) {
             let containerId = `content-${key}`;
             let container = document.getElementById(containerId);
