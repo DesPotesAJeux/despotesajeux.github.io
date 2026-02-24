@@ -73,24 +73,11 @@
             -webkit-touch-callout: none; pointer-events: none;
         }
 
-        /* --- ZONE JEU (PANNEAU EN BOIS) --- */
+        /* HITBOX (Zone cliquable invisible) */
         .hero-hitbox {
             position: absolute; top: 10%; left: 10%; width: 45%; height: 35%; 
             z-index: 15; cursor: pointer; pointer-events: auto;
-        }
-        
-        .game-hint-badge {
-            position: absolute; top: -5px; right: -5px;
-            width: 32px; height: 32px;
-            background: var(--gold-game); color: white; border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 1.1rem; box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-            border: 2px solid white; animation: bounce 2s infinite;
-        }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-10px);}
-            60% {transform: translateY(-5px);}
+            /* background: rgba(255,0,0,0.2); Décommenter pour voir la zone de clic */
         }
 
         .rdv-card {
@@ -201,7 +188,7 @@
         }
         .game-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* --- LIGHTBOX & UI --- */
+        /* --- LIGHTBOX --- */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
         .lightbox-img-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease-out; transform-origin: center center; }
         .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; transform: scale(0.9); opacity: 0; transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); will-change: transform; }
@@ -344,9 +331,7 @@
     <div class="main-wrapper" id="mainWrapper">
         <div class="hero-container">
             <div class="hero">
-                <div class="hero-hitbox" onclick="askToPlay()">
-                    <div class="game-hint-badge"><i class="fa-solid fa-dice"></i></div>
-                </div>
+                <div class="hero-hitbox" onclick="askToPlay()"></div>
                 
                 <div class="rdv-card">
                     <div style="font-size: 1.5rem; margin-right: 12px;">🎲</div>
@@ -406,16 +391,12 @@
 
     function askToPlay() {
         if(gameStarted) return;
-        // Reset Textes
         document.getElementById('gameTitle').innerText = "Psst... Joueur ?";
         document.getElementById('gameDesc').innerHTML = "Comme on est joueurs, <b>10 petits dés</b> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?";
-        
-        // Reset Boutons
         let btn = document.getElementById('gameBtn');
         btn.innerText = "C'est parti !";
         btn.setAttribute('onclick', 'initGame()');
         btn.style.display = 'block';
-        
         document.getElementById('shareContainer').style.display = 'none'; 
         document.getElementById('gameModalBackdrop').classList.add('visible');
     }
@@ -430,14 +411,13 @@
         gameStarted = true;
         startTimer();
         
-        // Distribution aléatoire
         const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque'];
         for(let i=0; i<9; i++) {
             let randomSec = sections[Math.floor(Math.random() * sections.length)];
             gameState[randomSec].total++;
         }
-        gameState['home'].total = 1; // Toujours 1 sur l'accueil
         
+        gameState['home'].total = 1;
         renderHomeEgg();
         showToast("Le chrono est lancé ! ⏱️");
     }
@@ -475,29 +455,28 @@
         gameState[sectionKey].found++;
         eggCount++;
         
-        // Animation
         el.style.pointerEvents = 'none'; 
         el.classList.add('found'); 
+        
         setTimeout(() => {
-            el.style.transition = "all 0.5s ease"; el.style.opacity = "0"; el.style.transform = "scale(0)";
+            el.style.transition = "all 0.5s ease";
+            el.style.opacity = "0";
+            el.style.transform = "scale(0)";
             setTimeout(() => el.remove(), 500); 
         }, 600);
         
+        let msg = `Bravo ! ${eggCount}/${totalEggs}`;
         if(eggCount === totalEggs) {
             clearInterval(timerInterval);
             let rawMs = Date.now() - startTime;
             finishGame(rawMs);
+        } else if(eggCount > 5) {
+            msg = `Tu chauffes ! ${eggCount}/${totalEggs}`;
+            showToast(msg);
         } else {
-            showToast(`Bravo ! ${eggCount}/${totalEggs}`);
+            showToast(msg);
         }
         if(navigator.vibrate) navigator.vibrate(50);
-    }
-
-    // --- ALGORITHME ANTI-TRICHE SIMPLE ---
-    // Génère un code hexadécimal basé sur le temps exact en ms
-    function generateChecksum(ms) {
-        // Formule arbitraire pour brouiller les pistes
-        return Math.floor((ms * 17) + 2026).toString(36).toUpperCase();
     }
     
     function finishGame(rawMs) {
@@ -505,37 +484,35 @@
         document.getElementById('gameTimer').style.color = '#2ecc71'; 
         
         let seconds = rawMs / 1000;
-        let rank = ""; 
-        let message = "";
+        let rank = ""; let message = "";
 
-        // Attribution des Rangs
-        if (seconds < 5) { rank = "LE DIEU DU DÉ ⚡"; message = "T'as triché ou t'es un robot ? C'est inhumain !"; }
-        else if (seconds < 10) { rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre !"; }
-        else if (seconds < 15) { rank = "GRAND MAÎTRE 🥋"; message = "Tes réflexes sont affûtés comme des lames."; }
-        else if (seconds < 20) { rank = "ŒIL DE LYNX 😼"; message = "Vif et précis, rien ne t'échappe !"; }
-        else if (seconds < 30) { rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Une enquête menée avec méthode et brio."; }
-        else if (seconds < 40) { rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; }
-        else if (seconds < 50) { rank = "LE DIESEL 🚜"; message = "Un peu lent au démarrage, mais tu es arrivé !"; }
-        else if (seconds < 60) { rank = "LE PARESSEUX 🦥"; message = "Tout doux, pas de stress, c'est les vacances."; }
-        else { rank = "L'ESCARGOT 🐌"; message = "L'important, c'est de participer... non ?"; }
+        if (seconds < 5) { rank = "LE DIEU DU DÉ ⚡"; message = "Inhumain !"; }
+        else if (seconds < 10) { rank = "LUCKY LUKE 🤠"; message = "Plus vite que ton ombre !"; }
+        else if (seconds < 15) { rank = "GRAND MAÎTRE 🥋"; message = "Réflexes affûtés."; }
+        else if (seconds < 20) { rank = "ŒIL DE LYNX 😼"; message = "Rien ne t'échappe."; }
+        else if (seconds < 30) { rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Enquête méthodique."; }
+        else if (seconds < 40) { rank = "LE TOURISTE 📸"; message = "Tu as profité du paysage."; }
+        else if (seconds < 50) { rank = "LE DIESEL 🚜"; message = "Lent au démarrage..."; }
+        else if (seconds < 60) { rank = "LE PARESSEUX 🦥"; message = "Tout doux, pas de stress."; }
+        else { rank = "L'ESCARGOT 🐌"; message = "L'important c'est de participer."; }
         
-        // Sauvegarde des données
         finalGameData.time = finalTime;
         finalGameData.rank = rank;
         finalGameData.rawMs = rawMs;
 
         setTimeout(() => {
             document.getElementById('gameTitle').innerText = "🎉 GAGNÉ ! 🎉";
-            document.getElementById('gameDesc').innerHTML = `Tu as trouvé les 10 dés en <b>${finalTime}</b>.<br><br><span style="color:var(--green-deep); font-weight:bold; font-size:1.1rem;">${rank}</span><br><span style="font-size:0.9rem; opacity:0.8;">${message}</span>`;
-            
+            document.getElementById('gameDesc').innerHTML = `Tu as trouvé les 10 dés en <b>${finalTime}</b>.<br><br><span style="color:var(--green-deep); font-weight:bold; font-size:1.1rem;">${rank}</span>`;
             document.getElementById('shareContainer').style.display = 'flex';
-            
             let btn = document.getElementById('gameBtn');
             btn.innerText = "Rejouer 🔄";
             btn.setAttribute('onclick', 'initGame()');
-            
             document.getElementById('gameModalBackdrop').classList.add('visible');
         }, 1000);
+    }
+    
+    function generateChecksum(ms) {
+        return Math.floor((ms * 7) + 2024).toString(36).toUpperCase();
     }
     
     function shareWhatsapp() {
@@ -543,15 +520,14 @@
         let check = generateChecksum(finalGameData.rawMs);
         let siteUrl = "https://despotesajeux.github.io/";
         
-        // Construction du message WhatsApp optimisé
-        let text = `🎲 *DÉFI DES POTES À JEUX* 🎲%0A%0A` +
-                   `👑 *Joueur :* ${pseudo}%0A` +
-                   `⏱️ *Temps :* ${finalGameData.time}%0A` +
+        let text = `🏆 *DÉFI DES POTES À JEUX* 🏆%0A%0A` +
+                   `🕵️ J'ai trouvé les 10 dés cachés !%0A%0A` +
+                   `👤 *Joueur :* ${pseudo}%0A` +
+                   `⏱️ *Chrono :* ${finalGameData.time}%0A` +
                    `🏅 *Rang :* ${finalGameData.rank}%0A%0A` +
-                   `Tu penses pouvoir me battre ? 😏%0A` +
+                   `Tu penses faire mieux ? Tente ta chance :%0A` +
                    `👉 ${siteUrl}%0A%0A` +
-                   `🔐 _Verif: ${check}_`; // Code anti-triche en petit à la fin
-                   
+                   `🔐 _Verif : ${check}_`;
         window.open(`https://wa.me/?text=${text}`, '_blank');
     }
     
@@ -564,7 +540,9 @@
     function renderHomeEgg() {
         let container = document.getElementById('homeEggContainer');
         container.innerHTML = ''; 
-        if(gameState['home'].total > gameState['home'].found) createEgg(container, 'home', false);
+        if(gameState['home'].total > gameState['home'].found) {
+            createEgg(container, 'home', false);
+        }
     }
     
     function createEgg(container, sectionKey, isFound, isRelative = false) {
@@ -585,7 +563,7 @@
         container.appendChild(egg);
     }
 
-    /* --- RESTE DU CODE SITE (Navigation, etc) --- */
+    /* --- RESTE DU CODE JS --- */
     const NB_PHOTOS_SORTIES = 19; const NB_PHOTOS_JEUX = 20;    
     let currentGallery = []; let currentPhotoIndex = 0;
 
@@ -679,14 +657,12 @@
     function openSheet(key) {
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
         
-        // --- INJECTION DYNAMIQUE DES OEUFS ---
         if(gameStarted && gameState[key].total > gameState[key].found) {
             let containerId = `content-${key}`;
             let container = document.getElementById(containerId);
             
             if(container) {
                 let remaining = gameState[key].total - gameState[key].found;
-                
                 if(key === 'photos') {
                     let titles = container.querySelectorAll('.photo-section-title');
                     for(let i=0; i<remaining; i++) {
