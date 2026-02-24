@@ -138,15 +138,28 @@
         .game-modal {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
             width: 85%; max-width: 350px;
-            background: white; border-radius: 20px; padding: 25px;
+            background: white; border-radius: 20px; padding: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.4); z-index: 300;
             text-align: center; opacity: 0; pointer-events: none;
             transition: all 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
+            display: flex; flex-direction: column; align-items: center;
         }
         .game-modal.visible { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
-        .game-modal h3 { color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 0 0 10px; }
-        .game-modal p { font-size: 0.95rem; line-height: 1.5; color: var(--text-brown); margin-bottom: 20px; }
-        .game-btn { background: var(--green-deep); color: white; border: none; padding: 10px 25px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 1rem; }
+        .game-modal h3 { color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 0 0 15px; }
+        
+        /* STYLE BEIGE POUR LE TEXTE */
+        .game-desc-box {
+            background: var(--bg-beige);
+            border-radius: 15px;
+            padding: 15px;
+            width: 100%; box-sizing: border-box;
+            margin-bottom: 20px;
+            border: 1px solid rgba(188, 143, 99, 0.2);
+        }
+        .game-desc-box p { font-size: 0.95rem; line-height: 1.5; color: var(--text-brown); margin: 0; }
+        
+        .game-btn { background: var(--green-deep); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); transition: transform 0.2s; }
+        .game-btn:active { transform: scale(0.95); }
 
         .game-toast {
             position: absolute; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px);
@@ -256,6 +269,9 @@
             .bottom-sheet.open { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
             .sheet-handle { display: none; }
             .lightbox-nav:hover { color: rgba(255, 255, 255, 1); }
+            
+            .egg-1 { top: 40px; left: 40px; font-size: 1.5rem; color: rgba(255,255,255,0.7); }
+            .egg-2 { bottom: 40px; left: 20px; }
         }
     </style>
 </head>
@@ -264,9 +280,11 @@
 <div class="phone">
     
     <div class="game-modal" id="gameModal">
-        <h3>Psst... Joueur ?</h3>
-        <p>Comme on est joueurs, <b>10 petits dés</b> (easter eggs) ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?</p>
-        <button class="game-btn" onclick="initGame()">C'est parti !</button>
+        <h3 id="gameTitle">Psst... Joueur ?</h3>
+        <div class="game-desc-box">
+            <p id="gameDesc">Comme on est joueurs, <b>10 petits dés</b> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?</p>
+        </div>
+        <button class="game-btn" id="gameBtn" onclick="initGame()">C'est parti !</button>
     </div>
 
     <div class="game-toast" id="gameToast">Bravo ! 1/10</div>
@@ -337,11 +355,19 @@
 
     function askToPlay() {
         if(gameStarted) return;
+        // Remet le texte d'intro si on clique après un reset
+        document.getElementById('gameTitle').innerText = "Psst... Joueur ?";
+        document.getElementById('gameDesc').innerHTML = "Comme on est joueurs, <b>10 petits dés</b> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?";
+        let btn = document.getElementById('gameBtn');
+        btn.innerText = "C'est parti !";
+        btn.setAttribute('onclick', 'initGame()');
+        
         document.getElementById('gameModal').classList.add('visible');
     }
     
     function initGame() {
         document.getElementById('gameModal').classList.remove('visible');
+        resetGameData(); // Nettoyage propre avant de commencer
         gameStarted = true;
         
         // 1. Démarrer le Timer
@@ -358,6 +384,22 @@
         createEgg(document.getElementById('homeEggContainer'));
         
         showToast("Le chrono est lancé ! ⏱️");
+    }
+    
+    function resetGameData() {
+        gameStarted = false;
+        eggCount = 0;
+        clearInterval(timerInterval);
+        document.getElementById('gameTimer').classList.remove('visible');
+        document.getElementById('gameTimer').innerText = "00:00";
+        document.getElementById('gameTimer').style.color = '#f1c40f'; // Reset couleur
+        
+        // Vider la distribution
+        for(let key in eggsDistribution) eggsDistribution[key] = 0;
+        eggsDistribution['home'] = 1;
+        
+        // Supprimer tous les oeufs existants dans le DOM
+        document.querySelectorAll('.egg').forEach(el => el.remove());
     }
     
     function startTimer() {
@@ -382,15 +424,41 @@
         
         if(eggCount === totalEggs) {
             clearInterval(timerInterval);
-            let finalTime = document.getElementById('gameTimer').innerText;
-            msg = `🎉 GAGNÉ en ${finalTime} ! 🎉`;
-            document.getElementById('gameTimer').style.color = '#2ecc71'; // Vert
+            let finalSeconds = (Date.now() - startTime) / 1000;
+            finishGame(finalSeconds);
         } else if(eggCount > 5) {
             msg = `Tu chauffes ! ${eggCount}/${totalEggs}`;
+            showToast(msg);
+        } else {
+            showToast(msg);
         }
         
-        showToast(msg);
         if(navigator.vibrate) navigator.vibrate(50);
+    }
+    
+    function finishGame(seconds) {
+        let finalTime = document.getElementById('gameTimer').innerText;
+        document.getElementById('gameTimer').style.color = '#2ecc71'; // Vert
+        
+        let comment = "";
+        if(seconds < 5) comment = "T'es un robot ? 🤖 (< 5s)";
+        else if(seconds < 10) comment = "Flash McQueer ! ⚡ (5-10s)";
+        else if(seconds < 15) comment = "Oeil de lynx ! 👁️ (10-15s)";
+        else if(seconds < 20) comment = "Super rapide ! 🚀 (15-20s)";
+        else if(seconds < 30) comment = "Pas mal du tout ! 👍 (20-30s)";
+        else if(seconds < 40) comment = "Joli score ! 👏 (30-40s)";
+        else if(seconds < 50) comment = "Tranquille mais efficace. 🐢 (40-50s)";
+        else comment = "On prend son temps, hein ? ☕ (> 1min)";
+        
+        // Afficher la modale de victoire avec le bouton REJOUER
+        setTimeout(() => {
+            document.getElementById('gameTitle').innerText = "🎉 GAGNÉ ! 🎉";
+            document.getElementById('gameDesc').innerHTML = `Tu as trouvé les 10 dés en <b>${finalTime}</b>.<br><br><span style="color:var(--green-deep); font-weight:bold;">${comment}</span>`;
+            let btn = document.getElementById('gameBtn');
+            btn.innerText = "Rejouer 🔄";
+            btn.setAttribute('onclick', 'initGame()'); // Relance direct
+            document.getElementById('gameModal').classList.add('visible');
+        }, 1000);
     }
     
     function showToast(msg) {
@@ -505,19 +573,10 @@
         
         // --- INJECTION DYNAMIQUE DES OEUFS ---
         if(gameStarted && eggsDistribution[key] > 0) {
-            // On vérifie qu'on n'a pas déjà inséré les oeufs (pour ne pas les doubler si on rouvre)
-            // Note: Ici, comme on réécrit le HTML à chaque openSheet, on doit les remettre.
-            // Mais pour éviter de compter plusieurs fois le même oeuf, on ne doit pas.
-            // Astuce simple : On les génère à chaque ouverture, mais s'ils sont cliqués, ils disparaissent.
-            // Pour faire propre, on va simplement générer X oeufs.
-            
             let containerId = `content-${key}`;
             let container = document.getElementById(containerId);
-            
             if(container) {
-                // On ajoute position relative si pas déjà fait par CSS
                 container.style.position = 'relative';
-                
                 for(let i=0; i < eggsDistribution[key]; i++) {
                     createEgg(container);
                 }
