@@ -284,7 +284,6 @@
         .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
         
         .contact-person .avatar { width: 38px; height: 38px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; overflow: hidden;}
-        /* Modif pour Présidente */
         .contact-person .avatar.president-icon { background: var(--president-color); color: white; }
         
         .contact-person .avatar.mail-icon { background: var(--wood-brown); }
@@ -485,7 +484,7 @@
                 <p style="text-align:center; margin-top:0;">Devenir membre est simple et convivial !</p>
                 <div style="background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.2); color: #dc3545; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans</div>
                 <div class="pricing-container"><div class="price-card featured"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div><div class="price-card featured"><div class="amount">20€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Couple</p></div></div>
-                <ul class="benefits-list" style="max-width: 280px; margin: 15px auto 0;"><li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li><li><i class="fa-solid fa-circle-check"></i> Première séance offerte</li><li><i class="fa-solid fa-circle-check"></i> Soirée escape game</li><li><i class="fa-solid fa-circle-check"></i> Repas de fin d'année</li><li><i class="fa-solid fa-circle-check"></i> Après-midi jeux extérieurs</li></ul>
+                <ul class="benefits-list" style="max-width: 280px; margin: 15px auto 0;"><li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li><li><i class="fa-solid fa-circle-check"></i> Première séance offerte</li><li><i class="fa-solid fa-circle-check"></i> Soirée escape game</li><li><i class="fa-solid fa-circle-check"></i> Repas de fin d'année</li></ul>
             </div>`
         },
         cal: { title: "Agenda Ludique", text: `<div class="panel-card" id="content-cal"><p style="text-align: center; color: var(--green-deep); margin-top: 0; font-size: 0.95rem;">On se retrouve chaque <b>dernier vendredi du mois</b>. Voici les prochaines sessions :</p>${agendaHTML}<p style="text-align: center; font-size:0.8rem; margin-bottom: 0;">N'oubliez pas d'apporter votre bonne humeur !</p></div>` },
@@ -685,7 +684,8 @@
     function finishGame(rawMs) {
         let finalTime = document.getElementById('gameTimer').innerText;
         document.getElementById('gameTimer').style.color = '#2ecc71'; 
-        
+        gameStarted = false; // Reset game state here
+
         let seconds = rawMs / 1000;
         let rank = ""; let message = ""; let rankNum = 0;
 
