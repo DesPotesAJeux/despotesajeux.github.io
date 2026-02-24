@@ -69,17 +69,20 @@
             background: url('hero.png') center top / cover no-repeat; 
             position: relative; z-index: 1; 
             -webkit-user-select: none; user-select: none;
-            -webkit-touch-callout: none; pointer-events: auto; cursor: pointer;
+            -webkit-touch-callout: none; pointer-events: none; /* Le clic est géré par la rdv-card */
         }
 
+        /* MODIF: rdv-card devient le déclencheur */
         .rdv-card {
             background: rgba(255, 252, 240, 0.98); width: 85%;
             padding: 12px 15px; border-radius: 18px;
             position: absolute; bottom: -20px; left: 50%;
             transform: translateX(-50%); display: flex; align-items: center;
             box-shadow: 0 10px 30px rgba(74, 60, 47, 0.15); border: 1px solid white;
-            z-index: 10; pointer-events: auto; cursor: default;
+            z-index: 10; pointer-events: auto; cursor: pointer; /* Curseur main */
+            transition: transform 0.1s ease;
         }
+        .rdv-card:active { transform: translateX(-50%) scale(0.98); }
 
         .rdv-info p { margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--green-deep); line-height: 1.3; }
         .rdv-info a { color: var(--green-deep); text-decoration: none; font-weight: 600; font-size: 0.8rem; }
@@ -134,20 +137,30 @@
         }
         .game-timer.visible { display: block; }
 
-        /* --- MODAL DE JEU & TOAST --- */
-        .game-modal {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
+        /* --- MODAL DE JEU & TOAST (NOUVEAU STYLE BACKDROP) --- */
+        .game-modal-backdrop {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); /* Fond gris semi-transparent */
+            z-index: 300;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(3px);
+        }
+        .game-modal-backdrop.visible { opacity: 1; pointer-events: auto; }
+
+        .game-modal-content {
             width: 85%; max-width: 350px;
             background: white; border-radius: 20px; padding: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4); z-index: 300;
-            text-align: center; opacity: 0; pointer-events: none;
-            transition: all 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            text-align: center;
+            transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
             display: flex; flex-direction: column; align-items: center;
         }
-        .game-modal.visible { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
-        .game-modal h3 { color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 0 0 15px; }
+        .game-modal-backdrop.visible .game-modal-content { transform: scale(1); }
+
+        .game-modal-content h3 { color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 0 0 15px; }
         
-        /* STYLE BEIGE POUR LE TEXTE */
         .game-desc-box {
             background: var(--bg-beige);
             border-radius: 15px;
@@ -279,12 +292,14 @@
 
 <div class="phone">
     
-    <div class="game-modal" id="gameModal">
-        <h3 id="gameTitle">Psst... Joueur ?</h3>
-        <div class="game-desc-box">
-            <p id="gameDesc">Comme on est joueurs, <b>10 petits dés</b> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?</p>
+    <div class="game-modal-backdrop" id="gameModalBackdrop" onclick="closeGameModal()">
+        <div class="game-modal-content" onclick="event.stopPropagation()">
+            <h3 id="gameTitle">Psst... Joueur ?</h3>
+            <div class="game-desc-box">
+                <p id="gameDesc">Comme on est joueurs, <b>10 petits dés</b> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?</p>
+            </div>
+            <button class="game-btn" id="gameBtn" onclick="initGame()">C'est parti !</button>
         </div>
-        <button class="game-btn" id="gameBtn" onclick="initGame()">C'est parti !</button>
     </div>
 
     <div class="game-toast" id="gameToast">Bravo ! 1/10</div>
@@ -302,8 +317,8 @@
     
     <div class="main-wrapper" id="mainWrapper">
         <div class="hero-container">
-            <div class="hero" onclick="askToPlay()">
-                <div class="rdv-card" onclick="event.stopPropagation()">
+            <div class="hero">
+                <div class="rdv-card" onclick="askToPlay()">
                     <div style="font-size: 1.5rem; margin-right: 12px;">🎲</div>
                     <div class="rdv-info">
                         <b style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase;">Prochain Rdv</b>
@@ -362,11 +377,15 @@
         btn.innerText = "C'est parti !";
         btn.setAttribute('onclick', 'initGame()');
         
-        document.getElementById('gameModal').classList.add('visible');
+        document.getElementById('gameModalBackdrop').classList.add('visible');
+    }
+    
+    function closeGameModal() {
+        document.getElementById('gameModalBackdrop').classList.remove('visible');
     }
     
     function initGame() {
-        document.getElementById('gameModal').classList.remove('visible');
+        document.getElementById('gameModalBackdrop').classList.remove('visible');
         resetGameData(); // Nettoyage propre avant de commencer
         gameStarted = true;
         
@@ -457,7 +476,7 @@
             let btn = document.getElementById('gameBtn');
             btn.innerText = "Rejouer 🔄";
             btn.setAttribute('onclick', 'initGame()'); // Relance direct
-            document.getElementById('gameModal').classList.add('visible');
+            document.getElementById('gameModalBackdrop').classList.add('visible');
         }, 1000);
     }
     
