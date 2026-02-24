@@ -121,11 +121,9 @@
         .egg:hover { color: var(--wood-brown); transform: scale(1.3); }
         .egg.found { 
             color: #f1c40f; text-shadow: 0 0 10px rgba(241, 196, 15, 0.8);
-            cursor: default; pointer-events: none; /* Désactivé si trouvé */
+            cursor: default; pointer-events: none;
         }
-        /* Animation spéciale juste au moment de la découverte */
         .egg.just-found { animation: spin 0.6s ease-in-out forwards; }
-        
         @keyframes spin { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(0); opacity: 0; } }
 
         /* --- TIMER --- */
@@ -166,8 +164,17 @@
         }
         .game-desc-box p { font-size: 0.95rem; line-height: 1.5; color: var(--text-brown); margin: 0; }
         
-        .game-btn { background: var(--green-deep); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); transition: transform 0.2s; }
+        .game-btn { background: var(--green-deep); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); transition: transform 0.2s; width: 100%; }
         .game-btn:active { transform: scale(0.95); }
+        
+        /* Styles pour le partage WhatsApp */
+        .share-container { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .share-input { 
+            width: 100%; padding: 10px; border-radius: 10px; border: 2px solid var(--wood-brown); 
+            background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown);
+            box-sizing: border-box; text-align: center;
+        }
+        .wa-btn { background: #25D366; color: white; margin-top: 5px; } /* Bouton Vert WhatsApp */
 
         .game-toast {
             position: absolute; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px);
@@ -292,6 +299,14 @@
             <div class="game-desc-box">
                 <p id="gameDesc">Comme on est joueurs, <b>10 petits dés</b> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?</p>
             </div>
+            
+            <div id="shareContainer" class="share-container" style="display:none;">
+                <input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15">
+                <button class="game-btn wa-btn" onclick="shareWhatsapp()">
+                    <i class="fa-brands fa-whatsapp"></i> Partager mon score
+                </button>
+            </div>
+
             <button class="game-btn" id="gameBtn" onclick="initGame()">C'est parti !</button>
         </div>
     </div>
@@ -351,31 +366,34 @@
 </div>
 
 <script>
-    /* --- LOGIQUE JEU EASTER EGGS (ANTI-TRICHE & DUPLICATION FIXED) --- */
+    /* --- LOGIQUE JEU EASTER EGGS --- */
     let gameStarted = false;
     let eggCount = 0;
     const totalEggs = 10;
     let timerInterval;
     let startTime;
+    let finalGameData = { time: "", rank: "" }; // Stockage pour le partage
     
-    // STRUCTURE DE DONNÉES ROBUSTE
     let gameState = {
-        'home': { total: 0, found: 0 },
-        'histoire': { total: 0, found: 0 },
-        'adhesion': { total: 0, found: 0 },
-        'cal': { total: 0, found: 0 },
-        'photos': { total: 0, found: 0 },
-        'contact': { total: 0, found: 0 },
+        'home': { total: 0, found: 0 }, 'histoire': { total: 0, found: 0 },
+        'adhesion': { total: 0, found: 0 }, 'cal': { total: 0, found: 0 },
+        'photos': { total: 0, found: 0 }, 'contact': { total: 0, found: 0 },
         'ludotheque': { total: 0, found: 0 }
     };
 
     function askToPlay() {
         if(gameStarted) return;
+        
+        // Reset de l'interface modale
         document.getElementById('gameTitle').innerText = "Psst... Joueur ?";
         document.getElementById('gameDesc').innerHTML = "Comme on est joueurs, <b>10 petits dés</b> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?";
+        
         let btn = document.getElementById('gameBtn');
         btn.innerText = "C'est parti !";
         btn.setAttribute('onclick', 'initGame()');
+        btn.style.display = 'block';
+        
+        document.getElementById('shareContainer').style.display = 'none'; // Cacher partage
         document.getElementById('gameModalBackdrop').classList.add('visible');
     }
     
@@ -389,17 +407,14 @@
         gameStarted = true;
         startTimer();
         
-        // Distribution
         const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque'];
         for(let i=0; i<9; i++) {
             let randomSec = sections[Math.floor(Math.random() * sections.length)];
             gameState[randomSec].total++;
         }
         
-        // Accueil
         gameState['home'].total = 1;
         renderHomeEgg();
-        
         showToast("Le chrono est lancé ! ⏱️");
     }
     
@@ -412,8 +427,6 @@
         document.getElementById('gameTimer').style.color = '#f1c40f'; 
         
         for(let key in gameState) { gameState[key].total = 0; gameState[key].found = 0; }
-        
-        // Nettoyage DOM
         document.querySelectorAll('.egg').forEach(el => el.remove());
     }
     
@@ -430,17 +443,12 @@
     
     function foundEgg(el, sectionKey) {
         if(el.classList.contains('found')) return;
-        if(eggCount >= 10) return; // Sécurité max
+        if(eggCount >= 10) return;
         
-        // Mise à jour de l'état
         gameState[sectionKey].found++;
         eggCount++;
+        el.classList.add('found'); el.classList.add('just-found');
         
-        // Animation
-        el.classList.add('found');
-        el.classList.add('just-found');
-        
-        // Feedback
         let msg = `Bravo ! ${eggCount}/${totalEggs}`;
         if(eggCount === totalEggs) {
             clearInterval(timerInterval);
@@ -452,39 +460,27 @@
         } else {
             showToast(msg);
         }
-        
         if(navigator.vibrate) navigator.vibrate(50);
     }
     
     function renderHomeEgg() {
         let container = document.getElementById('homeEggContainer');
-        container.innerHTML = ''; // Clean
-        if(gameState['home'].total > 0) {
-            createEgg(container, 'home', gameState['home'].found > 0);
-        }
+        container.innerHTML = ''; 
+        if(gameState['home'].total > 0) createEgg(container, 'home', gameState['home'].found > 0);
     }
     
-    // Fonction générique de création d'oeuf
     function createEgg(container, sectionKey, isFound, isRelative = false) {
         let egg = document.createElement('i');
         egg.className = 'fa-solid fa-dice egg';
-        
-        if (isFound) {
-            egg.classList.add('found'); // Déjà doré, pas d'anim
-        } else {
-            egg.onclick = function() { foundEgg(this, sectionKey); event.stopPropagation(); };
-            egg.style.pointerEvents = 'auto';
-        }
+        if (isFound) egg.classList.add('found'); 
+        else { egg.onclick = function() { foundEgg(this, sectionKey); event.stopPropagation(); }; egg.style.pointerEvents = 'auto'; }
 
         if(!isRelative) {
             egg.style.top = (Math.random() * 80 + 10) + '%';
             egg.style.left = (Math.random() * 80 + 10) + '%';
         } else {
-            egg.style.position = 'relative';
-            egg.style.marginLeft = '15px';
-            egg.style.verticalAlign = 'middle';
+            egg.style.position = 'relative'; egg.style.marginLeft = '15px'; egg.style.verticalAlign = 'middle';
         }
-        
         container.appendChild(egg);
     }
     
@@ -503,14 +499,32 @@
         else if (seconds < 60) { rank = "LE PARESSEUX 🦥"; message = "Tout doux, pas de stress, c'est les vacances."; }
         else { rank = "L'ESCARGOT 🐌"; message = "L'important, c'est de participer... non ?"; }
         
+        // Stockage des données pour le partage
+        finalGameData.time = finalTime;
+        finalGameData.rank = rank;
+
         setTimeout(() => {
-            document.getElementById('gameTitle').innerText = "🎉 " + rank + " 🎉";
+            document.getElementById('gameTitle').innerText = "🎉 GAGNÉ ! 🎉";
             document.getElementById('gameDesc').innerHTML = `Tu as trouvé les 10 dés en <b>${finalTime}</b>.<br><br><span style="color:var(--green-deep); font-weight:bold;">${message}</span>`;
+            
+            // Afficher zone partage
+            document.getElementById('shareContainer').style.display = 'flex';
+            
+            // Bouton devient Rejouer
             let btn = document.getElementById('gameBtn');
             btn.innerText = "Rejouer 🔄";
-            btn.setAttribute('onclick', 'initGame()'); 
+            btn.setAttribute('onclick', 'initGame()');
+            
             document.getElementById('gameModalBackdrop').classList.add('visible');
         }, 1000);
+    }
+    
+    function shareWhatsapp() {
+        let pseudo = document.getElementById('playerPseudo').value.trim() || "Un Pote";
+        let text = `🏆 *Défi Des Potes à Jeux* 🏆%0A%0AJ'ai trouvé les 10 dés cachés en *${finalGameData.time}* !%0AMon rang : ${finalGameData.rank}%0A%0AQui peut me battre ? 😎%0A%0A- ${pseudo}`;
+        
+        // Ouvrir WhatsApp
+        window.open(`https://wa.me/?text=${text}`, '_blank');
     }
     
     function showToast(msg) {
@@ -617,21 +631,17 @@
             let container = document.getElementById(containerId);
             
             if(container) {
-                // Pour éviter le "farming" : on recrée TOUS les oeufs de cette section
-                // Mais ceux DÉJÀ trouvés sont marqués ".found" et non-cliquables
                 let total = gameState[key].total;
                 let found = gameState[key].found;
                 
                 if(key === 'photos') {
-                    // Logique Photos (A côté des titres)
                     let titles = container.querySelectorAll('.photo-section-title');
                     for(let i=0; i<total; i++) {
                         let target = titles[i % titles.length];
-                        let isAlreadyFound = i < found; // Les premiers 'found' sont marqués
+                        let isAlreadyFound = i < found;
                         createEgg(target, key, isAlreadyFound, true);
                     }
                 } else {
-                    // Logique Standard (Random)
                     container.style.position = 'relative';
                     for(let i=0; i<total; i++) {
                         let isAlreadyFound = i < found;
