@@ -37,7 +37,6 @@
             --fb-blue: #1877F2;
             --wa-green: #25D366; 
             --myludo-color: #2c3e50; 
-            --gold-game: #f1c40f;
         }
 
         body {
@@ -73,44 +72,24 @@
             -webkit-touch-callout: none; pointer-events: none;
         }
 
-        /* HITBOX SUR LE PANNEAU EN BOIS (Image de fond) */
+        /* HITBOX */
         .hero-hitbox {
-            position: absolute; top: 8%; left: 8%; width: 45%; height: 35%; 
-            z-index: 15; cursor: pointer; pointer-events: auto;
+            position: absolute; top: 5%; left: 5%; width: 55%; height: 45%; 
+            z-index: 5; cursor: pointer; pointer-events: auto;
         }
 
-        /* DÉ REBONDISSANT : Positionné en haut à gauche du panneau principal */
-        .game-hint-badge {
-            position: absolute;
-            top: 0; left: 0; /* Alignement en haut à gauche de la hitbox */
-            width: 32px; height: 32px;
-            background: var(--gold-game);
-            color: white;
-            border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 1.1rem;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-            border: 2px solid white;
-            animation: bounce 2s infinite;
-            z-index: 20;
-        }
-        
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-10px);}
-            60% {transform: translateY(-5px);}
-        }
-
-        /* PANNEAU PROCHAIN RDV (Nettoyé du dé et des animations) */
         .rdv-card {
             background: rgba(255, 252, 240, 0.98); width: 85%;
             padding: 12px 15px; border-radius: 18px;
             position: absolute; bottom: -20px; left: 50%;
-            transform: translateX(-50%); 
-            display: flex; align-items: center;
+            transform: translateX(-50%); display: flex; align-items: center;
             box-shadow: 0 10px 30px rgba(74, 60, 47, 0.15); border: 1px solid white;
-            z-index: 10; pointer-events: auto;
+            z-index: 10; pointer-events: auto; cursor: default;
         }
+
+        .rdv-info p { margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--green-deep); line-height: 1.3; }
+        .rdv-info a { color: var(--green-deep); text-decoration: none; font-weight: 600; font-size: 0.8rem; }
+        .rdv-info a .underline { text-decoration: underline; }
 
         .content {
             background: var(--bg-beige); padding: 45px 0 20px 0; 
@@ -131,31 +110,46 @@
         }
         .btn-ludotheque:active { transform: scale(0.95); }
 
-        /* EASTER EGGS */
+        /* --- STYLE EASTER EGGS --- */
         .egg {
-            position: absolute; color: rgba(188, 143, 99, 0.6); font-size: 1.4rem;
-            cursor: pointer; z-index: 50; transition: all 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
+            position: absolute;
+            color: rgba(188, 143, 99, 0.6); font-size: 1.4rem;
+            cursor: pointer; z-index: 50;
+            transition: all 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
             filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
         }
-        .egg.found { color: #f1c40f; text-shadow: 0 0 10px rgba(241, 196, 15, 0.8); animation: spin 0.6s ease-in-out forwards; pointer-events: none; }
+        .egg:hover { color: var(--wood-brown); transform: scale(1.3); }
+        .egg.found { 
+            color: #f1c40f; text-shadow: 0 0 10px rgba(241, 196, 15, 0.8);
+            animation: spin 0.6s ease-in-out forwards;
+            pointer-events: none;
+        }
         @keyframes spin { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.2); } }
 
+        /* --- TIMER (Largeur ajustée pour centièmes) --- */
         .game-timer {
-            position: absolute; top: 15px; right: 15px; background: rgba(0, 0, 0, 0.8); color: #f1c40f;
-            padding: 5px 12px; border-radius: 15px; font-family: monospace; font-size: 1.1rem; font-weight: bold;
-            z-index: 200; display: none; text-align: center;
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(0, 0, 0, 0.8); color: #f1c40f;
+            padding: 5px 12px; border-radius: 15px;
+            font-family: monospace; font-size: 1.1rem; font-weight: bold;
+            z-index: 200; display: none; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            pointer-events: none; min-width: 80px; text-align: center;
         }
         .game-timer.visible { display: block; }
 
+        /* --- MODAL --- */
         .game-modal-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 300; display: flex; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none; transition: opacity 0.3s ease; backdrop-filter: blur(3px);
+            background: rgba(0,0,0,0.6); z-index: 300;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+            backdrop-filter: blur(3px);
         }
         .game-modal-backdrop.visible { opacity: 1; pointer-events: auto; }
 
         .game-modal-content {
-            width: 85%; max-width: 350px; background: white; border-radius: 20px; padding: 20px;
+            width: 85%; max-width: 350px;
+            background: white; border-radius: 20px; padding: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.4); text-align: center;
             transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
             display: flex; flex-direction: column; align-items: center;
@@ -164,33 +158,136 @@
         .game-modal-content h3 { color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 0 0 15px; }
         
         .game-desc-box {
-            background: var(--bg-beige); border-radius: 15px; padding: 15px; width: 100%; box-sizing: border-box; margin-bottom: 20px;
+            background: var(--bg-beige); border-radius: 15px; padding: 15px;
+            width: 100%; box-sizing: border-box; margin-bottom: 20px;
+            border: 1px solid rgba(188, 143, 99, 0.2);
         }
+        .game-desc-box p { font-size: 0.95rem; line-height: 1.5; color: var(--text-brown); margin: 0; }
         
-        .game-btn { background: var(--green-deep); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 1rem; width: 100%; }
-        .share-container { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; margin-bottom: 20px; }
-        .share-input { width: 100%; padding: 10px; border-radius: 10px; border: 2px solid var(--wood-brown); text-align: center; font-family: inherit; font-weight: 700; }
-        .wa-btn { background: #25D366; color: white; }
+        .game-btn { background: var(--green-deep); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); transition: transform 0.2s; width: 100%; }
+        .game-btn:active { transform: scale(0.95); }
+        
+        .share-container { 
+            width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; 
+            margin-bottom: 20px;
+        }
+        .share-input { 
+            width: 100%; padding: 10px; border-radius: 10px; border: 2px solid var(--wood-brown); 
+            background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown);
+            box-sizing: border-box; text-align: center;
+        }
+        .wa-btn { background: #25D366; color: white; margin-top: 5px; } 
 
-        /* FOOTER & OTHERS */
-        .footer-nav { position: relative; width: 100%; background: var(--green-deep); display: flex; justify-content: space-around; align-items: center; padding: 15px 0; border-top: 3px solid var(--wood-brown); z-index: 20; flex-shrink: 0; }
+        .game-toast {
+            position: absolute; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px);
+            background: var(--wood-brown); color: white; padding: 8px 20px; border-radius: 50px;
+            font-weight: 700; font-size: 0.9rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 300; opacity: 0; pointer-events: none; transition: all 0.3s ease; white-space: nowrap;
+        }
+        .game-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* --- LIGHTBOX --- */
+        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
+        .lightbox-img-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease-out; transform-origin: center center; }
+        .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; transform: scale(0.9); opacity: 0; transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); will-change: transform; }
+        .lightbox.active { opacity: 1; }
+        .lightbox.active img { transform: scale(1); opacity: 1; }
+        .lightbox-controls { position: absolute; top: 25px; right: 25px; display: flex; gap: 15px; z-index: 110; }
+        .lightbox-btn { color: #ffffff; font-size: 1.4rem; background: rgba(0,0,0,0.6); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; }
+        .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.6); font-size: 2rem; padding: 20px; z-index: 110; cursor: pointer; transition: color 0.3s ease; -webkit-tap-highlight-color: transparent; }
+        .lightbox-nav:active { color: rgba(255, 255, 255, 1); }
+        .lightbox-nav.prev { left: 0; }
+        .lightbox-nav.next { right: 0; }
+
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 25; display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .bottom-sheet { position: absolute; top: 100%; left: 0; width: 100%; height: auto; max-height: 85vh; min-height: 40vh; background: white; z-index: 30; border-top-left-radius: 35px; border-top-right-radius: 35px; display: flex; flex-direction: column; will-change: transform; transition: transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1); }
+        .bottom-sheet.open { transform: translateY(-100%); }
+        .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; cursor: grab; }
+        .sheet-handle { width: 45px; height: 6px; background: #e0e0e0; border-radius: 10px; margin: 0 auto; }
+        .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; -webkit-overflow-scrolling: touch; }
+        .sheet-content-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 2.4rem; margin: 5px 0 20px; text-align: center; position: relative; }
+        .sheet-content-title::after { content: ''; display: block; width: 50px; height: 4px; background: var(--wood-brown); margin: 10px auto 0; border-radius: 5px; }
+
+        .panel-card { background: var(--bg-beige); padding: 15px; border-radius: 20px; margin: 15px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.03); position: relative; }
+
+        .phase-label { font-size: 0.8rem; font-weight: 700; color: var(--wood-brown); text-transform: uppercase; letter-spacing: 2px; margin: 30px 0 5px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .phase-label.first { margin-top: 5px; }
+        .phase-label::before, .phase-label::after { content: ''; flex-grow: 1; height: 1px; background: var(--wood-highlight); opacity: 0.8; max-width: 30px; min-width: 10px; }
+        .phase-title { font-family: 'Quicksand', sans-serif; color: var(--green-deep); font-size: 1.1rem; font-weight: 700; text-align: center; margin: 0 0 15px; display: flex; align-items: center; justify-content: center; gap: 10px; white-space: nowrap; }
+        .phase-icon { font-size: 1.2rem; color: var(--wood-brown); }
+        .grimoire-text { text-align: center; line-height: 1.6; font-size: 0.95rem; margin-top: 0; }
+        .btn-article { display: inline-flex; align-items: center; gap: 8px; background: rgba(188, 143, 99, 0.15); color: var(--wood-brown); border: 1px solid var(--wood-brown); border-radius: 50px; padding: 6px 15px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 10px; text-decoration: none; }
+        .btn-article:active { transform: scale(0.95); background: rgba(188, 143, 99, 0.25); }
+        
+        .photo-section-title { text-align: center; color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 15px 0 10px 0; padding-top: 20px; border-top: 1px dashed rgba(0,0,0,0.1); }
+        .photo-section-title.first { border-top: none; padding-top: 0px; margin-top: 0px; } 
+        
+        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 0 3px 20px; }
+        .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 2px; }
+        .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+        
+        .contact-person { display: flex; flex-direction: column; padding: 10px 12px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
+        .contact-person.compact-item { padding: 6px 12px; margin-bottom: 6px; }
+        .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
+        .contact-person .avatar { width: 38px; height: 38px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; overflow: hidden;}
+        .contact-person .avatar.mail-icon { background: var(--wood-brown); }
+        .contact-person .avatar.fb-icon { background: var(--fb-blue); }
+        .contact-person .avatar.wa-icon { background: var(--wa-green); }
+        .contact-person .avatar.ludo-icon { background: #ffffff; border: 1px solid rgba(0,0,0,0.1); box-sizing: border-box; display: flex; align-items: center; justify-content: center; }
+        .contact-person .avatar.ludo-icon img { width: 24px; height: 24px; object-fit: contain; display: block; border-radius: 0; } 
+        .contact-top h4 { margin: 0; color: var(--green-deep); font-size: 1.05rem; flex-grow: 1; min-width: 80px; }
+        .contact-bottom { width: 100%; padding-top: 5px; text-align: left; }
+        .contact-bottom span { font-size: 0.7rem; color: var(--text-brown); font-weight: 600; opacity: 0.9; display: block; }
+        .call-btn { background: var(--green-deep); color: white; text-decoration: none; width: 95px; height: 32px; border-radius: 50px; font-weight: 700; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 6px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.2); }
+        .call-btn.mail-btn { background: var(--wood-brown); }
+        .call-btn.fb-btn { background: var(--fb-blue); }
+        .call-btn.wa-btn { background: var(--wa-green); }
+        .call-btn.ludo-btn { background: var(--myludo-color); box-shadow: 0 4px 10px rgba(41, 128, 185, 0.2); }
+        .pricing-container { display: flex; gap: 10px; margin: 15px 0; }
+        .price-card { flex: 1; background: #ffffff; padding: 12px; border-radius: 15px; text-align: center; border: 2px solid transparent; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .price-card.featured { border-color: var(--wood-brown); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .price-card h3 { font-size: 0.9rem; margin: 0; }
+        .price-card .amount { font-size: 1.6rem; font-weight: 700; color: var(--wood-brown); margin: 5px 0; }
+        .benefits-list { list-style: none; padding: 0; margin: 15px 0 0 0; }
+        .benefits-list li { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; }
+        .benefits-list i { color: var(--green-deep); }
+        .cal-list { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; } 
+        .cal-item { display: flex; align-items: center; gap: 12px; background: #ffffff; padding: 10px 15px; border-radius: 12px; border-left: 4px solid var(--wood-brown); box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .cal-content { flex-grow: 1; overflow: hidden; } 
+        .cal-item .date { font-weight: 700; color: var(--green-deep); font-size: 1rem; text-transform: capitalize; margin-bottom: 2px; }
+        .cal-item .time { font-size: 0.8rem; color: var(--text-brown); line-height: 1.4; }
+        .cal-item .time a { color: var(--green-deep); text-decoration: underline; font-weight: 600; }
+
+        .footer-nav { 
+            position: relative; width: 100%; background: var(--green-deep); 
+            display: flex; justify-content: space-around; align-items: center; 
+            padding: 15px 0; padding-bottom: max(15px, env(safe-area-inset-bottom)); 
+            border-top: 3px solid var(--wood-brown); z-index: 20; flex-shrink: 0;
+        }
         .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
-        .icon-box { width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; border-radius: 14px; background: var(--wood-brown); margin-bottom: 6px; color: #ffffff; font-size: 1.3rem; }
-        .menu-item span { font-weight: 700; font-size: 0.5rem; color: #ffffff; text-transform: uppercase; }
+        .icon-box { width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; border-radius: 14px; background: var(--wood-brown); margin-bottom: 6px; color: #ffffff; font-size: 1.3rem; box-shadow: 0 4px 8px rgba(0,0,0,0.25); transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); }
+        .menu-item span { font-weight: 700; font-size: 0.5rem; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
 
         @media (min-width: 768px) {
-            body { align-items: center; background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('hero.png') center / cover no-repeat; backdrop-filter: blur(10px); padding: 20px; }
-            .phone { max-width: 1400px; height: 80vh; border-radius: 30px; }
+            body { align-items: center; background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('hero.png') center / cover no-repeat; backdrop-filter: blur(10px); overflow: auto; padding: 20px; box-sizing: border-box; min-height: 100vh; }
+            .phone { max-width: 1400px; height: 80vh; min-height: 600px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
             .main-wrapper { display: grid; grid-template-columns: 55% 45%; grid-template-rows: 1fr auto; height: 100%; }
-            .hero-container { grid-column: 1; grid-row: 1 / span 2; height: 100%; }
-            .hero { width: 100%; height: 100%; background-position: left center; }
-            .rdv-card { bottom: 40px; width: 80%; padding: 20px; background: rgba(255, 252, 240, 0.95); }
-            .content { grid-column: 2; grid-row: 1; }
-            .footer-nav { grid-column: 2; grid-row: 2; background: transparent; border: none; padding: 0 50px 40px 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-            .menu-item { background: #fff; padding: 15px 5px; border-radius: 15px; }
-            .menu-item span { color: var(--text-brown); }
-            .bottom-sheet { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 600px; border-radius: 25px; opacity: 0; display: none; }
+            .hero-container { grid-column: 1; grid-row: 1 / span 2; height: 100%; width: 100%; }
+            .hero { width: 100%; height: 100%; max-width: none; margin: 0; border-radius: 0; background-position: left center; }
+            .rdv-card { bottom: 40px; width: 80%; padding: 20px; background: rgba(255, 252, 240, 0.95); backdrop-filter: blur(5px); }
+            .content { grid-column: 2; grid-row: 1; padding: 40px 60px 40px 40px; justify-content: center; align-items: center; }
+            .footer-nav { grid-column: 2; grid-row: 2; position: relative; order: unset; background: transparent; border: none; padding: 0 50px 40px 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; justify-content: center; }
+            .menu-item { background: #fff; padding: 15px 5px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+            .menu-item:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+            .icon-box { width: 50px; height: 50px; font-size: 1.5rem; margin-bottom: 8px; }
+            .menu-item span { color: var(--text-brown); font-size: 0.7rem; font-weight: 800; }
+            .bottom-sheet { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 600px; max-width: 90%; height: auto; max-height: 90%; border-radius: 25px; opacity: 0; display: none; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
             .bottom-sheet.open { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            .sheet-handle { display: none; }
+            .lightbox-nav:hover { color: rgba(255, 255, 255, 1); }
+            
+            .egg-1 { top: 40px; left: 40px; font-size: 1.5rem; color: rgba(255,255,255,0.7); }
+            .egg-2 { bottom: 40px; left: 20px; }
         }
     </style>
 </head>
@@ -202,7 +299,7 @@
         <div class="game-modal-content" onclick="event.stopPropagation()">
             <h3 id="gameTitle">Psst... Joueur ?</h3>
             <div class="game-desc-box">
-                <p id="gameDesc">Comme on est joueurs, <b>10 petits dés</b> ont été cachés dans tout le site.<br><br>Sauras-tu tous les retrouver ?</p>
+                <p id="gameDesc">Comme on est joueurs, <b>10 petits dés</b> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?</p>
             </div>
             
             <div id="shareContainer" class="share-container" style="display:none;">
@@ -217,16 +314,22 @@
     </div>
 
     <div class="game-toast" id="gameToast">Bravo ! 1/10</div>
+    
     <div class="game-timer" id="gameTimer">00:00:00</div>
+
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-nav prev" id="lbNavPrev" onclick="changePhotoDir('prev')"><i class="fa-solid fa-chevron-left"></i></div>
+        <div class="lightbox-nav next" id="lbNavNext" onclick="changePhotoDir('next')"><i class="fa-solid fa-chevron-right"></i></div>
+        <div class="lightbox-controls"><div class="lightbox-btn" onclick="closeLightboxForce()"><i class="fa-solid fa-xmark"></i></div></div>
+        <div class="lightbox-img-container" id="lbContainer"><img id="lightboxImg" src="" alt="Aperçu plein écran"></div>
+    </div>
 
     <div class="overlay" id="overlay" onclick="closeSheet()"></div>
     
     <div class="main-wrapper" id="mainWrapper">
         <div class="hero-container">
             <div class="hero">
-                <div class="hero-hitbox" onclick="askToPlay()">
-                    <div class="game-hint-badge"><i class="fa-solid fa-dice"></i></div>
-                </div>
+                <div class="hero-hitbox" onclick="askToPlay()"></div>
                 
                 <div class="rdv-card">
                     <div style="font-size: 1.5rem; margin-right: 12px;">🎲</div>
@@ -240,6 +343,7 @@
 
         <div class="content">
             <div id="homeEggContainer" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></div>
+            
             <div class="quote-box">
                 <p class="quote-text">"Ici on ne compte pas les points,<br>on compte les <strong>souvenirs</strong>."</p>
                 <div class="separator"></div>
@@ -272,6 +376,7 @@
     let startTime;
     let finalGameData = { time: "", rank: "" }; 
     
+    // Structure de données (Total vs Trouvé)
     let gameState = {
         'home': { total: 0, found: 0 },
         'histoire': { total: 0, found: 0 },
@@ -285,9 +390,11 @@
     function askToPlay() {
         if(gameStarted) return;
         document.getElementById('gameTitle').innerText = "Psst... Joueur ?";
-        document.getElementById('gameDesc').innerHTML = "Comme on est joueurs, <b>10 petits dés</b> ont été cachés dans tout le site.<br><br>Sauras-tu tous les retrouver ?";
-        document.getElementById('gameBtn').innerText = "C'est parti !";
-        document.getElementById('gameBtn').setAttribute('onclick', 'initGame()');
+        document.getElementById('gameDesc').innerHTML = "Comme on est joueurs, <b>10 petits dés</b> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?";
+        let btn = document.getElementById('gameBtn');
+        btn.innerText = "C'est parti !";
+        btn.setAttribute('onclick', 'initGame()');
+        btn.style.display = 'block';
         document.getElementById('shareContainer').style.display = 'none'; 
         document.getElementById('gameModalBackdrop').classList.add('visible');
     }
@@ -301,20 +408,25 @@
         resetGameData();
         gameStarted = true;
         startTimer();
+        
         const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque'];
         for(let i=0; i<9; i++) {
             let randomSec = sections[Math.floor(Math.random() * sections.length)];
             gameState[randomSec].total++;
         }
+        
         gameState['home'].total = 1;
         renderHomeEgg();
         showToast("Le chrono est lancé ! ⏱️");
     }
     
     function resetGameData() {
-        gameStarted = false; eggCount = 0; clearInterval(timerInterval);
+        gameStarted = false;
+        eggCount = 0;
+        clearInterval(timerInterval);
         document.getElementById('gameTimer').classList.remove('visible');
         document.getElementById('gameTimer').innerText = "00:00:00";
+        document.getElementById('gameTimer').style.color = '#f1c40f'; 
         for(let key in gameState) { gameState[key].total = 0; gameState[key].found = 0; }
         document.querySelectorAll('.egg').forEach(el => el.remove());
     }
@@ -327,38 +439,61 @@
             let minutes = Math.floor(delta / 60000);
             let seconds = Math.floor((delta % 60000) / 1000);
             let centiseconds = Math.floor((delta % 1000) / 10);
-            document.getElementById('gameTimer').innerText = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds) + ":" + (centiseconds < 10 ? "0" + centiseconds : centiseconds);
+            document.getElementById('gameTimer').innerText = 
+                (minutes < 10 ? "0" + minutes : minutes) + ":" + 
+                (seconds < 10 ? "0" + seconds : seconds) + ":" + 
+                (centiseconds < 10 ? "0" + centiseconds : centiseconds);
         }, 10);
     }
     
     function foundEgg(el, sectionKey) {
         if(el.classList.contains('found')) return;
         if(eggCount >= 10) return;
+        
         gameState[sectionKey].found++;
         eggCount++;
-        el.style.pointerEvents = 'none'; el.classList.add('found'); 
+        
+        el.style.pointerEvents = 'none'; 
+        el.classList.add('found'); 
+        
         setTimeout(() => {
-            el.style.transition = "all 0.5s ease"; el.style.opacity = "0"; el.style.transform = "scale(0)";
+            el.style.transition = "all 0.5s ease";
+            el.style.opacity = "0";
+            el.style.transform = "scale(0)";
             setTimeout(() => el.remove(), 500); 
         }, 600);
         
+        let msg = `Bravo ! ${eggCount}/${totalEggs}`;
         if(eggCount === totalEggs) {
             clearInterval(timerInterval);
-            finishGame((Date.now() - startTime) / 1000);
+            let finalSeconds = (Date.now() - startTime) / 1000;
+            finishGame(finalSeconds);
+        } else if(eggCount > 5) {
+            msg = `Tu chauffes ! ${eggCount}/${totalEggs}`;
+            showToast(msg);
         } else {
-            showToast(`Bravo ! ${eggCount}/${totalEggs}`);
+            showToast(msg);
         }
+        if(navigator.vibrate) navigator.vibrate(50);
     }
     
     function renderHomeEgg() {
         let container = document.getElementById('homeEggContainer');
-        if(gameState['home'].total > gameState['home'].found) createEgg(container, 'home', false);
+        container.innerHTML = ''; 
+        if(gameState['home'].total > gameState['home'].found) {
+            createEgg(container, 'home', false);
+        }
     }
     
     function createEgg(container, sectionKey, isFound, isRelative = false) {
         let egg = document.createElement('i');
         egg.className = 'fa-solid fa-dice egg';
+        
+        if (isFound) return; 
+
         egg.onclick = function() { foundEgg(this, sectionKey); event.stopPropagation(); };
+        egg.style.pointerEvents = 'auto';
+
         if(!isRelative) {
             egg.style.top = (Math.random() * 80 + 10) + '%';
             egg.style.left = (Math.random() * 80 + 10) + '%';
@@ -370,29 +505,35 @@
     
     function finishGame(seconds) {
         let finalTime = document.getElementById('gameTimer').innerText;
+        document.getElementById('gameTimer').style.color = '#2ecc71'; 
+        
         let rank = ""; let message = "";
         if (seconds < 5) { rank = "LE DIEU DU DÉ ⚡"; message = "T'as triché ou t'es un robot ? C'est inhumain !"; }
         else if (seconds < 10) { rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre !"; }
-        else if (seconds < 15) { rank = "GRAND MAÎTRE 🥋"; message = "Tes réflexes sont affûtés."; }
+        else if (seconds < 15) { rank = "GRAND MAÎTRE 🥋"; message = "Tes réflexes sont affûtés comme des lames."; }
         else if (seconds < 20) { rank = "ŒIL DE LYNX 😼"; message = "Vif et précis, rien ne t'échappe !"; }
-        else if (seconds < 30) { rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Une enquête menée avec brio."; }
-        else if (seconds < 40) { rank = "LE TOURISTE 📸"; message = "Tranquille, on profite."; }
-        else if (seconds < 60) { rank = "LE PARESSEUX 🦥"; message = "Pas de stress, c'est les vacances."; }
-        else { rank = "L'ESCARGOT 🐌"; message = "L'important c'est de participer !"; }
+        else if (seconds < 30) { rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Une enquête menée avec méthode et brio."; }
+        else if (seconds < 40) { rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; }
+        else if (seconds < 50) { rank = "LE DIESEL 🚜"; message = "Un peu lent au démarrage, mais tu es arrivé !"; }
+        else if (seconds < 60) { rank = "LE PARESSEUX 🦥"; message = "Tout doux, pas de stress, c'est les vacances."; }
+        else { rank = "L'ESCARGOT 🐌"; message = "L'important, c'est de participer... non ?"; }
         
         finalGameData.time = finalTime; finalGameData.rank = rank;
+
         setTimeout(() => {
             document.getElementById('gameTitle').innerText = "🎉 " + rank + " 🎉";
             document.getElementById('gameDesc').innerHTML = `Tu as trouvé les 10 dés en <b>${finalTime}</b>.<br><br><span style="color:var(--green-deep); font-weight:bold;">${message}</span>`;
             document.getElementById('shareContainer').style.display = 'flex';
-            document.getElementById('gameBtn').innerText = "Rejouer 🔄";
+            let btn = document.getElementById('gameBtn');
+            btn.innerText = "Rejouer 🔄";
+            btn.setAttribute('onclick', 'initGame()');
             document.getElementById('gameModalBackdrop').classList.add('visible');
         }, 1000);
     }
     
     function shareWhatsapp() {
         let pseudo = document.getElementById('playerPseudo').value.trim() || "Un Pote";
-        let text = `🏆 *DÉFI DES POTES À JEUX* 🏆%0A%0A🪧 J'ai trouvé les 10 dés cachés !%0A👤 Joueur : *${pseudo}*%0A⏱️ Temps : *${finalGameData.time}*%0A🎖️ Rang : *${finalGameData.rank}*%0A%0AQui peut faire mieux ? Tente ta chance ici :%0A👉 https://despotesajeux.github.io/`;
+        let text = `🏆 *Défi Des Potes à Jeux* 🏆%0A%0AJ'ai trouvé les 10 dés cachés en *${finalGameData.time}* !%0AMon rang : ${finalGameData.rank}%0A%0AQui peut me battre ? 😎%0A%0A- ${pseudo}`;
         window.open(`https://wa.me/?text=${text}`, '_blank');
     }
     
@@ -402,55 +543,149 @@
         setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    // --- LOGIQUE SITE (Histoire, etc) ---
+    /* --- RESTE DU CODE JS --- */
+    const NB_PHOTOS_SORTIES = 19; const NB_PHOTOS_JEUX = 20;    
+    let currentGallery = []; let currentPhotoIndex = 0;
+
     function getNextLastFridays() {
         let dates = []; let now = new Date(); let currentYear = now.getFullYear(); let currentMonth = now.getMonth();
         while (dates.length < 4) {
             let d = new Date(currentYear, currentMonth + 1, 0); 
-            while (d.getDay() !== 5) d.setDate(d.getDate() - 1);
-            if (new Date(d).setHours(23) >= now) dates.push(new Date(d));
+            while (d.getDay() !== 5) { d.setDate(d.getDate() - 1); }
+            let checkDate = new Date(d); checkDate.setHours(23, 59, 59);
+            if (checkDate >= now) { dates.push(new Date(d)); }
             currentMonth++;
         }
         return dates;
     }
+
     const upcomingDates = getNextLastFridays();
     const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
-    document.getElementById('next-rdv-banner').innerHTML = `${upcomingDates[0].toLocaleDateString('fr-FR', dateOptions).charAt(0).toUpperCase() + upcomingDates[0].toLocaleDateString('fr-FR', dateOptions).slice(1)} 20h30<br><a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank">📍 <span class="underline">Maison des Associations</span></a>`;
+    let rawDate = upcomingDates[0].toLocaleDateString('fr-FR', dateOptions);
+    document.getElementById('next-rdv-banner').innerHTML = `${rawDate.charAt(0).toUpperCase() + rawDate.slice(1)} 20h30<br><a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank">📍 <span class="underline">Maison des Associations</span></a>`;
+
+    let agendaHTML = '<div class="cal-list">' + upcomingDates.map(date => {
+        let formatted = date.toLocaleDateString('fr-FR', dateOptions);
+        return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem; flex-shrink:0;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank">Maison des Associations</a></div></div></div>`;
+    }).join('') + '</div>';
+
+    let photosSortiesHTML = '<div class="photo-grid">';
+    for(let i=1; i<=NB_PHOTOS_SORTIES; i++) { photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('sortie${i}.jpg')"><img src="sortie${i}.jpg" loading="lazy"></div>`; }
+    photosSortiesHTML += '</div>';
+
+    let photosJeuxHTML = '<div class="photo-grid">';
+    for(let i=1; i<=NB_PHOTOS_JEUX; i++) { photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('jeu${i}.jpg')"><img src="jeu${i}.jpg" loading="lazy"></div>`; }
+    photosJeuxHTML += '</div>';
 
     const pagesData = {
-        histoire: { title: "Le Grimoire", text: `<div class="panel-card" id="content-histoire"><p>Tout a commencé en 2014...</p></div>` },
-        adhesion: { title: "Rejoindre l'asso", text: `<div class="panel-card" id="content-adhesion"><p>15€/an en solo.</p></div>` },
-        cal: { title: "Agenda", text: `<div class="panel-card" id="content-cal"><p>Chaque dernier vendredi.</p></div>` },
-        photos: { title: "Souvenirs", text: `<div class="panel-card" id="content-photos"><h3 class="photo-section-title">Les Sorties</h3><h3 class="photo-section-title">Les Jeux</h3></div>` },
-        contact: { title: "Contact", text: `<div class="panel-card" id="content-contact"><p>Julie : 06 20 03 17 71</p></div>` },
-        ludotheque: { title: "Ludothèques", text: `<div class="panel-card" id="content-ludotheque"><p>Collections Myludo.</p></div>` }
+        histoire: { 
+            title: "Le Grimoire", 
+            text: `<div class="panel-card" id="content-histoire">
+                <div class="phase-label first">Phase 1</div><div class="phase-title"><i class="fa-solid fa-scroll phase-icon"></i><span>La Pioche (2014)</span></div>
+                <p class="grimoire-text">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>.</p>
+                <div class="phase-label">Phase 2</div><div class="phase-title"><i class="fa-solid fa-chess-rook phase-icon"></i><span>Le Coup de Maître (2015)</span></div>
+                <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>.</p>
+                <div class="phase-label">Phase 3</div><div class="phase-title"><i class="fa-brands fa-fort-awesome phase-icon"></i><span>La Fondation (2019)</span></div>
+                <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas.</p>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="btn-article" onclick="openLightbox('article_journal.jpg', true)"><i class="fa-solid fa-newspaper"></i> Voir l'article de journal</button>
+                </div>
+                <div class="phase-label">Phase 4</div><div class="phase-title"><i class="fa-solid fa-rocket phase-icon"></i><span>L'Envolée (2026)</span></div>
+                <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée.</p>
+            </div>`
+        },
+        adhesion: { 
+            title: "Rejoindre l'asso", 
+            text: `<div class="panel-card" id="content-adhesion">
+                <p style="text-align:center; margin-top:0;">Devenir membre est simple et convivial !</p>
+                <div style="background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.2); color: #dc3545; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans</div>
+                <div class="pricing-container"><div class="price-card featured"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div><div class="price-card featured"><div class="amount">20€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Couple</p></div></div>
+                <ul class="benefits-list" style="max-width: 280px; margin: 15px auto 0;"><li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li><li><i class="fa-solid fa-circle-check"></i> Première séance offerte</li><li><i class="fa-solid fa-circle-check"></i> Soirée escape game</li><li><i class="fa-solid fa-circle-check"></i> Repas de fin d'année</li></ul>
+            </div>`
+        },
+        cal: { title: "Agenda Ludique", text: `<div class="panel-card" id="content-cal"><p style="text-align: center; color: var(--green-deep); margin-top: 0; font-size: 0.95rem;">On se retrouve chaque <b>dernier vendredi du mois</b>.</p>${agendaHTML}</div>` },
+        photos: { title: "Souvenirs", text: `<div class="panel-card" id="content-photos" style="padding-left: 0; padding-right: 0; padding-bottom: 0; overflow: hidden; position: relative;"><h3 id="photo-title-1" class="photo-section-title first">Les Sorties</h3>${photosSortiesHTML}<h3 id="photo-title-2" class="photo-section-title">Les Jeux</h3>${photosJeuxHTML}</div>` },
+        contact: { 
+            title: "Nous Contacter", 
+            text: `<div class="panel-card" id="content-contact">
+                <div class="contact-person"><div class="contact-top"><div class="avatar"><i class="fa-solid fa-user"></i></div><h4>Julie</h4><a href="tel:+33620031771" class="call-btn">Appeler</a></div><div class="contact-bottom"><span>Présidente de l'association</span></div></div>
+                <div class="contact-person"><div class="contact-top"><div class="avatar mail-icon"><i class="fa-solid fa-envelope-open-text"></i></div><h4>Email</h4><a href="mailto:despotesajeux@protonmail.com" class="call-btn mail-btn">Écrire</a></div><div class="contact-bottom"><span>Pour toute question ou demande</span></div></div>
+                <div class="contact-person"><div class="contact-top"><div class="avatar fb-icon"><i class="fa-brands fa-facebook-f"></i></div><h4>Facebook</h4><a href="https://www.facebook.com/groups/despotesajeux/" target="_blank" class="call-btn fb-btn">Rejoindre</a></div><div class="contact-bottom"><span>Pour suivre la communauté en ligne</span></div></div>
+                <div class="contact-person"><div class="contact-top"><div class="avatar wa-icon"><i class="fa-brands fa-whatsapp"></i></div><h4>WhatsApp</h4><a href="https://chat.whatsapp.com/GE6whGWavky2alGNskA5yL?mode=gi_t" target="_blank" class="call-btn wa-btn">Papoter</a></div><div class="contact-bottom"><span>Rejoindre le groupe de discussion</span></div></div>
+            </div>` 
+        },
+        ludotheque: { 
+            title: "Nos Ludothèques", 
+            text: `<div class="panel-card" id="content-ludotheque">
+                <p style="text-align: center; margin-top: 0; margin-bottom: 10px; font-size: 0.95rem; line-height: 1.5;">Collections de nos membres sur <b>Myludo</b>.</p>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Ronan</h4><a href="https://www.myludo.fr/#!/profil/ronan-29-67622" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Ronan</span></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sébastien</h4><a href="https://www.myludo.fr/#!/profil/sebastien-g-107305" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Sébastien</span></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Stéphane</h4><a href="https://www.myludo.fr/#!/profil/stephane-rio-26496" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Stéphane</span></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sylvain</h4><a href="https://www.myludo.fr/#!/profil/sylvain-bedouet-64234" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Sylvain</span></div></div>
+            </div>` 
+        }
     };
 
     const sheet = document.getElementById('bottomSheet');
     const overlay = document.getElementById('overlay');
+    const sheetContent = document.getElementById('sheetContent');
+    const sheetBody = document.getElementById('sheetBody');
     const mainWrapper = document.getElementById('mainWrapper');
 
     function openSheet(key) {
-        document.getElementById('sheetContent').innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
+        sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
+        
+        // --- INJECTION DYNAMIQUE DES OEUFS ---
         if(gameStarted && gameState[key].total > gameState[key].found) {
-            let container = document.getElementById(`content-${key}`);
-            let remaining = gameState[key].total - gameState[key].found;
-            if(key === 'photos') {
-                let titles = container.querySelectorAll('.photo-section-title');
-                for(let i=0; i<remaining; i++) createEgg(titles[i % titles.length], key, false, true);
-            } else {
-                container.style.position = 'relative';
-                for(let i=0; i<remaining; i++) createEgg(container, key, false, false);
+            let containerId = `content-${key}`;
+            let container = document.getElementById(containerId);
+            
+            if(container) {
+                let remaining = gameState[key].total - gameState[key].found;
+                
+                if(key === 'photos') {
+                    let titles = container.querySelectorAll('.photo-section-title');
+                    for(let i=0; i<remaining; i++) {
+                        let target = titles[i % titles.length];
+                        createEgg(target, key, false, true);
+                    }
+                } else {
+                    container.style.position = 'relative';
+                    for(let i=0; i<remaining; i++) {
+                        createEgg(container, key, false, false);
+                    }
+                }
             }
         }
+        
         overlay.style.display = 'block'; mainWrapper.classList.add('blurred');
-        sheet.classList.add('open');
-        history.pushState({ type: 'sheet' }, '');
+        if (window.innerWidth <= 768) { sheet.style.transition = 'none'; sheet.style.transform = ''; void sheet.offsetWidth; sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)"; }
+        setTimeout(() => { overlay.style.opacity = '1'; sheet.classList.add('open'); }, 10);
+        if (!history.state || history.state.type !== 'sheet') { history.pushState({ type: 'sheet' }, ''); }
     }
 
-    function hideSheetDOM() { sheet.classList.remove('open'); overlay.style.opacity = '0'; mainWrapper.classList.remove('blurred'); setTimeout(() => overlay.style.display = 'none', 250); }
-    function closeSheet() { if (history.state && history.state.type === 'sheet') history.back(); else hideSheetDOM(); }
-    window.addEventListener('popstate', hideSheetDOM);
+    function hideSheetDOM() { if (window.innerWidth <= 768) { sheet.style.transition = "transform 0.25s ease-in"; } sheet.style.transform = ''; sheet.classList.remove('open'); overlay.style.opacity = '0'; mainWrapper.classList.remove('blurred'); setTimeout(() => { overlay.style.display = 'none'; }, 250); }
+    function closeSheet() { if (!sheet.classList.contains('open')) return; if (history.state && history.state.type === 'sheet') { history.back(); } else { hideSheetDOM(); } }
+    overlay.onclick = () => closeSheet();
+
+    let startY = 0; let isDragging = false;
+    sheet.addEventListener('touchstart', (e) => { if (window.innerWidth > 768) return; if (sheetBody.scrollTop <= 0) { startY = e.touches[0].clientY; isDragging = true; sheet.style.transition = 'none'; } }, { passive: true });
+    sheet.addEventListener('touchmove', (e) => { if (!isDragging || window.innerWidth > 768) return; let diff = e.touches[0].clientY - startY; if (diff > 0) { e.preventDefault(); sheet.style.transform = `translateY(calc(-100% + ${diff}px))`; } }, { passive: false });
+    sheet.addEventListener('touchend', (e) => { if (!isDragging || window.innerWidth > 768) return; isDragging = false; let diff = e.changedTouches[0].clientY - startY; sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; if (diff > 100) { closeSheet(); } else { sheet.style.transform = ''; } });
+
+    const lb = document.getElementById('lightbox'); const lbContainer = document.getElementById('lbContainer'); const lbImg = document.getElementById('lightboxImg'); const lbNavPrev = document.getElementById('lbNavPrev'); const lbNavNext = document.getElementById('lbNavNext');
+    let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
+    function openLightbox(src, isSingleImage = false) { lbImg.src = src; lb.style.display = 'flex'; resetZoom(); setTimeout(() => lb.classList.add('active'), 10); if (isSingleImage) { currentGallery = [src]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } else { const imgs = document.querySelectorAll('.photo-grid img'); currentGallery = Array.from(imgs).map(i => i.getAttribute('src')); currentPhotoIndex = currentGallery.indexOf(src); if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } } if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } }
+    function hideLightboxDOM() { lb.classList.remove('active'); setTimeout(() => { lb.style.display='none'; resetZoom(); }, 300); }
+    function closeLightboxForce(fromHistory = false) { if (!lb.classList.contains('active')) return; if (history.state && history.state.type === 'lightbox') { history.back(); } else { hideLightboxDOM(); } }
+    window.addEventListener('popstate', (e) => { if (lb.classList.contains('active')) { hideLightboxDOM(); } else if (sheet.classList.contains('open')) { hideSheetDOM(); } });
+    lbContainer.addEventListener('click', (e) => { if(e.target !== lbImg && currentScale === 1 && !e.target.closest('.lightbox-nav')) closeLightboxForce(); });
+    function getDistance(touches) { return Math.hypot(touches[0].pageX - touches[1].pageX, touches[0].pageY - touches[1].pageY); }
+    function resetZoom() { currentScale = 1; posX = 0; posY = 0; lastPanX = 0; lastPanY = 0; currentSwipeX = 0; lbImg.style.transform = `scale(1) translate(0px, 0px)`; lbContainer.style.transform = `translateX(0px)`; }
+    lbContainer.addEventListener('touchstart', (e) => { if(e.target.closest('.lightbox-nav')) return; if (e.touches.length === 2) { isZooming = true; initialDistance = getDistance(e.touches); } else if (e.touches.length === 1) { lastPanX = e.touches[0].clientX; lastPanY = e.touches[0].clientY; swipeStartX = e.touches[0].clientX; currentSwipeX = 0; } }, {passive: false});
+    lbContainer.addEventListener('touchmove', (e) => { if (e.touches.length === 2) { e.preventDefault(); const currentDistance = getDistance(e.touches); const scaleChange = currentDistance / initialDistance; currentScale = Math.min(Math.max(1, currentScale * scaleChange), 4); lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; initialDistance = currentDistance; } else if (e.touches.length === 1) { let currentX = e.touches[0].clientX; let currentY = e.touches[0].clientY; if (currentScale > 1) { e.preventDefault(); posX += (currentX - lastPanX) / currentScale; posY += (currentY - lastPanY) / currentScale; lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; lastPanX = currentX; lastPanY = currentY; } else if (!isZooming && currentGallery.length > 1) { e.preventDefault(); currentSwipeX = currentX - swipeStartX; lbContainer.style.transform = `translateX(${currentSwipeX}px)`; } } }, {passive: false});
+    lbContainer.addEventListener('touchend', (e) => { if (e.touches.length < 2) { isZooming = false; } if (currentScale === 1 && currentGallery.length > 1) { if (currentSwipeX > 70) { changePhotoDir('prev'); } else if (currentSwipeX < -70) { changePhotoDir('next'); } else { lbContainer.style.transform = `translateX(0px)`; } currentSwipeX = 0; } });
+    function changePhotoDir(dir) { if (currentGallery.length <= 1) return; if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } lbImg.style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; setTimeout(() => { let newSrc = currentGallery[currentPhotoIndex]; lbImg.src = newSrc; lbImg.style.opacity = 1; }, 150); }
 </script>
 </body>
 </html>
