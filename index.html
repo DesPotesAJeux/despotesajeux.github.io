@@ -119,12 +119,15 @@
             filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
         }
         .egg:hover { color: var(--wood-brown); transform: scale(1.3); }
+        
+        /* Animation quand on trouve : tourne, devient or, puis disparait */
         .egg.found { 
-            color: #f1c40f; text-shadow: 0 0 10px rgba(241, 196, 15, 0.8);
-            cursor: default; pointer-events: none;
+            color: #f1c40f; 
+            text-shadow: 0 0 10px rgba(241, 196, 15, 0.8);
+            animation: spin 0.6s ease-in-out forwards;
+            pointer-events: none; /* Plus cliquable */
         }
-        .egg.just-found { animation: spin 0.6s ease-in-out forwards; }
-        @keyframes spin { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(0); opacity: 0; } }
+        @keyframes spin { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.2); } }
 
         /* --- TIMER --- */
         .game-timer {
@@ -167,14 +170,13 @@
         .game-btn { background: var(--green-deep); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); transition: transform 0.2s; width: 100%; }
         .game-btn:active { transform: scale(0.95); }
         
-        /* Styles pour le partage WhatsApp */
         .share-container { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
         .share-input { 
             width: 100%; padding: 10px; border-radius: 10px; border: 2px solid var(--wood-brown); 
             background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown);
             box-sizing: border-box; text-align: center;
         }
-        .wa-btn { background: #25D366; color: white; margin-top: 5px; } /* Bouton Vert WhatsApp */
+        .wa-btn { background: #25D366; color: white; margin-top: 5px; } 
 
         .game-toast {
             position: absolute; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px);
@@ -372,28 +374,28 @@
     const totalEggs = 10;
     let timerInterval;
     let startTime;
-    let finalGameData = { time: "", rank: "" }; // Stockage pour le partage
+    let finalGameData = { time: "", rank: "" }; 
     
+    // Structure de données (Total vs Trouvé)
     let gameState = {
-        'home': { total: 0, found: 0 }, 'histoire': { total: 0, found: 0 },
-        'adhesion': { total: 0, found: 0 }, 'cal': { total: 0, found: 0 },
-        'photos': { total: 0, found: 0 }, 'contact': { total: 0, found: 0 },
+        'home': { total: 0, found: 0 },
+        'histoire': { total: 0, found: 0 },
+        'adhesion': { total: 0, found: 0 },
+        'cal': { total: 0, found: 0 },
+        'photos': { total: 0, found: 0 },
+        'contact': { total: 0, found: 0 },
         'ludotheque': { total: 0, found: 0 }
     };
 
     function askToPlay() {
         if(gameStarted) return;
-        
-        // Reset de l'interface modale
         document.getElementById('gameTitle').innerText = "Psst... Joueur ?";
         document.getElementById('gameDesc').innerHTML = "Comme on est joueurs, <b>10 petits dés</b> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?";
-        
         let btn = document.getElementById('gameBtn');
         btn.innerText = "C'est parti !";
         btn.setAttribute('onclick', 'initGame()');
         btn.style.display = 'block';
-        
-        document.getElementById('shareContainer').style.display = 'none'; // Cacher partage
+        document.getElementById('shareContainer').style.display = 'none'; 
         document.getElementById('gameModalBackdrop').classList.add('visible');
     }
     
@@ -425,7 +427,6 @@
         document.getElementById('gameTimer').classList.remove('visible');
         document.getElementById('gameTimer').innerText = "00:00";
         document.getElementById('gameTimer').style.color = '#f1c40f'; 
-        
         for(let key in gameState) { gameState[key].total = 0; gameState[key].found = 0; }
         document.querySelectorAll('.egg').forEach(el => el.remove());
     }
@@ -447,7 +448,17 @@
         
         gameState[sectionKey].found++;
         eggCount++;
-        el.classList.add('found'); el.classList.add('just-found');
+        
+        // Animation et Disparition
+        el.style.pointerEvents = 'none'; // Stop clic
+        el.classList.add('found'); 
+        
+        setTimeout(() => {
+            el.style.transition = "all 0.5s ease";
+            el.style.opacity = "0";
+            el.style.transform = "scale(0)";
+            setTimeout(() => el.remove(), 500); // Supprimé du DOM
+        }, 600);
         
         let msg = `Bravo ! ${eggCount}/${totalEggs}`;
         if(eggCount === totalEggs) {
@@ -466,14 +477,21 @@
     function renderHomeEgg() {
         let container = document.getElementById('homeEggContainer');
         container.innerHTML = ''; 
-        if(gameState['home'].total > 0) createEgg(container, 'home', gameState['home'].found > 0);
+        // On ne crée l'oeuf que s'il n'a pas encore été trouvé
+        if(gameState['home'].total > gameState['home'].found) {
+            createEgg(container, 'home', false);
+        }
     }
     
     function createEgg(container, sectionKey, isFound, isRelative = false) {
         let egg = document.createElement('i');
         egg.className = 'fa-solid fa-dice egg';
-        if (isFound) egg.classList.add('found'); 
-        else { egg.onclick = function() { foundEgg(this, sectionKey); event.stopPropagation(); }; egg.style.pointerEvents = 'auto'; }
+        
+        // Si déjà trouvé (ne devrait pas arriver avec la nouvelle logique, mais sécurité)
+        if (isFound) return; 
+
+        egg.onclick = function() { foundEgg(this, sectionKey); event.stopPropagation(); };
+        egg.style.pointerEvents = 'auto';
 
         if(!isRelative) {
             egg.style.top = (Math.random() * 80 + 10) + '%';
@@ -499,22 +517,15 @@
         else if (seconds < 60) { rank = "LE PARESSEUX 🦥"; message = "Tout doux, pas de stress, c'est les vacances."; }
         else { rank = "L'ESCARGOT 🐌"; message = "L'important, c'est de participer... non ?"; }
         
-        // Stockage des données pour le partage
-        finalGameData.time = finalTime;
-        finalGameData.rank = rank;
+        finalGameData.time = finalTime; finalGameData.rank = rank;
 
         setTimeout(() => {
             document.getElementById('gameTitle').innerText = "🎉 GAGNÉ ! 🎉";
             document.getElementById('gameDesc').innerHTML = `Tu as trouvé les 10 dés en <b>${finalTime}</b>.<br><br><span style="color:var(--green-deep); font-weight:bold;">${message}</span>`;
-            
-            // Afficher zone partage
             document.getElementById('shareContainer').style.display = 'flex';
-            
-            // Bouton devient Rejouer
             let btn = document.getElementById('gameBtn');
             btn.innerText = "Rejouer 🔄";
             btn.setAttribute('onclick', 'initGame()');
-            
             document.getElementById('gameModalBackdrop').classList.add('visible');
         }, 1000);
     }
@@ -522,8 +533,6 @@
     function shareWhatsapp() {
         let pseudo = document.getElementById('playerPseudo').value.trim() || "Un Pote";
         let text = `🏆 *Défi Des Potes à Jeux* 🏆%0A%0AJ'ai trouvé les 10 dés cachés en *${finalGameData.time}* !%0AMon rang : ${finalGameData.rank}%0A%0AQui peut me battre ? 😎%0A%0A- ${pseudo}`;
-        
-        // Ouvrir WhatsApp
         window.open(`https://wa.me/?text=${text}`, '_blank');
     }
     
@@ -626,26 +635,25 @@
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
         
         // --- INJECTION DYNAMIQUE DES OEUFS ---
-        if(gameStarted && gameState[key].total > 0) {
+        if(gameStarted && gameState[key].total > gameState[key].found) {
             let containerId = `content-${key}`;
             let container = document.getElementById(containerId);
             
             if(container) {
-                let total = gameState[key].total;
-                let found = gameState[key].found;
+                // On calcule combien il en reste à trouver ici
+                let remaining = gameState[key].total - gameState[key].found;
                 
                 if(key === 'photos') {
+                    // Logique Photos (A côté des titres)
                     let titles = container.querySelectorAll('.photo-section-title');
-                    for(let i=0; i<total; i++) {
+                    for(let i=0; i<remaining; i++) {
                         let target = titles[i % titles.length];
-                        let isAlreadyFound = i < found;
-                        createEgg(target, key, isAlreadyFound, true);
+                        createEgg(target, key, false, true);
                     }
                 } else {
                     container.style.position = 'relative';
-                    for(let i=0; i<total; i++) {
-                        let isAlreadyFound = i < found;
-                        createEgg(container, key, isAlreadyFound, false);
+                    for(let i=0; i<remaining; i++) {
+                        createEgg(container, key, false, false);
                     }
                 }
             }
