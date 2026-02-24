@@ -182,19 +182,30 @@
         .grimoire-text { text-align: center; line-height: 1.6; font-size: 0.95rem; margin-top: 0; }
         .btn-article { display: inline-flex; align-items: center; gap: 8px; background: rgba(188, 143, 99, 0.15); color: var(--wood-brown); border: 1px solid var(--wood-brown); border-radius: 50px; padding: 6px 15px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 10px; text-decoration: none; }
         .btn-article:active { transform: scale(0.95); background: rgba(188, 143, 99, 0.25); }
+        
+        /* MODIF SOUVENIRS : Titres remontés */
         .photo-section-title { text-align: center; color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 15px 0 10px 0; padding-top: 20px; border-top: 1px dashed rgba(0,0,0,0.1); }
-        .photo-section-title.first { border-top: none; padding-top: 10px; margin-top: 5px; }
+        .photo-section-title.first { border-top: none; padding-top: 0px; margin-top: 0px; } /* Remonté tout en haut */
+        
         .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 0 3px 20px; }
         .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 2px; }
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
-        .contact-person { display: flex; flex-direction: column; padding: 10px 12px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
+        
+        /* MODIF CONTACTS/LUDOTHEQUE : Compactage pour éviter le scroll */
+        .contact-person { 
+            display: flex; flex-direction: column; 
+            padding: 8px 12px; /* Réduit un peu le padding vertical */
+            width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 12px; 
+            margin-bottom: 8px; /* Réduit la marge entre les cartes */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04); 
+        }
         .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
         .contact-person .avatar { width: 38px; height: 38px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; overflow: hidden;}
         .contact-person .avatar.mail-icon { background: var(--wood-brown); }
         .contact-person .avatar.fb-icon { background: var(--fb-blue); }
         .contact-person .avatar.wa-icon { background: var(--wa-green); }
         .contact-person .avatar.ludo-icon { background: #ffffff; border: 1px solid rgba(0,0,0,0.1); box-sizing: border-box; }
-        .contact-person .avatar.ludo-icon img { width: 22px; height: 22px; border-radius: 4px; }
+        .contact-person .avatar.ludo-icon img { width: 22px; height: 22px; border-radius: 4px; object-fit: contain; } /* Icone MyLudo propre */
         .contact-top h4 { margin: 0; color: var(--green-deep); font-size: 1.05rem; flex-grow: 1; min-width: 80px; }
         .contact-bottom { width: 100%; padding-top: 5px; text-align: left; }
         .contact-bottom span { font-size: 0.7rem; color: var(--text-brown); font-weight: 600; opacity: 0.9; display: block; }
@@ -280,7 +291,6 @@
 
             .content {
                 grid-column: 2; grid-row: 1;
-                /* PADDING DROIT AUGMENTÉ À 60PX */
                 padding: 40px 60px 40px 40px;
                 justify-content: center;
                 align-items: center;
@@ -291,7 +301,6 @@
                 position: relative; 
                 order: unset; 
                 background: transparent; border: none; 
-                /* PADDING DROIT AUGMENTÉ À 60PX */
                 padding: 0 60px 40px 40px; 
                 display: grid; 
                 grid-template-columns: repeat(3, 1fr); 
@@ -503,7 +512,7 @@
         ludotheque: { 
             title: "Nos Ludothèques", 
             text: `<div class="panel-card">
-                <p style="text-align: center; margin-top: 0; font-size: 0.95rem; line-height: 1.5;">Collections de nos membres sur <b>Myludo</b>.</p>
+                <p style="text-align: center; margin-top: 0; margin-bottom: 10px; font-size: 0.95rem; line-height: 1.5;">Collections de nos membres sur <b>Myludo</b>.</p>
                 
                 <div class="contact-person"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Ronan</h4><a href="https://www.myludo.fr/#!/profil/ronan-29-67622" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Ronan</span></div></div>
                 
