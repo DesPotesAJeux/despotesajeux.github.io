@@ -121,8 +121,11 @@
         .egg:hover { color: var(--wood-brown); transform: scale(1.3); }
         .egg.found { 
             color: #f1c40f; text-shadow: 0 0 10px rgba(241, 196, 15, 0.8);
-            animation: spin 0.6s ease-in-out forwards; pointer-events: none;
+            cursor: default; pointer-events: none; /* Désactivé si trouvé */
         }
+        /* Animation spéciale juste au moment de la découverte */
+        .egg.just-found { animation: spin 0.6s ease-in-out forwards; }
+        
         @keyframes spin { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(0); opacity: 0; } }
 
         /* --- TIMER --- */
@@ -348,17 +351,22 @@
 </div>
 
 <script>
-    /* --- LOGIQUE JEU EASTER EGGS --- */
+    /* --- LOGIQUE JEU EASTER EGGS (ANTI-TRICHE & DUPLICATION FIXED) --- */
     let gameStarted = false;
     let eggCount = 0;
     const totalEggs = 10;
     let timerInterval;
     let startTime;
     
-    // Distribution des oeufs (Clé = ID de page, Valeur = Nombre d'oeufs)
-    let eggsDistribution = {
-        'home': 1,
-        'histoire': 0, 'adhesion': 0, 'cal': 0, 'photos': 0, 'contact': 0, 'ludotheque': 0
+    // STRUCTURE DE DONNÉES ROBUSTE
+    let gameState = {
+        'home': { total: 0, found: 0 },
+        'histoire': { total: 0, found: 0 },
+        'adhesion': { total: 0, found: 0 },
+        'cal': { total: 0, found: 0 },
+        'photos': { total: 0, found: 0 },
+        'contact': { total: 0, found: 0 },
+        'ludotheque': { total: 0, found: 0 }
     };
 
     function askToPlay() {
@@ -368,7 +376,6 @@
         let btn = document.getElementById('gameBtn');
         btn.innerText = "C'est parti !";
         btn.setAttribute('onclick', 'initGame()');
-        
         document.getElementById('gameModalBackdrop').classList.add('visible');
     }
     
@@ -378,19 +385,21 @@
     
     function initGame() {
         document.getElementById('gameModalBackdrop').classList.remove('visible');
-        resetGameData(); 
+        resetGameData();
         gameStarted = true;
-        
         startTimer();
         
-        // Distribution aléatoire
+        // Distribution
         const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque'];
         for(let i=0; i<9; i++) {
             let randomSec = sections[Math.floor(Math.random() * sections.length)];
-            eggsDistribution[randomSec]++;
+            gameState[randomSec].total++;
         }
         
-        createEgg(document.getElementById('homeEggContainer'));
+        // Accueil
+        gameState['home'].total = 1;
+        renderHomeEgg();
+        
         showToast("Le chrono est lancé ! ⏱️");
     }
     
@@ -402,9 +411,9 @@
         document.getElementById('gameTimer').innerText = "00:00";
         document.getElementById('gameTimer').style.color = '#f1c40f'; 
         
-        for(let key in eggsDistribution) eggsDistribution[key] = 0;
-        eggsDistribution['home'] = 1;
+        for(let key in gameState) { gameState[key].total = 0; gameState[key].found = 0; }
         
+        // Nettoyage DOM
         document.querySelectorAll('.egg').forEach(el => el.remove());
     }
     
@@ -415,19 +424,24 @@
             let delta = Date.now() - startTime;
             let seconds = Math.floor((delta / 1000) % 60);
             let minutes = Math.floor((delta / 1000 / 60));
-            document.getElementById('gameTimer').innerText = 
-                (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+            document.getElementById('gameTimer').innerText = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
         }, 1000);
     }
     
-    function foundEgg(el) {
+    function foundEgg(el, sectionKey) {
         if(el.classList.contains('found')) return;
+        if(eggCount >= 10) return; // Sécurité max
         
-        el.classList.add('found');
+        // Mise à jour de l'état
+        gameState[sectionKey].found++;
         eggCount++;
         
-        let msg = `Bravo ! ${eggCount}/${totalEggs}`;
+        // Animation
+        el.classList.add('found');
+        el.classList.add('just-found');
         
+        // Feedback
+        let msg = `Bravo ! ${eggCount}/${totalEggs}`;
         if(eggCount === totalEggs) {
             clearInterval(timerInterval);
             let finalSeconds = (Date.now() - startTime) / 1000;
@@ -442,41 +456,52 @@
         if(navigator.vibrate) navigator.vibrate(50);
     }
     
+    function renderHomeEgg() {
+        let container = document.getElementById('homeEggContainer');
+        container.innerHTML = ''; // Clean
+        if(gameState['home'].total > 0) {
+            createEgg(container, 'home', gameState['home'].found > 0);
+        }
+    }
+    
+    // Fonction générique de création d'oeuf
+    function createEgg(container, sectionKey, isFound, isRelative = false) {
+        let egg = document.createElement('i');
+        egg.className = 'fa-solid fa-dice egg';
+        
+        if (isFound) {
+            egg.classList.add('found'); // Déjà doré, pas d'anim
+        } else {
+            egg.onclick = function() { foundEgg(this, sectionKey); event.stopPropagation(); };
+            egg.style.pointerEvents = 'auto';
+        }
+
+        if(!isRelative) {
+            egg.style.top = (Math.random() * 80 + 10) + '%';
+            egg.style.left = (Math.random() * 80 + 10) + '%';
+        } else {
+            egg.style.position = 'relative';
+            egg.style.marginLeft = '15px';
+            egg.style.verticalAlign = 'middle';
+        }
+        
+        container.appendChild(egg);
+    }
+    
     function finishGame(seconds) {
         let finalTime = document.getElementById('gameTimer').innerText;
-        document.getElementById('gameTimer').style.color = '#2ecc71'; // Vert
+        document.getElementById('gameTimer').style.color = '#2ecc71'; 
         
-        let rank = "";
-        let message = "";
-
-        if (seconds < 5) {
-            rank = "LE DIEU DU DÉ ⚡";
-            message = "T'as triché ou t'es un robot ? C'est inhumain !";
-        } else if (seconds < 10) {
-            rank = "LUCKY LUKE 🤠";
-            message = "Tu cliques plus vite que ton ombre !";
-        } else if (seconds < 15) {
-            rank = "GRAND MAÎTRE 🥋";
-            message = "Tes réflexes sont affûtés comme des lames.";
-        } else if (seconds < 20) {
-            rank = "ŒIL DE LYNX 😼";
-            message = "Vif et précis, rien ne t'échappe !";
-        } else if (seconds < 30) {
-            rank = "SHERLOCK HOLMES 🕵️‍♂️";
-            message = "Une enquête menée avec méthode et brio.";
-        } else if (seconds < 40) {
-            rank = "LE TOURISTE 📸";
-            message = "Tu as pris le temps d'admirer le paysage.";
-        } else if (seconds < 50) {
-            rank = "LE DIESEL 🚜";
-            message = "Un peu lent au démarrage, mais tu es arrivé !";
-        } else if (seconds < 60) {
-            rank = "LE PARESSEUX 🦥";
-            message = "Tout doux, pas de stress, c'est les vacances.";
-        } else {
-            rank = "L'ESCARGOT 🐌";
-            message = "L'important, c'est de participer... non ?";
-        }
+        let rank = ""; let message = "";
+        if (seconds < 5) { rank = "LE DIEU DU DÉ ⚡"; message = "T'as triché ou t'es un robot ? C'est inhumain !"; }
+        else if (seconds < 10) { rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre !"; }
+        else if (seconds < 15) { rank = "GRAND MAÎTRE 🥋"; message = "Tes réflexes sont affûtés comme des lames."; }
+        else if (seconds < 20) { rank = "ŒIL DE LYNX 😼"; message = "Vif et précis, rien ne t'échappe !"; }
+        else if (seconds < 30) { rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Une enquête menée avec méthode et brio."; }
+        else if (seconds < 40) { rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; }
+        else if (seconds < 50) { rank = "LE DIESEL 🚜"; message = "Un peu lent au démarrage, mais tu es arrivé !"; }
+        else if (seconds < 60) { rank = "LE PARESSEUX 🦥"; message = "Tout doux, pas de stress, c'est les vacances."; }
+        else { rank = "L'ESCARGOT 🐌"; message = "L'important, c'est de participer... non ?"; }
         
         setTimeout(() => {
             document.getElementById('gameTitle').innerText = "🎉 " + rank + " 🎉";
@@ -490,19 +515,8 @@
     
     function showToast(msg) {
         const toast = document.getElementById('gameToast');
-        toast.innerText = msg;
-        toast.classList.add('show');
+        toast.innerText = msg; toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-    
-    function createEgg(container) {
-        let egg = document.createElement('i');
-        egg.className = 'fa-solid fa-dice egg';
-        egg.style.top = (Math.random() * 80 + 10) + '%';
-        egg.style.left = (Math.random() * 80 + 10) + '%';
-        egg.style.pointerEvents = 'auto'; 
-        egg.onclick = function() { foundEgg(this); };
-        container.appendChild(egg);
     }
 
     /* --- RESTE DU CODE JS --- */
@@ -597,31 +611,31 @@
     function openSheet(key) {
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
         
-        // --- INJECTION DYNAMIQUE DES OEUFS (SPECIAL PHOTOS) ---
-        if(gameStarted && eggsDistribution[key] > 0) {
+        // --- INJECTION DYNAMIQUE DES OEUFS ---
+        if(gameStarted && gameState[key].total > 0) {
             let containerId = `content-${key}`;
             let container = document.getElementById(containerId);
+            
             if(container) {
+                // Pour éviter le "farming" : on recrée TOUS les oeufs de cette section
+                // Mais ceux DÉJÀ trouvés sont marqués ".found" et non-cliquables
+                let total = gameState[key].total;
+                let found = gameState[key].found;
                 
-                // LOGIQUE SPECIALE PHOTOS : On met les dés à côté des titres
                 if(key === 'photos') {
+                    // Logique Photos (A côté des titres)
                     let titles = container.querySelectorAll('.photo-section-title');
-                    for(let i=0; i<eggsDistribution[key]; i++) {
-                        let target = titles[i % titles.length]; 
-                        let egg = document.createElement('i');
-                        egg.className = 'fa-solid fa-dice egg';
-                        egg.style.position = 'relative'; // Important : Relative
-                        egg.style.marginLeft = '15px';
-                        egg.style.verticalAlign = 'middle';
-                        egg.style.pointerEvents = 'auto';
-                        egg.onclick = function() { foundEgg(this); event.stopPropagation(); };
-                        target.appendChild(egg);
+                    for(let i=0; i<total; i++) {
+                        let target = titles[i % titles.length];
+                        let isAlreadyFound = i < found; // Les premiers 'found' sont marqués
+                        createEgg(target, key, isAlreadyFound, true);
                     }
                 } else {
-                    // LOGIQUE STANDARD
+                    // Logique Standard (Random)
                     container.style.position = 'relative';
-                    for(let i=0; i < eggsDistribution[key]; i++) {
-                        createEgg(container);
+                    for(let i=0; i<total; i++) {
+                        let isAlreadyFound = i < found;
+                        createEgg(container, key, isAlreadyFound, false);
                     }
                 }
             }
