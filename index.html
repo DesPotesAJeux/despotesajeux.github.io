@@ -23,7 +23,7 @@
     </script>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Des Potes à Jeux</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -45,17 +45,18 @@
             background-color: #1a1a1a;
             display: flex; 
             justify-content: center; 
-            align-items: flex-start; /* CORRECTION ICI : Aligné en haut par défaut pour mobile */
+            align-items: flex-start; /* Important pour éviter la barre noire mobile */
             font-family: 'Quicksand', sans-serif;
             color: var(--text-brown); overflow: hidden;
             touch-action: manipulation;
-            height: 100vh; /* Force la hauteur exacte sur mobile */
+            height: 100vh; 
+            height: 100dvh; /* Hauteur dynamique pour mobile */
         }
 
         /* --- CONTENEUR TYPE "TELEPHONE" (Base Mobile) --- */
         .phone {
             width: 100%; max-width: 414px; 
-            height: 100%; /* Prend toute la hauteur du body */
+            height: 100%; 
             background: var(--bg-beige); position: relative;
             overflow: hidden; display: flex; flex-direction: column;
             box-shadow: 0 0 50px rgba(0,0,0,0.5);
@@ -94,8 +95,10 @@
 
         /* --- CONTENU --- */
         .content {
-            background: var(--bg-beige); padding: 45px 0 100px 0;
-            position: relative; flex-grow: 1; overflow: hidden; 
+            background: var(--bg-beige); padding: 45px 0 20px 0; /* Réduit le padding bas car le menu n'est plus absolute */
+            position: relative; 
+            flex-grow: 1; /* Prend tout l'espace restant */
+            overflow: hidden; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
@@ -215,8 +218,18 @@
         .cal-item .time { font-size: 0.8rem; color: var(--text-brown); line-height: 1.4; }
         .cal-item .time a { color: var(--green-deep); text-decoration: underline; font-weight: 600; }
 
-        /* --- FOOTER (Navigation) --- */
-        .footer-nav { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--green-deep); display: flex; justify-content: space-around; align-items: center; padding: 15px 0 25px 0; border-top: 3px solid var(--wood-brown); z-index: 20; }
+        /* --- FOOTER (Navigation) - CORRIGÉ POUR MOBILE --- */
+        .footer-nav { 
+            position: relative; /* On change absolute en relative */
+            width: 100%; 
+            background: var(--green-deep); 
+            display: flex; justify-content: space-around; align-items: center; 
+            padding: 15px 0;
+            padding-bottom: max(15px, env(safe-area-inset-bottom)); /* Protection iPhone */
+            border-top: 3px solid var(--wood-brown); 
+            z-index: 20; 
+            flex-shrink: 0; /* Empêche le menu d'être écrasé */
+        }
         .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
         .icon-box { width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; border-radius: 14px; background: var(--wood-brown); margin-bottom: 6px; color: #ffffff; font-size: 1.3rem; box-shadow: 0 4px 8px rgba(0,0,0,0.25); transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); }
         .menu-item span { font-weight: 700; font-size: 0.5rem; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -227,7 +240,6 @@
         /* ============================================== */
         @media (min-width: 768px) {
             
-            /* 1. On remet le centrage pour PC uniquement */
             body {
                 align-items: center; /* Centré verticalement sur PC */
                 background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('hero.png') center / cover no-repeat;
@@ -238,7 +250,6 @@
                 min-height: 100vh;
             }
 
-            /* 2. Le téléphone devient une "Carte" Large */
             .phone { 
                 max-width: 1000px; 
                 height: 80vh; min-height: 600px;
@@ -246,7 +257,6 @@
                 box-shadow: 0 20px 50px rgba(0,0,0,0.4);
             }
 
-            /* 3. Grid Layout */
             .main-wrapper {
                 display: grid;
                 grid-template-columns: 1.1fr 0.9fr; 
@@ -254,7 +264,6 @@
                 height: 100%;
             }
 
-            /* 4. Hero */
             .hero-container {
                 grid-column: 1; grid-row: 1 / span 2;
                 height: 100%; width: 100%;
@@ -269,7 +278,6 @@
                 backdrop-filter: blur(5px);
             }
 
-            /* 5. Contenu */
             .content {
                 grid-column: 2; grid-row: 1;
                 padding: 40px;
@@ -277,7 +285,6 @@
                 align-items: center;
             }
 
-            /* 6. Menu PC */
             .footer-nav { 
                 grid-column: 2; grid-row: 2;
                 position: relative; 
@@ -303,7 +310,6 @@
             .icon-box { width: 50px; height: 50px; font-size: 1.5rem; margin-bottom: 8px; }
             .menu-item span { color: var(--text-brown); font-size: 0.7rem; font-weight: 800; }
 
-            /* 7. Modal PC */
             .bottom-sheet { 
                 position: absolute; 
                 top: 50%; left: 50%; 
