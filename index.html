@@ -39,20 +39,25 @@
             --myludo-color: #2c3e50; 
         }
 
+        /* --- BACKGROUND GÉNÉRAL --- */
         body {
-            margin: 0; background-color: #1a1a1a;
-            display: flex; justify-content: center;
+            margin: 0; 
+            background-color: #1a1a1a; /* Fond mobile par défaut */
+            display: flex; justify-content: center; align-items: center; /* Centré pour le PC */
             font-family: 'Quicksand', sans-serif;
             color: var(--text-brown); overflow: hidden;
             touch-action: manipulation;
+            min-height: 100vh;
         }
 
+        /* --- CONTENEUR TYPE "TELEPHONE" (Base Mobile) --- */
         .phone {
             width: 100%; max-width: 414px; 
             height: 100vh; height: 100dvh;
             background: var(--bg-beige); position: relative;
             overflow: hidden; display: flex; flex-direction: column;
             box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            transition: all 0.4s ease; /* Transition douce si on redimensionne */
         }
 
         /* --- WRAPPER --- */
@@ -92,7 +97,7 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        .quote-box { padding: 15px 30px; text-align: center; position: relative; display: flex; flex-direction: column; align-items: center; }
+        .quote-box { padding: 15px 30px; text-align: center; position: relative; display: flex; flex-direction: column; align-items: center; width: 100%; box-sizing: border-box; }
         .quote-text { font-family: 'Shadows Into Light', cursive; font-size: 1.5rem; line-height: 1.2; color: var(--green-deep); margin: 0; }
         .separator { width: 50px; height: 3px; background: var(--wood-highlight); margin: 12px auto; border-radius: 10px; opacity: 0.6; }
 
@@ -127,18 +132,13 @@
         .lightbox.active { opacity: 1; }
         .lightbox.active img { transform: scale(1); opacity: 1; }
         
-        .lightbox-controls {
-            position: absolute; top: 25px; right: 25px; display: flex; gap: 15px; z-index: 110;
-        }
-        
+        .lightbox-controls { position: absolute; top: 25px; right: 25px; display: flex; gap: 15px; z-index: 110; }
         .lightbox-btn {
             color: #ffffff; font-size: 1.4rem; background: rgba(0,0,0,0.6); 
             width: 45px; height: 45px; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; cursor: pointer;
             text-decoration: none;
         }
-
-        /* Indicateurs de défilement (Flèches) */
         .lightbox-nav {
             position: absolute; top: 50%; transform: translateY(-50%);
             color: rgba(255, 255, 255, 0.6); font-size: 2rem;
@@ -150,7 +150,7 @@
         .lightbox-nav.prev { left: 0; }
         .lightbox-nav.next { right: 0; }
 
-        /* --- BOTTOM SHEET --- */
+        /* --- BOTTOM SHEET (MODAL) --- */
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 25; display: none; opacity: 0; transition: opacity 0.3s ease; }
         .bottom-sheet { 
             position: absolute; top: 100%; left: 0; width: 100%; 
@@ -163,50 +163,33 @@
         .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; cursor: grab; }
         .sheet-handle { width: 45px; height: 6px; background: #e0e0e0; border-radius: 10px; margin: 0 auto; }
         .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; -webkit-overflow-scrolling: touch; }
-        
         .sheet-content-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 2.4rem; margin: 5px 0 20px; text-align: center; position: relative; }
         .sheet-content-title::after { content: ''; display: block; width: 50px; height: 4px; background: var(--wood-brown); margin: 10px auto 0; border-radius: 5px; }
 
         .panel-card { background: var(--bg-beige); padding: 15px; border-radius: 20px; margin: 15px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
 
-        /* --- HISTOIRE --- */
+        /* STYLES INTERNES (Histoire, Prix, etc.) - Inchangés */
         .phase-label { font-size: 0.8rem; font-weight: 700; color: var(--wood-brown); text-transform: uppercase; letter-spacing: 2px; margin: 30px 0 5px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .phase-label.first { margin-top: 5px; }
         .phase-label::before, .phase-label::after { content: ''; flex-grow: 1; height: 1px; background: var(--wood-highlight); opacity: 0.8; max-width: 30px; min-width: 10px; }
-        
         .phase-title { font-family: 'Quicksand', sans-serif; color: var(--green-deep); font-size: 1.1rem; font-weight: 700; text-align: center; margin: 0 0 15px; display: flex; align-items: center; justify-content: center; gap: 10px; white-space: nowrap; }
         .phase-icon { font-size: 1.2rem; color: var(--wood-brown); }
         .grimoire-text { text-align: center; line-height: 1.6; font-size: 0.95rem; margin-top: 0; }
-        
-        /* Bouton Article de journal */
-        .btn-article {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(188, 143, 99, 0.15); color: var(--wood-brown);
-            border: 1px solid var(--wood-brown); border-radius: 50px;
-            padding: 6px 15px; font-size: 0.8rem; font-weight: 700;
-            cursor: pointer; transition: all 0.2s; margin-top: 10px;
-            text-decoration: none;
-        }
+        .btn-article { display: inline-flex; align-items: center; gap: 8px; background: rgba(188, 143, 99, 0.15); color: var(--wood-brown); border: 1px solid var(--wood-brown); border-radius: 50px; padding: 6px 15px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 10px; text-decoration: none; }
         .btn-article:active { transform: scale(0.95); background: rgba(188, 143, 99, 0.25); }
-
-        /* --- PHOTOS --- */
         .photo-section-title { text-align: center; color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 15px 0 10px 0; padding-top: 20px; border-top: 1px dashed rgba(0,0,0,0.1); }
         .photo-section-title.first { border-top: none; padding-top: 10px; margin-top: 5px; }
         .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 0 3px 20px; }
         .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 2px; }
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
-
-        /* --- CONTACTS & LUDOTHÈQUES --- */
         .contact-person { display: flex; flex-direction: column; padding: 10px 12px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
         .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
         .contact-person .avatar { width: 38px; height: 38px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; overflow: hidden;}
         .contact-person .avatar.mail-icon { background: var(--wood-brown); }
         .contact-person .avatar.fb-icon { background: var(--fb-blue); }
         .contact-person .avatar.wa-icon { background: var(--wa-green); }
-        
         .contact-person .avatar.ludo-icon { background: #ffffff; border: 1px solid rgba(0,0,0,0.1); box-sizing: border-box; }
         .contact-person .avatar.ludo-icon img { width: 22px; height: 22px; border-radius: 4px; }
-        
         .contact-top h4 { margin: 0; color: var(--green-deep); font-size: 1.05rem; flex-grow: 1; min-width: 80px; }
         .contact-bottom { width: 100%; padding-top: 5px; text-align: left; }
         .contact-bottom span { font-size: 0.7rem; color: var(--text-brown); font-weight: 600; opacity: 0.9; display: block; }
@@ -215,8 +198,6 @@
         .call-btn.fb-btn { background: var(--fb-blue); }
         .call-btn.wa-btn { background: var(--wa-green); }
         .call-btn.ludo-btn { background: var(--myludo-color); box-shadow: 0 4px 10px rgba(41, 128, 185, 0.2); }
-
-        /* --- ADHESION --- */
         .pricing-container { display: flex; gap: 10px; margin: 15px 0; }
         .price-card { flex: 1; background: #ffffff; padding: 12px; border-radius: 15px; text-align: center; border: 2px solid transparent; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
         .price-card.featured { border-color: var(--wood-brown); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
@@ -225,8 +206,6 @@
         .benefits-list { list-style: none; padding: 0; margin: 15px 0 0 0; }
         .benefits-list li { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; }
         .benefits-list i { color: var(--green-deep); }
-
-        /* --- AGENDA --- */
         .cal-list { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; } 
         .cal-item { display: flex; align-items: center; gap: 12px; background: #ffffff; padding: 10px 15px; border-radius: 12px; border-left: 4px solid var(--wood-brown); box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
         .cal-content { flex-grow: 1; overflow: hidden; } 
@@ -234,19 +213,120 @@
         .cal-item .time { font-size: 0.8rem; color: var(--text-brown); line-height: 1.4; }
         .cal-item .time a { color: var(--green-deep); text-decoration: underline; font-weight: 600; }
 
-        /* --- FOOTER --- */
+        /* --- FOOTER (Navigation) --- */
         .footer-nav { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--green-deep); display: flex; justify-content: space-around; align-items: center; padding: 15px 0 25px 0; border-top: 3px solid var(--wood-brown); z-index: 20; }
         .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
         .icon-box { width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; border-radius: 14px; background: var(--wood-brown); margin-bottom: 6px; color: #ffffff; font-size: 1.3rem; box-shadow: 0 4px 8px rgba(0,0,0,0.25); transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); }
         .menu-item span { font-weight: 700; font-size: 0.5rem; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
 
+
+        /* ============================================== */
+        /* --- VERSION PC (DESKTOP) : Le grand changement --- */
+        /* ============================================== */
         @media (min-width: 768px) {
-            body { background-color: var(--bg-beige); overflow: auto; }
-            .phone { max-width: 100%; height: 100vh; box-shadow: none; border-radius: 0; }
-            .hero { width: 100%; max-width: 550px; height: 550px; border-radius: 30px; margin: 20px auto; }
-            .footer-nav { order: -1; position: relative; padding: 15px 50px; border-top: none; border-bottom: 4px solid var(--wood-brown); justify-content: center; gap: 20px; }
-            .bottom-sheet { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); height: auto; max-height: 85vh; width: 700px; border-radius: 25px; opacity: 0; display: none; }
-            .bottom-sheet.open { display: flex; opacity: 1; transform: translate(-50%, -50%); }
+            
+            /* 1. On met un beau fond flouté sur le PC */
+            body {
+                background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('hero.png') center / cover no-repeat;
+                backdrop-filter: blur(10px);
+                overflow: auto;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+
+            /* 2. Le téléphone devient une "Carte" Large */
+            .phone { 
+                max-width: 1000px; /* Beaucoup plus large */
+                height: 80vh; min-height: 600px;
+                border-radius: 30px; 
+                box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            }
+
+            /* 3. On utilise CSS Grid pour séparer l'image du contenu */
+            .main-wrapper {
+                display: grid;
+                grid-template-columns: 1.1fr 0.9fr; /* 55% image, 45% menu */
+                grid-template-rows: 1fr auto; /* Le menu nav prend sa place en bas ou au milieu */
+                height: 100%;
+            }
+
+            /* 4. L'image Hero prend toute la colonne de gauche */
+            .hero-container {
+                grid-column: 1; grid-row: 1 / span 2;
+                height: 100%; width: 100%;
+            }
+            .hero {
+                width: 100%; height: 100%; max-width: none; margin: 0; border-radius: 0;
+                background-position: center center;
+            }
+
+            /* La carte RDV un peu plus grosse et stylée sur PC */
+            .rdv-card {
+                bottom: 40px; width: 80%; padding: 20px;
+                background: rgba(255, 252, 240, 0.95);
+                backdrop-filter: blur(5px);
+            }
+
+            /* 5. Le contenu (Citation + Bouton) va en haut à droite */
+            .content {
+                grid-column: 2; grid-row: 1;
+                padding: 40px;
+                justify-content: center;
+                align-items: center;
+            }
+
+            /* 6. Le Menu devient une Grille de boutons au lieu d'une barre */
+            .footer-nav { 
+                grid-column: 2; grid-row: 2;
+                position: relative; 
+                order: unset; 
+                background: transparent; border: none; 
+                padding: 0 40px 40px 40px; 
+                display: grid; 
+                grid-template-columns: repeat(3, 1fr); /* 3 colonnes de boutons */
+                gap: 20px;
+                justify-content: center;
+            }
+
+            /* Transformation des icônes en "Cartes boutons" */
+            .menu-item { 
+                background: #fff; 
+                padding: 15px 5px; 
+                border-radius: 15px; 
+                box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            .menu-item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+            .icon-box {
+                width: 50px; height: 50px; font-size: 1.5rem; margin-bottom: 8px;
+            }
+            .menu-item span {
+                color: var(--text-brown);
+                font-size: 0.7rem;
+                font-weight: 800;
+            }
+
+            /* 7. La fenêtre modale (Bottom Sheet) */
+            /* Elle apparaît comme une pop-up au centre */
+            .bottom-sheet { 
+                position: absolute; /* Reste absolute par rapport au .phone */
+                top: 50%; left: 50%; 
+                transform: translate(-50%, -50%) scale(0.9); /* Départ un peu petit pour l'anim */
+                width: 600px; max-width: 90%;
+                height: auto; max-height: 90%;
+                border-radius: 25px; 
+                opacity: 0; display: none; 
+                box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            }
+            .bottom-sheet.open { 
+                display: flex; opacity: 1; 
+                transform: translate(-50%, -50%) scale(1); /* Arrivée taille normale */
+            }
+            .sheet-handle { display: none; /* Pas besoin de poignée sur PC */ }
+
             .lightbox-nav:hover { color: rgba(255, 255, 255, 1); }
         }
     </style>
@@ -450,10 +530,10 @@
         overlay.style.display = 'block'; 
         mainWrapper.classList.add('blurred');
         
+        // Sur PC, on retire la transition mobile pour éviter le "slide up"
         if (window.innerWidth <= 768) {
             sheet.style.transition = 'none';
             sheet.style.transform = '';
-            // Force la refonte pour éviter les clignotements
             void sheet.offsetWidth; 
             sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)";
         }
@@ -547,7 +627,6 @@
     let swipeStartX = 0; 
     let currentSwipeX = 0; 
 
-    // isSingleImage = true si on ouvre l'article de journal qui ne fait pas partie de la galerie
     function openLightbox(src, isSingleImage = false) { 
         lbImg.src = src; 
         lb.style.display = 'flex'; 
@@ -574,7 +653,6 @@
             }
         }
         
-        // Pousse l'état "lightbox" SUR l'état "sheet"
         if (!history.state || history.state.type !== 'lightbox') {
             history.pushState({type: 'lightbox'}, ''); 
         }
@@ -604,13 +682,10 @@
         closeLightboxForce();
     }
 
-    // Gestion du bouton précédent du téléphone (Android/iOS Swipe Edge)
     window.addEventListener('popstate', (e) => {
-        // 1. Si la Lightbox est ouverte, c'est elle qu'on ferme d'abord
         if (lb.classList.contains('active')) {
             hideLightboxDOM(); 
         } 
-        // 2. Sinon, si c'est le Bottom Sheet qui est ouvert, on ferme le Bottom Sheet
         else if (sheet.classList.contains('open')) {
             hideSheetDOM(); 
         }
@@ -648,7 +723,7 @@
 
     lbContainer.addEventListener('touchmove', (e) => {
         if (e.touches.length === 2) {
-            e.preventDefault(); // Bloque le scroll natif pendant le zoom
+            e.preventDefault(); 
             const currentDistance = getDistance(e.touches);
             const scaleChange = currentDistance / initialDistance;
             currentScale = Math.min(Math.max(1, currentScale * scaleChange), 4);
@@ -660,7 +735,6 @@
             let currentY = e.touches[0].clientY;
             
             if (currentScale > 1) {
-                // Déplacement à l'intérieur de la photo zoomée (Pan)
                 e.preventDefault();
                 posX += (currentX - lastPanX) / currentScale;
                 posY += (currentY - lastPanY) / currentScale;
@@ -668,8 +742,7 @@
                 lastPanX = currentX;
                 lastPanY = currentY;
             } else if (!isZooming && currentGallery.length > 1) {
-                // Swipe gauche/droite entre les photos (uniquement si galerie > 1)
-                e.preventDefault(); // Bloque le "retour arrière" natif du navigateur
+                e.preventDefault(); 
                 currentSwipeX = currentX - swipeStartX; 
                 lbContainer.style.transform = `translateX(${currentSwipeX}px)`; 
             }
@@ -687,7 +760,7 @@
             } else {
                 lbContainer.style.transform = `translateX(0px)`;
             }
-            currentSwipeX = 0; // Reset
+            currentSwipeX = 0;
         }
     });
 
