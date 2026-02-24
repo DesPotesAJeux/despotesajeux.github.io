@@ -69,20 +69,28 @@
             background: url('hero.png') center top / cover no-repeat; 
             position: relative; z-index: 1; 
             -webkit-user-select: none; user-select: none;
-            -webkit-touch-callout: none; pointer-events: none; /* Le clic est géré par la rdv-card */
+            -webkit-touch-callout: none; pointer-events: none;
         }
 
-        /* MODIF: rdv-card devient le déclencheur */
+        /* --- HITBOX DU PANNEAU (ZONE CLIQUABLE) --- */
+        .hero-hitbox {
+            position: absolute;
+            top: 5%; left: 5%; /* Coin haut gauche */
+            width: 55%; height: 45%; /* Taille approximative du panneau */
+            z-index: 5; /* Au dessus du fond, mais en dessous de la carte blanche (z-10) */
+            cursor: pointer;
+            /* background: rgba(255, 0, 0, 0.3); Decommenter pour voir la zone */
+            pointer-events: auto;
+        }
+
         .rdv-card {
             background: rgba(255, 252, 240, 0.98); width: 85%;
             padding: 12px 15px; border-radius: 18px;
             position: absolute; bottom: -20px; left: 50%;
             transform: translateX(-50%); display: flex; align-items: center;
             box-shadow: 0 10px 30px rgba(74, 60, 47, 0.15); border: 1px solid white;
-            z-index: 10; pointer-events: auto; cursor: pointer; /* Curseur main */
-            transition: transform 0.1s ease;
+            z-index: 10; pointer-events: auto; cursor: default;
         }
-        .rdv-card:active { transform: translateX(-50%) scale(0.98); }
 
         .rdv-info p { margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--green-deep); line-height: 1.3; }
         .rdv-info a { color: var(--green-deep); text-decoration: none; font-weight: 600; font-size: 0.8rem; }
@@ -137,10 +145,10 @@
         }
         .game-timer.visible { display: block; }
 
-        /* --- MODAL DE JEU & TOAST (NOUVEAU STYLE BACKDROP) --- */
+        /* --- MODAL DE JEU & TOAST --- */
         .game-modal-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); /* Fond gris semi-transparent */
+            background: rgba(0,0,0,0.6); 
             z-index: 300;
             display: flex; justify-content: center; align-items: center;
             opacity: 0; pointer-events: none;
@@ -318,7 +326,9 @@
     <div class="main-wrapper" id="mainWrapper">
         <div class="hero-container">
             <div class="hero">
-                <div class="rdv-card" onclick="askToPlay()">
+                <div class="hero-hitbox" onclick="askToPlay()"></div>
+                
+                <div class="rdv-card">
                     <div style="font-size: 1.5rem; margin-right: 12px;">🎲</div>
                     <div class="rdv-info">
                         <b style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase;">Prochain Rdv</b>
@@ -370,7 +380,6 @@
 
     function askToPlay() {
         if(gameStarted) return;
-        // Remet le texte d'intro si on clique après un reset
         document.getElementById('gameTitle').innerText = "Psst... Joueur ?";
         document.getElementById('gameDesc').innerHTML = "Comme on est joueurs, <b>10 petits dés</b> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?";
         let btn = document.getElementById('gameBtn');
@@ -386,22 +395,19 @@
     
     function initGame() {
         document.getElementById('gameModalBackdrop').classList.remove('visible');
-        resetGameData(); // Nettoyage propre avant de commencer
+        resetGameData(); 
         gameStarted = true;
         
-        // 1. Démarrer le Timer
         startTimer();
         
-        // 2. Distribuer aléatoirement les 9 oeufs restants dans les sections
+        // Distribution aléatoire
         const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque'];
         for(let i=0; i<9; i++) {
             let randomSec = sections[Math.floor(Math.random() * sections.length)];
             eggsDistribution[randomSec]++;
         }
         
-        // 3. Afficher l'oeuf de l'accueil
         createEgg(document.getElementById('homeEggContainer'));
-        
         showToast("Le chrono est lancé ! ⏱️");
     }
     
@@ -411,13 +417,11 @@
         clearInterval(timerInterval);
         document.getElementById('gameTimer').classList.remove('visible');
         document.getElementById('gameTimer').innerText = "00:00";
-        document.getElementById('gameTimer').style.color = '#f1c40f'; // Reset couleur
+        document.getElementById('gameTimer').style.color = '#f1c40f'; 
         
-        // Vider la distribution
         for(let key in eggsDistribution) eggsDistribution[key] = 0;
         eggsDistribution['home'] = 1;
         
-        // Supprimer tous les oeufs existants dans le DOM
         document.querySelectorAll('.egg').forEach(el => el.remove());
     }
     
@@ -469,13 +473,12 @@
         else if(seconds < 50) comment = "Tranquille mais efficace. 🐢 (40-50s)";
         else comment = "On prend son temps, hein ? ☕ (> 1min)";
         
-        // Afficher la modale de victoire avec le bouton REJOUER
         setTimeout(() => {
             document.getElementById('gameTitle').innerText = "🎉 GAGNÉ ! 🎉";
             document.getElementById('gameDesc').innerHTML = `Tu as trouvé les 10 dés en <b>${finalTime}</b>.<br><br><span style="color:var(--green-deep); font-weight:bold;">${comment}</span>`;
             let btn = document.getElementById('gameBtn');
             btn.innerText = "Rejouer 🔄";
-            btn.setAttribute('onclick', 'initGame()'); // Relance direct
+            btn.setAttribute('onclick', 'initGame()'); 
             document.getElementById('gameModalBackdrop').classList.add('visible');
         }, 1000);
     }
@@ -490,10 +493,9 @@
     function createEgg(container) {
         let egg = document.createElement('i');
         egg.className = 'fa-solid fa-dice egg';
-        // Position aléatoire (10% à 90% pour ne pas être au bord)
         egg.style.top = (Math.random() * 80 + 10) + '%';
         egg.style.left = (Math.random() * 80 + 10) + '%';
-        egg.style.pointerEvents = 'auto'; // Réactive le clic
+        egg.style.pointerEvents = 'auto'; 
         egg.onclick = function() { foundEgg(this); };
         container.appendChild(egg);
     }
@@ -559,7 +561,7 @@
             </div>`
         },
         cal: { title: "Agenda Ludique", text: `<div class="panel-card" id="content-cal"><p style="text-align: center; color: var(--green-deep); margin-top: 0; font-size: 0.95rem;">On se retrouve chaque <b>dernier vendredi du mois</b>.</p>${agendaHTML}</div>` },
-        photos: { title: "Souvenirs", text: `<div class="panel-card" id="content-photos" style="padding-left: 0; padding-right: 0; padding-bottom: 0; overflow: hidden; position: relative;"><h3 class="photo-section-title first">Les Sorties</h3>${photosSortiesHTML}<h3 class="photo-section-title">Les Jeux</h3>${photosJeuxHTML}</div>` },
+        photos: { title: "Souvenirs", text: `<div class="panel-card" id="content-photos" style="padding-left: 0; padding-right: 0; padding-bottom: 0; overflow: hidden; position: relative;"><h3 id="photo-title-1" class="photo-section-title first">Les Sorties</h3>${photosSortiesHTML}<h3 id="photo-title-2" class="photo-section-title">Les Jeux</h3>${photosJeuxHTML}</div>` },
         contact: { 
             title: "Nous Contacter", 
             text: `<div class="panel-card" id="content-contact">
@@ -590,14 +592,32 @@
     function openSheet(key) {
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
         
-        // --- INJECTION DYNAMIQUE DES OEUFS ---
+        // --- INJECTION DYNAMIQUE DES OEUFS (SPECIAL POUR PHOTOS) ---
         if(gameStarted && eggsDistribution[key] > 0) {
             let containerId = `content-${key}`;
             let container = document.getElementById(containerId);
             if(container) {
-                container.style.position = 'relative';
-                for(let i=0; i < eggsDistribution[key]; i++) {
-                    createEgg(container);
+                
+                // LOGIQUE SPECIALE PHOTOS : On met les dés à côté des titres pour ne pas gêner les images
+                if(key === 'photos') {
+                    let titles = container.querySelectorAll('.photo-section-title');
+                    for(let i=0; i<eggsDistribution[key]; i++) {
+                        let target = titles[i % titles.length]; // Distribue équitablement
+                        let egg = document.createElement('i');
+                        egg.className = 'fa-solid fa-dice egg';
+                        egg.style.position = 'relative'; // Important : Relative ici
+                        egg.style.marginLeft = '15px';
+                        egg.style.verticalAlign = 'middle';
+                        egg.style.pointerEvents = 'auto';
+                        egg.onclick = function() { foundEgg(this); event.stopPropagation(); };
+                        target.appendChild(egg);
+                    }
+                } else {
+                    // LOGIQUE STANDARD (Random absolute)
+                    container.style.position = 'relative';
+                    for(let i=0; i < eggsDistribution[key]; i++) {
+                        createEgg(container);
+                    }
                 }
             }
         }
