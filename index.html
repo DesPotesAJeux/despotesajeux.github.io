@@ -94,7 +94,7 @@
             z-index: 10; pointer-events: auto; cursor: default;
         }
 
-        .rdv-info { width: 100%; } /* S'assurer que le conteneur prend la place */
+        .rdv-info { width: 100%; }
         .rdv-info p { margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--green-deep); line-height: 1.3; }
         .rdv-info a { color: var(--green-deep); text-decoration: none; font-weight: 600; font-size: 0.8rem; }
         .rdv-info a .underline { text-decoration: underline; }
@@ -188,11 +188,24 @@
         }
         
         .victory-stats { width: 100%; margin: 5px 0 20px; }
+        
+        /* MESSAGE DE GAIN STYLE "CITATION" */
         .victory-message { 
-            font-size: 0.95rem; color: var(--green-deep); 
-            font-style: italic; background: rgba(255,255,255,0.6); 
-            padding: 12px; border-radius: 10px; margin-top: 15px;
-            border: 1px dashed var(--wood-brown); box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            font-family: 'Shadows Into Light', cursive;
+            font-size: 1.4rem; 
+            color: var(--green-deep); 
+            margin: 15px 0 5px 0;
+            padding: 5px 0;
+            position: relative;
+            line-height: 1.2;
+        }
+        .victory-message::before {
+            content: "❝"; color: var(--wood-brown); font-size: 2rem;
+            vertical-align: -0.4rem; margin-right: 5px; opacity: 0.6;
+        }
+        .victory-message::after {
+            content: "❞"; color: var(--wood-brown); font-size: 2rem;
+            vertical-align: -0.4rem; margin-left: 5px; opacity: 0.6;
         }
         
         .game-desc-box {
@@ -365,7 +378,8 @@
                 <div class="rdv-card">
                     <div style="font-size: 1.5rem; margin-right: 12px;">🎲</div>
                     <div class="rdv-info">
-                        <p id="next-rdv-banner" style="margin:0;">Calcul en cours...</p>
+                        <b style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase;">Prochain Rdv</b>
+                        <p id="next-rdv-banner">Calcul en cours...</p>
                     </div>
                 </div>
             </div>
@@ -456,14 +470,14 @@
                 <div class="phase-label first">Phase 1</div><div class="phase-title"><i class="fa-solid fa-scroll phase-icon"></i><span>La Pioche (2014)</span></div>
                 <p class="grimoire-text">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>. Très vite, le virus se transmet et les premières soirées jeux s'organisent chez les uns et les autres.</p>
                 <div class="phase-label">Phase 2</div><div class="phase-title"><i class="fa-solid fa-chess-rook phase-icon"></i><span>Le Coup de Maître (2015)</span></div>
-                <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante !</p>
+                <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante ! Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées.</p>
                 <div class="phase-label">Phase 3</div><div class="phase-title"><i class="fa-brands fa-fort-awesome phase-icon"></i><span>La Fondation (2019)</span></div>
-                <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. L'association <b>Des Potes à Jeux</b> naît officiellement.</p>
+                <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. L'association <b>Des Potes à Jeux</b> naît officiellement. La petite tablée s'agrandit peu à peu pour accueillir de nouveaux joueurs de Plouay.</p>
                 <div style="text-align: center; margin-top: 15px;">
                     <button class="btn-article" onclick="openLightbox('article_journal.jpg', true)"><i class="fa-solid fa-newspaper"></i> Voir l'article de journal</button>
                 </div>
                 <div class="phase-label">Phase 4</div><div class="phase-title"><i class="fa-solid fa-rocket phase-icon"></i><span>L'Envolée (2026)</span></div>
-                <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année.</p>
+                <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. L'aventure ne fait que continuer avec vous !</p>
             </div>`
         },
         adhesion: { 
@@ -472,7 +486,7 @@
                 <p style="text-align:center; margin-top:0;">Devenir membre est simple et convivial !</p>
                 <div style="background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.2); color: #dc3545; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans</div>
                 <div class="pricing-container"><div class="price-card featured"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div><div class="price-card featured"><div class="amount">20€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Couple</p></div></div>
-                <ul class="benefits-list" style="max-width: 280px; margin: 15px auto 0;"><li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li><li><i class="fa-solid fa-circle-check"></i> Première séance offerte</li><li><i class="fa-solid fa-circle-check"></i> Soirée escape game</li><li><i class="fa-solid fa-circle-check"></i> Repas de fin d'année</li></ul>
+                <ul class="benefits-list" style="max-width: 280px; margin: 15px auto 0;"><li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li><li><i class="fa-solid fa-circle-check"></i> Première séance offerte</li><li><i class="fa-solid fa-circle-check"></i> Soirée escape game</li><li><i class="fa-solid fa-circle-check"></i> Repas de fin d'année</li><li><i class="fa-solid fa-circle-check"></i> Après-midi jeux extérieurs</li></ul>
             </div>`
         },
         cal: { title: "Agenda Ludique", text: `<div class="panel-card" id="content-cal"><p style="text-align: center; color: var(--green-deep); margin-top: 0; font-size: 0.95rem;">On se retrouve chaque <b>dernier vendredi du mois</b>. Voici les prochaines sessions :</p>${agendaHTML}<p style="text-align: center; font-size:0.8rem; margin-bottom: 0;">N'oubliez pas d'apporter votre bonne humeur !</p></div>` },
@@ -702,7 +716,7 @@
                     <div style="font-size:1.2rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div>
                     <div style="font-size:1.5rem; color:#2c3e50; margin: 5px 0;">${rank}</div>
                     <div style="font-size:2.5rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div>
-                    <div class="victory-message">"${message}"</div>
+                    <div class="victory-message">${message}</div>
                 </div>
                 
                 <div id="shareContainer" class="share-container">
