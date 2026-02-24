@@ -378,8 +378,7 @@
                 <div class="rdv-card">
                     <div style="font-size: 1.5rem; margin-right: 12px;">🎲</div>
                     <div class="rdv-info">
-                        <b style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase;">Prochain Rdv</b>
-                        <p id="next-rdv-banner">Calcul en cours...</p>
+                        <p id="next-rdv-banner" style="margin:0;">Calcul en cours...</p>
                     </div>
                 </div>
             </div>
@@ -431,7 +430,7 @@
     const upcomingDates = getNextLastFridays();
     const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
     
-    // Calcul dynamique "Dans X jours"
+    // Calcul dynamique "J-X"
     const today = new Date();
     const nextDate = upcomingDates[0];
     const todayZero = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -439,13 +438,13 @@
     const diffTime = nextZero - todayZero;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    let dayPart = (diffDays === 0) ? "CE SOIR !" : (diffDays === 1) ? "DEMAIN !" : `DANS <b style="color:var(--green-deep);">${diffDays}</b> JOURS`;
+    let dayPart = (diffDays === 0) ? " : JOUR J !" : ` <b style="color:var(--green-deep);">J-${diffDays}</b>`;
     let dateStr = nextDate.toLocaleDateString('fr-FR', dateOptions);
     dateStr = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
 
     // Injection sur le panneau
     document.getElementById('next-rdv-banner').innerHTML = 
-        `<span style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase; font-weight:700;">PROCHAIN RDV • ${dayPart}</span><br>` +
+        `<span style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase; font-weight:700;">PROCHAIN RDV${dayPart}</span><br>` +
         `<span style="font-size:0.9rem; font-weight:700; color:var(--green-deep);">${dateStr} à 20h30</span><br>` +
         `<a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank">📍 <span class="underline">Maison des Associations</span></a>`;
 
@@ -716,7 +715,7 @@
                     <div style="font-size:1.2rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div>
                     <div style="font-size:1.5rem; color:#2c3e50; margin: 5px 0;">${rank}</div>
                     <div style="font-size:2.5rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div>
-                    <div class="victory-message">${message}</div>
+                    <div class="victory-message">"${message}"</div>
                 </div>
                 
                 <div id="shareContainer" class="share-container">
