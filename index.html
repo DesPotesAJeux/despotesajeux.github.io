@@ -72,15 +72,10 @@
             -webkit-touch-callout: none; pointer-events: none;
         }
 
-        /* --- HITBOX DU PANNEAU (ZONE CLIQUABLE) --- */
+        /* HITBOX */
         .hero-hitbox {
-            position: absolute;
-            top: 5%; left: 5%; /* Coin haut gauche */
-            width: 55%; height: 45%; /* Taille approximative du panneau */
-            z-index: 5; /* Au dessus du fond, mais en dessous de la carte blanche (z-10) */
-            cursor: pointer;
-            /* background: rgba(255, 0, 0, 0.3); Decommenter pour voir la zone */
-            pointer-events: auto;
+            position: absolute; top: 5%; left: 5%; width: 55%; height: 45%; 
+            z-index: 5; cursor: pointer; pointer-events: auto;
         }
 
         .rdv-card {
@@ -118,19 +113,15 @@
         /* --- STYLE EASTER EGGS --- */
         .egg {
             position: absolute;
-            color: rgba(188, 143, 99, 0.6); 
-            font-size: 1.4rem;
-            cursor: pointer;
-            z-index: 50;
+            color: rgba(188, 143, 99, 0.6); font-size: 1.4rem;
+            cursor: pointer; z-index: 50;
             transition: all 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
             filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
         }
         .egg:hover { color: var(--wood-brown); transform: scale(1.3); }
         .egg.found { 
-            color: #f1c40f; 
-            text-shadow: 0 0 10px rgba(241, 196, 15, 0.8);
-            animation: spin 0.6s ease-in-out forwards;
-            pointer-events: none;
+            color: #f1c40f; text-shadow: 0 0 10px rgba(241, 196, 15, 0.8);
+            animation: spin 0.6s ease-in-out forwards; pointer-events: none;
         }
         @keyframes spin { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(0); opacity: 0; } }
 
@@ -145,14 +136,12 @@
         }
         .game-timer.visible { display: block; }
 
-        /* --- MODAL DE JEU & TOAST --- */
+        /* --- MODAL --- */
         .game-modal-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); 
-            z-index: 300;
+            background: rgba(0,0,0,0.6); z-index: 300;
             display: flex; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.3s ease;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
             backdrop-filter: blur(3px);
         }
         .game-modal-backdrop.visible { opacity: 1; pointer-events: auto; }
@@ -160,21 +149,16 @@
         .game-modal-content {
             width: 85%; max-width: 350px;
             background: white; border-radius: 20px; padding: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4); text-align: center;
             transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
             display: flex; flex-direction: column; align-items: center;
         }
         .game-modal-backdrop.visible .game-modal-content { transform: scale(1); }
-
         .game-modal-content h3 { color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 0 0 15px; }
         
         .game-desc-box {
-            background: var(--bg-beige);
-            border-radius: 15px;
-            padding: 15px;
-            width: 100%; box-sizing: border-box;
-            margin-bottom: 20px;
+            background: var(--bg-beige); border-radius: 15px; padding: 15px;
+            width: 100%; box-sizing: border-box; margin-bottom: 20px;
             border: 1px solid rgba(188, 143, 99, 0.2);
         }
         .game-desc-box p { font-size: 0.95rem; line-height: 1.5; color: var(--text-brown); margin: 0; }
@@ -186,8 +170,7 @@
             position: absolute; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px);
             background: var(--wood-brown); color: white; padding: 8px 20px; border-radius: 50px;
             font-weight: 700; font-size: 0.9rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 300; opacity: 0; pointer-events: none; transition: all 0.3s ease;
-            white-space: nowrap;
+            z-index: 300; opacity: 0; pointer-events: none; transition: all 0.3s ease; white-space: nowrap;
         }
         .game-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -463,19 +446,41 @@
         let finalTime = document.getElementById('gameTimer').innerText;
         document.getElementById('gameTimer').style.color = '#2ecc71'; // Vert
         
-        let comment = "";
-        if(seconds < 5) comment = "T'es un robot ? 🤖 (< 5s)";
-        else if(seconds < 10) comment = "Flash McQueer ! ⚡ (5-10s)";
-        else if(seconds < 15) comment = "Oeil de lynx ! 👁️ (10-15s)";
-        else if(seconds < 20) comment = "Super rapide ! 🚀 (15-20s)";
-        else if(seconds < 30) comment = "Pas mal du tout ! 👍 (20-30s)";
-        else if(seconds < 40) comment = "Joli score ! 👏 (30-40s)";
-        else if(seconds < 50) comment = "Tranquille mais efficace. 🐢 (40-50s)";
-        else comment = "On prend son temps, hein ? ☕ (> 1min)";
+        let rank = "";
+        let message = "";
+
+        if (seconds < 5) {
+            rank = "LE DIEU DU DÉ ⚡";
+            message = "T'as triché ou t'es un robot ? C'est inhumain !";
+        } else if (seconds < 10) {
+            rank = "LUCKY LUKE 🤠";
+            message = "Tu cliques plus vite que ton ombre !";
+        } else if (seconds < 15) {
+            rank = "GRAND MAÎTRE 🥋";
+            message = "Tes réflexes sont affûtés comme des lames.";
+        } else if (seconds < 20) {
+            rank = "ŒIL DE LYNX 😼";
+            message = "Vif et précis, rien ne t'échappe !";
+        } else if (seconds < 30) {
+            rank = "SHERLOCK HOLMES 🕵️‍♂️";
+            message = "Une enquête menée avec méthode et brio.";
+        } else if (seconds < 40) {
+            rank = "LE TOURISTE 📸";
+            message = "Tu as pris le temps d'admirer le paysage.";
+        } else if (seconds < 50) {
+            rank = "LE DIESEL 🚜";
+            message = "Un peu lent au démarrage, mais tu es arrivé !";
+        } else if (seconds < 60) {
+            rank = "LE PARESSEUX 🦥";
+            message = "Tout doux, pas de stress, c'est les vacances.";
+        } else {
+            rank = "L'ESCARGOT 🐌";
+            message = "L'important, c'est de participer... non ?";
+        }
         
         setTimeout(() => {
-            document.getElementById('gameTitle').innerText = "🎉 GAGNÉ ! 🎉";
-            document.getElementById('gameDesc').innerHTML = `Tu as trouvé les 10 dés en <b>${finalTime}</b>.<br><br><span style="color:var(--green-deep); font-weight:bold;">${comment}</span>`;
+            document.getElementById('gameTitle').innerText = "🎉 " + rank + " 🎉";
+            document.getElementById('gameDesc').innerHTML = `Tu as trouvé les 10 dés en <b>${finalTime}</b>.<br><br><span style="color:var(--green-deep); font-weight:bold;">${message}</span>`;
             let btn = document.getElementById('gameBtn');
             btn.innerText = "Rejouer 🔄";
             btn.setAttribute('onclick', 'initGame()'); 
@@ -592,20 +597,20 @@
     function openSheet(key) {
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
         
-        // --- INJECTION DYNAMIQUE DES OEUFS (SPECIAL POUR PHOTOS) ---
+        // --- INJECTION DYNAMIQUE DES OEUFS (SPECIAL PHOTOS) ---
         if(gameStarted && eggsDistribution[key] > 0) {
             let containerId = `content-${key}`;
             let container = document.getElementById(containerId);
             if(container) {
                 
-                // LOGIQUE SPECIALE PHOTOS : On met les dés à côté des titres pour ne pas gêner les images
+                // LOGIQUE SPECIALE PHOTOS : On met les dés à côté des titres
                 if(key === 'photos') {
                     let titles = container.querySelectorAll('.photo-section-title');
                     for(let i=0; i<eggsDistribution[key]; i++) {
-                        let target = titles[i % titles.length]; // Distribue équitablement
+                        let target = titles[i % titles.length]; 
                         let egg = document.createElement('i');
                         egg.className = 'fa-solid fa-dice egg';
-                        egg.style.position = 'relative'; // Important : Relative ici
+                        egg.style.position = 'relative'; // Important : Relative
                         egg.style.marginLeft = '15px';
                         egg.style.verticalAlign = 'middle';
                         egg.style.pointerEvents = 'auto';
@@ -613,7 +618,7 @@
                         target.appendChild(egg);
                     }
                 } else {
-                    // LOGIQUE STANDARD (Random absolute)
+                    // LOGIQUE STANDARD
                     container.style.position = 'relative';
                     for(let i=0; i < eggsDistribution[key]; i++) {
                         createEgg(container);
