@@ -1,13 +1,32 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://www.googletagmanager.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+        font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+        img-src 'self' data: https://www.google.com https://*.google.com https://*.gstatic.com http://googleusercontent.com https://www.googletagmanager.com;
+        connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com;
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+        frame-src 'none';
+    ">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YPHH9PELKY');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Des Potes à Jeux</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
     <style>
         :root {
             --bg-beige: #f3f1e5;
@@ -54,11 +73,10 @@
             -webkit-touch-callout: none; pointer-events: none;
         }
 
-        /* --- ZONE JEU (PANNEAU EN BOIS) --- */
+        /* --- ZONE JEU --- */
         .hero-hitbox {
             position: absolute; top: 10%; left: 10%; width: 45%; height: 35%; 
             z-index: 15; cursor: pointer; pointer-events: auto;
-            /* background: rgba(255,0,0,0.3); Décommenter pour voir la zone */
         }
 
         .rdv-card {
@@ -351,7 +369,7 @@
 </div>
 
 <script>
-    /* --- 1. CALCULS DATE & HTML (Exécutés en premier pour être dispos) --- */
+    /* --- 1. CALCULS DATE & HTML --- */
     const NB_PHOTOS_SORTIES = 19; const NB_PHOTOS_JEUX = 20;    
     let currentGallery = []; let currentPhotoIndex = 0;
 
@@ -391,16 +409,16 @@
             title: "Le Grimoire", 
             text: `<div class="panel-card" id="content-histoire">
                 <div class="phase-label first">Phase 1</div><div class="phase-title"><i class="fa-solid fa-scroll phase-icon"></i><span>La Pioche (2014)</span></div>
-                <p class="grimoire-text">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>. Très vite, le virus se transmet et les premières soirées jeux s'organisent chez les uns et les autres.</p>
+                <p class="grimoire-text">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>.</p>
                 <div class="phase-label">Phase 2</div><div class="phase-title"><i class="fa-solid fa-chess-rook phase-icon"></i><span>Le Coup de Maître (2015)</span></div>
-                <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante !</p>
+                <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>.</p>
                 <div class="phase-label">Phase 3</div><div class="phase-title"><i class="fa-brands fa-fort-awesome phase-icon"></i><span>La Fondation (2019)</span></div>
-                <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. L'association <b>Des Potes à Jeux</b> naît officiellement.</p>
+                <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas.</p>
                 <div style="text-align: center; margin-top: 15px;">
                     <button class="btn-article" onclick="openLightbox('article_journal.jpg', true)"><i class="fa-solid fa-newspaper"></i> Voir l'article de journal</button>
                 </div>
                 <div class="phase-label">Phase 4</div><div class="phase-title"><i class="fa-solid fa-rocket phase-icon"></i><span>L'Envolée (2026)</span></div>
-                <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année.</p>
+                <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée.</p>
             </div>`
         },
         adhesion: { 
@@ -502,7 +520,7 @@
     const totalEggs = 10;
     let timerInterval;
     let startTime;
-    let finalGameData = { time: "", rank: "", message: "", rawMs: 0 }; 
+    let finalGameData = { time: "", rankNumber: 0, rank: "", message: "", rawMs: 0 }; 
     
     let gameState = {
         'home': { total: 0, found: 0 },
@@ -605,26 +623,27 @@
         document.getElementById('gameTimer').style.color = '#2ecc71'; 
         
         let seconds = rawMs / 1000;
-        let rank = ""; let message = "";
+        let rank = ""; let message = ""; let rankNum = 0;
 
-        if (seconds < 5) { rank = "DIEU DU DÉ ⚡"; message = "Inhumain ! T'as triché ?"; }
-        else if (seconds < 10) { rank = "GRAND MAÎTRE JEDI ⚔️"; message = "La Force est puissante en toi."; }
-        else if (seconds < 15) { rank = "CHUCK NORRIS 👊"; message = "Chuck Norris ne cherche pas les dés, ils se dénoncent."; }
-        else if (seconds < 20) { rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre."; }
-        else if (seconds < 25) { rank = "ŒIL DE LYNX 😼"; message = "Une vision perçante."; }
-        else if (seconds < 35) { rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Une enquête menée avec brio."; }
-        else if (seconds < 45) { rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; }
-        else if (seconds < 60) { rank = "LE DIESEL 🚜"; message = "Lent au démarrage, mais tu es arrivé !"; }
-        else { rank = "L'ESCARGOT 🐌"; message = "L'important c'est de participer... non ?"; }
+        if (seconds < 5) { rankNum=1; rank = "DIEU DU DÉ ⚡"; message = "Inhumain ! T'as triché ?"; }
+        else if (seconds < 10) { rankNum=2; rank = "GRAND MAÎTRE JEDI ⚔️"; message = "La Force est puissante en toi."; }
+        else if (seconds < 15) { rankNum=3; rank = "CHUCK NORRIS 👊"; message = "Chuck Norris ne cherche pas les dés, ils se dénoncent."; }
+        else if (seconds < 20) { rankNum=4; rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre."; }
+        else if (seconds < 25) { rankNum=5; rank = "ŒIL DE LYNX 😼"; message = "Une vision perçante."; }
+        else if (seconds < 35) { rankNum=6; rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Enquête méthodique."; }
+        else if (seconds < 45) { rankNum=7; rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; }
+        else if (seconds < 60) { rankNum=8; rank = "LE DIESEL 🚜"; message = "Lent au démarrage, mais tu es arrivé !"; }
+        else { rankNum=9; rank = "L'ESCARGOT 🐌"; message = "L'important c'est de participer... non ?"; }
         
         finalGameData.time = finalTime;
         finalGameData.rank = rank;
+        finalGameData.rankNumber = rankNum;
         finalGameData.message = message;
         finalGameData.rawMs = rawMs;
 
         setTimeout(() => {
             document.getElementById('gameTitle').innerText = "🎉 GAGNÉ ! 🎉";
-            document.getElementById('gameDesc').innerHTML = `Tu as trouvé les 10 dés en <b>${finalTime}</b>.<br><br><span style="color:var(--green-deep); font-weight:bold; font-size:1.1rem;">${rank}</span><br><span style="font-size:0.9rem; opacity:0.8;">${message}</span>`;
+            document.getElementById('gameDesc').innerHTML = `Tu as trouvé les 10 dés en <b>${finalTime}</b>.<br><br><span style="color:var(--green-deep); font-weight:bold; font-size:1.1rem;">Rang N°${rankNum} : ${rank}</span><br><span style="font-size:0.9rem; opacity:0.8;">${message}</span>`;
             document.getElementById('shareContainer').style.display = 'flex';
             let btn = document.getElementById('gameBtn');
             btn.innerText = "Rejouer 🔄";
@@ -646,7 +665,7 @@
                    `🕵️ J'ai trouvé les 10 dés cachés !%0A%0A` +
                    `👤 *Joueur :* ${pseudo}%0A` +
                    `⏱️ *Temps :* ${finalGameData.time}%0A` +
-                   `🏅 *Rang :* ${finalGameData.rank}%0A` +
+                   `🏅 *Rang N°${finalGameData.rankNumber} :* ${finalGameData.rank}%0A` +
                    `📝 _"${finalGameData.message}"_%0A%0A` +
                    `Tu penses faire mieux ? Tente ta chance ici :%0A` +
                    `👉 ${siteUrl}%0A%0A` +
