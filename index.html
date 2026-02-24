@@ -69,7 +69,6 @@
             background: url('hero.png') center top / cover no-repeat; 
             position: relative; z-index: 1; 
             -webkit-user-select: none; user-select: none;
-            /* MODIF: pointer-events auto pour permettre le clic sur le panneau */
             -webkit-touch-callout: none; pointer-events: auto; cursor: pointer;
         }
 
@@ -79,7 +78,7 @@
             position: absolute; bottom: -20px; left: 50%;
             transform: translateX(-50%); display: flex; align-items: center;
             box-shadow: 0 10px 30px rgba(74, 60, 47, 0.15); border: 1px solid white;
-            z-index: 10; pointer-events: auto; cursor: default; /* Pas de main sur la carte, juste le panneau */
+            z-index: 10; pointer-events: auto; cursor: default;
         }
 
         .rdv-info p { margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--green-deep); line-height: 1.3; }
@@ -108,32 +107,39 @@
         /* --- STYLE EASTER EGGS --- */
         .egg {
             position: absolute;
-            color: rgba(188, 143, 99, 0.4); /* Discret */
-            font-size: 1.2rem;
+            color: rgba(188, 143, 99, 0.6); 
+            font-size: 1.4rem;
             cursor: pointer;
             z-index: 50;
             transition: all 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
         }
-        .egg:hover { color: var(--wood-brown); transform: scale(1.2); }
+        .egg:hover { color: var(--wood-brown); transform: scale(1.3); }
         .egg.found { 
             color: #f1c40f; 
-            text-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
-            animation: spin 0.6s ease-in-out;
+            text-shadow: 0 0 10px rgba(241, 196, 15, 0.8);
+            animation: spin 0.6s ease-in-out forwards;
             pointer-events: none;
         }
-        @keyframes spin { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1); } }
+        @keyframes spin { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(0); opacity: 0; } }
 
-        /* Positionnement des oeufs fixes (Accueil) */
-        .egg-1 { top: 20px; left: 20px; } /* Coin haut gauche */
-        .egg-2 { bottom: 15px; right: 20px; font-size: 0.9rem; } /* Sur la carte RDV */
-        .egg-3 { top: 100px; right: 40px; transform: rotate(15deg); } /* Dans le contenu */
+        /* --- TIMER --- */
+        .game-timer {
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(0, 0, 0, 0.8); color: #f1c40f;
+            padding: 5px 12px; border-radius: 15px;
+            font-family: monospace; font-size: 1rem; font-weight: bold;
+            z-index: 200; display: none; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            pointer-events: none;
+        }
+        .game-timer.visible { display: block; }
 
         /* --- MODAL DE JEU & TOAST --- */
         .game-modal {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
             width: 85%; max-width: 350px;
             background: white; border-radius: 20px; padding: 25px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4); z-index: 200;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4); z-index: 300;
             text-align: center; opacity: 0; pointer-events: none;
             transition: all 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
         }
@@ -146,7 +152,8 @@
             position: absolute; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px);
             background: var(--wood-brown); color: white; padding: 8px 20px; border-radius: 50px;
             font-weight: 700; font-size: 0.9rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 200; opacity: 0; pointer-events: none; transition: all 0.3s ease;
+            z-index: 300; opacity: 0; pointer-events: none; transition: all 0.3s ease;
+            white-space: nowrap;
         }
         .game-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -163,7 +170,6 @@
         .lightbox-nav.prev { left: 0; }
         .lightbox-nav.next { right: 0; }
 
-        /* --- BOTTOM SHEET --- */
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 25; display: none; opacity: 0; transition: opacity 0.3s ease; }
         .bottom-sheet { position: absolute; top: 100%; left: 0; width: 100%; height: auto; max-height: 85vh; min-height: 40vh; background: white; z-index: 30; border-top-left-radius: 35px; border-top-right-radius: 35px; display: flex; flex-direction: column; will-change: transform; transition: transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1); }
         .bottom-sheet.open { transform: translateY(-100%); }
@@ -173,7 +179,7 @@
         .sheet-content-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 2.4rem; margin: 5px 0 20px; text-align: center; position: relative; }
         .sheet-content-title::after { content: ''; display: block; width: 50px; height: 4px; background: var(--wood-brown); margin: 10px auto 0; border-radius: 5px; }
 
-        .panel-card { background: var(--bg-beige); padding: 15px; border-radius: 20px; margin: 15px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+        .panel-card { background: var(--bg-beige); padding: 15px; border-radius: 20px; margin: 15px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.03); position: relative; }
 
         .phase-label { font-size: 0.8rem; font-weight: 700; color: var(--wood-brown); text-transform: uppercase; letter-spacing: 2px; margin: 30px 0 5px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .phase-label.first { margin-top: 5px; }
@@ -250,10 +256,6 @@
             .bottom-sheet.open { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
             .sheet-handle { display: none; }
             .lightbox-nav:hover { color: rgba(255, 255, 255, 1); }
-            
-            /* Ajustement Eggs sur PC */
-            .egg-1 { top: 40px; left: 40px; font-size: 1.5rem; color: rgba(255,255,255,0.7); }
-            .egg-2 { bottom: 40px; left: 20px; }
         }
     </style>
 </head>
@@ -264,10 +266,12 @@
     <div class="game-modal" id="gameModal">
         <h3>Psst... Joueur ?</h3>
         <p>Comme on est joueurs, <b>10 petits dés</b> (easter eggs) ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?</p>
-        <button class="game-btn" onclick="closeGameModal()">C'est parti !</button>
+        <button class="game-btn" onclick="initGame()">C'est parti !</button>
     </div>
 
     <div class="game-toast" id="gameToast">Bravo ! 1/10</div>
+    
+    <div class="game-timer" id="gameTimer">00:00</div>
 
     <div class="lightbox" id="lightbox">
         <div class="lightbox-nav prev" id="lbNavPrev" onclick="changePhotoDir('prev')"><i class="fa-solid fa-chevron-left"></i></div>
@@ -280,22 +284,19 @@
     
     <div class="main-wrapper" id="mainWrapper">
         <div class="hero-container">
-            <div class="hero" onclick="startGame()">
-                <i class="fa-solid fa-dice egg egg-1" onclick="foundEgg(this); event.stopPropagation();"></i>
-                
+            <div class="hero" onclick="askToPlay()">
                 <div class="rdv-card" onclick="event.stopPropagation()">
                     <div style="font-size: 1.5rem; margin-right: 12px;">🎲</div>
                     <div class="rdv-info">
                         <b style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase;">Prochain Rdv</b>
                         <p id="next-rdv-banner">Calcul en cours...</p>
                     </div>
-                    <i class="fa-solid fa-dice egg egg-2" onclick="foundEgg(this)"></i>
                 </div>
             </div>
         </div>
 
         <div class="content">
-            <i class="fa-solid fa-dice egg egg-3" onclick="foundEgg(this)"></i>
+            <div id="homeEggContainer" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></div>
             
             <div class="quote-box">
                 <p class="quote-text">"Ici on ne compte pas les points,<br>on compte les <strong>souvenirs</strong>."</p>
@@ -321,16 +322,54 @@
 </div>
 
 <script>
-    /* --- JEU EASTER EGGS --- */
+    /* --- LOGIQUE JEU EASTER EGGS --- */
+    let gameStarted = false;
     let eggCount = 0;
     const totalEggs = 10;
+    let timerInterval;
+    let startTime;
     
-    function startGame() {
+    // Distribution des oeufs (Clé = ID de page, Valeur = Nombre d'oeufs)
+    let eggsDistribution = {
+        'home': 1,
+        'histoire': 0, 'adhesion': 0, 'cal': 0, 'photos': 0, 'contact': 0, 'ludotheque': 0
+    };
+
+    function askToPlay() {
+        if(gameStarted) return;
         document.getElementById('gameModal').classList.add('visible');
     }
     
-    function closeGameModal() {
+    function initGame() {
         document.getElementById('gameModal').classList.remove('visible');
+        gameStarted = true;
+        
+        // 1. Démarrer le Timer
+        startTimer();
+        
+        // 2. Distribuer aléatoirement les 9 oeufs restants dans les sections
+        const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque'];
+        for(let i=0; i<9; i++) {
+            let randomSec = sections[Math.floor(Math.random() * sections.length)];
+            eggsDistribution[randomSec]++;
+        }
+        
+        // 3. Afficher l'oeuf de l'accueil
+        createEgg(document.getElementById('homeEggContainer'));
+        
+        showToast("Le chrono est lancé ! ⏱️");
+    }
+    
+    function startTimer() {
+        startTime = Date.now();
+        document.getElementById('gameTimer').classList.add('visible');
+        timerInterval = setInterval(() => {
+            let delta = Date.now() - startTime;
+            let seconds = Math.floor((delta / 1000) % 60);
+            let minutes = Math.floor((delta / 1000 / 60));
+            document.getElementById('gameTimer').innerText = 
+                (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+        }, 1000);
     }
     
     function foundEgg(el) {
@@ -340,12 +379,17 @@
         eggCount++;
         
         let msg = `Bravo ! ${eggCount}/${totalEggs}`;
-        if(eggCount === totalEggs) msg = "INCROYABLE ! Tu as tout trouvé ! 🎉";
-        else if(eggCount > 5) msg = `Tu chauffes ! ${eggCount}/${totalEggs}`;
+        
+        if(eggCount === totalEggs) {
+            clearInterval(timerInterval);
+            let finalTime = document.getElementById('gameTimer').innerText;
+            msg = `🎉 GAGNÉ en ${finalTime} ! 🎉`;
+            document.getElementById('gameTimer').style.color = '#2ecc71'; // Vert
+        } else if(eggCount > 5) {
+            msg = `Tu chauffes ! ${eggCount}/${totalEggs}`;
+        }
         
         showToast(msg);
-        
-        // Vibration mobile si supporté
         if(navigator.vibrate) navigator.vibrate(50);
     }
     
@@ -353,22 +397,26 @@
         const toast = document.getElementById('gameToast');
         toast.innerText = msg;
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2000);
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+    
+    function createEgg(container) {
+        let egg = document.createElement('i');
+        egg.className = 'fa-solid fa-dice egg';
+        // Position aléatoire (10% à 90% pour ne pas être au bord)
+        egg.style.top = (Math.random() * 80 + 10) + '%';
+        egg.style.left = (Math.random() * 80 + 10) + '%';
+        egg.style.pointerEvents = 'auto'; // Réactive le clic
+        egg.onclick = function() { foundEgg(this); };
+        container.appendChild(egg);
     }
 
     /* --- RESTE DU CODE JS --- */
-    const NB_PHOTOS_SORTIES = 19; 
-    const NB_PHOTOS_JEUX = 20;    
-    
-    let currentGallery = [];
-    let currentPhotoIndex = 0;
+    const NB_PHOTOS_SORTIES = 19; const NB_PHOTOS_JEUX = 20;    
+    let currentGallery = []; let currentPhotoIndex = 0;
 
-    // --- CALCUL PROCHAIN RDV ---
     function getNextLastFridays() {
-        let dates = [];
-        let now = new Date();
-        let currentYear = now.getFullYear();
-        let currentMonth = now.getMonth();
+        let dates = []; let now = new Date(); let currentYear = now.getFullYear(); let currentMonth = now.getMonth();
         while (dates.length < 4) {
             let d = new Date(currentYear, currentMonth + 1, 0); 
             while (d.getDay() !== 5) { d.setDate(d.getDate() - 1); }
@@ -384,93 +432,59 @@
     let rawDate = upcomingDates[0].toLocaleDateString('fr-FR', dateOptions);
     document.getElementById('next-rdv-banner').innerHTML = `${rawDate.charAt(0).toUpperCase() + rawDate.slice(1)} 20h30<br><a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank">📍 <span class="underline">Maison des Associations</span></a>`;
 
-    // --- GENERATION HTML ---
-    let agendaHTML = '<div class="cal-list">' + upcomingDates.map((date, index) => {
+    let agendaHTML = '<div class="cal-list">' + upcomingDates.map(date => {
         let formatted = date.toLocaleDateString('fr-FR', dateOptions);
-        // OEUF 7 : Caché dans l'agenda (2ème date)
-        let eggHtml = index === 1 ? '<i class="fa-solid fa-dice egg" style="position:static; margin-left:auto;" onclick="foundEgg(this)"></i>' : '';
-        return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem; flex-shrink:0;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank">Maison des Associations</a></div></div>${eggHtml}</div>`;
+        return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem; flex-shrink:0;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank">Maison des Associations</a></div></div></div>`;
     }).join('') + '</div>';
 
     let photosSortiesHTML = '<div class="photo-grid">';
-    for(let i=1; i<=NB_PHOTOS_SORTIES; i++) { 
-        photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('sortie${i}.jpg')"><img src="sortie${i}.jpg" loading="lazy"></div>`; 
-    }
+    for(let i=1; i<=NB_PHOTOS_SORTIES; i++) { photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('sortie${i}.jpg')"><img src="sortie${i}.jpg" loading="lazy"></div>`; }
     photosSortiesHTML += '</div>';
 
     let photosJeuxHTML = '<div class="photo-grid">';
-    for(let i=1; i<=NB_PHOTOS_JEUX; i++) { 
-        photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('jeu${i}.jpg')"><img src="jeu${i}.jpg" loading="lazy"></div>`; 
-    }
+    for(let i=1; i<=NB_PHOTOS_JEUX; i++) { photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('jeu${i}.jpg')"><img src="jeu${i}.jpg" loading="lazy"></div>`; }
     photosJeuxHTML += '</div>';
 
-    // --- DONNEES DES ONGLETS (AVEC OEUFS CACHÉS) ---
     const pagesData = {
         histoire: { 
             title: "Le Grimoire", 
-            text: `<div class="panel-card">
+            text: `<div class="panel-card" id="content-histoire">
                 <div class="phase-label first">Phase 1</div><div class="phase-title"><i class="fa-solid fa-scroll phase-icon"></i><span>La Pioche (2014)</span></div>
-                <p class="grimoire-text">Tout a commencé au travail... <i class="fa-solid fa-dice egg" style="position:relative; display:inline-block;" onclick="foundEgg(this)"></i> (Oeuf 4)</p>
-                
+                <p class="grimoire-text">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>.</p>
                 <div class="phase-label">Phase 2</div><div class="phase-title"><i class="fa-solid fa-chess-rook phase-icon"></i><span>Le Coup de Maître (2015)</span></div>
                 <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>.</p>
-                
                 <div class="phase-label">Phase 3</div><div class="phase-title"><i class="fa-brands fa-fort-awesome phase-icon"></i><span>La Fondation (2019)</span></div>
-                <p class="grimoire-text">Animés par l'envie de partager notre passion, l'association <b>Des Potes à Jeux</b> naît officiellement.</p>
+                <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas.</p>
                 <div style="text-align: center; margin-top: 15px;">
                     <button class="btn-article" onclick="openLightbox('article_journal.jpg', true)"><i class="fa-solid fa-newspaper"></i> Voir l'article de journal</button>
                 </div>
-                
-                <div class="phase-label">Phase 4</div><div class="phase-title"><i class="fa-solid fa-rocket phase-icon"></i><span>L'Envolée (2026)</span><i class="fa-solid fa-dice egg" style="position:relative; margin-left:10px;" onclick="foundEgg(this)"></i></div>
+                <div class="phase-label">Phase 4</div><div class="phase-title"><i class="fa-solid fa-rocket phase-icon"></i><span>L'Envolée (2026)</span></div>
                 <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée.</p>
             </div>`
         },
         adhesion: { 
             title: "Rejoindre l'asso", 
-            text: `<div class="panel-card">
+            text: `<div class="panel-card" id="content-adhesion">
                 <p style="text-align:center; margin-top:0;">Devenir membre est simple et convivial !</p>
                 <div style="background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.2); color: #dc3545; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans</div>
-                <div class="pricing-container">
-                    <div class="price-card featured"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div>
-                    <div class="price-card featured"><div class="amount">20€<span style="font-size:0.8rem; opacity:0.6;">/an</span><i class="fa-solid fa-dice egg" style="position:absolute; top:5px; right:5px; font-size:0.8rem;" onclick="foundEgg(this)"></i></div><p style="font-size:0.65rem; margin:0;">Couple</p></div>
-                </div>
-                <ul class="benefits-list" style="max-width: 280px; margin: 15px auto 0;">
-                    <li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li>
-                    <li><i class="fa-solid fa-circle-check"></i> Première séance offerte</li>
-                    <li><i class="fa-solid fa-circle-check"></i> Soirée escape game</li>
-                    <li><i class="fa-solid fa-circle-check"></i> Repas de fin d'année</li>
-                    <li><i class="fa-solid fa-circle-check"></i> Après-midi jeux extérieurs</li>
-                </ul>
+                <div class="pricing-container"><div class="price-card featured"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div><div class="price-card featured"><div class="amount">20€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Couple</p></div></div>
+                <ul class="benefits-list" style="max-width: 280px; margin: 15px auto 0;"><li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li><li><i class="fa-solid fa-circle-check"></i> Première séance offerte</li><li><i class="fa-solid fa-circle-check"></i> Soirée escape game</li><li><i class="fa-solid fa-circle-check"></i> Repas de fin d'année</li></ul>
             </div>`
         },
-        cal: { 
-            title: "Agenda Ludique", 
-            text: `<div class="panel-card">
-                <p style="text-align: center; color: var(--green-deep); margin-top: 0; font-size: 0.95rem;">On se retrouve chaque <b>dernier vendredi du mois</b>.</p>
-                ${agendaHTML}
-            </div>` 
-        },
-        photos: { 
-            title: "Souvenirs", 
-            text: `<div class="panel-card" style="padding-left: 0; padding-right: 0; padding-bottom: 0; overflow: hidden; position: relative;">
-                <i class="fa-solid fa-dice egg" style="position:absolute; top:10px; right:10px; z-index:10;" onclick="foundEgg(this)"></i>
-                <h3 class="photo-section-title first">Les Sorties</h3>${photosSortiesHTML}
-                <div style="position:relative; width:100%; height:20px; display:flex; justify-content:center;"><i class="fa-solid fa-dice egg" style="position:relative;" onclick="foundEgg(this)"></i></div>
-                <h3 class="photo-section-title">Les Jeux</h3>${photosJeuxHTML}
-            </div>` 
-        },
+        cal: { title: "Agenda Ludique", text: `<div class="panel-card" id="content-cal"><p style="text-align: center; color: var(--green-deep); margin-top: 0; font-size: 0.95rem;">On se retrouve chaque <b>dernier vendredi du mois</b>.</p>${agendaHTML}</div>` },
+        photos: { title: "Souvenirs", text: `<div class="panel-card" id="content-photos" style="padding-left: 0; padding-right: 0; padding-bottom: 0; overflow: hidden; position: relative;"><h3 class="photo-section-title first">Les Sorties</h3>${photosSortiesHTML}<h3 class="photo-section-title">Les Jeux</h3>${photosJeuxHTML}</div>` },
         contact: { 
             title: "Nous Contacter", 
-            text: `<div class="panel-card">
+            text: `<div class="panel-card" id="content-contact">
                 <div class="contact-person"><div class="contact-top"><div class="avatar"><i class="fa-solid fa-user"></i></div><h4>Julie</h4><a href="tel:+33620031771" class="call-btn">Appeler</a></div><div class="contact-bottom"><span>Présidente de l'association</span></div></div>
                 <div class="contact-person"><div class="contact-top"><div class="avatar mail-icon"><i class="fa-solid fa-envelope-open-text"></i></div><h4>Email</h4><a href="mailto:despotesajeux@protonmail.com" class="call-btn mail-btn">Écrire</a></div><div class="contact-bottom"><span>Pour toute question ou demande</span></div></div>
                 <div class="contact-person"><div class="contact-top"><div class="avatar fb-icon"><i class="fa-brands fa-facebook-f"></i></div><h4>Facebook</h4><a href="https://www.facebook.com/groups/despotesajeux/" target="_blank" class="call-btn fb-btn">Rejoindre</a></div><div class="contact-bottom"><span>Pour suivre la communauté en ligne</span></div></div>
-                <div class="contact-person"><div class="contact-top"><div class="avatar wa-icon"><i class="fa-brands fa-whatsapp"></i></div><h4>WhatsApp</h4><a href="https://chat.whatsapp.com/GE6whGWavky2alGNskA5yL?mode=gi_t" target="_blank" class="call-btn wa-btn">Papoter</a></div><div class="contact-bottom"><span>Rejoindre le groupe <i class="fa-solid fa-dice egg" style="position:relative; display:inline;" onclick="foundEgg(this)"></i></span></div></div>
+                <div class="contact-person"><div class="contact-top"><div class="avatar wa-icon"><i class="fa-brands fa-whatsapp"></i></div><h4>WhatsApp</h4><a href="https://chat.whatsapp.com/GE6whGWavky2alGNskA5yL?mode=gi_t" target="_blank" class="call-btn wa-btn">Papoter</a></div><div class="contact-bottom"><span>Rejoindre le groupe de discussion</span></div></div>
             </div>` 
         },
         ludotheque: { 
             title: "Nos Ludothèques", 
-            text: `<div class="panel-card">
+            text: `<div class="panel-card" id="content-ludotheque">
                 <p style="text-align: center; margin-top: 0; margin-bottom: 10px; font-size: 0.95rem; line-height: 1.5;">Collections de nos membres sur <b>Myludo</b>.</p>
                 <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Ronan</h4><a href="https://www.myludo.fr/#!/profil/ronan-29-67622" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Ronan</span></div></div>
                 <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sébastien</h4><a href="https://www.myludo.fr/#!/profil/sebastien-g-107305" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Sébastien</span></div></div>
@@ -488,55 +502,55 @@
 
     function openSheet(key) {
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
+        
+        // --- INJECTION DYNAMIQUE DES OEUFS ---
+        if(gameStarted && eggsDistribution[key] > 0) {
+            // On vérifie qu'on n'a pas déjà inséré les oeufs (pour ne pas les doubler si on rouvre)
+            // Note: Ici, comme on réécrit le HTML à chaque openSheet, on doit les remettre.
+            // Mais pour éviter de compter plusieurs fois le même oeuf, on ne doit pas.
+            // Astuce simple : On les génère à chaque ouverture, mais s'ils sont cliqués, ils disparaissent.
+            // Pour faire propre, on va simplement générer X oeufs.
+            
+            let containerId = `content-${key}`;
+            let container = document.getElementById(containerId);
+            
+            if(container) {
+                // On ajoute position relative si pas déjà fait par CSS
+                container.style.position = 'relative';
+                
+                for(let i=0; i < eggsDistribution[key]; i++) {
+                    createEgg(container);
+                }
+            }
+        }
+        
         overlay.style.display = 'block'; mainWrapper.classList.add('blurred');
         if (window.innerWidth <= 768) { sheet.style.transition = 'none'; sheet.style.transform = ''; void sheet.offsetWidth; sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)"; }
         setTimeout(() => { overlay.style.opacity = '1'; sheet.classList.add('open'); }, 10);
         if (!history.state || history.state.type !== 'sheet') { history.pushState({ type: 'sheet' }, ''); }
     }
 
-    function hideSheetDOM() {
-        if (window.innerWidth <= 768) { sheet.style.transition = "transform 0.25s ease-in"; }
-        sheet.style.transform = ''; sheet.classList.remove('open'); overlay.style.opacity = '0'; mainWrapper.classList.remove('blurred');
-        setTimeout(() => { overlay.style.display = 'none'; }, 250);
-    }
-
-    function closeSheet() {
-        if (!sheet.classList.contains('open')) return;
-        if (history.state && history.state.type === 'sheet') { history.back(); } else { hideSheetDOM(); }
-    }
+    function hideSheetDOM() { if (window.innerWidth <= 768) { sheet.style.transition = "transform 0.25s ease-in"; } sheet.style.transform = ''; sheet.classList.remove('open'); overlay.style.opacity = '0'; mainWrapper.classList.remove('blurred'); setTimeout(() => { overlay.style.display = 'none'; }, 250); }
+    function closeSheet() { if (!sheet.classList.contains('open')) return; if (history.state && history.state.type === 'sheet') { history.back(); } else { hideSheetDOM(); } }
     overlay.onclick = () => closeSheet();
 
-    /* --- SWIPE SHEET --- */
     let startY = 0; let isDragging = false;
     sheet.addEventListener('touchstart', (e) => { if (window.innerWidth > 768) return; if (sheetBody.scrollTop <= 0) { startY = e.touches[0].clientY; isDragging = true; sheet.style.transition = 'none'; } }, { passive: true });
     sheet.addEventListener('touchmove', (e) => { if (!isDragging || window.innerWidth > 768) return; let diff = e.touches[0].clientY - startY; if (diff > 0) { e.preventDefault(); sheet.style.transform = `translateY(calc(-100% + ${diff}px))`; } }, { passive: false });
     sheet.addEventListener('touchend', (e) => { if (!isDragging || window.innerWidth > 768) return; isDragging = false; let diff = e.changedTouches[0].clientY - startY; sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; if (diff > 100) { closeSheet(); } else { sheet.style.transform = ''; } });
 
-    /* --- LIGHTBOX --- */
     const lb = document.getElementById('lightbox'); const lbContainer = document.getElementById('lbContainer'); const lbImg = document.getElementById('lightboxImg'); const lbNavPrev = document.getElementById('lbNavPrev'); const lbNavNext = document.getElementById('lbNavNext');
     let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
-
-    function openLightbox(src, isSingleImage = false) { 
-        lbImg.src = src; lb.style.display = 'flex'; resetZoom(); 
-        setTimeout(() => lb.classList.add('active'), 10); 
-        if (isSingleImage) { currentGallery = [src]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } 
-        else { const imgs = document.querySelectorAll('.photo-grid img'); currentGallery = Array.from(imgs).map(i => i.getAttribute('src')); currentPhotoIndex = currentGallery.indexOf(src); if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } }
-        if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); }
-    }
-
+    function openLightbox(src, isSingleImage = false) { lbImg.src = src; lb.style.display = 'flex'; resetZoom(); setTimeout(() => lb.classList.add('active'), 10); if (isSingleImage) { currentGallery = [src]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } else { const imgs = document.querySelectorAll('.photo-grid img'); currentGallery = Array.from(imgs).map(i => i.getAttribute('src')); currentPhotoIndex = currentGallery.indexOf(src); if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } } if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } }
     function hideLightboxDOM() { lb.classList.remove('active'); setTimeout(() => { lb.style.display='none'; resetZoom(); }, 300); }
     function closeLightboxForce(fromHistory = false) { if (!lb.classList.contains('active')) return; if (history.state && history.state.type === 'lightbox') { history.back(); } else { hideLightboxDOM(); } }
-    
     window.addEventListener('popstate', (e) => { if (lb.classList.contains('active')) { hideLightboxDOM(); } else if (sheet.classList.contains('open')) { hideSheetDOM(); } });
     lbContainer.addEventListener('click', (e) => { if(e.target !== lbImg && currentScale === 1 && !e.target.closest('.lightbox-nav')) closeLightboxForce(); });
-
     function getDistance(touches) { return Math.hypot(touches[0].pageX - touches[1].pageX, touches[0].pageY - touches[1].pageY); }
     function resetZoom() { currentScale = 1; posX = 0; posY = 0; lastPanX = 0; lastPanY = 0; currentSwipeX = 0; lbImg.style.transform = `scale(1) translate(0px, 0px)`; lbContainer.style.transform = `translateX(0px)`; }
-
     lbContainer.addEventListener('touchstart', (e) => { if(e.target.closest('.lightbox-nav')) return; if (e.touches.length === 2) { isZooming = true; initialDistance = getDistance(e.touches); } else if (e.touches.length === 1) { lastPanX = e.touches[0].clientX; lastPanY = e.touches[0].clientY; swipeStartX = e.touches[0].clientX; currentSwipeX = 0; } }, {passive: false});
     lbContainer.addEventListener('touchmove', (e) => { if (e.touches.length === 2) { e.preventDefault(); const currentDistance = getDistance(e.touches); const scaleChange = currentDistance / initialDistance; currentScale = Math.min(Math.max(1, currentScale * scaleChange), 4); lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; initialDistance = currentDistance; } else if (e.touches.length === 1) { let currentX = e.touches[0].clientX; let currentY = e.touches[0].clientY; if (currentScale > 1) { e.preventDefault(); posX += (currentX - lastPanX) / currentScale; posY += (currentY - lastPanY) / currentScale; lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; lastPanX = currentX; lastPanY = currentY; } else if (!isZooming && currentGallery.length > 1) { e.preventDefault(); currentSwipeX = currentX - swipeStartX; lbContainer.style.transform = `translateX(${currentSwipeX}px)`; } } }, {passive: false});
     lbContainer.addEventListener('touchend', (e) => { if (e.touches.length < 2) { isZooming = false; } if (currentScale === 1 && currentGallery.length > 1) { if (currentSwipeX > 70) { changePhotoDir('prev'); } else if (currentSwipeX < -70) { changePhotoDir('next'); } else { lbContainer.style.transform = `translateX(0px)`; } currentSwipeX = 0; } });
-
     function changePhotoDir(dir) { if (currentGallery.length <= 1) return; if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } lbImg.style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; setTimeout(() => { let newSrc = currentGallery[currentPhotoIndex]; lbImg.src = newSrc; lbImg.style.opacity = 1; }, 150); }
 </script>
 </body>
