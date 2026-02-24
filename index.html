@@ -189,7 +189,6 @@
         
         .victory-stats { width: 100%; margin: 5px 0 20px; }
         
-        /* MESSAGE DE GAIN STYLE "CITATION" */
         .victory-message { 
             font-family: 'Shadows Into Light', cursive;
             font-size: 1.4rem; 
@@ -284,6 +283,7 @@
         .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
         
         .contact-person .avatar { width: 38px; height: 38px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; overflow: hidden;}
+        /* Modif pour Présidente */
         .contact-person .avatar.president-icon { background: var(--president-color); color: white; }
         
         .contact-person .avatar.mail-icon { background: var(--wood-brown); }
@@ -437,7 +437,7 @@
     const diffTime = nextZero - todayZero;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    let dayPart = (diffDays === 0) ? " : JOUR J !" : ` <b style="color:var(--green-deep);">J-${diffDays}</b>`;
+    let dayPart = (diffDays === 0) ? " : JOUR J !" : ` : J-${diffDays}`;
     let dateStr = nextDate.toLocaleDateString('fr-FR', dateOptions);
     dateStr = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
 
