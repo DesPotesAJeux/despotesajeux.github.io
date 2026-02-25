@@ -450,11 +450,12 @@
 
     // CONFIGURATION DES PHOTOS DE SORTIES PAR ANNÉE
     const sortiesConfig = [
-        { year: 2025, count: 6 }, // Nommées sortie_2025_1.jpg à sortie_2025_6.jpg
-        { year: 2024, count: 10 }, // Nommées sortie_2024_1.jpg à ...
-        { year: 2023, count: 7 }  // Nommées sortie_2023_1.jpg à ...
+        { year: 2025, count: 5 }, // Nommées sortie_2025_1.jpg à sortie_2025_6.jpg
+        { year: 2024, count: 7 }, // Nommées sortie_2024_1.jpg à ...
+        { year: 2023, count: 7 },  // Nommées sortie_2023_1.jpg à ...
+        { year: 2022, count: 9 },   // AJOUT 2022 (Exemple 5 photos)
+		{ year: 2019, count: 1 },   // AJOUT 2019 (Exemple 5 photos)
     ];
-    // Total = 23
 
     function getNextLastFridays() {
         let dates = []; let now = new Date(); let currentYear = now.getFullYear(); let currentMonth = now.getMonth();
