@@ -148,10 +148,12 @@
         /* --- MODAL --- */
         .game-modal-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 300;
+            /* MODIFICATION ICI: Fond presque transparent */
+            background: rgba(0,0,0,0.1); 
+            z-index: 300;
             display: flex; justify-content: center; align-items: center;
             opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-            backdrop-filter: blur(3px);
+            backdrop-filter: blur(4px); /* Flou conservé pour la lisibilité */
         }
         .game-modal-backdrop.visible { opacity: 1; pointer-events: auto; }
 
@@ -160,7 +162,9 @@
             width: 85%; max-width: 350px;
             background: var(--bg-beige); 
             border: 4px solid var(--wood-brown);
-            border-radius: 20px; padding: 25px 20px;
+            border-radius: 20px; 
+            /* MODIFICATION ICI: Padding réduit pour moins de hauteur */
+            padding: 15px 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align: center;
             transform: scale(0.8); opacity: 0; transition: all 0.4s cubic-bezier(0.17, 0.84, 0.44, 1);
             display: flex; flex-direction: column; align-items: center;
@@ -175,35 +179,37 @@
         }
         .modal-close-btn:active { transform: scale(0.9); }
 
-        /* VICTOIRE */
+        /* VICTOIRE - Style ajusté pour la hauteur */
         .victory-icon { 
-            font-size: 3rem; color: var(--gold-game); margin-bottom: 5px; 
+            font-size: 2.5rem; /* Réduit */
+            color: var(--gold-game); margin-bottom: 2px; 
             animation: fadeIn 1s ease; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .victory-title { 
-            font-family: 'Shadows Into Light', cursive; font-size: 2.2rem; 
-            color: var(--wood-brown); margin: 0 0 10px 0; font-weight: bold; 
+            font-family: 'Shadows Into Light', cursive; 
+            font-size: 1.8rem; /* Réduit */
+            color: var(--wood-brown); margin: 0 0 5px 0; font-weight: bold; 
         }
         
-        .victory-stats { width: 100%; margin: 5px 0 20px; }
+        .victory-stats { width: 100%; margin: 5px 0 10px; }
         
         .victory-message { 
             font-family: 'Shadows Into Light', cursive;
-            font-size: 1.4rem; 
+            font-size: 1.2rem; /* Réduit */
             color: var(--green-deep); 
-            margin: 15px 0 5px 0;
+            margin: 10px 0 5px 0;
             padding: 5px 0;
             position: relative;
             line-height: 1.2;
         }
         .victory-message::before {
-            content: "❝"; color: var(--wood-brown); font-size: 2rem;
+            content: "❝"; color: var(--wood-brown); font-size: 1.5rem;
             vertical-align: -0.4rem; margin-right: 5px; opacity: 0.6;
         }
         .victory-message::after {
-            content: "❞"; color: var(--wood-brown); font-size: 2rem;
+            content: "❞"; color: var(--wood-brown); font-size: 1.5rem;
             vertical-align: -0.4rem; margin-left: 5px; opacity: 0.6;
         }
         
@@ -214,17 +220,17 @@
         }
         .game-desc-box p { font-size: 0.95rem; line-height: 1.5; color: var(--text-brown); margin: 0; }
         
-        .game-btn { background: var(--green-deep); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); transition: transform 0.2s; width: 100%; }
+        .game-btn { background: var(--green-deep); color: white; border: none; padding: 10px 30px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 0.95rem; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); transition: transform 0.2s; width: 100%; }
         .game-btn:active { transform: scale(0.95); }
         
         .share-container { 
-            width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; 
-            margin-bottom: 15px;
+            width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 5px; 
+            margin-bottom: 10px;
         }
         .share-input { 
-            width: 100%; padding: 12px; border-radius: 12px; border: 2px solid var(--wood-brown); 
+            width: 100%; padding: 8px; border-radius: 12px; border: 2px solid var(--wood-brown); 
             background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown);
-            box-sizing: border-box; text-align: center; font-size: 1.1rem;
+            box-sizing: border-box; text-align: center; font-size: 1rem;
         }
         .wa-btn { background: #25D366; color: white; margin-top: 5px; display: flex; align-items: center; justify-content: center; gap: 10px; } 
 
@@ -333,7 +339,6 @@
             .rdv-card { bottom: 40px; width: 80%; padding: 20px; background: rgba(255, 252, 240, 0.95); backdrop-filter: blur(5px); }
             .content { grid-column: 2; grid-row: 1; padding: 40px 60px 40px 40px; justify-content: center; align-items: center; }
             
-            /* --- CORRECTION ICI --- */
             .footer-nav { 
                 grid-column: 2; 
                 grid-row: 2; 
@@ -346,7 +351,7 @@
                 grid-template-columns: repeat(3, 1fr); 
                 gap: 20px; 
                 justify-content: center;
-                box-sizing: border-box; /* Ajouté pour corriger le dépassement */
+                box-sizing: border-box; 
             }
             
             .menu-item { background: #fff; padding: 15px 5px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.2s ease, box-shadow 0.2s ease; }
@@ -629,6 +634,8 @@
     
     function initGame() {
         document.getElementById('gameModalBackdrop').classList.remove('visible');
+        // MODIFICATION ICI: Fermer la feuille ouverte
+        closeSheet();
         resetGameData();
         gameStarted = true;
         startTimer();
@@ -728,9 +735,9 @@
                 <div class="victory-icon"><i class="fa-solid fa-medal"></i></div>
                 <h3 class="victory-title">Félicitations !</h3>
                 <div class="victory-stats">
-                    <div style="font-size:1.2rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div>
-                    <div style="font-size:1.5rem; color:#2c3e50; margin: 5px 0;">${rank}</div>
-                    <div style="font-size:2.5rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div>
+                    <div style="font-size:1.1rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div>
+                    <div style="font-size:1.3rem; color:#2c3e50; margin: 2px 0;">${rank}</div>
+                    <div style="font-size:2rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div>
                     <div class="victory-message">"${message}"</div>
                 </div>
                 
