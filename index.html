@@ -44,6 +44,7 @@
             --myludo-color: #2c3e50; 
             --gold-game: #d4af37;
             --president-color: #e67e22;
+            /* Variable pour l'image de fond dynamique (format .png) */
             --bg-image: url('hero_soir.png');
         }
 
@@ -74,13 +75,14 @@
         .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
         .hero { 
             width: 100%; height: 360px;
+            /* Utilisation de la variable CSS ici */
             background: var(--bg-image) center top / cover no-repeat; 
             position: relative; z-index: 1; 
             -webkit-user-select: none; user-select: none;
             -webkit-touch-callout: none; pointer-events: none;
         }
 
-        /* --- ZONE JEU (TRIGGER) --- */
+        /* --- ZONE JEU --- */
         .hero-hitbox {
             position: absolute; top: 10%; left: 10%; width: 45%; height: 35%; 
             z-index: 15; cursor: pointer; pointer-events: auto;
@@ -119,61 +121,37 @@
         }
         .btn-ludotheque:active { transform: scale(0.95); }
 
-        /* --- NOUVEAU JEU : BLITZ LUDIQUE --- */
-        .blitz-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            z-index: 250; display: none; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity 0.3s ease;
+        /* --- STYLE EASTER EGGS --- */
+        .egg {
+            position: absolute;
+            color: rgba(188, 143, 99, 0.8); font-size: 1.6rem;
+            cursor: pointer; z-index: 100;
+            transition: all 0.3s cubic-bezier(0.17, 0.84, 0.44, 1);
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
         }
-        .blitz-overlay.active { display: block; opacity: 1; pointer-events: auto; }
-        
-        .blitz-ui-top {
-            position: absolute; top: 30px; left: 0; width: 100%; display: flex; justify-content: space-between;
-            padding: 0 25px; box-sizing: border-box; pointer-events: none; z-index: 255;
+        .egg:hover { color: var(--wood-brown); transform: scale(1.3); }
+        .egg.found { 
+            color: #f1c40f; text-shadow: 0 0 10px rgba(241, 196, 15, 0.8);
+            animation: spin 0.6s ease-in-out forwards;
+            pointer-events: none;
         }
-        .blitz-score-box, .blitz-timer-box {
-            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.2);
-            color: white; padding: 8px 15px; border-radius: 12px; font-weight: 700; font-size: 1.1rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-        .blitz-timer-box { color: var(--gold-game); font-family: monospace; font-size: 1.3rem; min-width: 70px; text-align: center; }
-        .blitz-timer-box.hurry { color: #ff4757; animation: pulse 0.5s infinite alternate; }
+        @keyframes spin { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.2); } }
 
-        .blitz-target {
-            position: absolute; display: flex; justify-content: center; align-items: center;
-            cursor: pointer; pointer-events: auto; z-index: 252;
-            transform: scale(0) rotate(-20deg); transition: transform 0.2s cubic-bezier(0.17, 0.84, 0.44, 1);
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+        /* --- TIMER --- */
+        .game-timer {
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(0, 0, 0, 0.8); color: #f1c40f;
+            padding: 5px 12px; border-radius: 15px;
+            font-family: monospace; font-size: 1.1rem; font-weight: bold;
+            z-index: 200; display: none; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            pointer-events: none; min-width: 80px; text-align: center;
         }
-        .blitz-target.spawned { transform: scale(1) rotate(0deg); }
-        .blitz-target.hit { transform: scale(1.5) !important; opacity: 0 !important; transition: all 0.2s ease-out !important; }
-        
-        /* Types de cibles */
-        .target-pawn { font-size: 3rem; color: #3498db; }
-        .target-dice { font-size: 2.5rem; color: #e74c3c; }
-        .target-crown { font-size: 2rem; color: var(--gold-game); filter: drop-shadow(0 0 15px var(--gold-game)); }
-        
-        /* Texte de points flottant */
-        .floating-points {
-            position: absolute; color: white; font-weight: 800; font-size: 1.5rem; font-family: monospace;
-            pointer-events: none; z-index: 260; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-            animation: floatUp 0.8s ease-out forwards;
-        }
-        .points-gold { color: var(--gold-game); font-size: 2rem; text-shadow: 0 0 10px rgba(212, 175, 55, 0.8); }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-50px) scale(1.2); opacity: 0; }
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.1); }
-        }
+        .game-timer.visible { display: block; }
 
         /* --- MODAL --- */
         .game-modal-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4); 
+            background: rgba(0,0,0,0.1); 
             z-index: 300;
             display: flex; justify-content: center; align-items: center;
             opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
@@ -182,9 +160,12 @@
         .game-modal-backdrop.visible { opacity: 1; pointer-events: auto; }
 
         .game-modal-content {
-            position: relative; width: 85%; max-width: 350px;
-            background: var(--bg-beige); border: 4px solid var(--wood-brown);
-            border-radius: 20px; padding: 15px 20px;
+            position: relative;
+            width: 85%; max-width: 350px;
+            background: var(--bg-beige); 
+            border: 4px solid var(--wood-brown);
+            border-radius: 20px; 
+            padding: 15px 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align: center;
             transform: scale(0.8); opacity: 0; transition: all 0.4s cubic-bezier(0.17, 0.84, 0.44, 1);
             display: flex; flex-direction: column; align-items: center;
@@ -193,40 +174,78 @@
         .game-modal-content h3 { color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 0 0 15px; }
         
         .modal-close-btn {
-            position: absolute; top: 10px; right: 15px; font-size: 1.5rem; color: var(--wood-brown);
+            position: absolute; top: 10px; right: 15px;
+            font-size: 1.5rem; color: var(--wood-brown);
             cursor: pointer; transition: transform 0.2s; z-index: 10;
         }
         .modal-close-btn:active { transform: scale(0.9); }
 
         /* VICTOIRE */
         .victory-icon { 
-            font-size: 2.5rem; color: var(--gold-game); margin-bottom: 2px; 
+            font-size: 2.5rem; 
+            color: var(--gold-game); margin-bottom: 2px; 
             animation: fadeIn 1s ease; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .victory-title { font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; color: var(--wood-brown); margin: 0 0 5px 0; font-weight: bold; }
-        .victory-stats { width: 100%; margin: 5px 0 10px; }
-        .victory-message { 
-            font-family: 'Shadows Into Light', cursive; font-size: 1.2rem; color: var(--green-deep); 
-            margin: 10px 0 5px 0; padding: 5px 0; position: relative; line-height: 1.2;
+        .victory-title { 
+            font-family: 'Shadows Into Light', cursive; 
+            font-size: 1.8rem; 
+            color: var(--wood-brown); margin: 0 0 5px 0; font-weight: bold; 
         }
-        .victory-message::before { content: "❝"; color: var(--wood-brown); font-size: 1.5rem; vertical-align: -0.4rem; margin-right: 5px; opacity: 0.6; }
-        .victory-message::after { content: "❞"; color: var(--wood-brown); font-size: 1.5rem; vertical-align: -0.4rem; margin-left: 5px; opacity: 0.6; }
         
-        .game-desc-box { background: #fff; border-radius: 15px; padding: 15px; width: 100%; box-sizing: border-box; margin-bottom: 20px; border: 1px solid rgba(188, 143, 99, 0.2); }
+        .victory-stats { width: 100%; margin: 5px 0 10px; }
+        
+        .victory-message { 
+            font-family: 'Shadows Into Light', cursive;
+            font-size: 1.2rem; 
+            color: var(--green-deep); 
+            margin: 10px 0 5px 0;
+            padding: 5px 0;
+            position: relative;
+            line-height: 1.2;
+        }
+        .victory-message::before {
+            content: "❝"; color: var(--wood-brown); font-size: 1.5rem;
+            vertical-align: -0.4rem; margin-right: 5px; opacity: 0.6;
+        }
+        .victory-message::after {
+            content: "❞"; color: var(--wood-brown); font-size: 1.5rem;
+            vertical-align: -0.4rem; margin-left: 5px; opacity: 0.6;
+        }
+        
+        .game-desc-box {
+            background: #fff; border-radius: 15px; padding: 15px;
+            width: 100%; box-sizing: border-box; margin-bottom: 20px;
+            border: 1px solid rgba(188, 143, 99, 0.2);
+        }
         .game-desc-box p { font-size: 0.95rem; line-height: 1.5; color: var(--text-brown); margin: 0; }
         
         .game-btn { background: var(--green-deep); color: white; border: none; padding: 10px 30px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 0.95rem; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); transition: transform 0.2s; width: 100%; }
         .game-btn:active { transform: scale(0.95); }
         
-        .share-container { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 5px; margin-bottom: 10px; }
-        .share-input { width: 100%; padding: 8px; border-radius: 12px; border: 2px solid var(--wood-brown); background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown); box-sizing: border-box; text-align: center; font-size: 1rem; }
+        .share-container { 
+            width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 5px; 
+            margin-bottom: 10px;
+        }
+        .share-input { 
+            width: 100%; padding: 8px; border-radius: 12px; border: 2px solid var(--wood-brown); 
+            background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown);
+            box-sizing: border-box; text-align: center; font-size: 1rem;
+        }
         .wa-btn { background: #25D366; color: white; margin-top: 5px; display: flex; align-items: center; justify-content: center; gap: 10px; } 
+
+        .game-toast {
+            position: absolute; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px);
+            background: var(--wood-brown); color: white; padding: 8px 20px; border-radius: 50px;
+            font-weight: 700; font-size: 0.9rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 300; opacity: 0; pointer-events: none; transition: all 0.3s ease; white-space: nowrap;
+        }
+        .game-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         .confetti { position: fixed; width: 10px; height: 10px; background-color: #f00; z-index: 400; top: -10px; pointer-events: none; opacity: 0; }
 
-        /* --- RESTE DU CSS CONSERVÉ --- */
+        /* --- LIGHTBOX --- */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
         .lightbox-img-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease-out; transform-origin: center center; }
         .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; transform: scale(0.9); opacity: 0; transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); will-change: transform; }
@@ -265,13 +284,30 @@
         .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 0 3px 20px; }
         .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 2px; }
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
-        .photo-year { position: absolute; bottom: 4px; right: 4px; background: rgba(0, 0, 0, 0.6); color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; pointer-events: none; backdrop-filter: blur(2px); }
+        
+        /* STYLE POUR L'ANNÉE SUR LA PHOTO */
+        .photo-year {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            pointer-events: none;
+            backdrop-filter: blur(2px);
+        }
 
         .contact-person { display: flex; flex-direction: column; padding: 10px 12px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
         .contact-person.compact-item { padding: 6px 12px; margin-bottom: 6px; }
         .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
+        
         .contact-person .avatar { width: 38px; height: 38px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; overflow: hidden;}
+        /* Modif pour Présidente */
         .contact-person .avatar.president-icon { background: var(--president-color); color: white; }
+        
         .contact-person .avatar.mail-icon { background: var(--wood-brown); }
         .contact-person .avatar.fb-icon { background: var(--fb-blue); }
         .contact-person .avatar.wa-icon { background: var(--wa-green); }
@@ -301,22 +337,45 @@
         .cal-item .time a { color: var(--green-deep); text-decoration: underline; font-weight: 600; }
 
         .footer-nav { 
-            position: relative; width: 100%; background: var(--green-deep); display: flex; justify-content: space-around; align-items: center; 
-            padding: 15px 0; padding-bottom: max(15px, env(safe-area-inset-bottom)); border-top: 3px solid var(--wood-brown); z-index: 20; flex-shrink: 0;
+            position: relative; width: 100%; background: var(--green-deep); 
+            display: flex; justify-content: space-around; align-items: center; 
+            padding: 15px 0; padding-bottom: max(15px, env(safe-area-inset-bottom)); 
+            border-top: 3px solid var(--wood-brown); z-index: 20; flex-shrink: 0;
         }
         .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
         .icon-box { width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; border-radius: 14px; background: var(--wood-brown); margin-bottom: 6px; color: #ffffff; font-size: 1.3rem; box-shadow: 0 4px 8px rgba(0,0,0,0.25); transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); }
         .menu-item span { font-weight: 700; font-size: 0.5rem; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
 
         @media (min-width: 768px) {
-            body { align-items: center; background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), var(--bg-image) center / cover no-repeat; backdrop-filter: blur(10px); overflow: auto; padding: 20px; box-sizing: border-box; min-height: 100vh; }
+            body { 
+                align-items: center; 
+                /* Utilisation de la variable CSS pour la version PC aussi */
+                background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), var(--bg-image) center / cover no-repeat; 
+                backdrop-filter: blur(10px); 
+                overflow: auto; padding: 20px; box-sizing: border-box; min-height: 100vh; 
+            }
             .phone { max-width: 1400px; height: 80vh; min-height: 600px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
             .main-wrapper { display: grid; grid-template-columns: 55% 45%; grid-template-rows: 1fr auto; height: 100%; }
             .hero-container { grid-column: 1; grid-row: 1 / span 2; height: 100%; width: 100%; }
             .hero { width: 100%; height: 100%; max-width: none; margin: 0; border-radius: 0; background-position: left center; }
             .rdv-card { bottom: 40px; width: 80%; padding: 20px; background: rgba(255, 252, 240, 0.95); backdrop-filter: blur(5px); }
             .content { grid-column: 2; grid-row: 1; padding: 40px 60px 40px 40px; justify-content: center; align-items: center; }
-            .footer-nav { grid-column: 2; grid-row: 2; position: relative; order: unset; background: transparent; border: none; padding: 0 50px 40px 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; justify-content: center; box-sizing: border-box; }
+            
+            .footer-nav { 
+                grid-column: 2; 
+                grid-row: 2; 
+                position: relative; 
+                order: unset; 
+                background: transparent; 
+                border: none; 
+                padding: 0 50px 40px 40px; 
+                display: grid; 
+                grid-template-columns: repeat(3, 1fr); 
+                gap: 20px; 
+                justify-content: center;
+                box-sizing: border-box; 
+            }
+            
             .menu-item { background: #fff; padding: 15px 5px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.2s ease, box-shadow 0.2s ease; }
             .menu-item:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
             .icon-box { width: 50px; height: 50px; font-size: 1.5rem; margin-bottom: 8px; }
@@ -325,24 +384,24 @@
             .bottom-sheet.open { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
             .sheet-handle { display: none; }
             .lightbox-nav:hover { color: rgba(255, 255, 255, 1); }
+            
+            .egg-1 { top: 40px; left: 40px; font-size: 1.5rem; color: rgba(255,255,255,0.7); }
+            .egg-2 { bottom: 40px; left: 20px; }
         }
     </style>
 </head>
 <body>
 
-<div class="phone" id="gameArea">
+<div class="phone">
     
-    <div class="blitz-overlay" id="blitzOverlay">
-        <div class="blitz-ui-top">
-            <div class="blitz-score-box">Score: <span id="blitzScore">0</span></div>
-            <div class="blitz-timer-box" id="blitzTimer">30.00</div>
-        </div>
-        </div>
-
     <div class="game-modal-backdrop" id="gameModalBackdrop" onclick="closeGameModal()">
         <div class="game-modal-content" id="modalContent" onclick="event.stopPropagation()">
             </div>
     </div>
+
+    <div class="game-toast" id="gameToast">Bravo ! 1/10</div>
+    
+    <div class="game-timer" id="gameTimer">00:00:00</div>
 
     <div class="lightbox" id="lightbox">
         <div class="lightbox-nav prev" id="lbNavPrev" onclick="changePhotoDir('prev')"><i class="fa-solid fa-chevron-left"></i></div>
@@ -368,6 +427,8 @@
         </div>
 
         <div class="content">
+            <div id="homeEggContainer" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></div>
+            
             <div class="quote-box">
                 <p class="quote-text">"Ici on ne compte pas les points,<br>on compte les <strong>souvenirs</strong>."</p>
                 <div class="separator"></div>
@@ -402,8 +463,11 @@
         } else if (hour >= 12 && hour < 18) {
             bgUrl = "url('hero_aprem.png')"; // Après-midi (de 12h à 17h59)
         }
+
+        // Applique l'image à la variable CSS
         document.documentElement.style.setProperty('--bg-image', bgUrl);
     }
+    // On exécute la fonction dès le chargement
     updateBackgroundTime();
 
     /* --- 1. CALCULS DATE & HTML --- */
@@ -412,8 +476,12 @@
 
     // CONFIGURATION DES PHOTOS DE SORTIES PAR ANNÉE
     const sortiesConfig = [
-        { year: 2025, count: 5 }, { year: 2024, count: 7 }, { year: 2023, count: 7 }, 
-        { year: 2022, count: 9 }, { year: 2021, count: 2 }, { year: 2019, count: 1 }  
+        { year: 2025, count: 5 }, // Nommées sortie_2025_1.jpg à sortie_2025_6.jpg
+        { year: 2024, count: 7 }, // Nommées sortie_2024_1.jpg à ...
+        { year: 2023, count: 7 },  // Nommées sortie_2023_1.jpg à ...
+        { year: 2022, count: 9 },   // AJOUT 2022 (Exemple 5 photos)
+        { year: 2021, count: 2 },   // AJOUT 2022 (Exemple 5 photos)
+        { year: 2019, count: 1 }   // AJOUT 2019 (Exemple 5 photos)
     ];
 
     function getNextLastFridays() {
@@ -431,6 +499,7 @@
     const upcomingDates = getNextLastFridays();
     const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
     
+    // Calcul dynamique "J-X"
     const today = new Date();
     const nextDate = upcomingDates[0];
     const todayZero = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -442,6 +511,7 @@
     let dateStr = nextDate.toLocaleDateString('fr-FR', dateOptions);
     dateStr = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
 
+    // Injection sur le panneau
     document.getElementById('next-rdv-banner').innerHTML = 
         `<span style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase; font-weight:700;">PROCHAIN RDV${dayPart}</span><br>` +
         `<span style="font-size:0.9rem; font-weight:700; color:var(--green-deep);">${dateStr} à 20h30</span><br>` +
@@ -452,16 +522,20 @@
         return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem; flex-shrink:0;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank">Maison des Associations</a></div></div></div>`;
     }).join('') + '</div>';
 
+    // GÉNÉRATION PHOTOS SORTIES (Basée sur le nom des fichiers)
     let photosSortiesHTML = '<div class="photo-grid">';
     sortiesConfig.forEach(cfg => {
         for(let i=1; i<=cfg.count; i++) {
             let filename = `sortie_${cfg.year}_${i}.jpg`;
             photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('${filename}')">
-                <img src="${filename}" loading="lazy"><span class="photo-year">${cfg.year}</span></div>`;
+                <img src="${filename}" loading="lazy">
+                <span class="photo-year">${cfg.year}</span>
+            </div>`;
         }
     });
     photosSortiesHTML += '</div>';
 
+    // GÉNÉRATION PHOTOS JEUX
     let photosJeuxHTML = '<div class="photo-grid">';
     for(let i=1; i<=NB_PHOTOS_JEUX; i++) { photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('jeu${i}.jpg')"><img src="jeu${i}.jpg" loading="lazy"></div>`; }
     photosJeuxHTML += '</div>';
@@ -473,13 +547,17 @@
             text: `<div class="panel-card" id="content-histoire">
                 <div class="phase-label first">Phase 1</div><div class="phase-title"><i class="fa-solid fa-layer-group phase-icon"></i><span>La Pioche (2014)</span></div>
                 <p class="grimoire-text">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>. Très vite, le virus se transmet et les premières soirées jeux s'organisent chez les uns et les autres.</p>
+                
                 <div class="phase-label">Phase 2</div><div class="phase-title"><i class="fa-solid fa-chess-board phase-icon"></i><span>La Mise en Place (2015)</span></div>
                 <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante ! Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées.</p>
+                
                 <div class="phase-label">Phase 3</div><div class="phase-title"><i class="fa-solid fa-people-group phase-icon"></i><span>Le Plateau Central (2019)</span></div>
                 <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. L'association <b>Des Potes à Jeux</b> naît officiellement. La petite tablée s'agrandit peu à peu pour accueillir de nouveaux joueurs de Plouay.</p>
+                
                 <div style="text-align: center; margin-top: 15px;">
                     <button class="btn-article" onclick="openLightbox('article_journal.jpg', true)"><i class="fa-solid fa-newspaper"></i> Voir l'article de journal</button>
                 </div>
+                
                 <div class="phase-label">Phase 4</div><div class="phase-title"><i class="fa-solid fa-puzzle-piece phase-icon"></i><span>L'Extension (2026)</span></div>
                 <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. L'aventure ne fait que continuer avec vous !</p>
             </div>`
@@ -525,6 +603,29 @@
 
     function openSheet(key) {
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
+        
+        // --- INJECTION DYNAMIQUE DES OEUFS (Seulement si jeu actif) ---
+        if(gameStarted && gameState[key].total > gameState[key].found) {
+            let containerId = `content-${key}`;
+            let container = document.getElementById(containerId);
+            
+            if(container) {
+                let remaining = gameState[key].total - gameState[key].found;
+                if(key === 'photos') {
+                    let titles = container.querySelectorAll('.photo-section-title');
+                    for(let i=0; i<remaining; i++) {
+                        let target = titles[i % titles.length];
+                        createEgg(target, key, false, true);
+                    }
+                } else {
+                    container.style.position = 'relative';
+                    for(let i=0; i<remaining; i++) {
+                        createEgg(container, key, false, false);
+                    }
+                }
+            }
+        }
+        
         overlay.style.display = 'block'; mainWrapper.classList.add('blurred');
         if (window.innerWidth <= 768) { sheet.style.transition = 'none'; sheet.style.transform = ''; void sheet.offsetWidth; sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)"; }
         setTimeout(() => { overlay.style.opacity = '1'; sheet.classList.add('open'); }, 10);
@@ -554,183 +655,152 @@
     lbContainer.addEventListener('touchend', (e) => { if (e.touches.length < 2) { isZooming = false; } if (currentScale === 1 && currentGallery.length > 1) { if (currentSwipeX > 70) { changePhotoDir('prev'); } else if (currentSwipeX < -70) { changePhotoDir('next'); } else { lbContainer.style.transform = `translateX(0px)`; } currentSwipeX = 0; } });
     function changePhotoDir(dir) { if (currentGallery.length <= 1) return; if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } lbImg.style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; setTimeout(() => { let newSrc = currentGallery[currentPhotoIndex]; lbImg.src = newSrc; lbImg.style.opacity = 1; }, 150); }
 
-    /* --- 4. NOUVEAU JEU : BLITZ LUDIQUE (MEEPLE CATCH) --- */
-    let blitzGameActive = false;
-    let blitzScore = 0;
-    let blitzTimeLeft = 3000; // 30.00 secondes en centisecondes
-    let blitzTimerInterval;
-    let blitzSpawnInterval;
-    let blitzDifficultyRate = 800; // Vitesse d'apparition (diminue avec le temps)
-    let finalGameData = { score: 0, rankNumber: 0, rank: "", message: "" }; 
+    /* --- 4. LOGIQUE JEU & ANTI-TRICHE --- */
+    let gameStarted = false;
+    let eggCount = 0;
+    const totalEggs = 10;
+    let timerInterval;
+    let startTime;
+    let finalGameData = { time: "", rankNumber: 0, rank: "", message: "", rawMs: 0 }; 
     let confettiInterval; 
     
+    let gameState = {
+        'home': { total: 0, found: 0 },
+        'histoire': { total: 0, found: 0 },
+        'adhesion': { total: 0, found: 0 },
+        'cal': { total: 0, found: 0 },
+        'photos': { total: 0, found: 0 },
+        'contact': { total: 0, found: 0 },
+        'ludotheque': { total: 0, found: 0 }
+    };
+
     function askToPlay() {
-        if(blitzGameActive) return;
+        if(gameStarted) return;
         const modal = document.getElementById('modalContent');
         modal.innerHTML = `
             <div class="modal-close-btn" onclick="closeGameModal()"><i class="fa-solid fa-xmark"></i></div>
-            <h3 id="gameTitle">Blitz Ludique ⚡</h3>
-            <div class="game-desc-box" style="text-align: left;">
-                <p style="margin-bottom: 10px; text-align: center;"><b>Attrape un maximum d'objets en 30s !</b></p>
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom: 5px;">
-                    <i class="fa-solid fa-chess-pawn" style="color:#3498db; font-size:1.5rem; width:30px; text-align:center;"></i> <span>Meeple : <b>10 pts</b></span>
-                </div>
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom: 5px;">
-                    <i class="fa-solid fa-dice" style="color:#e74c3c; font-size:1.5rem; width:30px; text-align:center;"></i> <span>Dé rapide : <b>20 pts</b></span>
-                </div>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <i class="fa-solid fa-crown" style="color:var(--gold-game); font-size:1.5rem; width:30px; text-align:center;"></i> <span>Couronne (Très rapide) : <b>50 pts</b></span>
-                </div>
+            <h3 id="gameTitle">Psst... Joueur ?</h3>
+            <div class="game-desc-box">
+                <p>Comme on est joueurs, <b>10 petits dés</b> <i class="fa-solid fa-dice" style="color:var(--wood-brown); font-size:1.2rem; vertical-align:middle; margin: 0 4px;"></i> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?</p>
             </div>
-            <button class="game-btn" onclick="startBlitzGame()">C'est parti !</button>
+            <button class="game-btn" onclick="initGame()">C'est parti !</button>
         `;
         document.getElementById('gameModalBackdrop').classList.add('visible');
     }
     
     function closeGameModal() {
         document.getElementById('gameModalBackdrop').classList.remove('visible');
+        // Stop confetti si actif
         clearInterval(confettiInterval);
         document.querySelectorAll('.confetti').forEach(c => c.remove());
     }
     
-    function startBlitzGame() {
+    function initGame() {
         document.getElementById('gameModalBackdrop').classList.remove('visible');
-        closeSheet(); // Ferme les menus si ouverts
+        // MODIFICATION ICI: Fermer la feuille ouverte
+        closeSheet();
+        resetGameData();
+        gameStarted = true;
+        startTimer();
         
-        blitzGameActive = true;
-        blitzScore = 0;
-        blitzTimeLeft = 3000;
-        blitzDifficultyRate = 800;
-        
-        document.getElementById('blitzScore').innerText = blitzScore;
-        document.getElementById('blitzTimer').innerText = "30.00";
-        document.getElementById('blitzTimer').classList.remove('hurry');
-        document.getElementById('blitzOverlay').classList.add('active');
-        
-        // Supprime les cibles restantes d'une partie précédente
-        document.querySelectorAll('.blitz-target, .floating-points').forEach(e => e.remove());
-
-        // Lancement du chrono
-        blitzTimerInterval = setInterval(() => {
-            blitzTimeLeft--;
-            let seconds = Math.floor(blitzTimeLeft / 100);
-            let centiseconds = blitzTimeLeft % 100;
-            document.getElementById('blitzTimer').innerText = `${seconds}.${centiseconds < 10 ? '0'+centiseconds : centiseconds}`;
-            
-            // Effet rouge quand il reste moins de 5 secondes
-            if(blitzTimeLeft === 500) document.getElementById('blitzTimer').classList.add('hurry');
-            
-            // Augmentation progressive de la difficulté
-            if(blitzTimeLeft % 500 === 0 && blitzDifficultyRate > 300) {
-                blitzDifficultyRate -= 100;
-                resetSpawner();
-            }
-
-            if(blitzTimeLeft <= 0) {
-                endBlitzGame();
-            }
-        }, 10);
-        
-        resetSpawner();
-    }
-    
-    function resetSpawner() {
-        clearInterval(blitzSpawnInterval);
-        if(blitzGameActive) {
-            blitzSpawnInterval = setInterval(spawnTarget, blitzDifficultyRate);
+        const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque'];
+        for(let i=0; i<9; i++) {
+            let randomSec = sections[Math.floor(Math.random() * sections.length)];
+            gameState[randomSec].total++;
         }
+        gameState['home'].total = 1;
+        renderHomeEgg();
+        showToast("Le chrono est lancé ! ⏱️");
     }
     
-    function spawnTarget() {
-        if(!blitzGameActive) return;
-        
-        const overlay = document.getElementById('blitzOverlay');
-        const target = document.createElement('i');
-        
-        // Détermination du type d'objet
-        let rand = Math.random();
-        let typeInfo = { class: 'fa-chess-pawn target-pawn', points: 10, lifespan: 1200 };
-        
-        if (rand > 0.90) { typeInfo = { class: 'fa-crown target-crown', points: 50, lifespan: 600 }; }
-        else if (rand > 0.65) { typeInfo = { class: 'fa-dice target-dice', points: 20, lifespan: 900 }; }
-
-        target.className = `fa-solid ${typeInfo.class} blitz-target`;
-        
-        // Position aléatoire (en gardant une marge de sécurité)
-        let safeArea = 60; 
-        target.style.top = Math.max(80, Math.random() * (window.innerHeight - safeArea)) + 'px';
-        target.style.left = Math.max(20, Math.random() * (window.innerWidth - safeArea)) + 'px';
-        
-        overlay.appendChild(target);
-        
-        // Animation pop-in
-        setTimeout(() => target.classList.add('spawned'), 10);
-
-        // Disparition si non cliqué
-        let despawnTimer = setTimeout(() => {
-            target.style.transform = 'scale(0) rotate(20deg)';
-            setTimeout(() => { if(target.parentElement) target.remove(); }, 200);
-        }, typeInfo.lifespan);
-
-        // Clic sur la cible
-        target.onmousedown = function(e) {
-            if(target.classList.contains('hit')) return; // Évite les doubles clics
-            clearTimeout(despawnTimer);
-            target.classList.add('hit');
-            
-            blitzScore += typeInfo.points;
-            document.getElementById('blitzScore').innerText = blitzScore;
-            if(navigator.vibrate) navigator.vibrate(20);
-            
-            // Affichage des points flottants
-            showFloatingPoints(e.clientX, e.clientY, typeInfo.points);
-            
-            setTimeout(() => { if(target.parentElement) target.remove(); }, 200);
-        };
+    function resetGameData() {
+        gameStarted = false;
+        eggCount = 0;
+        clearInterval(timerInterval);
+        document.getElementById('gameTimer').classList.remove('visible');
+        document.getElementById('gameTimer').innerText = "00:00:00";
+        document.getElementById('gameTimer').style.color = '#f1c40f'; 
+        for(let key in gameState) { gameState[key].total = 0; gameState[key].found = 0; }
+        document.querySelectorAll('.egg').forEach(el => el.remove());
     }
     
-    function showFloatingPoints(x, y, points) {
-        const floater = document.createElement('div');
-        floater.className = `floating-points ${points === 50 ? 'points-gold' : ''}`;
-        floater.innerText = `+${points}`;
-        floater.style.left = `${x - 10}px`;
-        floater.style.top = `${y - 20}px`;
-        
-        document.getElementById('blitzOverlay').appendChild(floater);
-        setTimeout(() => floater.remove(), 800);
+    function startTimer() {
+        startTime = Date.now();
+        document.getElementById('gameTimer').classList.add('visible');
+        timerInterval = setInterval(() => {
+            let delta = Date.now() - startTime;
+            let minutes = Math.floor(delta / 60000);
+            let seconds = Math.floor((delta % 60000) / 1000);
+            let centiseconds = Math.floor((delta % 1000) / 10);
+            document.getElementById('gameTimer').innerText = 
+                (minutes < 10 ? "0" + minutes : minutes) + ":" + 
+                (seconds < 10 ? "0" + seconds : seconds) + ":" + 
+                (centiseconds < 10 ? "0" + centiseconds : centiseconds);
+        }, 10);
     }
     
-    function endBlitzGame() {
-        blitzGameActive = false;
-        clearInterval(blitzTimerInterval);
-        clearInterval(blitzSpawnInterval);
-        document.getElementById('blitzTimer').innerText = "0.00";
-        document.getElementById('blitzOverlay').classList.remove('active');
+    function foundEgg(el, sectionKey) {
+        if(el.classList.contains('found')) return;
+        if(eggCount >= 10) return;
         
+        gameState[sectionKey].found++;
+        eggCount++;
+        el.style.pointerEvents = 'none'; 
+        el.classList.add('found'); 
+        
+        setTimeout(() => {
+            el.style.transition = "all 0.5s ease"; el.style.opacity = "0"; el.style.transform = "scale(0)";
+            setTimeout(() => el.remove(), 500); 
+        }, 600);
+        
+        let msg = `Bravo ! ${eggCount}/${totalEggs}`;
+        if(eggCount === totalEggs) {
+            clearInterval(timerInterval);
+            let rawMs = Date.now() - startTime;
+            finishGame(rawMs);
+        } else if(eggCount > 5) {
+            msg = `Tu chauffes ! ${eggCount}/${totalEggs}`;
+            showToast(msg);
+        } else {
+            showToast(msg);
+        }
+        if(navigator.vibrate) navigator.vibrate(50);
+    }
+    
+    function finishGame(rawMs) {
+        let finalTime = document.getElementById('gameTimer').innerText;
+        document.getElementById('gameTimer').style.color = '#2ecc71'; 
+        gameStarted = false; // Reset game state here
+
+        let seconds = rawMs / 1000;
         let rank = ""; let message = ""; let rankNum = 0;
 
-        if (blitzScore > 1000) { rankNum=1; rank = "DIEU DU BLITZ ⚡"; message = "Inhumain ! Ton doigt est un laser."; }
-        else if (blitzScore > 750) { rankNum=2; rank = "MAÎTRE JEDI ⚔️"; message = "Des réflexes fulgurants."; }
-        else if (blitzScore > 500) { rankNum=3; rank = "JOUEUR CONFIRMÉ 🎲"; message = "Très solide, l'asso est fière de toi !"; }
-        else if (blitzScore > 300) { rankNum=4; rank = "RÉGULIER 😼"; message = "Pas mal, mais tu peux faire mieux !"; }
-        else if (blitzScore > 150) { rankNum=5; rank = "DÉBUTANT 🐣"; message = "Encore un peu d'entraînement..."; }
-        else { rankNum=6; rank = "AFK 😴"; message = "Tu t'es endormi sur ton écran ?"; }
+        if (seconds < 5) { rankNum=1; rank = "DIEU DU DÉ ⚡"; message = "Inhumain ! T'as triché ?"; }
+        else if (seconds < 10) { rankNum=2; rank = "GRAND MAÎTRE JEDI ⚔️"; message = "La Force est puissante en toi."; }
+        else if (seconds < 15) { rankNum=3; rank = "CHUCK NORRIS 👊"; message = "Chuck Norris ne cherche pas les dés, ils se dénoncent."; }
+        else if (seconds < 20) { rankNum=4; rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre."; }
+        else if (seconds < 25) { rankNum=5; rank = "ŒIL DE LYNX 😼"; message = "Une vision perçante."; }
+        else if (seconds < 35) { rankNum=6; rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Enquête méthodique."; }
+        else if (seconds < 45) { rankNum=7; rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; }
+        else if (seconds < 60) { rankNum=8; rank = "LE DIESEL 🚜"; message = "Lent au démarrage, mais tu es arrivé !"; }
+        else { rankNum=9; rank = "L'ESCARGOT 🐌"; message = "L'important c'est de participer... non ?"; }
         
-        finalGameData.score = blitzScore;
+        finalGameData.time = finalTime;
         finalGameData.rank = rank;
         finalGameData.rankNumber = rankNum;
         finalGameData.message = message;
+        finalGameData.rawMs = rawMs;
 
         setTimeout(() => {
             const modal = document.getElementById('modalContent');
             modal.innerHTML = `
                 <div class="modal-close-btn" onclick="closeGameModal()"><i class="fa-solid fa-xmark"></i></div>
-                <div class="victory-icon"><i class="fa-solid fa-trophy"></i></div>
-                <h3 class="victory-title">Terminé !</h3>
+                <div class="victory-icon"><i class="fa-solid fa-medal"></i></div>
+                <h3 class="victory-title">Félicitations !</h3>
                 <div class="victory-stats">
                     <div style="font-size:1.1rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div>
                     <div style="font-size:1.3rem; color:#2c3e50; margin: 2px 0;">${rank}</div>
-                    <div style="font-size:2.5rem; font-family:monospace; color:#e67e22; font-weight:bold;">${blitzScore} pts</div>
+                    <div style="font-size:2rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div>
                     <div class="victory-message">"${message}"</div>
                 </div>
                 
@@ -741,11 +811,11 @@
                     </button>
                 </div>
 
-                <button class="game-btn" style="background-color:#95a5a6;" onclick="startBlitzGame()">Rejouer 🔄</button>
+                <button class="game-btn" style="background-color:#95a5a6;" onclick="initGame()">Rejouer 🔄</button>
             `;
             document.getElementById('gameModalBackdrop').classList.add('visible');
-            if (blitzScore > 300) startConfetti();
-        }, 500);
+            startConfetti();
+        }, 1000);
     }
     
     // CONFETTIS SANS LIBS EXTERNES
@@ -759,34 +829,69 @@
             confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
             document.body.appendChild(confetti);
             
+            // Animation CSS injectée dynamiquement
             if(!document.getElementById('confetti-style')) {
                 const style = document.createElement('style');
                 style.id = 'confetti-style';
                 style.innerHTML = `@keyframes fall { 0% { top: -10px; opacity: 1; transform: rotate(0deg); } 100% { top: 100vh; opacity: 0; transform: rotate(720deg); } }`;
                 document.head.appendChild(style);
             }
+            
             setTimeout(() => confetti.remove(), 5000);
         }, 100);
     }
 
-    function generateChecksum(score) {
-        return Math.floor((score * 17) + 2026).toString(36).toUpperCase();
+    function generateChecksum(ms) {
+        return Math.floor((ms * 17) + 2026).toString(36).toUpperCase();
     }
     
     function shareWhatsapp() {
         let pseudo = document.getElementById('playerPseudo').value.trim() || "Un Pote";
-        let check = generateChecksum(finalGameData.score);
+        let check = generateChecksum(finalGameData.rawMs);
         let siteUrl = "https://despotesajeux.github.io/";
         
-        let text = `⚡ *BLITZ DES POTES À JEUX* ⚡%0A%0A` +
+        let text = `🎲 *DÉFI DES POTES À JEUX* 🎲%0A%0A` +
+                   `🕵️ J'ai trouvé les 10 dés cachés !%0A%0A` +
                    `👤 *Joueur :* ${pseudo}%0A` +
-                   `🎯 *Score :* ${finalGameData.score} points%0A` +
+                   `⏱️ *Temps :* ${finalGameData.time}%0A` +
                    `🏅 *Rang N°${finalGameData.rankNumber} :* ${finalGameData.rank}%0A` +
                    `📝 _"${finalGameData.message}"_%0A%0A` +
-                   `Tu penses pouvoir faire mieux en 30 secondes ? Clique sur l'image en haut de l'écran pour tester :%0A` +
+                   `Tu penses faire mieux ? Tente ta chance ici :%0A` +
                    `👉 ${siteUrl}%0A%0A` +
                    `🔐 _Verif : ${check}_`;
         window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+    
+    function showToast(msg) {
+        const toast = document.getElementById('gameToast');
+        toast.innerText = msg; toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+    
+    function renderHomeEgg() {
+        let container = document.getElementById('homeEggContainer');
+        container.innerHTML = ''; 
+        if(gameState['home'].total > gameState['home'].found) {
+            createEgg(container, 'home', false);
+        }
+    }
+    
+    function createEgg(container, sectionKey, isFound, isRelative = false) {
+        let egg = document.createElement('i');
+        egg.className = 'fa-solid fa-dice egg';
+        
+        if (isFound) return; 
+
+        egg.onclick = function() { foundEgg(this, sectionKey); event.stopPropagation(); };
+        egg.style.pointerEvents = 'auto';
+
+        if(!isRelative) {
+            egg.style.top = (Math.random() * 80 + 10) + '%';
+            egg.style.left = (Math.random() * 80 + 10) + '%';
+        } else {
+            egg.style.position = 'relative'; egg.style.marginLeft = '15px'; egg.style.verticalAlign = 'middle';
+        }
+        container.appendChild(egg);
     }
 </script>
 </body>
