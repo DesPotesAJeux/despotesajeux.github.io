@@ -44,6 +44,8 @@
             --myludo-color: #2c3e50; 
             --gold-game: #d4af37;
             --president-color: #e67e22;
+            /* Variable pour l'image de fond dynamique (format .png) */
+            --bg-image: url('hero_soir.png');
         }
 
         body {
@@ -73,7 +75,8 @@
         .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
         .hero { 
             width: 100%; height: 360px;
-            background: url('hero.png') center top / cover no-repeat; 
+            /* Utilisation de la variable CSS ici */
+            background: var(--bg-image) center top / cover no-repeat; 
             position: relative; z-index: 1; 
             -webkit-user-select: none; user-select: none;
             -webkit-touch-callout: none; pointer-events: none;
@@ -344,7 +347,13 @@
         .menu-item span { font-weight: 700; font-size: 0.5rem; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
 
         @media (min-width: 768px) {
-            body { align-items: center; background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('hero.png') center / cover no-repeat; backdrop-filter: blur(10px); overflow: auto; padding: 20px; box-sizing: border-box; min-height: 100vh; }
+            body { 
+                align-items: center; 
+                /* Utilisation de la variable CSS pour la version PC aussi */
+                background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), var(--bg-image) center / cover no-repeat; 
+                backdrop-filter: blur(10px); 
+                overflow: auto; padding: 20px; box-sizing: border-box; min-height: 100vh; 
+            }
             .phone { max-width: 1400px; height: 80vh; min-height: 600px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
             .main-wrapper { display: grid; grid-template-columns: 55% 45%; grid-template-rows: 1fr auto; height: 100%; }
             .hero-container { grid-column: 1; grid-row: 1 / span 2; height: 100%; width: 100%; }
@@ -444,6 +453,23 @@
 </div>
 
 <script>
+    /* --- 0. GESTION DU FOND SELON L'HEURE --- */
+    function updateBackgroundTime() {
+        const hour = new Date().getHours();
+        let bgUrl = "url('hero_soir.png')"; // Par défaut : Soir / Nuit (de 18h à 5h59)
+
+        if (hour >= 6 && hour < 12) {
+            bgUrl = "url('hero_matin.png')"; // Matin (de 6h à 11h59)
+        } else if (hour >= 12 && hour < 18) {
+            bgUrl = "url('hero_aprem.png')"; // Après-midi (de 12h à 17h59)
+        }
+
+        // Applique l'image à la variable CSS
+        document.documentElement.style.setProperty('--bg-image', bgUrl);
+    }
+    // On exécute la fonction dès le chargement
+    updateBackgroundTime();
+
     /* --- 1. CALCULS DATE & HTML --- */
     const NB_PHOTOS_JEUX = 33;    
     let currentGallery = []; let currentPhotoIndex = 0;
@@ -454,8 +480,8 @@
         { year: 2024, count: 7 }, // Nommées sortie_2024_1.jpg à ...
         { year: 2023, count: 7 },  // Nommées sortie_2023_1.jpg à ...
         { year: 2022, count: 9 },   // AJOUT 2022 (Exemple 5 photos)
-		{ year: 2021, count: 2 },   // AJOUT 2022 (Exemple 5 photos)
-		{ year: 2019, count: 1 }   // AJOUT 2019 (Exemple 5 photos)
+        { year: 2021, count: 2 },   // AJOUT 2022 (Exemple 5 photos)
+        { year: 2019, count: 1 }   // AJOUT 2019 (Exemple 5 photos)
     ];
 
     function getNextLastFridays() {
