@@ -74,7 +74,6 @@
             z-index: 15; cursor: pointer; pointer-events: auto;
         }
         
-        /* Hitbox ajustée et plus précise pour la Grange (Haut Droite) */
         .barn-hitbox {
             position: absolute; top: 15%; right: 5%; width: 25%; height: 35%; 
             z-index: 15; cursor: pointer; pointer-events: auto;
@@ -137,12 +136,11 @@
            ========================================= */
         .stack-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            /* Ambiance Intérieur Grange / Planches de bois sombres */
             background: 
                 radial-gradient(circle at 50% 30%, rgba(0, 0, 0, 0) 0%, rgba(10, 5, 0, 0.95) 80%),
                 repeating-linear-gradient(to right, #2a1608 0px, #2a1608 38px, #1a0e05 38px, #1a0e05 40px);
             z-index: 250; display: none; flex-direction: column; opacity: 0; transition: opacity 0.4s ease;
-            overflow: hidden; /* FIX: Empêche le défilement et la jauge de descendre */
+            overflow: hidden; 
         }
         .stack-overlay.active { display: flex; opacity: 1; }
         
@@ -159,16 +157,13 @@
         }
         .stack-bank-btn:active { transform: scale(0.9); }
 
-        /* FIX BUG: min-height: 0 permet au conteneur flex de ne pas s'agrandir à l'infini */
         .tower-area { 
             flex-grow: 1; min-height: 0; display: flex; flex-direction: column-reverse; align-items: center; 
             padding-bottom: 0; overflow: visible; position: relative; z-index: 5; 
         }
         
-        /* --- L'Étagère de la Grange --- */
         .wooden-shelf {
-            width: 240px; height: 15px; 
-            background: linear-gradient(to bottom, #5C3A21, #3A2312);
+            width: 240px; height: 15px; background: linear-gradient(to bottom, #5C3A21, #3A2312);
             margin: 0 auto 10px auto; border-radius: 3px; border-bottom: 2px solid #1a0f08;
             box-shadow: 0 15px 25px rgba(0,0,0,0.8), inset 0 2px 0 rgba(255,255,255,0.1);
             position: relative; z-index: 4; flex-shrink: 0;
@@ -181,19 +176,13 @@
         .wooden-shelf::before { left: 20px; }
         .wooden-shelf::after { right: 20px; }
 
-        /* Les Boites de Jeux */
         .game-box {
             width: 170px; height: 35px; margin-bottom: -1px; position: relative; flex-shrink: 0;
             display: flex; justify-content: center; align-items: center; text-align: center;
             font-family: 'Quicksand', sans-serif; font-weight: 800; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase;
             border-radius: 3px; border: 1px solid rgba(0,0,0,0.6);
-            /* Effet 3D d'épaisseur de boîte */
-            box-shadow: 
-                inset 0 2px 3px rgba(255,255,255,0.4), 
-                inset 0 -4px 5px rgba(0,0,0,0.3), 
-                0 6px 10px rgba(0,0,0,0.6);
-            animation: dropIn 0.3s cubic-bezier(0.17, 0.84, 0.44, 1) forwards;
-            will-change: transform; transition: filter 0.2s;
+            box-shadow: inset 0 2px 3px rgba(255,255,255,0.4), inset 0 -4px 5px rgba(0,0,0,0.3), 0 6px 10px rgba(0,0,0,0.6);
+            animation: dropIn 0.3s cubic-bezier(0.17, 0.84, 0.44, 1) forwards; will-change: transform; transition: filter 0.2s;
         }
         .game-box::before {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 60%;
@@ -220,7 +209,6 @@
         }
         .tap-hint { color: rgba(255,255,255,0.8); font-size: 0.85rem; letter-spacing: 3px; font-weight: bold; margin-top: 15px; animation: blink 1s infinite; text-shadow: 0 2px 4px #000; }
 
-        /* Effets Stack */
         .shake { animation: screenShake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
         .flash-green { animation: flashGreen 0.4s ease-out forwards; }
         .flash-red { animation: flashRed 0.5s ease-out forwards; }
@@ -472,6 +460,23 @@
 </div>
 
 <script>
+    /* --- GESTION DU BOUTON RETOUR ANDROID (HISTORY API) --- */
+    window.addEventListener('popstate', (e) => { 
+        if (lb.classList.contains('active')) { 
+            hideLightboxDOM(); 
+        } else if (document.getElementById('stackOverlay').classList.contains('active') && stackActive) {
+            // Fermeture brutale du jeu de la Tour Infernale via le bouton retour
+            stackActive = false; 
+            cancelAnimationFrame(animationFrameId); 
+            document.getElementById('stackOverlay').classList.remove('active');
+            document.getElementById('mainWrapper').classList.remove('blurred');
+        } else if (document.getElementById('gameModalBackdrop').classList.contains('visible')) { 
+            closeGameModalForce(); 
+        } else if (sheet.classList.contains('open')) { 
+            hideSheetDOM(); 
+        } 
+    });
+
     /* --- 0. GESTION DU FOND SELON L'HEURE --- */
     function updateBackgroundTime() {
         const hour = new Date().getHours();
@@ -633,7 +638,6 @@
     function openLightbox(src, isSingleImage = false) { lbImg.src = src; lb.style.display = 'flex'; resetZoom(); setTimeout(() => lb.classList.add('active'), 10); if (isSingleImage) { currentGallery = [src]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } else { const imgs = document.querySelectorAll('.photo-grid img'); currentGallery = Array.from(imgs).map(i => i.getAttribute('src')); currentPhotoIndex = currentGallery.indexOf(src); if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } } if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } }
     function hideLightboxDOM() { lb.classList.remove('active'); setTimeout(() => { lb.style.display='none'; resetZoom(); }, 300); }
     function closeLightboxForce(fromHistory = false) { if (!lb.classList.contains('active')) return; if (history.state && history.state.type === 'lightbox') { history.back(); } else { hideLightboxDOM(); } }
-    window.addEventListener('popstate', (e) => { if (lb.classList.contains('active')) { hideLightboxDOM(); } else if (sheet.classList.contains('open')) { hideSheetDOM(); } });
     lbContainer.addEventListener('click', (e) => { if(e.target !== lbImg && currentScale === 1 && !e.target.closest('.lightbox-nav')) closeLightboxForce(); });
     function getDistance(touches) { return Math.hypot(touches[0].pageX - touches[1].pageX, touches[0].pageY - touches[1].pageY); }
     function resetZoom() { currentScale = 1; posX = 0; posY = 0; lastPanX = 0; lastPanY = 0; currentSwipeX = 0; lbImg.style.transform = `scale(1) translate(0px, 0px)`; lbContainer.style.transform = `translateX(0px)`; }
@@ -641,6 +645,24 @@
     lbContainer.addEventListener('touchmove', (e) => { if (e.touches.length === 2) { e.preventDefault(); const currentDistance = getDistance(e.touches); const scaleChange = currentDistance / initialDistance; currentScale = Math.min(Math.max(1, currentScale * scaleChange), 4); lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; initialDistance = currentDistance; } else if (e.touches.length === 1) { let currentX = e.touches[0].clientX; let currentY = e.touches[0].clientY; if (currentScale > 1) { e.preventDefault(); posX += (currentX - lastPanX) / currentScale; posY += (currentY - lastPanY) / currentScale; lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; lastPanX = currentX; lastPanY = currentY; } else if (!isZooming && currentGallery.length > 1) { e.preventDefault(); currentSwipeX = currentX - swipeStartX; lbContainer.style.transform = `translateX(${currentSwipeX}px)`; } } }, {passive: false});
     lbContainer.addEventListener('touchend', (e) => { if (e.touches.length < 2) { isZooming = false; } if (currentScale === 1 && currentGallery.length > 1) { if (currentSwipeX > 70) { changePhotoDir('prev'); } else if (currentSwipeX < -70) { changePhotoDir('next'); } else { lbContainer.style.transform = `translateX(0px)`; } currentSwipeX = 0; } });
     function changePhotoDir(dir) { if (currentGallery.length <= 1) return; if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } lbImg.style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; setTimeout(() => { let newSrc = currentGallery[currentPhotoIndex]; lbImg.src = newSrc; lbImg.style.opacity = 1; }, 150); }
+
+    /* =================================================================================
+       FONCTIONS COMMUNES MODALES & ECRANS DE JEU
+       ================================================================================= */
+    function closeGameModalForce() {
+        document.getElementById('gameModalBackdrop').classList.remove('visible');
+        clearInterval(confettiInterval); document.querySelectorAll('.confetti').forEach(c => c.remove());
+    }
+
+    function closeGameModal() {
+        if (document.getElementById('gameModalBackdrop').classList.contains('visible')) {
+            if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'stackgame')) {
+                history.back(); // Laisse le popstate gérer la fermeture
+            } else {
+                closeGameModalForce();
+            }
+        }
+    }
 
     /* =================================================================================
        JEU 1 : CHASSE AUX DÉS (CONSERVÉ)
@@ -662,15 +684,16 @@
             <button class="game-btn" onclick="initGame()">C'est parti !</button>
         `;
         document.getElementById('gameModalBackdrop').classList.add('visible');
-    }
-    
-    function closeGameModal() {
-        document.getElementById('gameModalBackdrop').classList.remove('visible');
-        clearInterval(confettiInterval); document.querySelectorAll('.confetti').forEach(c => c.remove());
+        if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
     }
     
     function initGame() {
-        document.getElementById('gameModalBackdrop').classList.remove('visible'); closeSheet(); resetGameData();
+        closeGameModalForce(); 
+        hideSheetDOM();
+        if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) {
+            history.replaceState({ type: 'main' }, '');
+        }
+        resetGameData();
         gameStarted = true; startTimer();
         const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque'];
         for(let i=0; i<9; i++) { let randomSec = sections[Math.floor(Math.random() * sections.length)]; gameState[randomSec].total++; }
@@ -726,7 +749,9 @@
                 </div>
                 <button class="game-btn" style="background-color:#95a5a6;" onclick="initGame()">Rejouer 🔄</button>
             `;
-            document.getElementById('gameModalBackdrop').classList.add('visible'); startConfetti();
+            document.getElementById('gameModalBackdrop').classList.add('visible'); 
+            if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
+            startConfetti();
         }, 1000);
     }
     
@@ -751,7 +776,6 @@
         container.appendChild(egg);
     }
 
-
     /* =================================================================================
        JEU 2 : LA TOUR INFERNALE (STACKING DANS LA GRANGE)
        ================================================================================= */
@@ -766,7 +790,6 @@
     let perfectZoneWidth = 15; 
     let animationFrameId;
 
-    // Design de vraies boîtes de jeux (Couleurs identitaires)
     const boxStyles = [
         { name: "Agricola", bg: "#d35400", color: "#fff" },       
         { name: "7 Wonders", bg: "#2c3e50", color: "#f1c40f" },   
@@ -794,11 +817,18 @@
             <button class="game-btn" onclick="initStackGame()">Construire la pile</button>
         `;
         document.getElementById('gameModalBackdrop').classList.add('visible');
+        if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
     }
 
     function initStackGame() {
-        closeGameModal();
-        closeSheet();
+        closeGameModalForce();
+        hideSheetDOM();
+        
+        if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) {
+            history.replaceState({ type: 'stackgame' }, '');
+        } else {
+            history.pushState({ type: 'stackgame' }, '');
+        }
         
         stackActive = true;
         stackScore = 0;
@@ -859,7 +889,6 @@
             let pts = 10; stackScore += pts; combo = 1; speed += 0.1;
             showFeedback("OK", pts, false);
             
-            // Calcul du décalage visuel de la boîte (pour la rendre bancale)
             let rawOffset = (cursorX - 50); 
             let pixelOffset = rawOffset * 1.5; 
             addBoxToTower(boxData, false, pixelOffset);
@@ -898,7 +927,6 @@
         box.className = `game-box ${isPerfect ? 'perfect' : ''}`;
         box.innerText = boxData.name;
         
-        // Applique les couleurs de la boîte spécifique
         box.style.backgroundColor = boxData.bg;
         box.style.color = boxData.color;
         
@@ -926,6 +954,12 @@
     function endStackGame(isWin) {
         document.getElementById('stackOverlay').classList.remove('active');
         document.getElementById('mainWrapper').classList.remove('blurred');
+
+        if (history.state && history.state.type === 'stackgame') {
+            history.replaceState({ type: 'gamemodal' }, '');
+        } else {
+            history.pushState({ type: 'gamemodal' }, '');
+        }
 
         let rank = ""; let message = ""; let finalScore = isWin ? stackScore : 0;
 
