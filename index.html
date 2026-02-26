@@ -68,7 +68,7 @@
             position: relative; z-index: 1; -webkit-user-select: none; user-select: none; pointer-events: none;
         }
 
-        /* --- ZONES DE JEU (HITBOXES) --- */
+        /* --- ZONES DE JEU / INTERACTION (HITBOXES) --- */
         .hero-hitbox {
             position: absolute; top: 10%; left: 10%; width: 40%; height: 40%; 
             z-index: 15; cursor: pointer; pointer-events: auto;
@@ -132,94 +132,32 @@
         .game-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         /* =========================================
-           UI JEU 2 : LA TOUR INFERNALE (STACK)
+           VUE INTÉRIEUR GRANGE
            ========================================= */
-        .stack-overlay {
+        .barn-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            /* NOUVELLE IMAGE DE FOND : Intérieur de la grange avec léger filtre sombre */
             background: 
-                linear-gradient(rgba(10, 5, 0, 0.3), rgba(10, 5, 0, 0.8)),
-                url('grange_interieur.png') center bottom / cover no-repeat;
-            z-index: 250; display: none; flex-direction: column; opacity: 0; transition: opacity 0.4s ease;
-            overflow: hidden; 
+                linear-gradient(rgba(10, 5, 0, 0.3), rgba(10, 5, 0, 0.7)),
+                url('grange_interieur.jpg') center bottom / cover no-repeat;
+            z-index: 250; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
         }
-        .stack-overlay.active { display: flex; opacity: 1; }
+        .barn-overlay.active { opacity: 1; pointer-events: auto; }
         
-        .stack-top-bar { padding: 30px 20px 10px; display: flex; justify-content: space-between; align-items: flex-start; z-index: 10; }
-        .stack-score-board { color: white; font-size: 2rem; font-family: monospace; font-weight: bold; text-shadow: 0 2px 10px rgba(0,0,0,0.9); line-height: 1; }
-        .combo-text { font-size: 0.9rem; color: var(--gold-game); opacity: 0; transition: opacity 0.2s; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
-        .combo-text.show { opacity: 1; animation: pulse 0.4s infinite alternate; }
+        .barn-close-btn {
+            position: absolute; top: 20px; right: 20px; font-size: 2rem; color: #fff;
+            cursor: pointer; transition: transform 0.2s; z-index: 260; text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+        .barn-close-btn:active { transform: scale(0.9); }
 
-        .stack-bank-btn {
-            background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; border: none;
-            padding: 10px 20px; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 800; font-size: 0.9rem; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); cursor: pointer; transition: transform 0.1s;
-            animation: pulse-btn 1.5s infinite alternate;
+        .barn-message {
+            background: rgba(255, 252, 240, 0.95); border: 4px solid var(--wood-brown);
+            padding: 25px 25px; border-radius: 20px; text-align: center; max-width: 80%;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8); transform: translateY(20px); transition: transform 0.4s ease;
         }
-        .stack-bank-btn:active { transform: scale(0.9); }
-
-        .tower-area { 
-            flex-grow: 1; min-height: 0; display: flex; flex-direction: column-reverse; align-items: center; 
-            padding-bottom: 0; overflow: visible; position: relative; z-index: 5; 
-        }
-        
-        .wooden-shelf {
-            width: 240px; height: 15px; background: linear-gradient(to bottom, #5C3A21, #3A2312);
-            margin: 0 auto 10px auto; border-radius: 3px; border-bottom: 2px solid #1a0f08;
-            box-shadow: 0 15px 25px rgba(0,0,0,0.8), inset 0 2px 0 rgba(255,255,255,0.1);
-            position: relative; z-index: 4; flex-shrink: 0;
-        }
-        .wooden-shelf::before, .wooden-shelf::after {
-            content: ''; position: absolute; top: 15px; width: 12px; height: 35px;
-            background: linear-gradient(to bottom, #3A2312, #1a0f08);
-            border-radius: 0 0 5px 5px; box-shadow: 3px 3px 8px rgba(0,0,0,0.7);
-        }
-        .wooden-shelf::before { left: 20px; }
-        .wooden-shelf::after { right: 20px; }
-
-        .game-box {
-            width: 170px; height: 35px; margin-bottom: -1px; position: relative; flex-shrink: 0;
-            display: flex; justify-content: center; align-items: center; text-align: center;
-            font-family: 'Quicksand', sans-serif; font-weight: 800; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase;
-            border-radius: 3px; border: 1px solid rgba(0,0,0,0.6);
-            box-shadow: inset 0 2px 3px rgba(255,255,255,0.4), inset 0 -4px 5px rgba(0,0,0,0.3), 0 6px 10px rgba(0,0,0,0.6);
-            animation: dropIn 0.3s cubic-bezier(0.17, 0.84, 0.44, 1) forwards; will-change: transform; transition: filter 0.2s;
-        }
-        .game-box::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 60%;
-            background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
-            border-bottom: 1px solid rgba(0,0,0,0.3); border-radius: 3px 3px 0 0; pointer-events: none;
-        }
-        .game-box.perfect { box-shadow: inset 0 2px 3px rgba(255,255,255,0.4), inset 0 -4px 5px rgba(0,0,0,0.3), 0 0 20px #f1c40f, 0 6px 10px rgba(0,0,0,0.6); z-index: 10; }
-
-        .gauge-area {
-            height: 120px; flex-shrink: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0)); 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            cursor: pointer; position: relative; user-select: none; -webkit-tap-highlight-color: transparent; z-index: 10;
-        }
-        .gauge-track {
-            width: 85%; height: 35px; background: #c0392b; border-radius: 50px; position: relative;
-            box-shadow: inset 0 5px 15px rgba(0,0,0,0.7), 0 0 20px rgba(231, 76, 60, 0.2); overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.1);
-        }
-        .gauge-safe { position: absolute; height: 100%; background: #e67e22; left: 25%; width: 50%; transition: all 0.3s linear; }
-        .gauge-perfect { position: absolute; height: 100%; background: #2ecc71; left: 40%; width: 20%; box-shadow: 0 0 20px #2ecc71; transition: all 0.3s linear; }
-        .gauge-cursor {
-            position: absolute; width: 6px; height: 45px; background: #fff; top: -5px; left: 50%;
-            border-radius: 5px; box-shadow: 0 0 15px #fff; transform: translateX(-50%); will-change: left; z-index: 5;
-        }
-        .tap-hint { color: rgba(255,255,255,0.8); font-size: 0.85rem; letter-spacing: 3px; font-weight: bold; margin-top: 15px; animation: blink 1s infinite; text-shadow: 0 2px 4px #000; }
-
-        .shake { animation: screenShake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
-        .flash-green { animation: flashGreen 0.4s ease-out forwards; }
-        .flash-red { animation: flashRed 0.5s ease-out forwards; }
-        
-        .floating-points {
-            position: absolute; color: white; font-weight: 800; font-size: 2rem; font-family: monospace;
-            pointer-events: none; z-index: 260; text-shadow: 0 3px 8px rgba(0,0,0,0.9);
-            animation: floatUp 0.8s ease-out forwards;
-        }
-        .points-gold { color: var(--gold-game); font-size: 2.5rem; text-shadow: 0 0 20px rgba(212, 175, 55, 1); }
+        .barn-overlay.active .barn-message { transform: translateY(0); }
+        .barn-message h3 { font-family: 'Shadows Into Light', cursive; color: var(--wood-brown); font-size: 2.2rem; margin: 0 0 10px 0; }
+        .barn-message p { font-size: 1.05rem; color: var(--text-brown); margin: 0; font-weight: 700; line-height: 1.5; }
 
         /* =========================================
            MODALES COMMUNES
@@ -264,14 +202,6 @@
         /* --- ANIMATIONS GLOBALES --- */
         @keyframes spin { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.2); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes dropIn { from { transform: translateY(-100px) scale(1.1); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
-        @keyframes floatUp { 0% { transform: translate(-50%, 0) scale(1); opacity: 1; } 100% { transform: translate(-50%, -100px) scale(1.3); opacity: 0; } }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.1); opacity: 1; } }
-        @keyframes pulse-btn { 0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(46, 204, 113, 0); } 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); } }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        @keyframes screenShake { 10%, 90% { transform: translate3d(-3px, 0, 0); } 20%, 80% { transform: translate3d(5px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-8px, 0, 0); } 40%, 60% { transform: translate3d(8px, 0, 0); } }
-        @keyframes flashGreen { 0% { box-shadow: inset 0 0 150px rgba(46, 204, 113, 0.6); } 100% { box-shadow: inset 0 0 0 rgba(46, 204, 113, 0); } }
-        @keyframes flashRed { 0% { box-shadow: inset 0 0 200px rgba(231, 76, 60, 0.8); } 100% { box-shadow: inset 0 0 0 rgba(231, 76, 60, 0); } }
 
         /* --- RESTE DU CSS (Menus, Lightbox) --- */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
@@ -379,34 +309,17 @@
     <div class="game-toast" id="gameToast">Bravo ! 1/10</div>
     <div class="game-timer" id="gameTimer">00:00:00</div>
 
-    <div id="stackOverlay" class="stack-overlay">
-        <div class="stack-top-bar">
-            <div class="stack-score-board">
-                <span style="font-size: 0.8rem; opacity: 0.8; text-transform: uppercase;">Cagnotte</span><br>
-                <span id="stackCurrentScore">0</span> <span style="font-size:1.2rem">pts</span>
-                <div id="comboText" class="combo-text">Combo x1</div>
-            </div>
-            <button class="stack-bank-btn" onclick="bankStackScore()">ENCAISSER</button>
-        </div>
-        
-        <div class="tower-area" id="towerContainer">
-            </div>
-        
-        <div class="wooden-shelf"></div>
-
-        <div class="gauge-area" onclick="dropBox()">
-            <div class="gauge-track">
-                <div class="gauge-safe" id="gaugeSafe"></div>
-                <div class="gauge-perfect" id="gaugePerfect"></div>
-                <div class="gauge-cursor" id="gaugeCursor"></div>
-            </div>
-            <p class="tap-hint"><i class="fa-regular fa-hand-pointer"></i> TAP POUR EMPILER</p>
+    <div id="barnOverlay" class="barn-overlay">
+        <div class="barn-close-btn" onclick="closeBarn()"><i class="fa-solid fa-xmark"></i></div>
+        <div class="barn-message">
+            <h3>Chut...</h3>
+            <p>Il n'y a rien à voir ici pour l'instant !<br><br>Les meeples font la sieste dans la paille. Reviens plus tard pour une surprise.</p>
         </div>
     </div>
 
     <div class="game-modal-backdrop" id="gameModalBackdrop" onclick="closeGameModal()">
         <div class="game-modal-content" id="modalContent" onclick="event.stopPropagation()">
-            </div>
+        </div>
     </div>
 
     <div class="lightbox" id="lightbox">
@@ -423,7 +336,7 @@
             <div class="hero">
                 <div class="hero-hitbox" onclick="askToPlay()"></div>
                 
-                <div class="barn-hitbox" onclick="askToPlayStack()"></div>
+                <div class="barn-hitbox" onclick="openBarn()"></div>
                 
                 <div class="rdv-card">
                     <div style="font-size: 1.5rem; margin-right: 12px;">🎲</div>
@@ -465,18 +378,36 @@
     window.addEventListener('popstate', (e) => { 
         if (lb.classList.contains('active')) { 
             hideLightboxDOM(); 
-        } else if (document.getElementById('stackOverlay').classList.contains('active') && stackActive) {
-            // Fermeture brutale du jeu de la Tour Infernale via le bouton retour
-            stackActive = false; 
-            cancelAnimationFrame(animationFrameId); 
-            document.getElementById('stackOverlay').classList.remove('active');
-            document.getElementById('mainWrapper').classList.remove('blurred');
+        } else if (document.getElementById('barnOverlay').classList.contains('active')) {
+            closeBarnForce();
         } else if (document.getElementById('gameModalBackdrop').classList.contains('visible')) { 
             closeGameModalForce(); 
         } else if (sheet.classList.contains('open')) { 
             hideSheetDOM(); 
         } 
     });
+
+    /* --- GESTION DE LA GRANGE (EN CONSTRUCTION) --- */
+    function openBarn() {
+        document.getElementById('barnOverlay').classList.add('active');
+        document.getElementById('mainWrapper').classList.add('blurred');
+        if (!history.state || history.state.type !== 'barn') {
+            history.pushState({ type: 'barn' }, '');
+        }
+    }
+
+    function closeBarn() {
+        if (history.state && history.state.type === 'barn') {
+            history.back(); // Laisse le popstate (bouton retour) gérer la fermeture propre
+        } else {
+            closeBarnForce();
+        }
+    }
+
+    function closeBarnForce() {
+        document.getElementById('barnOverlay').classList.remove('active');
+        document.getElementById('mainWrapper').classList.remove('blurred');
+    }
 
     /* --- 0. GESTION DU FOND SELON L'HEURE --- */
     function updateBackgroundTime() {
@@ -657,8 +588,8 @@
 
     function closeGameModal() {
         if (document.getElementById('gameModalBackdrop').classList.contains('visible')) {
-            if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'stackgame')) {
-                history.back(); // Laisse le popstate gérer la fermeture
+            if (history.state && (history.state.type === 'gamemodal')) {
+                history.back(); 
             } else {
                 closeGameModalForce();
             }
@@ -674,7 +605,7 @@
     let gameState = { 'home': { total: 0, found: 0 }, 'histoire': { total: 0, found: 0 }, 'adhesion': { total: 0, found: 0 }, 'cal': { total: 0, found: 0 }, 'photos': { total: 0, found: 0 }, 'contact': { total: 0, found: 0 }, 'ludotheque': { total: 0, found: 0 } };
 
     function askToPlay() {
-        if(gameStarted || stackActive) return;
+        if(gameStarted) return;
         const modal = document.getElementById('modalContent');
         modal.innerHTML = `
             <div class="modal-close-btn" onclick="closeGameModal()"><i class="fa-solid fa-xmark"></i></div>
@@ -777,229 +708,9 @@
         container.appendChild(egg);
     }
 
-
     /* =================================================================================
-       JEU 2 : LA TOUR INFERNALE (STACKING DANS LA GRANGE)
+       FONCTION CONFETTIS
        ================================================================================= */
-    let stackActive = false;
-    let stackScore = 0;
-    let cursorX = 50; 
-    let cursorDir = 1; 
-    let speed = 1.2; 
-    let combo = 1;
-    let boxCount = 0;
-    let safeZoneWidth = 60; 
-    let perfectZoneWidth = 15; 
-    let animationFrameId;
-
-    const boxStyles = [
-        { name: "Agricola", bg: "#d35400", color: "#fff" },       
-        { name: "7 Wonders", bg: "#2c3e50", color: "#f1c40f" },   
-        { name: "Scythe", bg: "#2c2c2c", color: "#e74c3c" },      
-        { name: "Carcassonne", bg: "#3498db", color: "#fff" },    
-        { name: "Catan", bg: "#c0392b", color: "#f1c40f" },       
-        { name: "Azul", bg: "#0984e3", color: "#fff" },           
-        { name: "Splendor", bg: "#27ae60", color: "#fff" },       
-        { name: "Les Aventuriers", bg: "#e1b12c", color: "#2d3436"}
-    ];
-
-    function askToPlayStack() {
-        if(stackActive || gameStarted) return;
-        const modal = document.getElementById('modalContent');
-        modal.innerHTML = `
-            <div class="modal-close-btn" onclick="closeGameModal()"><i class="fa-solid fa-xmark"></i></div>
-            <h3 class="victory-title" style="margin-top:10px;">La Tour Infernale</h3>
-            <div class="game-desc-box" style="text-align: left; font-size:0.9rem;">
-                <p style="text-align:center; margin-bottom:10px;"><b>Empile tes jeux pour faire la plus haute tour !</b></p>
-                <p>🟢 <b>Zone Verte :</b> Coup parfait ! Le combo augmente (Points x2, x3...)</p>
-                <p>🟠 <b>Zone Orange :</b> Coup safe. La boîte se décale un peu.</p>
-                <p>🔴 <b>Zone Rouge :</b> La pile s'effondre, tu perds ta cagnotte en cours !</p>
-                <p style="text-align:center; margin-top:10px;"><i>N'oublie pas d'ENCAISSER avant la chute !</i></p>
-            </div>
-            <button class="game-btn" onclick="initStackGame()">Construire la pile</button>
-        `;
-        document.getElementById('gameModalBackdrop').classList.add('visible');
-        if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
-    }
-
-    function initStackGame() {
-        closeGameModalForce();
-        hideSheetDOM();
-        
-        if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) {
-            history.replaceState({ type: 'stackgame' }, '');
-        } else {
-            history.pushState({ type: 'stackgame' }, '');
-        }
-        
-        stackActive = true;
-        stackScore = 0;
-        cursorX = 10;
-        cursorDir = 1;
-        speed = 1.2;
-        combo = 1;
-        boxCount = 0;
-        safeZoneWidth = 60;
-        perfectZoneWidth = 15;
-
-        document.getElementById('stackCurrentScore').innerText = "0";
-        document.getElementById('comboText').innerText = `Combo x${combo}`;
-        document.getElementById('comboText').classList.remove('show');
-        document.getElementById('towerContainer').innerHTML = ""; 
-        
-        updateGaugeVisuals();
-
-        document.getElementById('stackOverlay').classList.add('active');
-        document.getElementById('mainWrapper').classList.add('blurred');
-        
-        animationFrameId = requestAnimationFrame(stackLoop);
-    }
-
-    function stackLoop() {
-        if (!stackActive) return;
-        cursorX += speed * cursorDir;
-        if (cursorX >= 98) { cursorX = 98; cursorDir = -1; }
-        if (cursorX <= 2) { cursorX = 2; cursorDir = 1; }
-        document.getElementById('gaugeCursor').style.left = `${cursorX}%`;
-        animationFrameId = requestAnimationFrame(stackLoop);
-    }
-
-    function updateGaugeVisuals() {
-        const safe = document.getElementById('gaugeSafe');
-        const perfect = document.getElementById('gaugePerfect');
-        safe.style.width = `${safeZoneWidth}%`; safe.style.left = `${50 - (safeZoneWidth/2)}%`;
-        perfect.style.width = `${perfectZoneWidth}%`; perfect.style.left = `${50 - (perfectZoneWidth/2)}%`;
-    }
-
-    function dropBox() {
-        if (!stackActive) return;
-
-        let dist = Math.abs(cursorX - 50);
-        let safeRadius = safeZoneWidth / 2;
-        let perfectRadius = perfectZoneWidth / 2;
-
-        let boxData = boxStyles[boxCount % boxStyles.length];
-
-        if (dist <= perfectRadius) {
-            let pts = 50 * combo; stackScore += pts; combo++; speed += 0.2;
-            if(safeZoneWidth > 20) safeZoneWidth -= 2; 
-            showFeedback("PARFAIT !", pts, true);
-            addBoxToTower(boxData, true, 0);
-            if(navigator.vibrate) navigator.vibrate([30, 50, 30]);
-
-        } else if (dist <= safeRadius) {
-            let pts = 10; stackScore += pts; combo = 1; speed += 0.1;
-            showFeedback("OK", pts, false);
-            
-            let rawOffset = (cursorX - 50); 
-            let pixelOffset = rawOffset * 1.5; 
-            addBoxToTower(boxData, false, pixelOffset);
-            
-            if(navigator.vibrate) navigator.vibrate(30);
-
-        } else {
-            stackActive = false; cancelAnimationFrame(animationFrameId);
-            document.getElementById('stackOverlay').classList.add('shake');
-            document.getElementById('stackOverlay').classList.add('flash-red');
-            if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-            
-            setTimeout(() => {
-                document.getElementById('stackOverlay').classList.remove('shake', 'flash-red');
-                endStackGame(false); 
-            }, 600);
-            return;
-        }
-
-        boxCount++;
-        document.getElementById('stackCurrentScore').innerText = stackScore;
-        const comboEl = document.getElementById('comboText');
-        if(combo > 1) {
-            comboEl.innerText = `Combo x${combo}`; comboEl.classList.add('show');
-            document.getElementById('stackOverlay').classList.add('flash-green');
-            setTimeout(() => document.getElementById('stackOverlay').classList.remove('flash-green'), 400);
-        } else {
-            comboEl.classList.remove('show');
-        }
-        updateGaugeVisuals();
-    }
-
-    function addBoxToTower(boxData, isPerfect, offsetPx) {
-        const tower = document.getElementById('towerContainer');
-        const box = document.createElement('div');
-        box.className = `game-box ${isPerfect ? 'perfect' : ''}`;
-        box.innerText = boxData.name;
-        
-        box.style.backgroundColor = boxData.bg;
-        box.style.color = boxData.color;
-        
-        if(!isPerfect) {
-            box.style.transform = `translateX(${offsetPx}px)`;
-        } 
-
-        tower.prepend(box); 
-    }
-
-    function showFeedback(text, pts, isPerfect) {
-        const gauge = document.querySelector('.gauge-area');
-        const floater = document.createElement('div');
-        floater.className = `floating-points ${isPerfect ? 'points-gold' : ''}`;
-        floater.innerHTML = `${text}<br>+${pts}`;
-        floater.style.left = `50%`; floater.style.top = `-20px`;
-        gauge.appendChild(floater); setTimeout(() => floater.remove(), 800);
-    }
-
-    function bankStackScore() {
-        if(!stackActive || stackScore === 0) return;
-        stackActive = false; cancelAnimationFrame(animationFrameId); endStackGame(true);
-    }
-
-    function endStackGame(isWin) {
-        document.getElementById('stackOverlay').classList.remove('active');
-        document.getElementById('mainWrapper').classList.remove('blurred');
-
-        if (history.state && history.state.type === 'stackgame') {
-            history.replaceState({ type: 'gamemodal' }, '');
-        } else {
-            history.pushState({ type: 'gamemodal' }, '');
-        }
-
-        let rank = ""; let message = ""; let finalScore = isWin ? stackScore : 0;
-
-        if (!isWin) { rank = "LA TOUR INFERNALE 💥"; message = "Boum ! Trop gourmand, tes boîtes se sont étalées au sol."; } 
-        else {
-            if (finalScore > 2000) { rank = "ARCHITECTE LUDIQUE 🏆"; message = "Impressionnant ! Ta tour défie la gravité."; }
-            else if (finalScore > 800) { rank = "STRATÈGE ASSURÉ 🧠"; message = "Tu as su t'arrêter avant le drame. Belle pile !"; }
-            else if (finalScore > 300) { rank = "PETIT JOUEUR 🎲"; message = "Pas mal, mais tu aurais pu monter plus haut."; }
-            else { rank = "FOURMI PRUDENTE 🐜"; message = "Tu as sécurisé très vite ! Sécurité avant tout."; }
-        }
-
-        const modal = document.getElementById('modalContent');
-        modal.innerHTML = `
-            <div class="modal-close-btn" onclick="closeGameModal()"><i class="fa-solid fa-xmark"></i></div>
-            <div class="victory-icon"><i class="fa-solid ${isWin ? 'fa-sack-dollar' : 'fa-skull'}"></i></div>
-            <h3 class="victory-title">${isWin ? 'Encaissé !' : 'Crash !'}</h3>
-            <div class="victory-stats">
-                <div style="font-size:1.1rem; color:var(--wood-brown); font-weight:bold;">${rank}</div>
-                <div style="font-size:2.5rem; font-family:monospace; color:${isWin ? '#2ecc71' : '#e74c3c'}; font-weight:bold;">${finalScore} pts</div>
-                <div class="victory-message">"${message}"</div>
-            </div>
-            <div id="shareContainer" class="share-container">
-                <input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15">
-                <button class="game-btn wa-btn" onclick="shareStackWhatsApp(${finalScore}, '${rank}', ${isWin})"><i class="fa-brands fa-whatsapp"></i> Partager</button>
-            </div>
-            <button class="game-btn" style="background-color:#95a5a6;" onclick="initStackGame()">Rejouer 🔄</button>
-        `;
-        document.getElementById('gameModalBackdrop').classList.add('visible');
-        if (isWin && finalScore > 500) startConfetti();
-    }
-
-    function shareStackWhatsApp(score, rank, isWin) {
-        let pseudo = document.getElementById('playerPseudo').value.trim() || "Un Pote";
-        let siteUrl = "https://despotesajeux.github.io/"; let icon = isWin ? "💸" : "💥";
-        let text = `📦 *LA TOUR INFERNALE* 📦%0A%0A👤 *Joueur :* ${pseudo}%0A🎯 *Score :* ${score} points ${icon}%0A🏅 *Titre :* ${rank}%0A%0AViens tester tes réflexes en cliquant sur la grange du site :%0A👉 ${siteUrl}`;
-        window.open(`https://wa.me/?text=${text}`, '_blank');
-    }
-
     function startConfetti() {
         const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6'];
         for(let i=0; i<30; i++) {
