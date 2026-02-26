@@ -73,8 +73,10 @@
             position: absolute; top: 10%; left: 10%; width: 40%; height: 40%; 
             z-index: 15; cursor: pointer; pointer-events: auto;
         }
+        
+        /* Hitbox ajustée et plus précise pour la Grange (Haut Droite) */
         .barn-hitbox {
-            position: absolute; top: 20%; right: 0%; width: 45%; height: 60%; 
+            position: absolute; top: 15%; right: 5%; width: 25%; height: 35%; 
             z-index: 15; cursor: pointer; pointer-events: auto;
         }
 
@@ -131,15 +133,14 @@
         .game-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         /* =========================================
-           UI JEU 2 : L'ÉQUILIBRE LUDIQUE (STACK)
+           UI JEU 2 : LA PILE DE LA HONTE (STACK)
            ========================================= */
         .stack-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            /* Ambiance Grange sombre avec éclairage central */
+            /* Ambiance Intérieur Grange / Planches de bois sombres */
             background: 
-                radial-gradient(circle at 50% 40%, rgba(210, 140, 70, 0.2) 0%, rgba(20, 10, 5, 0.95) 80%),
-                repeating-linear-gradient(to right, transparent, transparent 50px, rgba(0,0,0,0.4) 50px, rgba(0,0,0,0.4) 53px),
-                #3a2312;
+                radial-gradient(circle at 50% 30%, rgba(0, 0, 0, 0) 0%, rgba(10, 5, 0, 0.95) 80%),
+                repeating-linear-gradient(to right, #2a1608 0px, #2a1608 38px, #1a0e05 38px, #1a0e05 40px);
             z-index: 250; display: none; flex-direction: column; opacity: 0; transition: opacity 0.4s ease;
         }
         .stack-overlay.active { display: flex; opacity: 1; }
@@ -157,9 +158,25 @@
         }
         .stack-bank-btn:active { transform: scale(0.9); }
 
-        .tower-area { flex-grow: 1; display: flex; flex-direction: column-reverse; align-items: center; padding-bottom: 20px; overflow: visible; position: relative; z-index: 5; }
+        .tower-area { flex-grow: 1; display: flex; flex-direction: column-reverse; align-items: center; padding-bottom: 0; overflow: visible; position: relative; z-index: 5; }
         
-        /* Les Boites de Jeux ! */
+        /* --- L'Étagère de la Grange --- */
+        .wooden-shelf {
+            width: 240px; height: 15px; 
+            background: linear-gradient(to bottom, #5C3A21, #3A2312);
+            margin: 0 auto 10px auto; border-radius: 3px; border-bottom: 2px solid #1a0f08;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.8), inset 0 2px 0 rgba(255,255,255,0.1);
+            position: relative; z-index: 4;
+        }
+        .wooden-shelf::before, .wooden-shelf::after {
+            content: ''; position: absolute; top: 15px; width: 12px; height: 35px;
+            background: linear-gradient(to bottom, #3A2312, #1a0f08);
+            border-radius: 0 0 5px 5px; box-shadow: 3px 3px 8px rgba(0,0,0,0.7);
+        }
+        .wooden-shelf::before { left: 20px; }
+        .wooden-shelf::after { right: 20px; }
+
+        /* Les Boites de Jeux */
         .game-box {
             width: 170px; height: 35px; margin-bottom: -1px; position: relative;
             display: flex; justify-content: center; align-items: center; text-align: center;
@@ -173,7 +190,6 @@
             animation: dropIn 0.3s cubic-bezier(0.17, 0.84, 0.44, 1) forwards;
             will-change: transform; transition: filter 0.2s;
         }
-        /* Le couvercle de la boîte */
         .game-box::before {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 60%;
             background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
@@ -182,7 +198,7 @@
         .game-box.perfect { box-shadow: inset 0 2px 3px rgba(255,255,255,0.4), inset 0 -4px 5px rgba(0,0,0,0.3), 0 0 20px #f1c40f, 0 6px 10px rgba(0,0,0,0.6); z-index: 10; }
 
         .gauge-area {
-            height: 140px; background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0)); 
+            height: 120px; background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0)); 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             cursor: pointer; position: relative; user-select: none; -webkit-tap-highlight-color: transparent; z-index: 10;
         }
@@ -197,7 +213,7 @@
             position: absolute; width: 6px; height: 45px; background: #fff; top: -5px; left: 50%;
             border-radius: 5px; box-shadow: 0 0 15px #fff; transform: translateX(-50%); will-change: left; z-index: 5;
         }
-        .tap-hint { color: rgba(255,255,255,0.8); font-size: 0.85rem; letter-spacing: 3px; font-weight: bold; margin-top: 20px; animation: blink 1s infinite; text-shadow: 0 2px 4px #000; }
+        .tap-hint { color: rgba(255,255,255,0.8); font-size: 0.85rem; letter-spacing: 3px; font-weight: bold; margin-top: 15px; animation: blink 1s infinite; text-shadow: 0 2px 4px #000; }
 
         /* Effets Stack */
         .shake { animation: screenShake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
@@ -381,6 +397,8 @@
         
         <div class="tower-area" id="towerContainer">
             </div>
+        
+        <div class="wooden-shelf"></div>
 
         <div class="gauge-area" onclick="dropBox()">
             <div class="gauge-track">
@@ -453,8 +471,13 @@
     function updateBackgroundTime() {
         const hour = new Date().getHours();
         let bgUrl = "url('hero_soir.png')"; // Par défaut : Soir / Nuit (de 18h à 5h59)
-        if (hour >= 6 && hour < 12) bgUrl = "url('hero_matin.png')"; // Matin
-        else if (hour >= 12 && hour < 18) bgUrl = "url('hero_aprem.png')"; // Après-midi
+
+        if (hour >= 6 && hour < 12) {
+            bgUrl = "url('hero_matin.png')"; // Matin (de 6h à 11h59)
+        } else if (hour >= 12 && hour < 18) {
+            bgUrl = "url('hero_aprem.png')"; // Après-midi (de 12h à 17h59)
+        }
+
         document.documentElement.style.setProperty('--bg-image', bgUrl);
     }
     updateBackgroundTime();
@@ -570,6 +593,7 @@
 
     function openSheet(key) {
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
+        
         if(gameStarted && gameState[key].total > gameState[key].found) {
             let containerId = `content-${key}`; let container = document.getElementById(containerId);
             if(container) {
@@ -583,6 +607,7 @@
                 }
             }
         }
+        
         overlay.style.display = 'block'; mainWrapper.classList.add('blurred');
         if (window.innerWidth <= 768) { sheet.style.transition = 'none'; sheet.style.transform = ''; void sheet.offsetWidth; sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)"; }
         setTimeout(() => { overlay.style.opacity = '1'; sheet.classList.add('open'); }, 10);
@@ -613,7 +638,7 @@
     function changePhotoDir(dir) { if (currentGallery.length <= 1) return; if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } lbImg.style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; setTimeout(() => { let newSrc = currentGallery[currentPhotoIndex]; lbImg.src = newSrc; lbImg.style.opacity = 1; }, 150); }
 
     /* =================================================================================
-       JEU 1 : CHASSE AUX DÉS (CONSERVÉ INTACT)
+       JEU 1 : CHASSE AUX DÉS (CONSERVÉ)
        ================================================================================= */
     let gameStarted = false; let eggCount = 0; const totalEggs = 10;
     let timerInterval; let startTime; let finalGameData = { time: "", rankNumber: 0, rank: "", message: "", rawMs: 0 }; 
@@ -621,7 +646,7 @@
     let gameState = { 'home': { total: 0, found: 0 }, 'histoire': { total: 0, found: 0 }, 'adhesion': { total: 0, found: 0 }, 'cal': { total: 0, found: 0 }, 'photos': { total: 0, found: 0 }, 'contact': { total: 0, found: 0 }, 'ludotheque': { total: 0, found: 0 } };
 
     function askToPlay() {
-        if(gameStarted) return;
+        if(gameStarted || stackActive) return;
         const modal = document.getElementById('modalContent');
         modal.innerHTML = `
             <div class="modal-close-btn" onclick="closeGameModal()"><i class="fa-solid fa-xmark"></i></div>
@@ -721,8 +746,9 @@
         container.appendChild(egg);
     }
 
+
     /* =================================================================================
-       JEU 2 : L'ÉQUILIBRE LUDIQUE (NOUVEAU)
+       JEU 2 : LA PILE DE LA HONTE (STACKING DANS LA GRANGE)
        ================================================================================= */
     let stackActive = false;
     let stackScore = 0;
@@ -735,32 +761,32 @@
     let perfectZoneWidth = 15; 
     let animationFrameId;
 
-    // Design de vraies boîtes de jeux
+    // Design de vraies boîtes de jeux (Couleurs identitaires)
     const boxStyles = [
-        { name: "Agricola", bg: "#d35400", color: "#fff" },       // Orange vif
-        { name: "7 Wonders", bg: "#2c3e50", color: "#f1c40f" },   // Bleu nuit / Or
-        { name: "Scythe", bg: "#2c2c2c", color: "#e74c3c" },      // Gris foncé / Rouge
-        { name: "Carcassonne", bg: "#3498db", color: "#fff" },    // Bleu ciel
-        { name: "Catan", bg: "#c0392b", color: "#f1c40f" },       // Rouge
-        { name: "Azul", bg: "#0984e3", color: "#fff" },           // Bleu vif
-        { name: "Splendor", bg: "#27ae60", color: "#fff" },       // Vert émeraude
-        { name: "Ticket to Ride", bg: "#e1b12c", color: "#2d3436"}// Jaune moutarde
+        { name: "Agricola", bg: "#d35400", color: "#fff" },       
+        { name: "7 Wonders", bg: "#2c3e50", color: "#f1c40f" },   
+        { name: "Scythe", bg: "#2c2c2c", color: "#e74c3c" },      
+        { name: "Carcassonne", bg: "#3498db", color: "#fff" },    
+        { name: "Catan", bg: "#c0392b", color: "#f1c40f" },       
+        { name: "Azul", bg: "#0984e3", color: "#fff" },           
+        { name: "Splendor", bg: "#27ae60", color: "#fff" },       
+        { name: "Les Aventuriers", bg: "#e1b12c", color: "#2d3436"}
     ];
 
     function askToPlayStack() {
-        if(stackActive) return;
+        if(stackActive || gameStarted) return;
         const modal = document.getElementById('modalContent');
         modal.innerHTML = `
             <div class="modal-close-btn" onclick="closeGameModal()"><i class="fa-solid fa-xmark"></i></div>
-            <h3 class="victory-title" style="margin-top:10px;">L'Équilibre Ludique</h3>
+            <h3 class="victory-title" style="margin-top:10px;">La Pile de la Honte</h3>
             <div class="game-desc-box" style="text-align: left; font-size:0.9rem;">
-                <p style="text-align:center; margin-bottom:10px;"><b>Empile tes jeux dans la grange !</b></p>
+                <p style="text-align:center; margin-bottom:10px;"><i>Le défi ultime de tout joueur !</i><br><b>Empile tes jeux sur l'étagère de la grange.</b></p>
                 <p>🟢 <b>Zone Verte :</b> Coup parfait ! Le combo augmente (Points x2, x3...)</p>
-                <p>🟠 <b>Zone Orange :</b> Coup safe. Le combo retombe à x1.</p>
+                <p>🟠 <b>Zone Orange :</b> Coup safe. La boîte se décale un peu.</p>
                 <p>🔴 <b>Zone Rouge :</b> La pile s'effondre, tu perds ta cagnotte en cours !</p>
-                <p style="text-align:center; margin-top:10px;"><i>N'oublie pas d'ENCAISSER avant que ça ne tombe !</i></p>
+                <p style="text-align:center; margin-top:10px;"><i>N'oublie pas d'ENCAISSER avant la chute !</i></p>
             </div>
-            <button class="game-btn" onclick="initStackGame()">Construire ma ludothèque</button>
+            <button class="game-btn" onclick="initStackGame()">Construire la pile</button>
         `;
         document.getElementById('gameModalBackdrop').classList.add('visible');
     }
@@ -868,15 +894,12 @@
         box.innerText = boxData.name;
         
         // Applique les couleurs de la boîte spécifique
+        box.style.backgroundColor = boxData.bg;
+        box.style.color = boxData.color;
+        
         if(!isPerfect) {
-            box.style.backgroundColor = boxData.bg;
-            box.style.color = boxData.color;
             box.style.transform = `translateX(${offsetPx}px)`;
-        } else {
-            // Conserve la couleur de base, mais ajoute l'aura dorée via CSS
-            box.style.backgroundColor = boxData.bg;
-            box.style.color = boxData.color;
-        }
+        } 
 
         tower.prepend(box); 
     }
@@ -901,10 +924,10 @@
 
         let rank = ""; let message = ""; let finalScore = isWin ? stackScore : 0;
 
-        if (!isWin) { rank = "LA TOUR INFERNALE 💥"; message = "Boum ! Trop gourmand, tu as tout fait tomber dans la paille."; } 
+        if (!isWin) { rank = "LA TOUR INFERNALE 💥"; message = "Boum ! Trop gourmand, tes boîtes se sont étalées dans la paille."; } 
         else {
-            if (finalScore > 2000) { rank = "ARCHITECTE LUDIQUE 🏆"; message = "Impressionnant ! La grange est remplie à craquer."; }
-            else if (finalScore > 800) { rank = "STRATÈGE ASSURÉ 🧠"; message = "Tu as su t'arrêter à temps avec une belle ludothèque."; }
+            if (finalScore > 2000) { rank = "LUDOTHÉCAIRE LÉGENDAIRE 🏆"; message = "Impressionnant ! L'étagère ploie sous le poids de ta collection."; }
+            else if (finalScore > 800) { rank = "ACHETEUR COMPULSIF 🧠"; message = "Tu as su t'arrêter avant le drame. Belle pile de la honte !"; }
             else if (finalScore > 300) { rank = "PETIT JOUEUR 🎲"; message = "Pas mal, mais il reste de la place sur l'étagère."; }
             else { rank = "FOURMI PRUDENTE 🐜"; message = "Tu as sécurisé très vite ! Sécurité avant tout."; }
         }
@@ -932,7 +955,7 @@
     function shareStackWhatsApp(score, rank, isWin) {
         let pseudo = document.getElementById('playerPseudo').value.trim() || "Un Pote";
         let siteUrl = "https://despotesajeux.github.io/"; let icon = isWin ? "💸" : "💥";
-        let text = `📦 *L'ÉQUILIBRE LUDIQUE* 📦%0A%0A👤 *Joueur :* ${pseudo}%0A🎯 *Score :* ${score} points ${icon}%0A🏅 *Titre :* ${rank}%0A%0AViens tester tes réflexes en cliquant sur la grange du site :%0A👉 ${siteUrl}`;
+        let text = `📦 *LA PILE DE LA HONTE* 📦%0A%0A👤 *Joueur :* ${pseudo}%0A🎯 *Score :* ${score} points ${icon}%0A🏅 *Titre :* ${rank}%0A%0AViens tester tes réflexes en cliquant sur la grange du site :%0A👉 ${siteUrl}`;
         window.open(`https://wa.me/?text=${text}`, '_blank');
     }
 
