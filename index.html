@@ -192,12 +192,18 @@
         .game-desc-box { background: #fff; border-radius: 15px; padding: 15px; width: 100%; box-sizing: border-box; margin-bottom: 20px; border: 1px solid rgba(188, 143, 99, 0.2); }
         .game-desc-box p { font-size: 0.95rem; line-height: 1.5; color: var(--text-brown); margin: 0; }
         
-        .game-btn { background: var(--green-deep); color: white; border: none; padding: 10px 30px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 0.95rem; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); transition: transform 0.2s; width: 100%; }
+        /* Boutons de la modale mis à jour */
+        .game-btn { 
+            background: var(--wood-brown); color: white; border: none; padding: 10px 25px; border-radius: 50px; 
+            font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; 
+            box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); transition: transform 0.2s; 
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; 
+        }
         .game-btn:active { transform: scale(0.95); }
         
         .share-container { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 5px; margin-bottom: 10px; }
         .share-input { width: 100%; padding: 8px; border-radius: 12px; border: 2px solid var(--wood-brown); background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown); box-sizing: border-box; text-align: center; font-size: 1rem; }
-        .wa-btn { background: #25D366; display: flex; align-items: center; justify-content: center; gap: 10px; color: white; margin-top: 5px; } 
+        .wa-btn { background: #25D366; color: white; margin-top: 5px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); } 
 
         .confetti { position: fixed; width: 10px; height: 10px; background-color: #f00; z-index: 400; top: -10px; pointer-events: none; opacity: 0; }
 
@@ -237,9 +243,9 @@
         .btn-article { display: inline-flex; align-items: center; gap: 8px; background: rgba(188, 143, 99, 0.15); color: var(--wood-brown); border: 1px solid var(--wood-brown); border-radius: 50px; padding: 6px 15px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 10px; text-decoration: none; }
         .btn-article:active { transform: scale(0.95); background: rgba(188, 143, 99, 0.25); }
         
-        /* --- CSS ONGLETS PHOTOS ET GRILLE (AFFICHAGE EN CASCADE) --- */
+        /* --- CSS ONGLETS PHOTOS ET GRILLE --- */
         .photo-tabs { display: flex; background: rgba(188, 143, 99, 0.15); border-radius: 50px; padding: 5px; margin: 0 auto 20px; max-width: 320px; position: relative; }
-        .photo-tab { flex: 1; text-align: center; padding: 10px 15px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--wood-brown); cursor: pointer; transition: all 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
+        .photo-tab { flex: 1; text-align: center; padding: 10px 15px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--wood-brown); cursor: pointer; transition: background 0.1s, color 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
         .photo-tab.active { background: var(--wood-brown); color: white; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); }
         
         .photo-tab-content { display: none; }
@@ -444,7 +450,13 @@
         
         // Ajoute l'état actif au bouton cliqué et à la grille correspondante de manière instantanée
         element.classList.add('active');
-        document.getElementById('grid-' + tabId).classList.add('active');
+        
+        let newGrid = document.getElementById('grid-' + tabId);
+        newGrid.classList.add('active');
+        
+        // Relance l'animation de cascade en "clonant" puis remplaçant l'élément
+        let newGridClone = newGrid.cloneNode(true);
+        newGrid.parentNode.replaceChild(newGridClone, newGrid);
     }
 
     /* --- 0. GESTION DU FOND SELON L'HEURE --- */
@@ -592,7 +604,7 @@
             if(container) {
                 let remaining = gameState[key].total - gameState[key].found;
                 if(key === 'photos') {
-                    // Les dés du menu photos s'affichent désormais sur les boutons du menu !
+                    // Les dés s'affichent en absolute sur l'onglet pour ne pas le déformer
                     let tabs = container.querySelectorAll('.photo-tab');
                     for(let i=0; i<remaining; i++) createEgg(tabs[i % tabs.length], key, false, true);
                 } else {
@@ -620,7 +632,6 @@
     const lb = document.getElementById('lightbox'); const lbContainer = document.getElementById('lbContainer'); const lbImg = document.getElementById('lightboxImg'); const lbNavPrev = document.getElementById('lbNavPrev'); const lbNavNext = document.getElementById('lbNavNext');
     let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
     function openLightbox(src, isSingleImage = false) { lbImg.src = src; lb.style.display = 'flex'; resetZoom(); setTimeout(() => lb.classList.add('active'), 10); if (isSingleImage) { currentGallery = [src]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } else { 
-        // On récupère uniquement les images de l'onglet actif pour la galerie !
         const activeTab = document.querySelector('.photo-tab-content.active');
         const imgs = activeTab.querySelectorAll('.photo-grid img'); 
         currentGallery = Array.from(imgs).map(i => i.getAttribute('src')); 
@@ -672,7 +683,7 @@
             <div class="game-desc-box">
                 <p>Comme on est joueurs, <b>10 petits dés</b> <i class="fa-solid fa-dice" style="color:var(--wood-brown); font-size:1.2rem; vertical-align:middle; margin: 0 4px;"></i> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?</p>
             </div>
-            <button class="game-btn" onclick="initGame()">C'est parti !</button>
+            <button class="game-btn" onclick="initGame()"><i class="fa-solid fa-play"></i> C'est parti !</button>
         `;
         document.getElementById('gameModalBackdrop').classList.add('visible');
         if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
@@ -738,7 +749,7 @@
                     <input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15">
                     <button class="game-btn wa-btn" onclick="shareWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Partager mon score</button>
                 </div>
-                <button class="game-btn" style="background-color:#95a5a6;" onclick="initGame()">Rejouer 🔄</button>
+                <button class="game-btn" onclick="initGame()"><i class="fa-solid fa-rotate-right"></i> Rejouer</button>
             `;
             document.getElementById('gameModalBackdrop').classList.add('visible'); 
             if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
@@ -760,10 +771,22 @@
     
     function renderHomeEgg() { let container = document.getElementById('homeEggContainer'); container.innerHTML = ''; if(gameState['home'].total > gameState['home'].found) { createEgg(container, 'home', false); } }
     
-    function createEgg(container, sectionKey, isFound, isRelative = false) {
+    function createEgg(container, sectionKey, isFound, isTab = false) {
         let egg = document.createElement('i'); egg.className = 'fa-solid fa-dice egg'; if (isFound) return; 
-        egg.onclick = function() { foundEgg(this, sectionKey); event.stopPropagation(); }; egg.style.pointerEvents = 'auto';
-        if(!isRelative) { egg.style.top = (Math.random() * 80 + 10) + '%'; egg.style.left = (Math.random() * 80 + 10) + '%'; } else { egg.style.position = 'relative'; egg.style.marginLeft = '15px'; egg.style.verticalAlign = 'middle'; }
+        egg.onclick = function(event) { foundEgg(this, sectionKey); event.stopPropagation(); }; egg.style.pointerEvents = 'auto';
+        
+        if(!isTab) { 
+            egg.style.top = (Math.random() * 80 + 10) + '%'; 
+            egg.style.left = (Math.random() * 80 + 10) + '%'; 
+        } else { 
+            // Position absolue pour l'onglet : il ne déformera plus le bouton !
+            egg.style.position = 'absolute'; 
+            egg.style.top = '-8px'; 
+            egg.style.right = '5px'; 
+            egg.style.margin = '0';
+            egg.style.fontSize = '1.2rem';
+            egg.style.filter = 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))'; // Le fait bien ressortir
+        }
         container.appendChild(egg);
     }
 
