@@ -6,7 +6,7 @@
         script-src 'self' 'unsafe-inline' https://www.googletagmanager.com;
         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
         font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
-        img-src 'self' data: https://www.google.com https://*.google.com https://*.gstatic.com http://googleusercontent.com https://www.googletagmanager.com;
+        img-src 'self' data: https://www.google.com https://*.google.com https://*.gstatic.com http://googleusercontent.com https://www.googletagmanager.com https://via.placeholder.com;
         connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com;
         object-src 'none';
         base-uri 'self';
@@ -424,6 +424,13 @@
 </div>
 
 <script>
+    /* --- CONFIGURATION DES CHEMINS --- */
+    const cheminTries = "images/jeux_de_societe/tries/";
+    const cheminNonIdentifies = "images/jeux_de_societe/non_identifies/";
+    const cheminPresse = "images/presse/";
+    const cheminSorties = "images/sorties/";
+    const extensionJeux = ".jpg"; // Modifiez en .png si nécessaire
+
     /* --- GESTION DU BOUTON RETOUR ANDROID (HISTORY API) --- */
     window.addEventListener('popstate', (e) => { 
         if (lb.classList.contains('active')) { 
@@ -529,50 +536,52 @@
     let photosSortiesHTML = '<div class="photo-grid">';
     sortiesConfig.forEach(cfg => {
         for(let i=1; i<=cfg.count; i++) {
-            let filename = `sortie_${cfg.year}_${i}.jpg`;
-            photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('${filename}')"><img src="${filename}" loading="lazy" alt=""><span class="photo-year">${cfg.year}</span></div>`;
+            // Intégration de la nouvelle arborescence pour les sorties
+            let filename = `${cheminSorties}${cfg.year}/sortie_${cfg.year}_${i}.jpg`;
+            photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('${filename}')"><img src="${filename}" loading="lazy" alt="" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"><span class="photo-year">${cfg.year}</span></div>`;
         }
     });
     photosSortiesHTML += '</div>';
 
-    /* --- 1.B NOUVELLE GESTION DES JEUX --- */
-    // AJOUTE TES NOMS DE FICHIERS ICI !
-    const fichiersJeux = [
-        "jeu_imagine.jpg", 
-        "jeu_jamaïca.jpg",
-        "jeu_pandemic.jpg",
-        "jeu4.jpg",       // <- C'est un ancien format, il s'affichera sans bandeau
-        "jeu7.jpg",       // <- Celui-ci aussi
-        "jeu_Catan.jpg",
-        "jeu_Les_Aventuriers_du_Rail.jpg" // Les tirets du bas deviendront des espaces
+    /* --- 1.B NOUVELLE GESTION DES JEUX (Avec Arborescence) --- */
+    const jeuxNommes = [
+        "jeu_abyss", "jeu_azul", "jeu_camel_cup", "jeu_century",
+        "jeu_code_names", "jeu_dice_town", "jeu_flamme_rouge", "jeu_heimlich&co",
+        "jeu_imagine", "jeu_jamaïca", "jeu_king_of_tokyo", "jeu_kingdomino",
+        "jeu_la_cour_des_miracles", "jeu_le_mystere_de_Whitehall", "jeu_les_aventuriers_du_rail",
+        "jeu_living_forest", "jeu_menara", "jeu_mysterium", "jeu_nemesis",
+        "jeu_noé", "jeu_paleo", "jeu_pandemic", "jeu_parks",
+        "jeu_the_island", "jeu_tokaido", "jeu_tumblin_dice", "jeu_wingspan", "jeu_witness"
     ];
+    const nombreDeJeuxNumerotes = 7;
 
     let photosJeuxHTML = '<div class="photo-grid">';
-    fichiersJeux.forEach(fichier => {
-        // Enlève l'extension (.jpg ou .png)
-        let nomBrut = fichier.split('.').slice(0, -1).join('.');
-        let nomJeu = "";
-        let bannerHTML = "";
-
-        // On vérifie si c'est "jeu" suivi UNIQUEMENT de chiffres (ex: jeu4, jeu15)
-        if (!/^jeu\d+$/.test(nomBrut)) {
-            // C'est un nouveau nom (ex: jeu_imagine) !
-            // 1. On enlève "jeu_"
-            nomJeu = nomBrut.startsWith('jeu_') ? nomBrut.substring(4) : nomBrut;
-            // 2. On remplace les tirets du bas par des espaces
-            nomJeu = nomJeu.replace(/_/g, ' ');
-            // 3. On force la première lettre en majuscule pour que ça soit joli
-            nomJeu = nomJeu.charAt(0).toUpperCase() + nomJeu.slice(1);
-            
-            bannerHTML = `<div class="photo-game-title">${nomJeu}</div>`;
-        }
-
+    
+    // Ajout des jeux connus (Tries)
+    jeuxNommes.forEach(jeu => {
+        let nomJeu = jeu.replace('jeu_', '').replace(/_/g, ' ');
+        nomJeu = nomJeu.charAt(0).toUpperCase() + nomJeu.slice(1);
+        let fichierComplet = cheminTries + jeu + extensionJeux;
+        
         photosJeuxHTML += `
-            <div class="photo-grid-item" onclick="openLightbox('${fichier}')">
-                <img src="${fichier}" loading="lazy" alt="${nomJeu}">
-                ${bannerHTML}
+            <div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')">
+                <img src="${fichierComplet}" loading="lazy" alt="${nomJeu}" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'">
+                <div class="photo-game-title">${nomJeu}</div>
             </div>`;
     });
+
+    // Ajout des jeux inconnus (Non Identifies)
+    for (let i = 1; i <= nombreDeJeuxNumerotes; i++) {
+        let nomFichier = "jeu" + i;
+        let nomJeu = "Jeu mystère n°" + i;
+        let fichierComplet = cheminNonIdentifies + nomFichier + extensionJeux;
+        
+        photosJeuxHTML += `
+            <div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')">
+                <img src="${fichierComplet}" loading="lazy" alt="${nomJeu}" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'">
+                <div class="photo-game-title">${nomJeu}</div>
+            </div>`;
+    }
     photosJeuxHTML += '</div>';
 
     /* --- 2. DONNÉES DES PAGES --- */
@@ -586,7 +595,9 @@
                 <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante ! Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées.</p>
                 <div class="phase-label">Phase 3</div><div class="phase-title"><i class="fa-solid fa-people-group phase-icon"></i><span>Le Plateau Central (2019)</span></div>
                 <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. L'association <b>Des Potes à Jeux</b> naît officiellement.</p>
-                <div style="text-align: center; margin-top: 15px;"><button class="btn-article" onclick="openLightbox('article_journal.jpg', true)"><i class="fa-solid fa-newspaper"></i> Voir l'article de journal</button></div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="btn-article" onclick="openLightbox('${cheminPresse}article_journal.jpg', true)"><i class="fa-solid fa-newspaper"></i> Voir l'article de journal</button>
+                </div>
                 <div class="phase-label">Phase 4</div><div class="phase-title"><i class="fa-solid fa-puzzle-piece phase-icon"></i><span>L'Extension (2026)</span></div>
                 <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. L'aventure ne fait que continuer avec vous !</p>
             </div>`
