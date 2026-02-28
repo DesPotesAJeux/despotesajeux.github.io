@@ -44,7 +44,6 @@
             --myludo-color: #2c3e50; 
             --gold-game: #d4af37;
             --president-color: #e67e22;
-            /* MODIFICATION ICI */
             --bg-image: url('images/backgrounds/hero_soir.png');
         }
 
@@ -137,7 +136,6 @@
            ========================================= */
         .barn-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            /* MODIFICATION ICI */
             background: url('images/backgrounds/grange_interieur.jpg') center center / cover no-repeat;
             z-index: 250; display: flex; flex-direction: column; justify-content: flex-end;
             opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
@@ -483,7 +481,6 @@
     }
 
     /* --- 0. GESTION DU FOND SELON L'HEURE --- */
-    /* MODIFICATION ICI */
     function updateBackgroundTime() {
         const hour = new Date().getHours();
         let bgUrl = "url('images/backgrounds/hero_soir.png')"; // Par défaut : Soir / Nuit (de 18h à 5h59)
@@ -539,7 +536,6 @@
     let photosSortiesHTML = '<div class="photo-grid">';
     sortiesConfig.forEach(cfg => {
         for(let i=1; i<=cfg.count; i++) {
-            // Intégration de la nouvelle arborescence pour les sorties
             let filename = `${cheminSorties}${cfg.year}/sortie_${cfg.year}_${i}.jpg`;
             photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('${filename}')"><img src="${filename}" loading="lazy" alt="" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"><span class="photo-year">${cfg.year}</span></div>`;
         }
@@ -573,16 +569,14 @@
             </div>`;
     });
 
-    // Ajout des jeux inconnus (Non Identifies)
+    // Ajout des jeux inconnus (Non Identifiés) : BANDEAU "JEU MYSTÈRE" RETIRÉ ICI
     for (let i = 1; i <= nombreDeJeuxNumerotes; i++) {
         let nomFichier = "jeu" + i;
-        let nomJeu = "Jeu mystère n°" + i;
         let fichierComplet = cheminNonIdentifies + nomFichier + extensionJeux;
         
         photosJeuxHTML += `
             <div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')">
-                <img src="${fichierComplet}" loading="lazy" alt="${nomJeu}" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'">
-                <div class="photo-game-title">${nomJeu}</div>
+                <img src="${fichierComplet}" loading="lazy" alt="" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'">
             </div>`;
     }
     photosJeuxHTML += '</div>';
