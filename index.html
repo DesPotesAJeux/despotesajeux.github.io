@@ -192,7 +192,6 @@
         .game-desc-box { background: #fff; border-radius: 15px; padding: 15px; width: 100%; box-sizing: border-box; margin-bottom: 20px; border: 1px solid rgba(188, 143, 99, 0.2); }
         .game-desc-box p { font-size: 0.95rem; line-height: 1.5; color: var(--text-brown); margin: 0; }
         
-        /* Boutons de la modale mis à jour */
         .game-btn { 
             background: var(--wood-brown); color: white; border: none; padding: 10px 25px; border-radius: 50px; 
             font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; 
@@ -213,10 +212,19 @@
 
         /* --- RESTE DU CSS (Menus, Lightbox) --- */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
-        .lightbox-img-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease-out; transform-origin: center center; }
+        .lightbox-img-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease-out; transform-origin: center center; position: relative; }
         .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; transform: scale(0.9); opacity: 0; transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); will-change: transform; }
         .lightbox.active { opacity: 1; }
         .lightbox.active img { transform: scale(1); opacity: 1; }
+        
+        .lightbox-caption {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            color: #fff; font-family: 'Quicksand', sans-serif; font-size: 1.4rem; font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.9); z-index: 110; text-align: center;
+            opacity: 0; transition: opacity 0.3s ease; width: 90%; pointer-events: none;
+        }
+        .lightbox.active .lightbox-caption { opacity: 1; }
+
         .lightbox-controls { position: absolute; top: 25px; right: 25px; display: flex; gap: 15px; z-index: 110; }
         .lightbox-btn { color: #ffffff; font-size: 1.4rem; background: rgba(0,0,0,0.6); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; }
         .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.6); font-size: 2rem; padding: 20px; z-index: 110; cursor: pointer; transition: color 0.3s ease; -webkit-tap-highlight-color: transparent; }
@@ -243,7 +251,6 @@
         .btn-article { display: inline-flex; align-items: center; gap: 8px; background: rgba(188, 143, 99, 0.15); color: var(--wood-brown); border: 1px solid var(--wood-brown); border-radius: 50px; padding: 6px 15px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 10px; text-decoration: none; }
         .btn-article:active { transform: scale(0.95); background: rgba(188, 143, 99, 0.25); }
         
-        /* --- CSS ONGLETS PHOTOS ET GRILLE --- */
         .photo-tabs { display: flex; background: rgba(188, 143, 99, 0.15); border-radius: 50px; padding: 5px; margin: 0 auto 20px; max-width: 320px; position: relative; }
         .photo-tab { flex: 1; text-align: center; padding: 10px 15px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--wood-brown); cursor: pointer; transition: background 0.1s, color 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
         .photo-tab.active { background: var(--wood-brown); color: white; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); }
@@ -255,7 +262,14 @@
         .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 4px; opacity: 0; }
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
         
-        /* Animation d'apparition au fil de l'eau (cascade) sans cloner le DOM */
+        .photo-game-title {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+            color: #fff; font-family: 'Quicksand', sans-serif; font-size: 0.7rem; font-weight: 700;
+            padding: 15px 4px 4px; text-align: center; box-sizing: border-box;
+            pointer-events: none; text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+        }
+
         .photo-tab-content.active .photo-grid-item { animation: gridItemFade 0.4s cubic-bezier(0.17, 0.84, 0.44, 1) forwards; }
         .photo-tab-content.active .photo-grid-item:nth-child(1) { animation-delay: 0.05s; }
         .photo-tab-content.active .photo-grid-item:nth-child(2) { animation-delay: 0.10s; }
@@ -276,8 +290,7 @@
         .photo-year { position: absolute; bottom: 4px; right: 4px; background: rgba(0, 0, 0, 0.6); color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; pointer-events: none; backdrop-filter: blur(2px); }
 
         .contact-person { display: flex; flex-direction: column; padding: 10px 12px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
-        /* Cartes Ludothèque amincies */
-        .contact-person.compact-item { padding: 10px 12px; margin-bottom: 8px; }
+        .contact-person.compact-item { padding: 10px 12px; margin-bottom: 8px; flex-direction: row; align-items: center; }
         .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
         .contact-person .avatar { width: 38px; height: 38px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; overflow: hidden;}
         .contact-person .avatar.president-icon { background: var(--president-color); color: white; }
@@ -360,7 +373,10 @@
         <div class="lightbox-nav prev" id="lbNavPrev" onclick="changePhotoDir('prev')"><i class="fa-solid fa-chevron-left"></i></div>
         <div class="lightbox-nav next" id="lbNavNext" onclick="changePhotoDir('next')"><i class="fa-solid fa-chevron-right"></i></div>
         <div class="lightbox-controls"><div class="lightbox-btn" onclick="closeLightboxForce()"><i class="fa-solid fa-xmark"></i></div></div>
-        <div class="lightbox-img-container" id="lbContainer"><img id="lightboxImg" src="" alt="Aperçu plein écran"></div>
+        <div class="lightbox-img-container" id="lbContainer">
+            <img id="lightboxImg" src="" alt="Aperçu plein écran">
+            <div id="lightboxCaption" class="lightbox-caption"></div>
+        </div>
     </div>
 
     <div class="overlay" id="overlay" onclick="closeSheet()"></div>
@@ -445,18 +461,15 @@
 
     /* --- GESTION DES ONGLETS PHOTOS INSTANTANÉE --- */
     function switchPhotoTab(tabId, element) {
-        // Enlève l'état actif de tous les boutons et contenus
         document.querySelectorAll('.photo-tab').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.photo-tab-content').forEach(content => content.classList.remove('active'));
         
-        // Active le bouton cliqué
         element.classList.add('active');
-        
         let newGrid = document.getElementById('grid-' + tabId);
         
-        // Astuce magique pour relancer l'animation CSS instantanément sans lag
+        // Astuce pour relancer l'animation CSS sans lag
         newGrid.classList.remove('active');
-        void newGrid.offsetWidth; // Force le navigateur à recalculer l'affichage (0ms)
+        void newGrid.offsetWidth; 
         newGrid.classList.add('active');
     }
 
@@ -475,10 +488,7 @@
     }
     updateBackgroundTime();
 
-    /* --- 1. CALCULS DATE & HTML --- */
-    const NB_PHOTOS_JEUX = 33;    
-    let currentGallery = []; let currentPhotoIndex = 0;
-
+    /* --- 1. CALCULS DATE & HTML SORTIES --- */
     const sortiesConfig = [
         { year: 2025, count: 5 }, { year: 2024, count: 7 }, { year: 2023, count: 7 },
         { year: 2022, count: 9 }, { year: 2021, count: 2 }, { year: 2019, count: 1 }
@@ -520,13 +530,42 @@
     sortiesConfig.forEach(cfg => {
         for(let i=1; i<=cfg.count; i++) {
             let filename = `sortie_${cfg.year}_${i}.jpg`;
-            photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('${filename}')"><img src="${filename}" loading="lazy"><span class="photo-year">${cfg.year}</span></div>`;
+            photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('${filename}')"><img src="${filename}" loading="lazy" alt=""><span class="photo-year">${cfg.year}</span></div>`;
         }
     });
     photosSortiesHTML += '</div>';
 
+    /* --- 1.B NOUVELLE GESTION DES JEUX --- */
+    // Remplace ces noms par les vrais noms de tes fichiers !
+    const fichiersJeux = [
+        "jeu_Carcassonne.jpg", 
+        "jeu_7_Wonders.jpg",
+        "jeu_Azul.jpg",
+        "jeu_Splendor.jpg",
+        "jeu_Les_Aventuriers_du_Rail.jpg",
+        "jeu_Scythe.jpg",
+        "jeu_Mysterium.jpg",
+        "jeu_Catan.jpg",
+        "jeu_Dixit.jpg"
+    ];
+
     let photosJeuxHTML = '<div class="photo-grid">';
-    for(let i=1; i<=NB_PHOTOS_JEUX; i++) { photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('jeu${i}.jpg')"><img src="jeu${i}.jpg" loading="lazy"></div>`; }
+    fichiersJeux.forEach(fichier => {
+        // 1. Enlève l'extension (.jpg ou .png)
+        let nomBrut = fichier.split('.').slice(0, -1).join('.');
+        
+        // 2. Enlève "jeu_" au début
+        let nomJeu = nomBrut.startsWith('jeu_') ? nomBrut.substring(4) : nomBrut;
+        
+        // 3. Remplace les tirets du bas (_) par des espaces pour faire joli !
+        nomJeu = nomJeu.replace(/_/g, ' ');
+        
+        photosJeuxHTML += `
+            <div class="photo-grid-item" onclick="openLightbox('${fichier}')">
+                <img src="${fichier}" loading="lazy" alt="${nomJeu}">
+                <div class="photo-game-title">${nomJeu}</div>
+            </div>`;
+    });
     photosJeuxHTML += '</div>';
 
     /* --- 2. DONNÉES DES PAGES --- */
@@ -605,7 +644,6 @@
             if(container) {
                 let remaining = gameState[key].total - gameState[key].found;
                 if(key === 'photos') {
-                    // Les dés s'affichent en absolute sur l'onglet pour ne pas le déformer
                     let tabs = container.querySelectorAll('.photo-tab');
                     for(let i=0; i<remaining; i++) createEgg(tabs[i % tabs.length], key, false, true);
                 } else {
@@ -630,15 +668,40 @@
     sheet.addEventListener('touchmove', (e) => { if (!isDragging || window.innerWidth > 768) return; let diff = e.touches[0].clientY - startY; if (diff > 0) { e.preventDefault(); sheet.style.transform = `translateY(calc(-100% + ${diff}px))`; } }, { passive: false });
     sheet.addEventListener('touchend', (e) => { if (!isDragging || window.innerWidth > 768) return; isDragging = false; let diff = e.changedTouches[0].clientY - startY; sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; if (diff > 100) { closeSheet(); } else { sheet.style.transform = ''; } });
 
+    /* --- LIGHTBOX AVEC SOUS-TITRE --- */
     const lb = document.getElementById('lightbox'); const lbContainer = document.getElementById('lbContainer'); const lbImg = document.getElementById('lightboxImg'); const lbNavPrev = document.getElementById('lbNavPrev'); const lbNavNext = document.getElementById('lbNavNext');
+    let currentGallery = []; let currentPhotoIndex = 0;
     let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
-    function openLightbox(src, isSingleImage = false) { lbImg.src = src; lb.style.display = 'flex'; resetZoom(); setTimeout(() => lb.classList.add('active'), 10); if (isSingleImage) { currentGallery = [src]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } else { 
-        const activeTab = document.querySelector('.photo-tab-content.active');
-        const imgs = activeTab.querySelectorAll('.photo-grid img'); 
-        currentGallery = Array.from(imgs).map(i => i.getAttribute('src')); 
-        currentPhotoIndex = currentGallery.indexOf(src); 
-        if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } 
-    } if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } }
+    
+    function openLightbox(src, isSingleImage = false) { 
+        lbImg.src = src; lb.style.display = 'flex'; resetZoom(); 
+        setTimeout(() => lb.classList.add('active'), 10); 
+        
+        const captionEl = document.getElementById('lightboxCaption');
+
+        if (isSingleImage) { 
+            currentGallery = [{src: src, title: ''}]; 
+            currentPhotoIndex = 0; 
+            lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; 
+            captionEl.innerText = '';
+        } else { 
+            const activeTab = document.querySelector('.photo-tab-content.active');
+            const items = activeTab.querySelectorAll('.photo-grid-item img'); 
+            
+            // On enregistre l'URL ET le titre (attribut alt)
+            currentGallery = Array.from(items).map(img => ({
+                src: img.getAttribute('src'),
+                title: img.getAttribute('alt') || ''
+            })); 
+            
+            currentPhotoIndex = currentGallery.findIndex(g => g.src === src); 
+            if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } 
+            
+            captionEl.innerText = currentGallery[currentPhotoIndex].title;
+        } 
+        if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } 
+    }
+    
     function hideLightboxDOM() { lb.classList.remove('active'); setTimeout(() => { lb.style.display='none'; resetZoom(); }, 300); }
     function closeLightboxForce(fromHistory = false) { if (!lb.classList.contains('active')) return; if (history.state && history.state.type === 'lightbox') { history.back(); } else { hideLightboxDOM(); } }
     lbContainer.addEventListener('click', (e) => { if(e.target !== lbImg && currentScale === 1 && !e.target.closest('.lightbox-nav')) closeLightboxForce(); });
@@ -647,7 +710,24 @@
     lbContainer.addEventListener('touchstart', (e) => { if(e.target.closest('.lightbox-nav')) return; if (e.touches.length === 2) { isZooming = true; initialDistance = getDistance(e.touches); } else if (e.touches.length === 1) { lastPanX = e.touches[0].clientX; lastPanY = e.touches[0].clientY; swipeStartX = e.touches[0].clientX; currentSwipeX = 0; } }, {passive: false});
     lbContainer.addEventListener('touchmove', (e) => { if (e.touches.length === 2) { e.preventDefault(); const currentDistance = getDistance(e.touches); const scaleChange = currentDistance / initialDistance; currentScale = Math.min(Math.max(1, currentScale * scaleChange), 4); lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; initialDistance = currentDistance; } else if (e.touches.length === 1) { let currentX = e.touches[0].clientX; let currentY = e.touches[0].clientY; if (currentScale > 1) { e.preventDefault(); posX += (currentX - lastPanX) / currentScale; posY += (currentY - lastPanY) / currentScale; lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; lastPanX = currentX; lastPanY = currentY; } else if (!isZooming && currentGallery.length > 1) { e.preventDefault(); currentSwipeX = currentX - swipeStartX; lbContainer.style.transform = `translateX(${currentSwipeX}px)`; } } }, {passive: false});
     lbContainer.addEventListener('touchend', (e) => { if (e.touches.length < 2) { isZooming = false; } if (currentScale === 1 && currentGallery.length > 1) { if (currentSwipeX > 70) { changePhotoDir('prev'); } else if (currentSwipeX < -70) { changePhotoDir('next'); } else { lbContainer.style.transform = `translateX(0px)`; } currentSwipeX = 0; } });
-    function changePhotoDir(dir) { if (currentGallery.length <= 1) return; if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } lbImg.style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; setTimeout(() => { let newSrc = currentGallery[currentPhotoIndex]; lbImg.src = newSrc; lbImg.style.opacity = 1; }, 150); }
+    
+    function changePhotoDir(dir) { 
+        if (currentGallery.length <= 1) return; 
+        if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } 
+        
+        lbImg.style.opacity = 0; 
+        document.getElementById('lightboxCaption').style.opacity = 0;
+        lbContainer.style.transform = `translateX(0px)`; 
+        
+        setTimeout(() => { 
+            let newObj = currentGallery[currentPhotoIndex]; 
+            lbImg.src = newObj.src; 
+            document.getElementById('lightboxCaption').innerText = newObj.title;
+            
+            lbImg.style.opacity = 1; 
+            document.getElementById('lightboxCaption').style.opacity = 1;
+        }, 150); 
+    }
 
     /* =================================================================================
        FONCTIONS COMMUNES MODALES & ECRANS DE JEU
@@ -780,7 +860,6 @@
             egg.style.top = (Math.random() * 80 + 10) + '%'; 
             egg.style.left = (Math.random() * 80 + 10) + '%'; 
         } else { 
-            // Position absolue pour l'onglet : il ne déformera plus le bouton !
             egg.style.position = 'absolute'; 
             egg.style.top = '-8px'; 
             egg.style.right = '5px'; 
