@@ -255,7 +255,7 @@
         .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 4px; opacity: 0; }
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
         
-        /* Animation d'apparition au fil de l'eau (cascade) */
+        /* Animation d'apparition au fil de l'eau (cascade) sans cloner le DOM */
         .photo-tab-content.active .photo-grid-item { animation: gridItemFade 0.4s cubic-bezier(0.17, 0.84, 0.44, 1) forwards; }
         .photo-tab-content.active .photo-grid-item:nth-child(1) { animation-delay: 0.05s; }
         .photo-tab-content.active .photo-grid-item:nth-child(2) { animation-delay: 0.10s; }
@@ -276,7 +276,8 @@
         .photo-year { position: absolute; bottom: 4px; right: 4px; background: rgba(0, 0, 0, 0.6); color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; pointer-events: none; backdrop-filter: blur(2px); }
 
         .contact-person { display: flex; flex-direction: column; padding: 10px 12px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
-        .contact-person.compact-item { padding: 6px 12px; margin-bottom: 6px; }
+        /* Cartes Ludothèque amincies */
+        .contact-person.compact-item { padding: 10px 12px; margin-bottom: 8px; }
         .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
         .contact-person .avatar { width: 38px; height: 38px; background: var(--wood-highlight); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; flex-shrink: 0; overflow: hidden;}
         .contact-person .avatar.president-icon { background: var(--president-color); color: white; }
@@ -442,21 +443,21 @@
         document.getElementById('mainWrapper').classList.remove('blurred');
     }
 
-    /* --- GESTION DES ONGLETS PHOTOS --- */
+    /* --- GESTION DES ONGLETS PHOTOS INSTANTANÉE --- */
     function switchPhotoTab(tabId, element) {
         // Enlève l'état actif de tous les boutons et contenus
         document.querySelectorAll('.photo-tab').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.photo-tab-content').forEach(content => content.classList.remove('active'));
         
-        // Ajoute l'état actif au bouton cliqué et à la grille correspondante de manière instantanée
+        // Active le bouton cliqué
         element.classList.add('active');
         
         let newGrid = document.getElementById('grid-' + tabId);
-        newGrid.classList.add('active');
         
-        // Relance l'animation de cascade en "clonant" puis remplaçant l'élément
-        let newGridClone = newGrid.cloneNode(true);
-        newGrid.parentNode.replaceChild(newGridClone, newGrid);
+        // Astuce magique pour relancer l'animation CSS instantanément sans lag
+        newGrid.classList.remove('active');
+        void newGrid.offsetWidth; // Force le navigateur à recalculer l'affichage (0ms)
+        newGrid.classList.add('active');
     }
 
     /* --- 0. GESTION DU FOND SELON L'HEURE --- */
@@ -580,11 +581,11 @@
             title: "Nos Ludothèques", 
             text: `<div class="panel-card" id="content-ludotheque">
                 <p style="text-align: center; margin-top: 0; margin-bottom: 15px; font-size: 0.9rem; line-height: 1.5;">L'asso n'a pas de jeux, mais nos membres en ont des centaines ! 📦 Chaque dernier vendredi du mois, chacun apporte ses coups de cœur du moment pour les faire découvrir aux autres. N'hésitez pas à fouiller dans leurs collections <b>Myludo</b> pour leur réclamer une partie à la prochaine soirée !</p>
-                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Carine</h4><a href="https://www.myludo.fr/#!/profil/carine-duneuf-jardin-85877" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Carine</span></div></div>
-                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Ronan</h4><a href="https://www.myludo.fr/#!/profil/ronan-29-67622" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Ronan</span></div></div>
-                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sébastien</h4><a href="https://www.myludo.fr/#!/profil/sebastien-g-107305" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Sébastien</span></div></div>
-                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Stéphane</h4><a href="https://www.myludo.fr/#!/profil/stephane-rio-26496" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Stéphane</span></div></div>
-                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sylvain</h4><a href="https://www.myludo.fr/#!/profil/sylvain-bedouet-64234" target="_blank" class="call-btn ludo-btn">Voir</a></div><div class="contact-bottom"><span>Collection de Sylvain</span></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Carine</h4><a href="https://www.myludo.fr/#!/profil/carine-duneuf-jardin-85877" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Ronan</h4><a href="https://www.myludo.fr/#!/profil/ronan-29-67622" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sébastien</h4><a href="https://www.myludo.fr/#!/profil/sebastien-g-107305" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Stéphane</h4><a href="https://www.myludo.fr/#!/profil/stephane-rio-26496" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sylvain</h4><a href="https://www.myludo.fr/#!/profil/sylvain-bedouet-64234" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
             </div>` 
         }
     };
@@ -785,7 +786,7 @@
             egg.style.right = '5px'; 
             egg.style.margin = '0';
             egg.style.fontSize = '1.2rem';
-            egg.style.filter = 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))'; // Le fait bien ressortir
+            egg.style.filter = 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))'; 
         }
         container.appendChild(egg);
     }
