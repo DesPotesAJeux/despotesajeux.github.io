@@ -140,7 +140,6 @@
             z-index: 250; display: flex; flex-direction: column; justify-content: flex-end;
             opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
         }
-        /* Ombre douce en bas pour rendre le texte lisible sans gâcher l'image */
         .barn-overlay::after {
             content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%;
             background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0)); pointer-events: none; z-index: 1;
@@ -154,7 +153,7 @@
         .barn-close-btn:active { transform: scale(0.9); }
 
         .barn-message {
-            position: relative; z-index: 2; /* Pour passer au dessus du dégradé sombre */
+            position: relative; z-index: 2; 
             padding: 20px 25px 40px; text-align: center; width: 100%; box-sizing: border-box;
             transform: translateY(20px); transition: transform 0.4s ease;
         }
@@ -205,6 +204,7 @@
         /* --- ANIMATIONS GLOBALES --- */
         @keyframes spin { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.2); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes tabFadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- RESTE DU CSS (Menus, Lightbox) --- */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
@@ -238,10 +238,15 @@
         .btn-article { display: inline-flex; align-items: center; gap: 8px; background: rgba(188, 143, 99, 0.15); color: var(--wood-brown); border: 1px solid var(--wood-brown); border-radius: 50px; padding: 6px 15px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 10px; text-decoration: none; }
         .btn-article:active { transform: scale(0.95); background: rgba(188, 143, 99, 0.25); }
         
-        .photo-section-title { text-align: center; color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 15px 0 10px 0; padding-top: 20px; border-top: 1px dashed rgba(0,0,0,0.1); }
-        .photo-section-title.first { border-top: none; padding-top: 0px; margin-top: 0px; } 
-        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 0 3px 20px; }
-        .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 2px; }
+        /* --- NOUVEAU CSS ONGLETS PHOTOS --- */
+        .photo-tabs { display: flex; background: rgba(188, 143, 99, 0.15); border-radius: 50px; padding: 5px; margin: 0 auto 20px; max-width: 320px; position: relative; }
+        .photo-tab { flex: 1; text-align: center; padding: 10px 15px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--wood-brown); cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
+        .photo-tab.active { background: var(--wood-brown); color: white; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); }
+        .photo-tab-content { display: none; animation: tabFadeIn 0.4s ease; }
+        .photo-tab-content.active { display: block; }
+        
+        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 0 0 20px; }
+        .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 4px; }
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
         .photo-year { position: absolute; bottom: 4px; right: 4px; background: rgba(0, 0, 0, 0.6); color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; pointer-events: none; backdrop-filter: blur(2px); }
 
@@ -401,7 +406,7 @@
 
     function closeBarn() {
         if (history.state && history.state.type === 'barn') {
-            history.back(); // Laisse le popstate gérer la fermeture
+            history.back(); 
         } else {
             closeBarnForce();
         }
@@ -410,6 +415,17 @@
     function closeBarnForce() {
         document.getElementById('barnOverlay').classList.remove('active');
         document.getElementById('mainWrapper').classList.remove('blurred');
+    }
+
+    /* --- GESTION DES ONGLETS PHOTOS --- */
+    function switchPhotoTab(tabId, element) {
+        // Enlève l'état actif de tous les boutons et contenus
+        document.querySelectorAll('.photo-tab').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.photo-tab-content').forEach(content => content.classList.remove('active'));
+        
+        // Ajoute l'état actif au bouton cliqué et à la grille correspondante
+        element.classList.add('active');
+        document.getElementById('grid-' + tabId).classList.add('active');
     }
 
     /* --- 0. GESTION DU FOND SELON L'HEURE --- */
@@ -507,7 +523,19 @@
             </div>`
         },
         cal: { title: "Agenda Ludique", text: `<div class="panel-card" id="content-cal"><p style="text-align: center; color: var(--green-deep); margin-top: 0; font-size: 0.95rem;">On se retrouve chaque <b>dernier vendredi du mois</b>. Voici les prochaines sessions :</p>${agendaHTML}<p style="text-align: center; font-size:0.8rem; margin-bottom: 0;">N'oubliez pas d'apporter votre bonne humeur !</p></div>` },
-        photos: { title: "Souvenirs", text: `<div class="panel-card" id="content-photos" style="padding-left: 0; padding-right: 0; padding-bottom: 0; overflow: hidden; position: relative;"><h3 id="photo-title-1" class="photo-section-title first">Les Sorties</h3>${photosSortiesHTML}<h3 id="photo-title-2" class="photo-section-title">Les Jeux</h3>${photosJeuxHTML}</div>` },
+        photos: { 
+            title: "Souvenirs", 
+            text: `
+            <div id="content-photos" style="padding-top: 10px; overflow: hidden; position: relative; background: transparent; box-shadow: none;">
+                <div class="photo-tabs">
+                    <button class="photo-tab active" onclick="switchPhotoTab('jeux', this)"><i class="fa-solid fa-dice"></i> Les Jeux</button>
+                    <button class="photo-tab" onclick="switchPhotoTab('sorties', this)"><i class="fa-solid fa-users"></i> Les Sorties</button>
+                </div>
+                
+                <div id="grid-jeux" class="photo-tab-content active">${photosJeuxHTML}</div>
+                <div id="grid-sorties" class="photo-tab-content">${photosSortiesHTML}</div>
+            </div>` 
+        },
         contact: { 
             title: "Nous Contacter", 
             text: `<div class="panel-card" id="content-contact">
@@ -545,8 +573,9 @@
             if(container) {
                 let remaining = gameState[key].total - gameState[key].found;
                 if(key === 'photos') {
-                    let titles = container.querySelectorAll('.photo-section-title');
-                    for(let i=0; i<remaining; i++) createEgg(titles[i % titles.length], key, false, true);
+                    // Les dés du menu photos s'affichent désormais sur les boutons du menu !
+                    let tabs = container.querySelectorAll('.photo-tab');
+                    for(let i=0; i<remaining; i++) createEgg(tabs[i % tabs.length], key, false, true);
                 } else {
                     container.style.position = 'relative';
                     for(let i=0; i<remaining; i++) createEgg(container, key, false, false);
@@ -571,7 +600,14 @@
 
     const lb = document.getElementById('lightbox'); const lbContainer = document.getElementById('lbContainer'); const lbImg = document.getElementById('lightboxImg'); const lbNavPrev = document.getElementById('lbNavPrev'); const lbNavNext = document.getElementById('lbNavNext');
     let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
-    function openLightbox(src, isSingleImage = false) { lbImg.src = src; lb.style.display = 'flex'; resetZoom(); setTimeout(() => lb.classList.add('active'), 10); if (isSingleImage) { currentGallery = [src]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } else { const imgs = document.querySelectorAll('.photo-grid img'); currentGallery = Array.from(imgs).map(i => i.getAttribute('src')); currentPhotoIndex = currentGallery.indexOf(src); if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } } if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } }
+    function openLightbox(src, isSingleImage = false) { lbImg.src = src; lb.style.display = 'flex'; resetZoom(); setTimeout(() => lb.classList.add('active'), 10); if (isSingleImage) { currentGallery = [src]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } else { 
+        // On récupère uniquement les images de l'onglet actif pour la galerie !
+        const activeTab = document.querySelector('.photo-tab-content.active');
+        const imgs = activeTab.querySelectorAll('.photo-grid img'); 
+        currentGallery = Array.from(imgs).map(i => i.getAttribute('src')); 
+        currentPhotoIndex = currentGallery.indexOf(src); 
+        if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } 
+    } if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } }
     function hideLightboxDOM() { lb.classList.remove('active'); setTimeout(() => { lb.style.display='none'; resetZoom(); }, 300); }
     function closeLightboxForce(fromHistory = false) { if (!lb.classList.contains('active')) return; if (history.state && history.state.type === 'lightbox') { history.back(); } else { hideLightboxDOM(); } }
     lbContainer.addEventListener('click', (e) => { if(e.target !== lbImg && currentScale === 1 && !e.target.closest('.lightbox-nav')) closeLightboxForce(); });
@@ -601,7 +637,7 @@
     }
 
     /* =================================================================================
-       JEU 1 : CHASSE AUX DÉS (CONSERVÉ)
+       JEU 1 : CHASSE AUX DÉS
        ================================================================================= */
     let gameStarted = false; let eggCount = 0; const totalEggs = 10;
     let timerInterval; let startTime; let finalGameData = { time: "", rankNumber: 0, rank: "", message: "", rawMs: 0 }; 
