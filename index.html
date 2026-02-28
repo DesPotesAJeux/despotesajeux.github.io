@@ -536,30 +536,34 @@
     photosSortiesHTML += '</div>';
 
     /* --- 1.B NOUVELLE GESTION DES JEUX --- */
+    // AJOUTE TES NOMS DE FICHIERS ICI !
     const fichiersJeux = [
-        "jeu_Carcassonne.jpg", 
-        "jeu_7_Wonders.jpg",
-        "jeu_Azul.jpg",
-        "jeu_Splendor.jpg",
-        "jeu_Les_Aventuriers_du_Rail.jpg",
-        "jeu1.jpg", // Ancien format (sera affiché sans bandeau !)
-        "jeu2.jpg", // Ancien format (sera affiché sans bandeau !)
+        "jeu_imagine.jpg", 
+        "jeu_jamaïca.jpg",
+        "jeu_pandemic.jpg",
+        "jeu4.jpg",       // <- C'est un ancien format, il s'affichera sans bandeau
+        "jeu7.jpg",       // <- Celui-ci aussi
         "jeu_Catan.jpg",
-        "jeu3.jpg"  // Ancien format (sera affiché sans bandeau !)
+        "jeu_Les_Aventuriers_du_Rail.jpg" // Les tirets du bas deviendront des espaces
     ];
 
     let photosJeuxHTML = '<div class="photo-grid">';
     fichiersJeux.forEach(fichier => {
+        // Enlève l'extension (.jpg ou .png)
         let nomBrut = fichier.split('.').slice(0, -1).join('.');
         let nomJeu = "";
         let bannerHTML = "";
 
-        // Si le nom N'EST PAS juste "jeu" suivi d'un ou plusieurs chiffres (ex: jeu1, jeu15)
+        // On vérifie si c'est "jeu" suivi UNIQUEMENT de chiffres (ex: jeu4, jeu15)
         if (!/^jeu\d+$/.test(nomBrut)) {
-            // On enlève "jeu_" si ça commence par ça, sinon on garde le nom
+            // C'est un nouveau nom (ex: jeu_imagine) !
+            // 1. On enlève "jeu_"
             nomJeu = nomBrut.startsWith('jeu_') ? nomBrut.substring(4) : nomBrut;
-            // On remplace les tirets du bas (_) par des espaces
+            // 2. On remplace les tirets du bas par des espaces
             nomJeu = nomJeu.replace(/_/g, ' ');
+            // 3. On force la première lettre en majuscule pour que ça soit joli
+            nomJeu = nomJeu.charAt(0).toUpperCase() + nomJeu.slice(1);
+            
             bannerHTML = `<div class="photo-game-title">${nomJeu}</div>`;
         }
 
