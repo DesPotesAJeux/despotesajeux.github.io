@@ -204,7 +204,6 @@
         /* --- ANIMATIONS GLOBALES --- */
         @keyframes spin { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.2); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes tabFadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- RESTE DU CSS (Menus, Lightbox) --- */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
@@ -240,11 +239,11 @@
         .btn-article { display: inline-flex; align-items: center; gap: 8px; background: rgba(188, 143, 99, 0.15); color: var(--wood-brown); border: 1px solid var(--wood-brown); border-radius: 50px; padding: 6px 15px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 10px; text-decoration: none; }
         .btn-article:active { transform: scale(0.95); background: rgba(188, 143, 99, 0.25); }
         
-        /* --- NOUVEAU CSS ONGLETS PHOTOS --- */
+        /* --- NOUVEAU CSS ONGLETS PHOTOS (SANS ANIMATION POUR L'INSTANTANÉITÉ) --- */
         .photo-tabs { display: flex; background: rgba(188, 143, 99, 0.15); border-radius: 50px; padding: 5px; margin: 0 auto 20px; max-width: 320px; position: relative; }
-        .photo-tab { flex: 1; text-align: center; padding: 10px 15px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--wood-brown); cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
+        .photo-tab { flex: 1; text-align: center; padding: 10px 15px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--wood-brown); cursor: pointer; transition: background 0.1s, color 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
         .photo-tab.active { background: var(--wood-brown); color: white; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); }
-        .photo-tab-content { display: none; animation: tabFadeIn 0.4s ease; }
+        .photo-tab-content { display: none; }
         .photo-tab-content.active { display: block; }
         
         .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 0 0 20px; }
@@ -408,7 +407,7 @@
 
     function closeBarn() {
         if (history.state && history.state.type === 'barn') {
-            history.back(); 
+            history.back(); // Laisse le popstate gérer la fermeture
         } else {
             closeBarnForce();
         }
@@ -425,7 +424,7 @@
         document.querySelectorAll('.photo-tab').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.photo-tab-content').forEach(content => content.classList.remove('active'));
         
-        // Ajoute l'état actif au bouton cliqué et à la grille correspondante
+        // Ajoute l'état actif au bouton cliqué et à la grille correspondante de manière instantanée
         element.classList.add('active');
         document.getElementById('grid-' + tabId).classList.add('active');
     }
@@ -530,7 +529,7 @@
             text: `
             <div id="content-photos" style="padding-top: 10px; overflow: hidden; position: relative; background: transparent; box-shadow: none;">
                 <div class="photo-tabs">
-                    <button class="photo-tab active" onclick="switchPhotoTab('jeux', this)"><i class="fa-solid fa-dice"></i> Les Jeux</button>
+                    <button class="photo-tab active" onclick="switchPhotoTab('jeux', this)"><i class="fa-solid fa-puzzle-piece"></i> Les Jeux</button>
                     <button class="photo-tab" onclick="switchPhotoTab('sorties', this)"><i class="fa-solid fa-users"></i> Les Sorties</button>
                 </div>
                 
