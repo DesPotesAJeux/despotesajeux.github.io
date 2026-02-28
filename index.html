@@ -222,10 +222,12 @@
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 25; display: none; opacity: 0; transition: opacity 0.3s ease; }
         .bottom-sheet { position: absolute; top: 100%; left: 0; width: 100%; height: auto; max-height: 85vh; min-height: 40vh; background: white; z-index: 30; border-top-left-radius: 35px; border-top-right-radius: 35px; display: flex; flex-direction: column; will-change: transform; transition: transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1); }
         .bottom-sheet.open { transform: translateY(-100%); }
-        .sheet-header { width: 100%; padding: 20px 0 10px; flex-shrink: 0; cursor: grab; }
+        /* AJUSTEMENT DU HEADER DU BOTTOM SHEET */
+        .sheet-header { width: 100%; padding: 12px 0 5px; flex-shrink: 0; cursor: grab; }
         .sheet-handle { width: 45px; height: 6px; background: #e0e0e0; border-radius: 10px; margin: 0 auto; }
         .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; -webkit-overflow-scrolling: touch; }
-        .sheet-content-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 2.4rem; margin: 5px 0 20px; text-align: center; position: relative; }
+        /* AJUSTEMENT DU TITRE DE LA PAGE */
+        .sheet-content-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 2.4rem; margin: 0 0 15px; text-align: center; position: relative; }
         .sheet-content-title::after { content: ''; display: block; width: 50px; height: 4px; background: var(--wood-brown); margin: 10px auto 0; border-radius: 5px; }
 
         .panel-card { background: var(--bg-beige); padding: 15px; border-radius: 20px; margin: 15px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.03); position: relative; }
