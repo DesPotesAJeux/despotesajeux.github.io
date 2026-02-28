@@ -536,34 +536,37 @@
     photosSortiesHTML += '</div>';
 
     /* --- 1.B NOUVELLE GESTION DES JEUX --- */
-    // Remplace ces noms par les vrais noms de tes fichiers !
     const fichiersJeux = [
         "jeu_Carcassonne.jpg", 
         "jeu_7_Wonders.jpg",
         "jeu_Azul.jpg",
         "jeu_Splendor.jpg",
         "jeu_Les_Aventuriers_du_Rail.jpg",
-        "jeu_Scythe.jpg",
-        "jeu_Mysterium.jpg",
+        "jeu1.jpg", // Ancien format (sera affiché sans bandeau !)
+        "jeu2.jpg", // Ancien format (sera affiché sans bandeau !)
         "jeu_Catan.jpg",
-        "jeu_Dixit.jpg"
+        "jeu3.jpg"  // Ancien format (sera affiché sans bandeau !)
     ];
 
     let photosJeuxHTML = '<div class="photo-grid">';
     fichiersJeux.forEach(fichier => {
-        // 1. Enlève l'extension (.jpg ou .png)
         let nomBrut = fichier.split('.').slice(0, -1).join('.');
-        
-        // 2. Enlève "jeu_" au début
-        let nomJeu = nomBrut.startsWith('jeu_') ? nomBrut.substring(4) : nomBrut;
-        
-        // 3. Remplace les tirets du bas (_) par des espaces pour faire joli !
-        nomJeu = nomJeu.replace(/_/g, ' ');
-        
+        let nomJeu = "";
+        let bannerHTML = "";
+
+        // Si le nom N'EST PAS juste "jeu" suivi d'un ou plusieurs chiffres (ex: jeu1, jeu15)
+        if (!/^jeu\d+$/.test(nomBrut)) {
+            // On enlève "jeu_" si ça commence par ça, sinon on garde le nom
+            nomJeu = nomBrut.startsWith('jeu_') ? nomBrut.substring(4) : nomBrut;
+            // On remplace les tirets du bas (_) par des espaces
+            nomJeu = nomJeu.replace(/_/g, ' ');
+            bannerHTML = `<div class="photo-game-title">${nomJeu}</div>`;
+        }
+
         photosJeuxHTML += `
             <div class="photo-grid-item" onclick="openLightbox('${fichier}')">
                 <img src="${fichier}" loading="lazy" alt="${nomJeu}">
-                <div class="photo-game-title">${nomJeu}</div>
+                ${bannerHTML}
             </div>`;
     });
     photosJeuxHTML += '</div>';
