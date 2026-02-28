@@ -44,7 +44,8 @@
             --myludo-color: #2c3e50; 
             --gold-game: #d4af37;
             --president-color: #e67e22;
-            --bg-image: url('hero_soir.png');
+            /* MODIFICATION ICI */
+            --bg-image: url('images/backgrounds/hero_soir.png');
         }
 
         body {
@@ -136,7 +137,8 @@
            ========================================= */
         .barn-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('grange_interieur.jpg') center center / cover no-repeat;
+            /* MODIFICATION ICI */
+            background: url('images/backgrounds/grange_interieur.jpg') center center / cover no-repeat;
             z-index: 250; display: flex; flex-direction: column; justify-content: flex-end;
             opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
         }
@@ -481,14 +483,15 @@
     }
 
     /* --- 0. GESTION DU FOND SELON L'HEURE --- */
+    /* MODIFICATION ICI */
     function updateBackgroundTime() {
         const hour = new Date().getHours();
-        let bgUrl = "url('hero_soir.png')"; // Par défaut : Soir / Nuit (de 18h à 5h59)
+        let bgUrl = "url('images/backgrounds/hero_soir.png')"; // Par défaut : Soir / Nuit (de 18h à 5h59)
 
         if (hour >= 6 && hour < 12) {
-            bgUrl = "url('hero_matin.png')"; // Matin (de 6h à 11h59)
+            bgUrl = "url('images/backgrounds/hero_matin.png')"; // Matin (de 6h à 11h59)
         } else if (hour >= 12 && hour < 18) {
-            bgUrl = "url('hero_aprem.png')"; // Après-midi (de 12h à 17h59)
+            bgUrl = "url('images/backgrounds/hero_aprem.png')"; // Après-midi (de 12h à 17h59)
         }
 
         document.documentElement.style.setProperty('--bg-image', bgUrl);
