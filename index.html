@@ -7,20 +7,12 @@
         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
         font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
         img-src 'self' data: https://www.google.com https://*.google.com https://*.gstatic.com http://googleusercontent.com https://www.googletagmanager.com https://via.placeholder.com;
-        connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://api.open-meteo.com;
+        connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://api.open-meteo.com;
         object-src 'none';
         base-uri 'self';
         form-action 'self';
         frame-src 'none';
     ">
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-YPHH9PELKY');
-    </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -176,7 +168,8 @@
         .photo-tab-content { display: none; }
         .photo-tab-content.active { display: block; }
         .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 0 0 20px; }
-        .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 4px; opacity: 0; }
+        /* AJOUT DU WILL-CHANGE ICI POUR LA FLUIDITÉ */
+        .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 4px; opacity: 0; will-change: transform, opacity; }
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
         .photo-game-title { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); color: #fff; font-family: 'Quicksand', sans-serif; font-size: 0.7rem; font-weight: 700; padding: 15px 4px 4px; text-align: center; box-sizing: border-box; pointer-events: none; text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
         .photo-tab-content.active .photo-grid-item { animation: gridItemFade 0.4s cubic-bezier(0.17, 0.84, 0.44, 1) forwards; }
@@ -228,6 +221,25 @@
         .menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
         .icon-box { width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; border-radius: 14px; background: var(--wood-brown); margin-bottom: 6px; color: #ffffff; font-size: 1.3rem; box-shadow: 0 4px 8px rgba(0,0,0,0.25); transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); }
         .menu-item span { font-weight: 700; font-size: 0.5rem; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* =========================================
+           POPUP COOKIES
+           ========================================= */
+        .cookie-popup {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%);
+            width: 90%; max-width: 350px; background: rgba(255, 252, 240, 0.98);
+            border: 2px solid var(--wood-brown); border-radius: 15px; padding: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4); z-index: 400; opacity: 0;
+            transition: all 0.6s cubic-bezier(0.17, 0.84, 0.44, 1); text-align: center; backdrop-filter: blur(5px);
+        }
+        .cookie-popup.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .cookie-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 1.6rem; margin: 0 0 5px 0; }
+        .cookie-text { font-size: 0.85rem; margin: 0 0 15px 0; line-height: 1.4; }
+        .cookie-buttons { display: flex; gap: 10px; justify-content: center; }
+        .cookie-btn { padding: 8px 15px; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: none; transition: transform 0.2s; }
+        .cookie-btn:active { transform: scale(0.95); }
+        .cookie-btn.accept { background: var(--green-deep); color: white; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.2); }
+        .cookie-btn.decline { background: transparent; border: 1px solid var(--wood-brown); color: var(--wood-brown); }
 
         @media (min-width: 768px) {
             body { align-items: center; background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), var(--bg-image) center / cover no-repeat; backdrop-filter: blur(10px); overflow: auto; padding: 20px; box-sizing: border-box; min-height: 100vh; }
@@ -284,6 +296,15 @@
 <body>
 
 <div class="phone">
+    
+    <div id="cookiePopup" class="cookie-popup">
+        <h3 class="cookie-title">🍪 Une petite faim ?</h3>
+        <p class="cookie-text">On utilise quelques cookies (pas ceux qu'on grignote en jouant) pour analyser les visites via Google Analytics. Ça nous aide à savoir si notre asso gagne en visibilité !</p>
+        <div class="cookie-buttons">
+            <button class="cookie-btn decline" onclick="handleCookies('declined')">Non merci</button>
+            <button class="cookie-btn accept" onclick="handleCookies('accepted')">Accepter</button>
+        </div>
+    </div>
     
     <div class="game-toast" id="gameToast">Bravo ! 1/10</div>
     <div class="game-timer" id="gameTimer">00:00:00</div>
@@ -436,18 +457,13 @@
         document.getElementById('mainWrapper').classList.remove('blurred');
     }
 
-    /* --- GESTION DES ONGLETS PHOTOS INSTANTANÉE --- */
+    /* --- GESTION DES ONGLETS PHOTOS INSTANTANÉE (Optimisée) --- */
     function switchPhotoTab(tabId, element) {
         document.querySelectorAll('.photo-tab').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.photo-tab-content').forEach(content => content.classList.remove('active'));
         
         element.classList.add('active');
-        let newGrid = document.getElementById('grid-' + tabId);
-        
-        // Astuce pour relancer l'animation CSS sans lag
-        newGrid.classList.remove('active');
-        void newGrid.offsetWidth; 
-        newGrid.classList.add('active');
+        document.getElementById('grid-' + tabId).classList.add('active');
     }
 
     /* --- 1. CALCULS DATE & HTML SORTIES --- */
@@ -488,11 +504,12 @@
         return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem; flex-shrink:0;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank">Maison des Associations</a></div></div></div>`;
     }).join('') + '</div>';
 
+    // Optimisation avec decoding="async"
     let photosSortiesHTML = '<div class="photo-grid">';
     sortiesConfig.forEach(cfg => {
         for(let i=1; i<=cfg.count; i++) {
             let filename = `${cheminSorties}${cfg.year}/sortie_${cfg.year}_${i}.jpg`;
-            photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('${filename}')"><img src="${filename}" loading="lazy" alt="" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"><span class="photo-year">${cfg.year}</span></div>`;
+            photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('${filename}')"><img src="${filename}" loading="lazy" decoding="async" alt="" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"><span class="photo-year">${cfg.year}</span></div>`;
         }
     });
     photosSortiesHTML += '</div>';
@@ -511,7 +528,7 @@
 
     let photosJeuxHTML = '<div class="photo-grid">';
     
-    // Ajout des jeux connus (Tries)
+    // Ajout des jeux connus (Optimisé avec decoding="async")
     jeuxNommes.forEach(jeu => {
         let nomJeu = jeu.replace('jeu_', '').replace(/_/g, ' ');
         nomJeu = nomJeu.charAt(0).toUpperCase() + nomJeu.slice(1);
@@ -519,19 +536,19 @@
         
         photosJeuxHTML += `
             <div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')">
-                <img src="${fichierComplet}" loading="lazy" alt="${nomJeu}" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'">
+                <img src="${fichierComplet}" loading="lazy" decoding="async" alt="${nomJeu}" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'">
                 <div class="photo-game-title">${nomJeu}</div>
             </div>`;
     });
 
-    // Ajout des jeux inconnus (Non Identifiés)
+    // Ajout des jeux inconnus sans le titre de mystère (Optimisé avec decoding="async")
     for (let i = 1; i <= nombreDeJeuxNumerotes; i++) {
         let nomFichier = "jeu" + i;
         let fichierComplet = cheminNonIdentifies + nomFichier + extensionJeux;
         
         photosJeuxHTML += `
             <div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')">
-                <img src="${fichierComplet}" loading="lazy" alt="" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'">
+                <img src="${fichierComplet}" loading="lazy" decoding="async" alt="" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'">
             </div>`;
     }
     photosJeuxHTML += '</div>';
@@ -856,6 +873,45 @@
             document.head.appendChild(style);
         }
     }
+
+    /* =================================================================================
+       GESTION DES COOKIES & ANALYTICS
+       ================================================================================= */
+    function loadGoogleAnalytics() {
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = "https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY";
+        document.head.appendChild(script);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-YPHH9PELKY');
+    }
+
+    function checkCookies() {
+        const consent = localStorage.getItem('potes_cookie_consent');
+        
+        if (consent === 'accepted') {
+            loadGoogleAnalytics();
+        } else if (!consent) {
+            setTimeout(() => {
+                document.getElementById('cookiePopup').classList.add('show');
+            }, 1000);
+        }
+    }
+
+    function handleCookies(choice) {
+        localStorage.setItem('potes_cookie_consent', choice);
+        document.getElementById('cookiePopup').classList.remove('show');
+        
+        if (choice === 'accepted') {
+            loadGoogleAnalytics();
+        }
+    }
+
+    // Lancement de la vérification au démarrage
+    checkCookies();
 </script>
 </body>
 </html>
