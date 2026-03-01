@@ -839,9 +839,17 @@
     let authMode = 'login'; 
 
     // GESTION DES RETOURS D'ERREUR GOOGLE REDIRECT
-    getRedirectResult(auth).catch((error) => {
+    getRedirectResult(auth).then((result) => {
+        if (result !== null) {
+            console.log("Connecté avec Google !");
+        }
+    }).catch((error) => {
         console.error("Erreur Google Redirect :", error);
-        window.showCustomAlert("Oups !", "La connexion avec Google a échoué. Assure-toi que le domaine est autorisé dans Firebase.", "fa-triangle-exclamation");
+        window.showCustomAlert(
+            "La connexion a échoué", 
+            "Google a refusé l'accès. Voici l'erreur technique renvoyée par le serveur :<br><br><b style='font-size:0.8rem; color: var(--president-color);'>" + error.code + "</b><br><br><i>(As-tu bien ajouté ton adresse web dans les Domaines Autorisés de Firebase ?)</i>", 
+            "fa-triangle-exclamation"
+        );
     });
 
     window.toggleVisibility = function(inputId, iconId) {
