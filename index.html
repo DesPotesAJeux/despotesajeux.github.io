@@ -938,7 +938,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBwLFuQcpv_Ml8omuhzEL1mvTEPlxsH1Wo",
@@ -958,52 +958,126 @@
 
     let currentUser = null;
     let unsubscribeVotes = null;
+    let authMode = 'login'; // Modes possibles : 'login', 'register', 'reset'
 
-    // ÉCOUTEUR : Vérifie en temps réel si le joueur est connecté ou non
-    onAuthStateChanged(auth, (user) => {
-        currentUser = user;
+    // Fonction pour dessiner l'interface de connexion en fonction du mode
+    window.renderAuthUI = function() {
         const authContainer = document.getElementById('auth-container');
-        
-        if (authContainer) {
-            if (user) {
-                // S'il est connecté, on affiche son nom et un bouton déconnexion
-                authContainer.innerHTML = `
-                    <div style="font-size:0.85rem; color:var(--green-deep); margin-bottom:15px; padding: 8px; background: rgba(58, 99, 81, 0.1); border-radius: 10px;">
-                        Connecté(e) : <b>${user.displayName}</b> 
-                        <button onclick="logoutFirebase()" style="margin-left:10px; padding:4px 10px; font-size:0.7rem; font-weight:bold; border-radius:50px; border:1px solid var(--wood-brown); color:var(--wood-brown); background:transparent; cursor:pointer;">Quitter</button>
-                    </div>`;
-            } else {
-                // S'il n'est pas connecté, on lui propose de se connecter avec Google
-                authContainer.innerHTML = `
-                    <button class="game-btn" onclick="loginFirebase()" style="margin-bottom:15px; background:var(--fb-blue); width:100%; justify-content:center;">
-                        <i class="fa-brands fa-google"></i> Se connecter avec Google
-                    </button>`;
-            }
-        }
-        
-        // On met à jour l'affichage des votes pour débloquer/bloquer les boutons
-        if (document.getElementById('liste-votes-firebase')) {
-            window.initFirebaseVotes(); 
-        }
-    });
+        if (!authContainer) return;
 
-    // Fonction de connexion Google
-    window.loginFirebase = async function() {
-        const provider = new GoogleAuthProvider();
-        try { 
-            await signInWithPopup(auth, provider); 
-        } catch (e) { 
-            console.error(e); 
-            alert("Erreur lors de la connexion. Vérifiez que les pop-ups sont autorisées ou que le domaine est bien déclaré dans Firebase."); 
+        if (currentUser) {
+            // Si connecté
+            authContainer.innerHTML = `
+                <div style="font-size:0.85rem; color:var(--green-deep); margin-bottom:15px; padding: 8px; background: rgba(58, 99, 81, 0.1); border-radius: 10px;">
+                    Connecté(e) : <b>${currentUser.displayName || currentUser.email}</b> 
+                    <button onclick="logoutFirebase()" style="margin-left:10px; padding:4px 10px; font-size:0.7rem; font-weight:bold; border-radius:50px; border:1px solid var(--wood-brown); color:var(--wood-brown); background:transparent; cursor:pointer;">Quitter</button>
+                </div>`;
+        } else {
+            // Si non connecté : on affiche le bon formulaire
+            if (authMode === 'login') {
+                authContainer.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05);">
+                        <input type="email" id="auth-email" class="share-input" placeholder="Adresse e-mail">
+                        <input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe">
+                        <button class="game-btn" style="width:100%; justify-content:center;" onclick="loginEmail()"><i class="fa-solid fa-right-to-bracket"></i> Connexion</button>
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:5px; font-weight:bold;">
+                            <a href="#" onclick="setAuthMode('register')" style="color:var(--green-deep); text-decoration:none;">Créer un compte</a>
+                            <a href="#" onclick="setAuthMode('reset')" style="color:var(--text-brown); text-decoration:none;">Mot de passe oublié ?</a>
+                        </div>
+                    </div>`;
+            } else if (authMode === 'register') {
+                authContainer.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05);">
+                        <input type="text" id="auth-name" class="share-input" placeholder="Ton pseudo (ex: Julie)">
+                        <input type="email" id="auth-email" class="share-input" placeholder="Adresse e-mail">
+                        <input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe (6 min.)">
+                        <button class="game-btn" style="width:100%; justify-content:center; background:var(--green-deep);" onclick="registerEmail()"><i class="fa-solid fa-user-plus"></i> S'inscrire</button>
+                        <div style="text-align:center; font-size:0.75rem; margin-top:5px; font-weight:bold;">
+                            <a href="#" onclick="setAuthMode('login')" style="color:var(--wood-brown); text-decoration:none;">Déjà inscrit ? Se connecter</a>
+                        </div>
+                    </div>`;
+            } else if (authMode === 'reset') {
+                authContainer.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05);">
+                        <p style="font-size:0.8rem; margin:0 0 5px; color:var(--text-brown);">Un lien de réinitialisation vous sera envoyé.</p>
+                        <input type="email" id="auth-email" class="share-input" placeholder="Adresse e-mail">
+                        <button class="game-btn" style="width:100%; justify-content:center; background:var(--president-color);" onclick="resetPwd()"><i class="fa-solid fa-envelope"></i> Recevoir le lien</button>
+                        <div style="text-align:center; font-size:0.75rem; margin-top:5px; font-weight:bold;">
+                            <a href="#" onclick="setAuthMode('login')" style="color:var(--wood-brown); text-decoration:none;">Retour à la connexion</a>
+                        </div>
+                    </div>`;
+            }
         }
     };
 
-    // Fonction de déconnexion
+    // Changer le mode d'affichage
+    window.setAuthMode = function(mode) {
+        authMode = mode;
+        window.renderAuthUI();
+    };
+
+    // ACTIONS FIREBASE AUTH
+    window.loginEmail = async function() {
+        const email = document.getElementById('auth-email').value.trim();
+        const pwd = document.getElementById('auth-pwd').value.trim();
+        if(!email || !pwd) return alert("Veuillez remplir tous les champs.");
+        try {
+            await signInWithEmailAndPassword(auth, email, pwd);
+        } catch (e) {
+            alert("Erreur de connexion. Vérifiez vos identifiants.");
+            console.error(e);
+        }
+    };
+
+    window.registerEmail = async function() {
+        const name = document.getElementById('auth-name').value.trim();
+        const email = document.getElementById('auth-email').value.trim();
+        const pwd = document.getElementById('auth-pwd').value.trim();
+        
+        if(!name || !email || !pwd) return alert("Veuillez remplir tous les champs.");
+        if(pwd.length < 6) return alert("Le mot de passe doit faire au moins 6 caractères.");
+
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, pwd);
+            // On ajoute le pseudo au profil Firebase
+            await updateProfile(userCredential.user, { displayName: name });
+            // On force le rafraîchissement de l'UI pour afficher le nom
+            window.renderAuthUI();
+        } catch (e) {
+            if(e.code === 'auth/email-already-in-use') alert("Cet email est déjà utilisé.");
+            else alert("Erreur lors de l'inscription.");
+            console.error(e);
+        }
+    };
+
+    window.resetPwd = async function() {
+        const email = document.getElementById('auth-email').value.trim();
+        if(!email) return alert("Veuillez entrer votre adresse e-mail.");
+        try {
+            await sendPasswordResetEmail(auth, email);
+            alert("Lien de réinitialisation envoyé ! Vérifiez vos spams.");
+            setAuthMode('login');
+        } catch (e) {
+            alert("Erreur. Cette adresse est-elle bien enregistrée ?");
+            console.error(e);
+        }
+    };
+
     window.logoutFirebase = async function() {
         try { await signOut(auth); } catch (e) { console.error(e); }
     };
 
-    // Affichage des jeux en temps réel
+    // ÉCOUTEUR PRINCIPAL : Se déclenche à chaque connexion/déconnexion
+    onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        window.renderAuthUI(); // Met à jour le formulaire/nom
+        
+        if (document.getElementById('liste-votes-firebase')) {
+            window.initFirebaseVotes(); // Met à jour les boutons de vote
+        }
+    });
+
+    /* --- GESTION DES VOTES (Base de données) --- */
     window.initFirebaseVotes = function() {
         if(!window.db) return;
         const jeuxRef = collection(window.db, "jeux_proposes");
@@ -1021,7 +1095,7 @@
                 jeux.push({ id: doc.id, ...doc.data() });
             });
 
-            // On trie par la taille du tableau 'votants' (qui correspond au nb de votes)
+            // Tri par nombre de votes décroissants
             jeux.sort((a, b) => ((b.votants || []).length) - ((a.votants || []).length));
 
             if(jeux.length === 0) {
@@ -1031,15 +1105,11 @@
                     let votantsArray = jeu.votants || [];
                     let nbVotes = votantsArray.length;
                     
-                    // On vérifie si l'ID de l'utilisateur actuel est dans le tableau
                     let aDejaVote = currentUser ? votantsArray.includes(currentUser.uid) : false;
-                    
                     let btnClass = aDejaVote ? "call-btn fb-btn" : "call-btn ludo-btn"; 
                     let btnText = aDejaVote ? `✅ ${nbVotes}` : `👍 ${nbVotes}`;
                     
-                    // Si pas connecté, le clic demande de se connecter. Sinon, ça vote/dévote.
-                    let clickAction = currentUser ? `onclick="voterPourJeu('${jeu.id}', ${aDejaVote})"` : `onclick="alert('Connectez-vous avec Google pour voter !')"`;
-
+                    let clickAction = currentUser ? `onclick="voterPourJeu('${jeu.id}', ${aDejaVote})"` : `onclick="alert('Connectez-vous pour voter !') ; setAuthMode('login')"`;
                     let proposeur = jeu.proposePar ? `<span style="font-size:0.65rem; color:gray; display:block; margin-top:2px;">Proposé par <b>${jeu.proposePar}</b></span>` : '';
 
                     html += `
@@ -1058,10 +1128,9 @@
         });
     };
 
-    // Ajouter un jeu
     window.ajouterJeuFirebase = async function() {
         if(!currentUser) { 
-            alert("Connectez-vous avec Google avant de proposer un jeu !"); 
+            alert("Veuillez vous connecter pour proposer un jeu !"); 
             return; 
         }
         const input = document.getElementById('nomNouveauJeu');
@@ -1072,8 +1141,8 @@
         try {
             await addDoc(collection(window.db, "jeux_proposes"), {
                 nom: nom,
-                votants: [currentUser.uid], // Le proposeur ajoute son ID dans les votants
-                proposePar: currentUser.displayName, // On stocke son prénom/nom Google
+                votants: [currentUser.uid], 
+                proposePar: currentUser.displayName || "Un Pote", 
                 proposeParUid: currentUser.uid,
                 date_ajout: new Date()
             });
@@ -1082,17 +1151,13 @@
         }
     };
 
-    // Voter ou retirer son vote
     window.voterPourJeu = async function(id, aDejaVote) {
         if(!currentUser) return;
         const jeuRef = doc(window.db, "jeux_proposes", id);
-        
         try {
             if(aDejaVote) {
-                // S'il a déjà voté, on RETIRE son UID du tableau (ça lui permet d'annuler son vote)
                 await updateDoc(jeuRef, { votants: arrayRemove(currentUser.uid) });
             } else {
-                // Sinon on AJOUTE son UID
                 await updateDoc(jeuRef, { votants: arrayUnion(currentUser.uid) });
             }
         } catch (e) {
@@ -1100,5 +1165,6 @@
         }
     };
 </script>
+
 </body>
 </html>
