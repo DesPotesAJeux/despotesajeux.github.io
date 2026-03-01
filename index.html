@@ -588,7 +588,7 @@
                         <button class="vote-tab" onclick="window.switchVoteTab('arene', this)"><i class="fa-solid fa-chess-board"></i> L'Arène</button>
                     </div>
 
-                    <div id="vote-swipe-area" style="position: relative; width: 100%; touch-action: pan-y;">
+                    <div id="vote-swipe-area" style="position: relative; width: 100%;">
                         
                         <div id="tab-profil" class="vote-tab-content active">
                             
@@ -617,19 +617,11 @@
                         </div>
 
                         <div id="tab-reserve" class="vote-tab-content">
-                            <p style="font-size:0.8rem; text-align:center; color:var(--text-brown); margin: 0 0 15px; line-height:1.4;">Accède aux collections des membres pour demander un jeu !</p>
+                            <p style="font-size:0.8rem; text-align:center; color:var(--text-brown); margin: 0 0 15px; line-height:1.4;">Demande aux membres d'apporter un jeu de leur collection !</p>
                             
-                            <div style="display:flex; overflow-x:auto; gap:10px; padding-bottom:10px; margin-bottom:15px; scrollbar-width:none;">
-                                <a href="https://www.myludo.fr/#!/profil/carine-duneuf-jardin-85877" target="_blank" style="text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow:0 2px 5px rgba(0,0,0,0.05); flex-shrink:0; text-align:center;"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; vertical-align:middle; margin-right:4px;"> Carine</a>
-                                <a href="https://www.myludo.fr/#!/profil/ronan-29-67622" target="_blank" style="text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow:0 2px 5px rgba(0,0,0,0.05); flex-shrink:0; text-align:center;"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; vertical-align:middle; margin-right:4px;"> Ronan</a>
-                                <a href="https://www.myludo.fr/#!/profil/sebastien-g-107305" target="_blank" style="text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow:0 2px 5px rgba(0,0,0,0.05); flex-shrink:0; text-align:center;"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; vertical-align:middle; margin-right:4px;"> Séb</a>
-                                <a href="https://www.myludo.fr/#!/profil/stephane-rio-26496" target="_blank" style="text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow:0 2px 5px rgba(0,0,0,0.05); flex-shrink:0; text-align:center;"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; vertical-align:middle; margin-right:4px;"> Stéphane</a>
-                                <a href="https://www.myludo.fr/#!/profil/sylvain-bedouet-64234" target="_blank" style="text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow:0 2px 5px rgba(0,0,0,0.05); flex-shrink:0; text-align:center;"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; vertical-align:middle; margin-right:4px;"> Sylvain</a>
-                            </div>
-
                             <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed rgba(188,143,99,0.3);">
-                                <label style="font-weight:bold; font-size:0.8rem; display:block; margin-bottom:5px; color:var(--text-brown);">Qu'est-ce qu'on amène ?</label>
-                                <input type="text" id="ludo-bag-search" class="share-input" style="width:100%; margin-bottom:10px; text-align:left;" placeholder="Rechercher un jeu de l'asso..." onkeyup="window.searchBagLudo(this.value)">
+                                <label style="font-weight:bold; font-size:0.8rem; display:block; margin-bottom:5px; color:var(--text-brown);">Chercher dans les ludothèques :</label>
+                                <input type="text" id="ludo-bag-search" class="share-input" style="width:100%; margin-bottom:10px; text-align:left;" placeholder="Ex: Catan..." onkeyup="window.searchBagLudo(this.value)">
                                 <div id="ludo-bag-results" style="display:flex; flex-direction:column; gap:5px;"></div>
                             </div>
 
@@ -932,30 +924,12 @@
         if(activeContent) activeContent.classList.add('active');
     };
 
-    let voteTouchStartX = 0;
-    let voteTouchEndX = 0;
-    document.addEventListener('touchstart', e => {
-        if (e.target.closest('#vote-swipe-area')) {
-            voteTouchStartX = e.changedTouches[0].screenX;
-        }
-    }, {passive: true});
-
-    document.addEventListener('touchend', e => {
-        if (e.target.closest('#vote-swipe-area')) {
-            voteTouchEndX = e.changedTouches[0].screenX;
-            if (voteTouchEndX < voteTouchStartX - 50) {
-                window.switchVoteTab('profil'); // Swipe gauche -> va vers profil
-            } else if (voteTouchEndX > voteTouchStartX + 50) {
-                window.switchVoteTab('arene'); // Swipe droite -> va vers arene
-            }
-        }
-    }, {passive: true});
 </script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, updateDoc, doc, deleteDoc, onSnapshot, getDocs, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, updateDoc, doc, deleteDoc, onSnapshot, getDocs, getDoc, setDoc, collectionGroup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const CODE_ASSO = "POTES56";
     const firebaseConfig = {
@@ -977,31 +951,25 @@
     window.tousLesJeux = []; 
     window.myCurrentRSVP = null; 
 
-    getRedirectResult(auth).then((result) => { if (result) console.log("Utilisateur Google:", result.user.displayName); }).catch((error) => { console.error("Erreur Google:", error); });
-
     window.toggleVisibility = function(inputId, iconId) {
         const input = document.getElementById(inputId), icon = document.getElementById(iconId);
         if (input.type === "password") { input.type = "text"; icon.classList.replace("fa-eye", "fa-eye-slash"); }
         else { input.type = "password"; icon.classList.replace("fa-eye-slash", "fa-eye"); }
     };
 
-    // ==========================================
-    // UI ET GESTION DES PROFILS
-    // ==========================================
+    // --- AUTHENTIFICATION ---
     window.updateVoteUI = async function() {
         const viewAuth = document.getElementById('view-auth'), viewVotes = document.getElementById('view-votes'), userGreeting = document.getElementById('user-greeting');
         if(!viewAuth || !viewVotes) return;
-        
         if(auth.currentUser) {
             viewAuth.style.display = 'none'; viewVotes.style.display = 'block';
             await window.loadProfile();
             let displayName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
             userGreeting.innerHTML = `<div style="font-size:3.5rem; margin-bottom:5px; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> Salut ${displayName} !`;
-            
             window.initFirebaseRSVP();
             window.initFirebaseVotes();
             window.chargerListeCollection(); 
-            if(window.initFirebaseSacs) window.initFirebaseSacs();
+            if (window.initFirebaseSacs) window.initFirebaseSacs();
         } else {
             viewAuth.style.display = 'block'; viewVotes.style.display = 'none';
             window.renderAuthUI();
@@ -1011,24 +979,20 @@
     window.renderAuthUI = function() {
         const authContainer = document.getElementById('auth-container'); if (!authContainer) return;
         if (window.authMode === 'register') {
-            authContainer.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
+            authContainer.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px;">
                 <input type="text" id="auth-secret" class="share-input" placeholder="Code secret de l'asso" style="border-color:var(--president-color); background:rgba(230,126,34,0.05);">
                 <input type="text" id="auth-name" class="share-input" placeholder="Pseudo">
                 <input type="email" id="auth-email" class="share-input" placeholder="Email">
                 <div style="position:relative;"><input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe" style="width:100%;"><i class="fa-solid fa-eye" id="t-pwd" onclick="toggleVisibility('auth-pwd','t-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
                 <div style="position:relative;"><input type="password" id="auth-pwd-confirm" class="share-input" placeholder="Confirmer" style="width:100%;"><i class="fa-solid fa-eye" id="t-pwd-c" onclick="toggleVisibility('auth-pwd-confirm','t-pwd-c')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
                 <button class="game-btn game-btn-green" onclick="registerEmail()" style="width:100%; justify-content:center;"><i class="fa-solid fa-user-plus"></i> S'inscrire</button>
-                <div style="text-align:center; margin: 5px 0; color:gray; font-size:0.8rem;">— ou —</div>
-                <button class="game-btn" style="background:#4285F4; width:100%; justify-content:center;" onclick="registerGoogle()"><i class="fa-brands fa-google"></i> S'inscrire via Google</button>
                 <span onclick="window.authMode='login'; renderAuthUI()" style="font-size:0.75rem; text-align:center; display:block; margin-top:10px; cursor:pointer; text-decoration:underline;">Déjà inscrit ? Connexion</span>
             </div>`;
         } else {
-            authContainer.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
+            authContainer.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px;">
                 <input type="email" id="auth-email" class="share-input" placeholder="Email">
                 <div style="position:relative;"><input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe" style="width:100%;"><i class="fa-solid fa-eye" id="t-pwd" onclick="toggleVisibility('auth-pwd','t-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
                 <button class="game-btn game-btn-green" onclick="loginEmail()" style="width:100%; justify-content:center;"><i class="fa-solid fa-right-to-bracket"></i> Connexion</button>
-                <div style="text-align:center; margin: 5px 0; color:gray; font-size:0.8rem;">— ou —</div>
-                <button class="game-btn" style="background:#4285F4; width:100%; justify-content:center;" onclick="loginGoogle()"><i class="fa-brands fa-google"></i> Continuer avec Google</button>
                 <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:10px;">
                     <span onclick="window.authMode='register'; renderAuthUI()" style="cursor:pointer; text-decoration:underline;">Créer un compte</span>
                     <span onclick="resetPwd()" style="cursor:pointer; text-decoration:underline;">Oublié ?</span>
@@ -1038,8 +1002,6 @@
     };
     
     window.authMode = 'login';
-    window.loginGoogle = () => signInWithRedirect(auth, new GoogleAuthProvider());
-    window.registerGoogle = () => { if(document.getElementById('auth-secret').value.trim().toUpperCase() !== CODE_ASSO) return window.showCustomAlert("Erreur", "Code secret invalide", "fa-user-shield"); window.loginGoogle(); };
     window.loginEmail = async () => { try { await signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pwd').value); } catch (e) { window.showCustomAlert("Erreur", "Identifiants invalides", "fa-circle-xmark"); } };
     window.registerEmail = async () => {
         if(document.getElementById('auth-secret').value.trim().toUpperCase() !== CODE_ASSO) return window.showCustomAlert("Refusé", "Code secret invalide", "fa-user-shield");
@@ -1049,7 +1011,7 @@
             const res = await createUserWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pwd').value);
             await updateProfile(res.user, { displayName: name });
             await setDoc(doc(db, "utilisateurs", res.user.uid), { avatar: '🎲', titre: 'Novice', nom: name });
-            window.showCustomAlert("Succès", "Compte créé !", "fa-champagne-glasses");
+            window.showCustomAlert("Succès", "Compte créé ! Vérifie tes spams.", "fa-champagne-glasses");
         } catch (e) { window.showCustomAlert("Erreur", e.message, "fa-bug"); }
     };
     window.logoutFirebase = () => signOut(auth);
@@ -1064,7 +1026,7 @@
         if(d.exists()) {
             localProfile = d.data();
         } else {
-            localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout' };
+            localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout', pseudoMyludo: '' };
             await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile);
         }
     };
@@ -1077,6 +1039,11 @@
             <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px; margin-bottom:10px; text-align:left;">
                 <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Avatar (Emoji)</label><input type="text" id="prof-avatar" class="share-input" value="${localProfile.avatar || '🎲'}" maxlength="2" style="font-size:1.2rem;"></div>
                 <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Titre (Fun)</label><input type="text" id="prof-titre" class="share-input" value="${localProfile.titre || 'Membre'}" placeholder="Le Stratège"></div>
+            </div>
+
+            <div style="text-align:left; margin-bottom:10px; background:rgba(44, 62, 80, 0.1); padding:8px; border-radius:8px; border:1px dashed #2c3e50;">
+                <label style="font-size:0.7rem; font-weight:bold; color:#2c3e50;">🔗 Ton pseudo exact de Ludothèque MyLudo :</label>
+                <input type="text" id="prof-myludo" class="share-input" value="${localProfile.pseudoMyludo || ''}" placeholder="Ex: sebastien, julie..." style="margin-top:4px;">
             </div>
 
             <div style="text-align:left; margin-bottom:10px;">
@@ -1105,6 +1072,7 @@
         localProfile.titre = document.getElementById('prof-titre').value || 'Membre';
         localProfile.jeuFavori = document.getElementById('prof-jeu').value || '';
         localProfile.styleJoueur = document.getElementById('prof-style').value || 'Touche-à-tout';
+        localProfile.pseudoMyludo = document.getElementById('prof-myludo') ? document.getElementById('prof-myludo').value.trim() : '';
         localProfile.nom = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
         
         await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile, {merge:true});
@@ -1190,7 +1158,7 @@
         });
     };
 
-    // --- ONGLET LA RESERVE (SACS) ---
+    // --- ONGLET LA RESERVE (SACS DE JEUX) ---
     window.searchBagLudo = function(q) {
         const resDiv = document.getElementById('ludo-bag-results');
         if(!q || q.length < 2) { resDiv.innerHTML = ''; return; }
@@ -1199,14 +1167,16 @@
         const filtered = window.tousLesJeux.filter(j => j.titre.toLowerCase().includes(query)).slice(0, 10);
         
         if(filtered.length === 0) {
-            resDiv.innerHTML = '<div style="font-size:0.75rem; color:gray; text-align:center;">Jeu introuvable dans l\'asso.</div>'; return;
+            resDiv.innerHTML = '<div style="font-size:0.75rem; color:gray; text-align:center;">Jeu introuvable dans l\'asso.</div>';
+            return;
         }
 
         let html = '';
         let myName = (auth.currentUser.displayName || auth.currentUser.email.split('@')[0]).toLowerCase();
+        let checkLudoId = (localProfile.pseudoMyludo || myName).toLowerCase();
 
         filtered.forEach(j => {
-            const isMe = j.proprio.toLowerCase() === myName;
+            const isMe = j.proprio.toLowerCase() === checkLudoId;
             const btn = isMe 
                 ? `<button class="btn-small game-btn-green" style="margin:0;" onclick="window.actionSac('${j.titre.replace(/'/g, "\\'")}', '${j.proprio.replace(/'/g, "\\'")}', 'apporter')">J'amène</button>`
                 : `<button class="btn-small" style="margin:0; background:var(--wood-brown);" onclick="window.actionSac('${j.titre.replace(/'/g, "\\'")}', '${j.proprio.replace(/'/g, "\\'")}', 'demander')">Demander</button>`;
@@ -1225,26 +1195,31 @@
     window.actionSac = async function(titre, proprio, action) {
         let demandeur = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
         let statut = action === 'apporter' ? 'confirmé' : 'demandé';
-        await addDoc(collection(db, "sacs_jeux"), { titre: titre, proprio: proprio, demandeur: demandeur, statut: statut, date_event: window.getNextEventDateStr(), timestamp: new Date() });
+        
+        await addDoc(collection(db, "sacs_jeux"), {
+            titre: titre, proprio: proprio, demandeur: demandeur, statut: statut, date_event: window.getNextEventDateStr(), timestamp: new Date()
+        });
+        
         document.getElementById('ludo-bag-search').value = "";
         document.getElementById('ludo-bag-results').innerHTML = "";
-        window.showCustomAlert("Fait !", action === 'apporter' ? "Jeu ajouté à ton sac." : `Demande envoyée pour ${titre}.`, "fa-box-open");
     };
 
     window.supprimerSac = async function(id) {
-        if(confirm("Retirer ce jeu de la liste des sacs ?")) await deleteDoc(doc(db, "sacs_jeux", id));
+        if(confirm("Retirer ce jeu de la liste des sacs ?")) {
+            await deleteDoc(doc(db, "sacs_jeux", id));
+        }
     };
 
-    window.buildSacCard = function(s, myName) {
+    window.buildSacCard = function(s, myName, myLudoId) {
         let icon = s.statut === "confirmé" ? "📦" : "🙏";
         let text = "";
         if (s.statut === "confirmé") {
-            text = s.proprio.toLowerCase() === myName ? `Je l'amène.` : `<b>${s.proprio}</b> l'amène.`;
+            text = s.proprio.toLowerCase() === myLudoId ? `Je l'amène.` : `<b>${s.proprio}</b> l'amène.`;
         } else {
-            text = s.demandeur.toLowerCase() === myName ? `J'ai demandé à <b>${s.proprio}</b>` : `Demandé à <b>${s.proprio}</b> par ${s.demandeur}`;
+            text = s.demandeur.toLowerCase() === myName.toLowerCase() ? `J'ai demandé à <b>${s.proprio}</b>` : `Demandé à <b>${s.proprio}</b> par ${s.demandeur}`;
         }
         
-        let canDelete = (s.demandeur.toLowerCase() === myName || s.proprio.toLowerCase() === myName);
+        let canDelete = (s.demandeur.toLowerCase() === myName.toLowerCase() || s.proprio.toLowerCase() === myLudoId);
         let delBtn = canDelete ? `<span onclick="window.supprimerSac('${s.id}')" style="color:var(--text-brown); opacity:0.5; padding:5px; cursor:pointer; font-size:1.2rem;"><i class="fa-solid fa-xmark"></i></span>` : '';
 
         return `<div style="background:#fff; padding:8px 12px; border-radius:12px; border:1px solid rgba(0,0,0,0.05); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
@@ -1260,25 +1235,29 @@
         if(window.unsubscribeSacs) window.unsubscribeSacs();
         window.unsubscribeSacs = onSnapshot(collection(db, "sacs_jeux"), (snap) => {
             const div = document.getElementById('liste-sacs-firebase'); if(!div) return;
-            let sacs = []; const dateCible = window.getNextEventDateStr();
+            
+            let sacs = []; 
+            const dateCible = window.getNextEventDateStr();
             snap.forEach(d => { if(d.data().date_event === dateCible) sacs.push({id: d.id, ...d.data()}) });
+            
             sacs.sort((a, b) => b.timestamp - a.timestamp);
 
-            let myName = (auth.currentUser.displayName || auth.currentUser.email.split('@')[0]).toLowerCase();
+            let myName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
+            let myLudoId = (localProfile.pseudoMyludo || myName).toLowerCase();
 
-            let mesSacs = sacs.filter(s => s.proprio.toLowerCase() === myName || s.demandeur.toLowerCase() === myName);
-            let autresSacs = sacs.filter(s => s.proprio.toLowerCase() !== myName && s.demandeur.toLowerCase() !== myName);
+            let mesSacs = sacs.filter(s => s.proprio.toLowerCase() === myLudoId);
+            let autresSacs = sacs.filter(s => s.proprio.toLowerCase() !== myLudoId);
 
             let html = '';
             
             if (mesSacs.length > 0) {
                 html += `<h4 style="font-size:0.85rem; color:var(--green-deep); margin:0 0 5px; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:3px;">🎒 Mon Sac</h4>`;
-                html += mesSacs.map(s => window.buildSacCard(s, myName)).join('');
+                html += mesSacs.map(s => window.buildSacCard(s, myName, myLudoId)).join('');
             }
             
             if (autresSacs.length > 0) {
                 html += `<h4 style="font-size:0.85rem; color:var(--wood-brown); margin:10px 0 5px; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:3px;">🎲 Les autres sacs</h4>`;
-                html += autresSacs.map(s => window.buildSacCard(s, myName)).join('');
+                html += autresSacs.map(s => window.buildSacCard(s, myName, myLudoId)).join('');
             }
 
             if(sacs.length === 0) { 
@@ -1294,15 +1273,18 @@
         const datalist = document.getElementById('jeux-datalist');
         if(!datalist) return;
 
-        const proprietaires = ['sebastien', 'julie', 'ronan', 'carine', 'stephane', 'sylvain'];
         window.tousLesJeux = [];
 
-        for (const p of proprietaires) {
-            try {
-                const snap = await getDocs(collection(db, `collection_${p}`));
-                snap.forEach(d => { window.tousLesJeux.push({ ...d.data(), proprio: p }); });
-            } catch(e) {}
+        try {
+            const querySnapshot = await getDocs(collectionGroup(db, 'mes_jeux'));
+            querySnapshot.forEach((doc) => {
+                window.tousLesJeux.push({ ...doc.data(), proprio: doc.data().proprietaire });
+            });
+        } catch(e) {
+            console.error("Erreur lors du chargement de la ludothèque globale:", e);
         }
+
+        window.tousLesJeux.sort((a, b) => a.titre.localeCompare(b.titre));
 
         let options = '';
         window.tousLesJeux.forEach(j => {
