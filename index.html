@@ -164,7 +164,6 @@
         .photo-tab-content { display: none; }
         .photo-tab-content.active { display: block; }
         .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 0 0 20px; }
-        /* AJOUT DU WILL-CHANGE ICI POUR LA FLUIDITÉ */
         .photo-grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: pointer; overflow: hidden; background: #ddd; border-radius: 4px; opacity: 0; will-change: transform, opacity; }
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
         .photo-game-title { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); color: #fff; font-family: 'Quicksand', sans-serif; font-size: 0.7rem; font-weight: 700; padding: 15px 4px 4px; text-align: center; box-sizing: border-box; pointer-events: none; text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
@@ -265,27 +264,33 @@
             const month = now.getMonth() + 1; 
             const day = now.getDate();
             const hour = now.getHours();
-            
-            // Priorité absolue aux dates spéciales
-            if (month === 12 && day === 25) {
-                document.documentElement.style.setProperty('--bg-image', "url('images/backgrounds/hero_noel.png')");
-                return;
-            }
-            if (month === 10 && day === 31) {
-                document.documentElement.style.setProperty('--bg-image', "url('images/backgrounds/hero_halloween.png')");
-                return;
-            }
 
-            // Calcul de base horaire
+            if ((month === 12 && day === 25) || (month === 10 && day === 31)) return;
+
             let baseName = "hero_soir"; 
             if (hour >= 6 && hour < 12) baseName = "hero_matin";
             else if (hour >= 12 && hour < 18) baseName = "hero_aprem";
 
-            // Récupération instantanée de la météo depuis le cache (si dispo)
-            let condition = localStorage.getItem('plouay_weather') || "";
-            
-            // Application du style instantanément avant que le reste du site s'affiche
-            document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}${condition}.png')`);
+            try {
+                const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=47.91&longitude=-3.33&current=weather_code');
+                const data = await response.json();
+                const code = data.current.weather_code;
+
+                let newCondition = "";
+                if (code >= 1 && code <= 3) newCondition = "_nuage";
+                else if (code >= 51 && code <= 67) newCondition = "_pluie";
+                else if (code >= 80 && code <= 99) newCondition = "_orage";
+                else if (code >= 71 && code <= 77) newCondition = "_neige";
+
+                const cachedCondition = localStorage.getItem('plouay_weather') || "";
+
+                if (newCondition !== cachedCondition) {
+                    localStorage.setItem('plouay_weather', newCondition);
+                    document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}${newCondition}.png')`);
+                }
+            } catch (error) {
+                console.error("Erreur météo:", error);
+            }
         })();
     </script>
 </head>
@@ -381,42 +386,6 @@
     const cheminPresse = "images/presse/";
     const cheminSorties = "images/sorties/";
     const extensionJeux = ".jpg"; 
-
-    /* --- GESTION DU FOND ASYNCHRONE (Mise à jour discrète) --- */
-    async function fetchWeatherUpdate() {
-        const now = new Date();
-        const month = now.getMonth() + 1; 
-        const day = now.getDate();
-        const hour = now.getHours();
-
-        if ((month === 12 && day === 25) || (month === 10 && day === 31)) return;
-
-        let baseName = "hero_soir"; 
-        if (hour >= 6 && hour < 12) baseName = "hero_matin";
-        else if (hour >= 12 && hour < 18) baseName = "hero_aprem";
-
-        try {
-            const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=47.91&longitude=-3.33&current=weather_code');
-            const data = await response.json();
-            const code = data.current.weather_code;
-
-            let newCondition = "";
-            if (code >= 1 && code <= 3) newCondition = "_nuage";
-            else if (code >= 51 && code <= 67) newCondition = "_pluie";
-            else if (code >= 80 && code <= 99) newCondition = "_orage";
-            else if (code >= 71 && code <= 77) newCondition = "_neige";
-
-            const cachedCondition = localStorage.getItem('plouay_weather') || "";
-
-            if (newCondition !== cachedCondition) {
-                localStorage.setItem('plouay_weather', newCondition);
-                document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}${newCondition}.png')`);
-            }
-        } catch (error) {
-            console.error("Erreur météo:", error);
-        }
-    }
-    fetchWeatherUpdate();
 
     /* --- GESTION DU BOUTON RETOUR ANDROID (HISTORY API) --- */
     window.addEventListener('popstate', (e) => { 
@@ -646,7 +615,6 @@
     function openSheet(key) {
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
         
-        // Mettre à jour l'affichage de l'authentification si on ouvre l'onglet "vote"
         if(key === 'vote') {
             setTimeout(() => {
                 if(window.updateVoteUI) window.updateVoteUI();
@@ -682,7 +650,7 @@
     sheet.addEventListener('touchmove', (e) => { if (!isDragging || window.innerWidth > 768) return; let diff = e.touches[0].clientY - startY; if (diff > 0) { e.preventDefault(); sheet.style.transform = `translateY(calc(-100% + ${diff}px))`; } }, { passive: false });
     sheet.addEventListener('touchend', (e) => { if (!isDragging || window.innerWidth > 768) return; isDragging = false; let diff = e.changedTouches[0].clientY - startY; sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; if (diff > 100) { closeSheet(); } else { sheet.style.transform = ''; } });
 
-    /* --- LIGHTBOX AVEC SOUS-TITRE --- */
+    /* --- LIGHTBOX --- */
     const lb = document.getElementById('lightbox'); const lbContainer = document.getElementById('lbContainer'); const lbImg = document.getElementById('lightboxImg'); const lbNavPrev = document.getElementById('lbNavPrev'); const lbNavNext = document.getElementById('lbNavNext');
     let currentGallery = []; let currentPhotoIndex = 0;
     let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
@@ -690,26 +658,15 @@
     function openLightbox(src, isSingleImage = false) { 
         lbImg.src = src; lb.style.display = 'flex'; resetZoom(); 
         setTimeout(() => lb.classList.add('active'), 10); 
-        
         const captionEl = document.getElementById('lightboxCaption');
-
         if (isSingleImage) { 
-            currentGallery = [{src: src, title: ''}]; 
-            currentPhotoIndex = 0; 
-            lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; 
-            captionEl.innerText = '';
+            currentGallery = [{src: src, title: ''}]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; captionEl.innerText = '';
         } else { 
             const activeTab = document.querySelector('.photo-tab-content.active');
             const items = activeTab.querySelectorAll('.photo-grid-item img'); 
-            
-            currentGallery = Array.from(items).map(img => ({
-                src: img.getAttribute('src'),
-                title: img.getAttribute('alt') || ''
-            })); 
-            
+            currentGallery = Array.from(items).map(img => ({ src: img.getAttribute('src'), title: img.getAttribute('alt') || '' })); 
             currentPhotoIndex = currentGallery.findIndex(g => g.src === src); 
             if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } 
-            
             captionEl.innerText = currentGallery[currentPhotoIndex].title;
         } 
         if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } 
@@ -727,42 +684,17 @@
     function changePhotoDir(dir) { 
         if (currentGallery.length <= 1) return; 
         if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } 
-        
-        lbImg.style.opacity = 0; 
-        document.getElementById('lightboxCaption').style.opacity = 0;
-        lbContainer.style.transform = `translateX(0px)`; 
-        
+        lbImg.style.opacity = 0; document.getElementById('lightboxCaption').style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; 
         setTimeout(() => { 
-            let newObj = currentGallery[currentPhotoIndex]; 
-            lbImg.src = newObj.src; 
-            document.getElementById('lightboxCaption').innerText = newObj.title;
-            
-            lbImg.style.opacity = 1; 
-            document.getElementById('lightboxCaption').style.opacity = 1;
+            let newObj = currentGallery[currentPhotoIndex]; lbImg.src = newObj.src; document.getElementById('lightboxCaption').innerText = newObj.title;
+            lbImg.style.opacity = 1; document.getElementById('lightboxCaption').style.opacity = 1;
         }, 150); 
     }
 
-    /* =================================================================================
-       FONCTIONS COMMUNES MODALES & ECRANS DE JEU
-       ================================================================================= */
-    function closeGameModalForce() {
-        document.getElementById('gameModalBackdrop').classList.remove('visible');
-        clearInterval(confettiInterval); document.querySelectorAll('.confetti').forEach(c => c.remove());
-    }
+    /* --- JEU DES DES --- */
+    function closeGameModalForce() { document.getElementById('gameModalBackdrop').classList.remove('visible'); clearInterval(confettiInterval); document.querySelectorAll('.confetti').forEach(c => c.remove()); }
+    function closeGameModal() { if (document.getElementById('gameModalBackdrop').classList.contains('visible')) { if (history.state && (history.state.type === 'gamemodal')) { history.back(); } else { closeGameModalForce(); } } }
 
-    function closeGameModal() {
-        if (document.getElementById('gameModalBackdrop').classList.contains('visible')) {
-            if (history.state && (history.state.type === 'gamemodal')) {
-                history.back(); 
-            } else {
-                closeGameModalForce();
-            }
-        }
-    }
-
-    /* =================================================================================
-       JEU 1 : CHASSE AUX DÉS
-       ================================================================================= */
     let gameStarted = false; let eggCount = 0; const totalEggs = 10;
     let timerInterval; let startTime; let finalGameData = { time: "", rankNumber: 0, rank: "", message: "", rawMs: 0 }; 
     let confettiInterval; 
@@ -774,9 +706,7 @@
         modal.innerHTML = `
             <div class="modal-close-btn" onclick="closeGameModal()"><i class="fa-solid fa-xmark"></i></div>
             <h3 id="gameTitle">Psst... Joueur ?</h3>
-            <div class="game-desc-box">
-                <p>Comme on est joueurs, <b>10 petits dés</b> <i class="fa-solid fa-dice" style="color:var(--wood-brown); font-size:1.2rem; vertical-align:middle; margin: 0 4px;"></i> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?</p>
-            </div>
+            <div class="game-desc-box"><p>Comme on est joueurs, <b>10 petits dés</b> <i class="fa-solid fa-dice" style="color:var(--wood-brown); font-size:1.2rem; vertical-align:middle; margin: 0 4px;"></i> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?</p></div>
             <button class="game-btn" onclick="initGame()"><i class="fa-solid fa-play"></i> C'est parti !</button>
         `;
         document.getElementById('gameModalBackdrop').classList.add('visible');
@@ -784,13 +714,9 @@
     }
     
     function initGame() {
-        closeGameModalForce(); 
-        hideSheetDOM();
-        if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) {
-            history.replaceState({ type: 'main' }, '');
-        }
-        resetGameData();
-        gameStarted = true; startTimer();
+        closeGameModalForce(); hideSheetDOM();
+        if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) { history.replaceState({ type: 'main' }, ''); }
+        resetGameData(); gameStarted = true; startTimer();
         const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque'];
         for(let i=0; i<9; i++) { let randomSec = sections[Math.floor(Math.random() * sections.length)]; gameState[randomSec].total++; }
         gameState['home'].total = 1; renderHomeEgg(); showToast("Le chrono est lancé ! ⏱️");
@@ -817,8 +743,7 @@
         setTimeout(() => { el.style.transition = "all 0.5s ease"; el.style.opacity = "0"; el.style.transform = "scale(0)"; setTimeout(() => el.remove(), 500); }, 600);
         let msg = `Bravo ! ${eggCount}/${totalEggs}`;
         if(eggCount === totalEggs) { clearInterval(timerInterval); let rawMs = Date.now() - startTime; finishGame(rawMs); } 
-        else if(eggCount > 5) { msg = `Tu chauffes ! ${eggCount}/${totalEggs}`; showToast(msg); } 
-        else { showToast(msg); }
+        else if(eggCount > 5) { msg = `Tu chauffes ! ${eggCount}/${totalEggs}`; showToast(msg); } else { showToast(msg); }
         if(navigator.vibrate) navigator.vibrate(50);
     }
     
@@ -833,16 +758,8 @@
                 <div class="modal-close-btn" onclick="closeGameModal()"><i class="fa-solid fa-xmark"></i></div>
                 <div class="victory-icon"><i class="fa-solid fa-medal"></i></div>
                 <h3 class="victory-title">Félicitations !</h3>
-                <div class="victory-stats">
-                    <div style="font-size:1.1rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div>
-                    <div style="font-size:1.3rem; color:#2c3e50; margin: 2px 0;">${rank}</div>
-                    <div style="font-size:2rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div>
-                    <div class="victory-message">"${message}"</div>
-                </div>
-                <div id="shareContainer" class="share-container">
-                    <input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15">
-                    <button class="game-btn wa-btn" onclick="shareWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Partager mon score</button>
-                </div>
+                <div class="victory-stats"><div style="font-size:1.1rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div><div style="font-size:1.3rem; color:#2c3e50; margin: 2px 0;">${rank}</div><div style="font-size:2rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div><div class="victory-message">"${message}"</div></div>
+                <div id="shareContainer" class="share-container"><input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15"><button class="game-btn wa-btn" onclick="shareWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Partager mon score</button></div>
                 <button class="game-btn" onclick="initGame()"><i class="fa-solid fa-rotate-right"></i> Rejouer</button>
             `;
             document.getElementById('gameModalBackdrop').classList.add('visible'); 
@@ -859,90 +776,34 @@
         window.open(`https://wa.me/?text=${text}`, '_blank');
     }
     
-    function showToast(msg) {
-        const toast = document.getElementById('gameToast'); toast.innerText = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-    
+    function showToast(msg) { const toast = document.getElementById('gameToast'); toast.innerText = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
     function renderHomeEgg() { let container = document.getElementById('homeEggContainer'); container.innerHTML = ''; if(gameState['home'].total > gameState['home'].found) { createEgg(container, 'home', false); } }
-    
     function createEgg(container, sectionKey, isFound, isTab = false) {
         let egg = document.createElement('i'); egg.className = 'fa-solid fa-dice egg'; if (isFound) return; 
         egg.onclick = function(event) { foundEgg(this, sectionKey); event.stopPropagation(); }; egg.style.pointerEvents = 'auto';
-        
-        if(!isTab) { 
-            egg.style.top = (Math.random() * 80 + 10) + '%'; 
-            egg.style.left = (Math.random() * 80 + 10) + '%'; 
-        } else { 
-            egg.style.position = 'absolute'; 
-            egg.style.top = '-8px'; 
-            egg.style.right = '5px'; 
-            egg.style.margin = '0';
-            egg.style.fontSize = '1.2rem';
-            egg.style.filter = 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))'; 
-        }
+        if(!isTab) { egg.style.top = (Math.random() * 80 + 10) + '%'; egg.style.left = (Math.random() * 80 + 10) + '%'; } else { egg.style.position = 'absolute'; egg.style.top = '-8px'; egg.style.right = '5px'; egg.style.margin = '0'; egg.style.fontSize = '1.2rem'; egg.style.filter = 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))'; }
         container.appendChild(egg);
     }
-
     function startConfetti() {
         const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6'];
-        for(let i=0; i<30; i++) {
-            setTimeout(() => {
-                const confetti = document.createElement('div'); confetti.classList.add('confetti');
-                confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
-                document.body.appendChild(confetti); setTimeout(() => confetti.remove(), 5000);
-            }, i * 50);
-        }
-        if(!document.getElementById('confetti-style')) {
-            const style = document.createElement('style'); style.id = 'confetti-style';
-            style.innerHTML = `@keyframes fall { 0% { top: -10px; opacity: 1; transform: rotate(0deg); } 100% { top: 100vh; opacity: 0; transform: rotate(720deg); } }`;
-            document.head.appendChild(style);
-        }
+        for(let i=0; i<30; i++) { setTimeout(() => { const confetti = document.createElement('div'); confetti.classList.add('confetti'); confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`; document.body.appendChild(confetti); setTimeout(() => confetti.remove(), 5000); }, i * 50); }
+        if(!document.getElementById('confetti-style')) { const style = document.createElement('style'); style.id = 'confetti-style'; style.innerHTML = `@keyframes fall { 0% { top: -10px; opacity: 1; transform: rotate(0deg); } 100% { top: 100vh; opacity: 0; transform: rotate(720deg); } }`; document.head.appendChild(style); }
     }
 
-    /* =================================================================================
-       GESTION DES COOKIES & ANALYTICS
-       ================================================================================= */
+    /* --- GESTION DES COOKIES & ANALYTICS --- */
     function loadGoogleAnalytics() {
-        const script = document.createElement('script');
-        script.async = true;
-        script.src = "https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY";
-        document.head.appendChild(script);
-
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-YPHH9PELKY');
+        const script = document.createElement('script'); script.async = true; script.src = "https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY"; document.head.appendChild(script);
+        window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-YPHH9PELKY');
     }
-
-    function checkCookies() {
-        const consent = localStorage.getItem('potes_cookie_consent');
-        
-        if (consent === 'accepted') {
-            loadGoogleAnalytics();
-        } else if (!consent) {
-            setTimeout(() => {
-                document.getElementById('cookiePopup').classList.add('show');
-            }, 1000);
-        }
-    }
-
-    function handleCookies(choice) {
-        localStorage.setItem('potes_cookie_consent', choice);
-        document.getElementById('cookiePopup').classList.remove('show');
-        
-        if (choice === 'accepted') {
-            loadGoogleAnalytics();
-        }
-    }
-
+    function checkCookies() { const consent = localStorage.getItem('potes_cookie_consent'); if (consent === 'accepted') { loadGoogleAnalytics(); } else if (!consent) { setTimeout(() => { document.getElementById('cookiePopup').classList.add('show'); }, 1000); } }
+    function handleCookies(choice) { localStorage.setItem('potes_cookie_consent', choice); document.getElementById('cookiePopup').classList.remove('show'); if (choice === 'accepted') { loadGoogleAnalytics(); } }
     checkCookies();
 </script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBwLFuQcpv_Ml8omuhzEL1mvTEPlxsH1Wo",
@@ -957,6 +818,9 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
     
+    // FORCER LA LANGUE EN FRANÇAIS POUR LES EMAILS FIREBASE !
+    auth.languageCode = 'fr'; 
+    
     window.db = db;
     window.auth = auth;
 
@@ -964,7 +828,7 @@
     let unsubscribeVotes = null;
     let authMode = 'login'; 
 
-    // Fonction pour afficher/masquer les mots de passe
+    // Afficher/masquer les mots de passe
     window.toggleVisibility = function(inputId, iconId) {
         const input = document.getElementById(inputId);
         const icon = document.getElementById(iconId);
@@ -979,7 +843,7 @@
         }
     };
 
-    // Bascule d'affichage entre Connexion et Interface de Vote
+    // Bascule UI Connexion / Votes
     window.updateVoteUI = function() {
         const viewAuth = document.getElementById('view-auth');
         const viewVotes = document.getElementById('view-votes');
@@ -1000,7 +864,7 @@
         }
     };
 
-    // Génération dynamique du formulaire avec les "yeux"
+    // Dessiner le formulaire
     window.renderAuthUI = function() {
         const authContainer = document.getElementById('auth-container');
         if (!authContainer) return;
@@ -1016,7 +880,11 @@
                     </div>
 
                     <button class="game-btn" style="width:100%; justify-content:center;" onclick="loginEmail()"><i class="fa-solid fa-right-to-bracket"></i> Connexion</button>
-                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:5px; font-weight:bold;">
+                    
+                    <div style="text-align:center; margin: 5px 0; color:var(--text-brown); font-size:0.8rem; opacity:0.7;">— ou —</div>
+                    <button class="game-btn" style="width:100%; justify-content:center; background:#4285F4; margin-top:0; font-family: Roboto, Arial, sans-serif; font-weight: 500;" onclick="loginGoogle()"><i class="fa-brands fa-google"></i> Continuer avec Google</button>
+
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:10px; font-weight:bold;">
                         <span onclick="setAuthMode('register')" style="color:var(--green-deep); cursor:pointer; text-decoration:underline;">Créer un compte</span>
                         <span onclick="setAuthMode('reset')" style="color:var(--text-brown); cursor:pointer; text-decoration:underline;">Oublié ?</span>
                     </div>
@@ -1038,7 +906,11 @@
                     </div>
 
                     <button class="game-btn" style="width:100%; justify-content:center; background:var(--green-deep);" onclick="registerEmail()"><i class="fa-solid fa-user-plus"></i> S'inscrire</button>
-                    <div style="text-align:center; font-size:0.75rem; margin-top:5px; font-weight:bold;">
+                    
+                    <div style="text-align:center; margin: 5px 0; color:var(--text-brown); font-size:0.8rem; opacity:0.7;">— ou —</div>
+                    <button class="game-btn" style="width:100%; justify-content:center; background:#4285F4; margin-top:0; font-family: Roboto, Arial, sans-serif; font-weight: 500;" onclick="loginGoogle()"><i class="fa-brands fa-google"></i> Continuer avec Google</button>
+
+                    <div style="text-align:center; font-size:0.75rem; margin-top:10px; font-weight:bold;">
                         <span onclick="setAuthMode('login')" style="color:var(--wood-brown); cursor:pointer; text-decoration:underline;">Déjà inscrit ? Se connecter</span>
                     </div>
                 </div>`;
@@ -1060,7 +932,18 @@
         window.renderAuthUI();
     };
 
-    // ACTIONS FIREBASE
+    // Google Sign-in
+    window.loginGoogle = async function() {
+        const provider = new GoogleAuthProvider();
+        try { 
+            await signInWithPopup(auth, provider); 
+        } catch (e) { 
+            console.error(e); 
+            alert("Erreur lors de la connexion Google."); 
+        }
+    };
+
+    // Connexion Email
     window.loginEmail = async function() {
         const email = document.getElementById('auth-email').value.trim();
         const pwd = document.getElementById('auth-pwd').value.trim();
@@ -1073,6 +956,7 @@
         }
     };
 
+    // Inscription Email
     window.registerEmail = async function() {
         const name = document.getElementById('auth-name').value.trim();
         const email = document.getElementById('auth-email').value.trim();
@@ -1084,13 +968,8 @@
         if(pwd.length < 6) return alert("Le mot de passe doit faire au moins 6 caractères.");
 
         try {
-            // Création du compte
             const userCredential = await createUserWithEmailAndPassword(auth, email, pwd);
-            
-            // Mise à jour du pseudo
             await updateProfile(userCredential.user, { displayName: name });
-            
-            // Envoi de l'e-mail de vérification (Géré par Firebase)
             await sendEmailVerification(userCredential.user);
             
             alert("Bienvenue " + name + " ! 🎲 Un e-mail de vérification t'a été envoyé (vérifie tes spams).");
@@ -1121,7 +1000,6 @@
         try { await signOut(auth); } catch (e) { console.error(e); }
     };
 
-    // ÉCOUTEUR PRINCIPAL : Au changement d'état, on bascule les vues
     onAuthStateChanged(auth, (user) => {
         currentUser = user;
         window.updateVoteUI();
