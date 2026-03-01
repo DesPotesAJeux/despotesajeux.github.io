@@ -34,7 +34,7 @@
             --fb-blue: #1877F2;
             --wa-green: #25D366; 
             --myludo-color: #2c3e50; 
-            --gold-game: #f39c12;
+            --gold-game: #d4af37;
             --president-color: #e67e22;
             --bg-image: url('images/backgrounds/hero_soir.png');
         }
@@ -119,29 +119,25 @@
         .game-modal-content h3 { color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 0 0 15px; }
         .modal-close-btn { position: absolute; top: 10px; right: 15px; font-size: 1.5rem; color: var(--wood-brown); cursor: pointer; transition: transform 0.2s; z-index: 10; }
         .modal-close-btn:active { transform: scale(0.9); }
-        .victory-icon { font-size: 2.5rem; color: var(--gold-game); margin-bottom: 2px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2)); }
-        
+        .victory-icon { font-size: 2.5rem; color: var(--gold-game); margin-bottom: 2px; animation: fadeIn 1s ease; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2)); }
+        .victory-title { font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; color: var(--wood-brown); margin: 0 0 5px 0; font-weight: bold; }
+        .victory-stats { width: 100%; margin: 5px 0 10px; }
+        .victory-message { font-family: 'Shadows Into Light', cursive; font-size: 1.2rem; color: var(--green-deep); margin: 10px 0 5px 0; padding: 5px 0; position: relative; line-height: 1.2; }
+        .victory-message::before { content: "❝"; color: var(--wood-brown); font-size: 1.5rem; vertical-align: -0.4rem; margin-right: 5px; opacity: 0.6; }
+        .victory-message::after { content: "❞"; color: var(--wood-brown); font-size: 1.5rem; vertical-align: -0.4rem; margin-left: 5px; opacity: 0.6; }
+        .game-desc-box { background: #fff; border-radius: 15px; padding: 15px; width: 100%; box-sizing: border-box; margin-bottom: 20px; border: 1px solid rgba(188, 143, 99, 0.2); }
+        .game-desc-box p { font-size: 0.95rem; line-height: 1.5; color: var(--text-brown); margin: 0; }
         .game-btn { background: var(--wood-brown); color: white; border: none; padding: 10px 25px; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); transition: transform 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; }
         .game-btn:active { transform: scale(0.95); }
-        
-        .share-input { width: 100%; padding: 8px; border-radius: 12px; border: 2px solid var(--wood-brown); background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown); box-sizing: border-box; font-size: 1rem; }
-        .myludo-link { color: var(--green-deep); text-decoration: none; border-bottom: 1px dashed var(--wood-brown); font-weight: 800; transition: color 0.2s; }
-        .myludo-link:hover { color: var(--wood-brown); }
+        .share-container { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 5px; margin-bottom: 10px; }
+        .share-input { width: 100%; padding: 8px; border-radius: 12px; border: 2px solid var(--wood-brown); background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown); box-sizing: border-box; text-align: center; font-size: 1rem; }
+        .wa-btn { background: #25D366; color: white; margin-top: 5px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); } 
+        .confetti { position: fixed; width: 10px; height: 10px; background-color: #f00; z-index: 400; top: -10px; pointer-events: none; opacity: 0; }
+        .myludo-link { color: var(--green-deep); text-decoration: none; border-bottom: 1px dashed var(--wood-brown); font-weight: 800; }
 
-        /* =========================================
-           NOUVEAUX STYLES POUR LES TABLES (SIEGES)
-           ========================================= */
-        .table-card { background:#fff; padding:12px; border-radius:15px; border:1px solid #dbb38a; margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,0.03); text-align: left; }
-        .seat { display:inline-flex; align-items:center; gap:4px; padding:4px 8px; border-radius:8px; font-size:0.75rem; font-weight:bold; margin:2px; }
-        .seat.green { background: var(--wa-green); color: white; border: 1px solid var(--wa-green); }
-        .seat.gold { background: var(--gold-game); color: white; border: 1px solid var(--gold-game); }
-        .seat.empty-green { background: transparent; color: var(--wa-green); border: 1px dashed var(--wa-green); }
-        .seat.empty-gold { background: transparent; color: var(--gold-game); border: 1px dashed var(--gold-game); }
-        .action-bar { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; border-top: 1px solid #f3f1e5; padding-top: 8px; justify-content: center; }
-        .btn-small { padding: 6px 12px; font-size: 0.75rem; font-family: 'Quicksand', sans-serif; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap:4px; color:white; transition: opacity 0.2s; }
-        .btn-small:active { opacity: 0.8; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- MENUS --- */
+        /* --- RESTE DU CSS (Menus, Lightbox) --- */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
         .lightbox-img-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease-out; transform-origin: center center; position: relative; }
         .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; transform: scale(0.9); opacity: 0; transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); will-change: transform; }
@@ -171,8 +167,9 @@
         .phase-icon { font-size: 1.2rem; color: var(--wood-brown); }
         .grimoire-text { text-align: center; line-height: 1.6; font-size: 0.95rem; margin-top: 0; }
         .btn-article { display: inline-flex; align-items: center; gap: 8px; background: rgba(188, 143, 99, 0.15); color: var(--wood-brown); border: 1px solid var(--wood-brown); border-radius: 50px; padding: 6px 15px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 10px; text-decoration: none; }
+        .btn-article:active { transform: scale(0.95); background: rgba(188, 143, 99, 0.25); }
         .photo-tabs { display: flex; background: rgba(188, 143, 99, 0.15); border-radius: 50px; padding: 5px; margin: 0 auto 20px; max-width: 320px; position: relative; }
-        .photo-tab { flex: 1; text-align: center; padding: 10px 15px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--wood-brown); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
+        .photo-tab { flex: 1; text-align: center; padding: 10px 15px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--wood-brown); cursor: pointer; transition: background 0.1s, color 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
         .photo-tab.active { background: var(--wood-brown); color: white; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); }
         .photo-tab-content { display: none; }
         .photo-tab-content.active { display: block; }
@@ -181,6 +178,16 @@
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
         .photo-game-title { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); color: #fff; font-family: 'Quicksand', sans-serif; font-size: 0.7rem; font-weight: 700; padding: 15px 4px 4px; text-align: center; box-sizing: border-box; pointer-events: none; text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
         .photo-tab-content.active .photo-grid-item { animation: gridItemFade 0.4s cubic-bezier(0.17, 0.84, 0.44, 1) forwards; }
+        .photo-tab-content.active .photo-grid-item:nth-child(1) { animation-delay: 0.05s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(2) { animation-delay: 0.10s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(3) { animation-delay: 0.15s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(4) { animation-delay: 0.20s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(5) { animation-delay: 0.25s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(6) { animation-delay: 0.30s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(7) { animation-delay: 0.35s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(8) { animation-delay: 0.40s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(9) { animation-delay: 0.45s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(n+10) { animation-delay: 0.50s; }
         @keyframes gridItemFade { from { opacity: 0; transform: translateY(15px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
         .photo-year { position: absolute; bottom: 4px; right: 4px; background: rgba(0, 0, 0, 0.6); color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; pointer-events: none; backdrop-filter: blur(2px); }
         .contact-person { display: flex; flex-direction: column; padding: 10px 12px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
@@ -220,6 +227,25 @@
         .icon-box { width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; border-radius: 14px; background: var(--wood-brown); margin-bottom: 6px; color: #ffffff; font-size: 1.3rem; box-shadow: 0 4px 8px rgba(0,0,0,0.25); transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); }
         .menu-item span { font-weight: 700; font-size: 0.5rem; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
 
+        /* =========================================
+           POPUP COOKIES
+           ========================================= */
+        .cookie-popup {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%);
+            width: 90%; max-width: 350px; background: rgba(255, 252, 240, 0.98);
+            border: 2px solid var(--wood-brown); border-radius: 15px; padding: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4); z-index: 400; opacity: 0;
+            transition: all 0.6s cubic-bezier(0.17, 0.84, 0.44, 1); text-align: center; backdrop-filter: blur(5px);
+        }
+        .cookie-popup.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .cookie-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 1.6rem; margin: 0 0 5px 0; }
+        .cookie-text { font-size: 0.85rem; margin: 0 0 15px 0; line-height: 1.4; }
+        .cookie-buttons { display: flex; gap: 10px; justify-content: center; }
+        .cookie-btn { padding: 8px 15px; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: none; transition: transform 0.2s; }
+        .cookie-btn:active { transform: scale(0.95); }
+        .cookie-btn.accept { background: var(--green-deep); color: white; box-shadow: 0 4px 10px rgba(58, 99, 81, 0.2); }
+        .cookie-btn.decline { background: transparent; border: 1px solid var(--wood-brown); color: var(--wood-brown); }
+
         @media (min-width: 768px) {
             body { align-items: center; background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), var(--bg-image) center / cover no-repeat; backdrop-filter: blur(10px); overflow: auto; padding: 20px; box-sizing: border-box; min-height: 100vh; }
             .phone { max-width: 1400px; height: 80vh; min-height: 600px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
@@ -236,6 +262,9 @@
             .bottom-sheet { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 600px; max-width: 90%; height: auto; max-height: 90%; border-radius: 25px; opacity: 0; display: none; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
             .bottom-sheet.open { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
             .sheet-handle { display: none; }
+            .lightbox-nav:hover { color: rgba(255, 255, 255, 1); }
+            .egg-1 { top: 40px; left: 40px; font-size: 1.5rem; color: rgba(255,255,255,0.7); }
+            .egg-2 { bottom: 40px; left: 20px; }
         }
     </style>
 
@@ -281,7 +310,7 @@
         </div>
     </div>
 
-    <div class="game-modal-backdrop" id="gameModalBackdrop" onclick="closeGameModalForce()">
+    <div class="game-modal-backdrop" id="gameModalBackdrop" onclick="closeGameModal()">
         <div class="game-modal-content" id="modalContent" onclick="event.stopPropagation()">
         </div>
     </div>
@@ -397,13 +426,14 @@
     window.showCustomAlert = function(title, message, iconClass = "fa-circle-info") {
         const modal = document.getElementById('modalContent');
         modal.innerHTML = `
-            <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
-            <div class="victory-icon" style="color: var(--wood-brown); margin-bottom: 10px;"><i class="fa-solid ${iconClass}"></i></div>
+            <div class="modal-close-btn" onclick="closeGameModal()"><i class="fa-solid fa-xmark"></i></div>
+            <div class="victory-icon" style="color: var(--wood-brown); font-size: 2.5rem; margin-bottom: 10px;"><i class="fa-solid ${iconClass}"></i></div>
             <h3 class="victory-title" style="font-size: 1.6rem; color: var(--green-deep);">${title}</h3>
             <div style="font-size: 0.95rem; line-height: 1.4; color: var(--text-brown); margin: 10px 0 20px;">${message}</div>
             <button class="game-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-check"></i> Compris</button>
         `;
         document.getElementById('gameModalBackdrop').classList.add('visible');
+        if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
     };
 
     /* --- GESTION DU BOUTON RETOUR ANDROID (HISTORY API) --- */
@@ -461,7 +491,7 @@
         `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:3px; gap:5px;">
             <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="flex-shrink:0;">📍 <span class="underline">Maison des Associations</span></a>
             <button id="btn-voter-accueil" class="btn-ludotheque" style="margin:0; padding: 4px 12px; font-size: 0.75rem; white-space: nowrap; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">
-                <i class="fa-solid fa-users" style="margin-right:4px;"></i>Tables
+                <i class="fa-solid fa-check-to-slot" style="margin-right:4px;"></i>Voter
             </button>
         </div>`;
 
@@ -501,36 +531,28 @@
     /* --- 2. DONNÉES DES PAGES --- */
     const pagesData = {
         vote: {
-            title: "L'Arène",
-            text: `<div class="panel-card" id="content-vote" style="padding: 15px 10px;">
+            title: "Au programme ?",
+            text: `<div class="panel-card" id="content-vote">
                 <div id="view-auth">
-                    <p style="text-align: center; margin-top: 0; font-size: 0.9rem; color: var(--text-brown);">Connecte-toi pour voir et rejoindre les tables de jeux !</p>
+                    <p style="text-align: center; margin-top: 0; font-size: 0.9rem; color: var(--text-brown);">Connecte-toi pour proposer et voter pour tes jeux préférés !</p>
                     <div id="auth-container"></div>
                 </div>
-                
                 <div id="view-votes" style="display: none;">
-                    
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(188,143,99,0.1); padding:10px 15px; border-radius:15px; margin-bottom:15px;">
-                        <div id="user-greeting" style="font-weight:bold; color:var(--green-deep); font-size:0.95rem;"></div>
-                        <button class="game-btn" style="margin:0; padding:6px 12px; font-size:0.75rem; background:transparent; border:1px solid var(--wood-brown); color:var(--wood-brown); box-shadow:none;" onclick="window.openProfileModal()">👤 Profil</button>
+                    <div style="font-size:0.85rem; color:var(--green-deep); margin-bottom:15px; padding: 8px; background: rgba(58, 99, 81, 0.1); border-radius: 10px; display:flex; justify-content:space-between; align-items:center;">
+                        <span id="user-greeting">Connecté</span> 
+                        <button onclick="logoutFirebase()" style="padding:4px 10px; font-size:0.7rem; font-weight:bold; border-radius:50px; border:1px solid var(--wood-brown); color:var(--wood-brown); background:transparent; cursor:pointer;">Quitter</button>
                     </div>
-
-                    <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed rgba(188,143,99,0.3);">
-                        <label style="font-weight:bold; font-size:0.8rem; display:block; margin-bottom:5px; color:var(--text-brown);">Ouvrir une nouvelle table :</label>
-                        <select id="select-jeu-collection" class="share-input" style="width:100%; margin-bottom:10px;">
-                            <option value="">Chargement de la ludothèque...</option>
+                    <p style="text-align: center; margin-top: 0; font-size: 0.9rem;">Proposez un jeu de la ludothèque ou votez !</p>
+                    
+                    <div style="display:flex; flex-direction:column; gap:10px; margin-bottom: 20px;">
+                        <select id="select-jeu-collection" class="share-input" style="width:100%; margin-bottom:0;">
+                            <option value="">-- Chargement de la collection... --</option>
                         </select>
-                        <button class="game-btn" style="margin-top:0; width:100%; justify-content:center;" onclick="window.proposerJeuSelectionne()"><i class="fa-solid fa-plus"></i> Créer la table</button>
+                        <button class="game-btn" style="margin-top:0; width:100%; justify-content:center;" onclick="proposerJeuSelectionne()"><i class="fa-solid fa-plus"></i> Proposer ce jeu</button>
                     </div>
 
-                    <h3 style="font-family:'Shadows Into Light', cursive; color:var(--green-deep); font-size:1.5rem; text-align:center; margin: 0 0 10px;">Les Tables Ouvertes</h3>
-                    
-                    <div id="liste-votes-firebase" style="display:flex; flex-direction:column;">
-                        <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement des tables... <i class="fa-solid fa-spinner fa-spin"></i></div>
-                    </div>
-
-                    <div style="text-align:center; margin-top: 25px;">
-                        <span onclick="window.logoutFirebase()" style="font-size:0.7rem; color:gray; text-decoration:underline; cursor:pointer;">Se déconnecter</span>
+                    <div id="liste-votes-firebase" style="display:flex; flex-direction:column; gap:10px;">
+                        <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement des jeux... <i class="fa-solid fa-spinner fa-spin"></i></div>
                     </div>
                 </div>
             </div>`
@@ -682,17 +704,20 @@
         if(gameStarted) return;
         const modal = document.getElementById('modalContent');
         modal.innerHTML = `
-            <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
-            <h3 id="gameTitle" style="color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 0 0 15px;">Psst... Joueur ?</h3>
+            <div class="modal-close-btn" onclick="closeGameModal()"><i class="fa-solid fa-xmark"></i></div>
+            <h3 id="gameTitle">Psst... Joueur ?</h3>
             <div class="game-desc-box"><p>Comme on est joueurs, <b>10 petits dés</b> <i class="fa-solid fa-dice" style="color:var(--wood-brown); font-size:1.2rem; vertical-align:middle; margin: 0 4px;"></i> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?</p></div>
             <button class="game-btn" onclick="initGame()"><i class="fa-solid fa-play"></i> C'est parti !</button>
         `;
         document.getElementById('gameModalBackdrop').classList.add('visible');
+        if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
     }
     
     function initGame() {
         closeGameModalForce(); hideSheetDOM();
+        if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) { history.replaceState({ type: 'main' }, ''); }
         resetGameData(); gameStarted = true; startTimer();
+        
         const btnVoter = document.getElementById('btn-voter-accueil');
         if (btnVoter) btnVoter.style.display = 'none';
 
@@ -743,14 +768,15 @@
         setTimeout(() => {
             const modal = document.getElementById('modalContent');
             modal.innerHTML = `
-                <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
+                <div class="modal-close-btn" onclick="closeGameModal()"><i class="fa-solid fa-xmark"></i></div>
                 <div class="victory-icon"><i class="fa-solid fa-medal"></i></div>
-                <h3 class="victory-title" style="color: var(--green-deep); font-family: 'Shadows Into Light', cursive; font-size: 1.8rem; margin: 0 0 15px;">Félicitations !</h3>
+                <h3 class="victory-title">Félicitations !</h3>
                 <div class="victory-stats"><div style="font-size:1.1rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div><div style="font-size:1.3rem; color:#2c3e50; margin: 2px 0;">${rank}</div><div style="font-size:2rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div><div class="victory-message">"${message}"</div></div>
-                <div id="shareContainer" class="share-container"><input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15"><button class="game-btn wa-btn" style="width:100%;" onclick="shareWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Partager mon score</button></div>
+                <div id="shareContainer" class="share-container"><input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15"><button class="game-btn wa-btn" onclick="shareWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Partager mon score</button></div>
                 <button class="game-btn" onclick="initGame()"><i class="fa-solid fa-rotate-right"></i> Rejouer</button>
             `;
             document.getElementById('gameModalBackdrop').classList.add('visible'); 
+            if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
             startConfetti();
         }, 1000);
     }
@@ -788,14 +814,17 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, getDocs, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, arrayUnion, arrayRemove, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const CODE_ASSO = "POTES56";
     const firebaseConfig = {
       apiKey: "AIzaSyBwLFuQcpv_Ml8omuhzEL1mvTEPlxsH1Wo",
       authDomain: "des-potes-a-jeux.firebaseapp.com",
-      projectId: "des-potes-a-jeux"
+      projectId: "des-potes-a-jeux",
+      storageBucket: "des-potes-a-jeux.firebasestorage.app",
+      messagingSenderId: "826161718904",
+      appId: "1:826161718904:web:d2bb45b5cdadca5ca76f8d"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -806,23 +835,30 @@
     window.db = db;
     window.auth = auth;
     let unsubscribeVotes = null;
-    let localProfile = { avatar: '🎲', titre: 'Novice' };
 
+    // --- FIX : Traitement automatique au retour de Google ---
     getRedirectResult(auth).then((result) => {
-        if (result) console.log("Utilisateur connecté via Google:", result.user.displayName);
+        if (result) {
+            console.log("Utilisateur connecté via Google:", result.user.displayName);
+        }
     }).catch((error) => {
         console.error("Erreur Redirect Detail:", error);
-        if(error.code === "auth/internal-error") window.showCustomAlert("Liaison Google interrompue", "Ton navigateur a bloqué le retour de connexion. Essaie sans mode privé.", "fa-circle-xmark");
+        // Si l'erreur est internal-error, on affiche un message plus précis
+        if(error.code === "auth/internal-error") {
+            window.showCustomAlert("Liaison Google interrompue", "Ton navigateur a bloqué le retour de connexion. Essaie de désactiver ton bloqueur de pub ou d'utiliser Chrome/Safari en mode normal.", "fa-circle-xmark");
+        } else {
+            window.showCustomAlert("Erreur Google", error.code, "fa-circle-xmark");
+        }
     });
 
     window.toggleVisibility = function(inputId, iconId) {
-        const input = document.getElementById(inputId); const icon = document.getElementById(iconId);
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
         if (input.type === "password") { input.type = "text"; icon.classList.replace("fa-eye", "fa-eye-slash"); }
         else { input.type = "password"; icon.classList.replace("fa-eye-slash", "fa-eye"); }
     };
 
-    // --- MISE A JOUR UI DE VOTE ---
-    window.updateVoteUI = async function() {
+    window.updateVoteUI = function() {
         const viewAuth = document.getElementById('view-auth');
         const viewVotes = document.getElementById('view-votes');
         const userGreeting = document.getElementById('user-greeting');
@@ -831,13 +867,10 @@
         if(auth.currentUser) {
             viewAuth.style.display = 'none'; 
             viewVotes.style.display = 'block';
-            await window.loadProfile();
-            
             let displayName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
-            userGreeting.innerHTML = `<span style="font-size:1.2rem; margin-right:5px;">${localProfile.avatar}</span> Salut ${displayName} !`;
-            
+            userGreeting.innerHTML = `Connecté(e) : <b>${displayName}</b>`;
             window.initFirebaseVotes();
-            window.chargerListeCollection(); 
+            window.chargerListeCollection(); // Charge la liste MyLudo
         } else {
             viewAuth.style.display = 'block'; 
             viewVotes.style.display = 'none';
@@ -845,19 +878,18 @@
         }
     };
 
-    // --- RENDU FORMULAIRES ---
     window.renderAuthUI = function() {
         const authContainer = document.getElementById('auth-container');
         if (!authContainer) return;
         let html = '';
         if (window.authMode === 'register') {
             html = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
-                <input type="text" id="auth-secret" class="share-input" placeholder="Code secret de l'asso" style="border-color:var(--president-color); background:rgba(230,126,34,0.05);">
+                <input type="text" id="auth-secret" class="share-input" placeholder="Code secret de l'asso">
                 <input type="text" id="auth-name" class="share-input" placeholder="Pseudo">
                 <input type="email" id="auth-email" class="share-input" placeholder="Email">
-                <div style="position:relative;"><input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe" style="width:100%;"><i class="fa-solid fa-eye" id="t-pwd" onclick="toggleVisibility('auth-pwd','t-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
-                <div style="position:relative;"><input type="password" id="auth-pwd-confirm" class="share-input" placeholder="Confirmer mot de passe" style="width:100%;"><i class="fa-solid fa-eye" id="t-pwd-c" onclick="toggleVisibility('auth-pwd-confirm','t-pwd-c')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
-                <button class="game-btn" onclick="registerEmail()" style="width:100%; justify-content:center;"><i class="fa-solid fa-user-plus"></i> S'inscrire</button>
+                <div style="position:relative;"><input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe"><i class="fa-solid fa-eye" id="t-pwd" onclick="toggleVisibility('auth-pwd','t-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
+                <div style="position:relative;"><input type="password" id="auth-pwd-confirm" class="share-input" placeholder="Confirmer"><i class="fa-solid fa-eye" id="t-pwd-c" onclick="toggleVisibility('auth-pwd-confirm','t-pwd-c')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
+                <button class="game-btn" onclick="registerEmail()" style="width:100%; justify-content:center;">S'inscrire</button>
                 <div style="text-align:center; margin: 5px 0; color:gray; font-size:0.8rem;">— ou —</div>
                 <button class="game-btn" style="background:#4285F4; width:100%; justify-content:center;" onclick="registerGoogle()"><i class="fa-brands fa-google"></i> S'inscrire via Google</button>
                 <span onclick="window.authMode='login'; renderAuthUI()" style="font-size:0.75rem; text-align:center; display:block; margin-top:10px; cursor:pointer; text-decoration:underline;">Déjà inscrit ? Connexion</span>
@@ -865,8 +897,8 @@
         } else {
             html = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
                 <input type="email" id="auth-email" class="share-input" placeholder="Email">
-                <div style="position:relative;"><input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe" style="width:100%;"><i class="fa-solid fa-eye" id="t-pwd" onclick="toggleVisibility('auth-pwd','t-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
-                <button class="game-btn" onclick="loginEmail()" style="width:100%; justify-content:center;"><i class="fa-solid fa-right-to-bracket"></i> Connexion</button>
+                <div style="position:relative;"><input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe"><i class="fa-solid fa-eye" id="t-pwd" onclick="toggleVisibility('auth-pwd','t-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
+                <button class="game-btn" onclick="loginEmail()" style="width:100%; justify-content:center;">Connexion</button>
                 <div style="text-align:center; margin: 5px 0; color:gray; font-size:0.8rem;">— ou —</div>
                 <button class="game-btn" style="background:#4285F4; width:100%; justify-content:center;" onclick="loginGoogle()"><i class="fa-brands fa-google"></i> Continuer avec Google</button>
                 <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:10px;">
@@ -878,7 +910,6 @@
         authContainer.innerHTML = html;
     };
 
-    // --- ACTIONS D'AUTHENTIFICATION ---
     window.authMode = 'login';
     window.loginGoogle = () => signInWithRedirect(auth, new GoogleAuthProvider());
     window.registerGoogle = () => {
@@ -887,7 +918,7 @@
     };
     window.loginEmail = async () => {
         try { await signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pwd').value); } 
-        catch (e) { window.showCustomAlert("Erreur", "Identifiants invalides", "fa-circle-xmark"); }
+        catch (e) { window.showCustomAlert("Erreur", "Email ou mot de passe incorrect", "fa-circle-xmark"); }
     };
     window.registerEmail = async () => {
         const secret = document.getElementById('auth-secret').value.trim().toUpperCase();
@@ -896,51 +927,15 @@
         try {
             const res = await createUserWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pwd').value);
             await updateProfile(res.user, { displayName: document.getElementById('auth-name').value });
-            await setDoc(doc(db, "utilisateurs", res.user.uid), { avatar: '🎲', titre: 'Novice' });
+            await sendEmailVerification(res.user);
             window.showCustomAlert("Succès", "Compte créé ! Vérifie tes spams.", "fa-champagne-glasses");
-        } catch (e) { window.showCustomAlert("Erreur", e.message, "fa-bug"); }
+        } catch (e) { window.showCustomAlert("Erreur", e.code, "fa-bug"); }
     };
     window.logoutFirebase = () => signOut(auth);
     window.resetPwd = async () => {
         const mail = document.getElementById('auth-email').value;
         if(!mail) return window.showCustomAlert("Info", "Tape ton email d'abord", "fa-envelope");
         try { await sendPasswordResetEmail(auth, mail); window.showCustomAlert("Envoyé", "Vérifie tes spams.", "fa-paper-plane"); } catch(e) { window.showCustomAlert("Erreur", "Email inconnu", "fa-question"); }
-    };
-
-    // --- GESTION PROFIL UTILISATEUR ---
-    window.loadProfile = async function() {
-        const docSnap = await getDoc(doc(db, "utilisateurs", auth.currentUser.uid));
-        if(docSnap.exists()) localProfile = docSnap.data();
-    };
-
-    window.openProfileModal = function() {
-        document.getElementById('modalContent').innerHTML = `
-            <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
-            <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; font-size:1.8rem; margin:0 0 15px;">Mon Profil</h3>
-            
-            <div style="text-align:left; margin-bottom:10px;">
-                <label style="font-size:0.8rem; font-weight:bold; color:var(--text-brown);">Mon Avatar (Emoji) :</label>
-                <input type="text" id="prof-avatar" class="share-input" value="${localProfile.avatar || '🎲'}" maxlength="2">
-            </div>
-            
-            <div style="text-align:left; margin-bottom:15px;">
-                <label style="font-size:0.8rem; font-weight:bold; color:var(--text-brown);">Mon Titre (Fun) :</label>
-                <input type="text" id="prof-titre" class="share-input" value="${localProfile.titre || 'Membre'}" maxlength="20" placeholder="Ex: Le Stratège">
-            </div>
-
-            <button class="game-btn" style="width:100%; justify-content:center; margin-top:5px;" onclick="saveProfile()"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button>
-        `;
-        document.getElementById('gameModalBackdrop').classList.add('visible');
-    };
-
-    window.saveProfile = async function() {
-        localProfile.avatar = document.getElementById('prof-avatar').value || '🎲';
-        localProfile.titre = document.getElementById('prof-titre').value || 'Membre';
-        await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile, {merge: true});
-        
-        let displayName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
-        document.getElementById('user-greeting').innerHTML = `<span style="font-size:1.2rem; margin-right:5px;">${localProfile.avatar}</span> Salut ${displayName} !`;
-        closeGameModalForce();
     };
 
     // --- GESTION DE LA COLLECTION MULTI-PROPRIOS ---
@@ -951,19 +946,23 @@
         const proprietaires = ['sebastien', 'julie', 'ronan', 'carine', 'stephane', 'sylvain'];
         let tousLesJeux = [];
 
+        // Parcourt les collections existantes
         for (const p of proprietaires) {
             try {
                 const snap = await getDocs(collection(db, `collection_${p}`));
-                snap.forEach(d => { tousLesJeux.push({ ...d.data(), proprio: p }); });
-            } catch(e) {}
+                snap.forEach(d => {
+                    tousLesJeux.push({ ...d.data(), proprio: p });
+                });
+            } catch(e) {
+                // Ignore si la collection n'existe pas encore
+            }
         }
 
         tousLesJeux.sort((a, b) => a.titre.localeCompare(b.titre));
 
         let options = '<option value="">-- Sélectionner un jeu --</option>';
         tousLesJeux.forEach(j => {
-            // j.joueurs est de la forme "2 — 4" ou "1 — 5"
-            options += `<option value="${j.titre}" data-proprio="${j.proprio}" data-lien="${j.lien || ''}" data-joueurs="${j.joueurs || '2-4'}">${j.titre} (${j.proprio})</option>`;
+            options += `<option value="${j.titre}" data-proprio="${j.proprio}" data-lien="${j.lien || ''}">${j.titre} (${j.proprio})</option>`;
         });
         
         select.innerHTML = options;
@@ -973,48 +972,30 @@
         const select = document.getElementById('select-jeu-collection');
         const selectedOption = select.options[select.selectedIndex];
         const titre = select.value;
-        
-        if(!titre) return window.showCustomAlert("Attention", "Choisis un jeu de la liste !", "fa-hand-pointer");
-
         const proprioDuJeu = selectedOption.getAttribute('data-proprio');
         const lienMyludo = selectedOption.getAttribute('data-lien');
         
-        // Extraction Min/Max Joueurs depuis la chaine "2 — 4"
-        const joueursStr = selectedOption.getAttribute('data-joueurs') || "2-4";
-        const parts = joueursStr.match(/\d+/g);
-        let minJ = parts && parts.length > 0 ? parseInt(parts[0]) : 2;
-        let maxJ = parts && parts.length > 1 ? parseInt(parts[1]) : minJ;
-        if (maxJ < minJ) maxJ = minJ; // Sécurité
-
-        // Joueur qui propose = premier assis
-        const moi = { 
-            uid: auth.currentUser.uid, 
-            nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], 
-            avatar: localProfile.avatar, 
-            type: 'main', 
-            flex: false, 
-            id: Date.now() 
-        };
+        if(!titre) return window.showCustomAlert("Attention", "Choisis un jeu de la liste !", "fa-hand-pointer");
 
         try {
             await addDoc(collection(db, "jeux_proposes"), {
                 nom: titre,
-                proposePar: moi.nom,
+                votants: [auth.currentUser.uid],
+                proposePar: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
                 appartientA: proprioDuJeu,
                 myludoLien: lienMyludo,
-                minJoueurs: minJ,
-                maxJoueurs: maxJ,
-                inscrits: [moi], // On utilise un tableau d'objets maintenant !
                 date_ajout: new Date()
             });
-            window.showCustomAlert("Table Ouverte !", `Les autres peuvent maintenant te rejoindre.`, "fa-champagne-glasses");
-            select.selectedIndex = 0; 
-        } catch(e) { console.error(e); }
+            window.showCustomAlert("Succès", `Le jeu de ${proprioDuJeu} est ajouté aux votes !`, "fa-check");
+            select.selectedIndex = 0; // Remet à zéro
+        } catch(e) { 
+            console.error(e); 
+            window.showCustomAlert("Erreur", "Impossible de rajouter ce jeu.", "fa-bug");
+        }
     };
 
     onAuthStateChanged(auth, (user) => { window.updateVoteUI(); });
 
-    // --- GESTION DES TABLES DYNAMIQUES ---
     window.initFirebaseVotes = function() {
         if(!window.db) return;
         if(unsubscribeVotes) unsubscribeVotes(); 
@@ -1025,118 +1006,43 @@
             
             let jeux = [];
             snap.forEach(d => jeux.push({ id: d.id, ...d.data() }));
-            // Tri par le nombre d'inscrits décroissant
-            jeux.sort((a, b) => (b.inscrits || []).length - (a.inscrits || []).length);
+            jeux.sort((a, b) => (b.votants || []).length - (a.votants || []).length);
             
             if(jeux.length === 0) {
-                div.innerHTML = '<div style="text-align:center; font-size:0.8rem; color:gray; padding: 20px;">Aucune table pour le moment. Crée la première !</div>';
+                div.innerHTML = '<div style="text-align:center; font-size:0.8rem; color:gray; padding: 20px;">Aucun jeu proposé pour le moment.</div>';
                 return;
             }
 
             div.innerHTML = jeux.map(j => {
-                let inscrits = j.inscrits || [];
-                let min = j.minJoueurs || 2; 
-                let max = j.maxJoueurs || 4;
+                const votants = j.votants || [];
+                const vted = auth.currentUser && votants.includes(auth.currentUser.uid);
                 
-                // 1. GENERATION DES SIEGES
-                let seatsHTML = '<div style="display:flex; flex-wrap:wrap; gap:4px; margin: 12px 0;">';
-                for(let i=0; i<max; i++) {
-                    let isGreen = i < min; // Siège vital
-                    let occupant = inscrits[i];
-                    
-                    if(occupant) {
-                        let badge = occupant.flex ? '👼' : '';
-                        let colorClass = isGreen ? 'green' : 'gold';
-                        let displayName = occupant.nom.split(' ')[0]; // Juste le prénom pour pas prendre de place
-                        seatsHTML += `<div class="seat ${colorClass}">${occupant.avatar||'👤'} ${displayName} ${badge}</div>`;
-                    } else {
-                        let emptyClass = isGreen ? 'empty-green' : 'empty-gold';
-                        seatsHTML += `<div class="seat ${emptyClass}">🪑 Libre</div>`;
-                    }
-                }
-                seatsHTML += '</div>';
-
-                // 2. GENERATION DES ACTIONS
-                let mySeats = inscrits.filter(i => i.uid === auth.currentUser.uid);
-                let amISitting = mySeats.length > 0;
-                let amIFlex = mySeats.some(i => i.flex);
-                let isFull = inscrits.length >= max;
-
-                let actionsHTML = '<div class="action-bar">';
-                
-                if (amISitting) {
-                    actionsHTML += `<button class="btn-small" style="background:#e74c3c;" onclick="actionTable('${j.id}', 'leave')"><i class="fa-solid fa-person-walking-arrow-right"></i> Quitter</button>`;
-                    
-                    if(!amIFlex) actionsHTML += `<button class="btn-small" style="background:#3498db;" onclick="actionTable('${j.id}', 'flex')">👼 Être Flexible</button>`;
-                    else actionsHTML += `<button class="btn-small" style="background:#95a5a6;" onclick="actionTable('${j.id}', 'unflex')">Ne plus être Flex.</button>`;
-                    
-                    if(!isFull) actionsHTML += `<button class="btn-small" style="background:var(--wood-brown);" onclick="actionTable('${j.id}', 'addGuest')"><i class="fa-solid fa-user-plus"></i> +1 Invité</button>`;
-                } else {
-                    if(!isFull) actionsHTML += `<button class="btn-small" style="background:var(--green-deep);" onclick="actionTable('${j.id}', 'join')">🪑 M'asseoir</button>`;
-                    else actionsHTML += `<span style="font-size:0.75rem; color:gray; font-style:italic; padding:4px;">Table complète 🔒</span>`;
-                }
-                actionsHTML += '</div>';
-
-                // 3. TITRE
+                // Titre cliquable si le lien est présent
                 const titreHTML = j.myludoLien 
-                    ? `<a href="${j.myludoLien}" target="_blank" class="myludo-link">${j.nom}</a>`
+                    ? `<a href="${j.myludoLien}" target="_blank" style="color:var(--green-deep); text-decoration:none; border-bottom:1px dashed var(--wood-brown);">${j.nom}</a>`
                     : j.nom;
 
-                return `
-                <div class="table-card">
-                    <div style="font-weight:800; color:var(--green-deep); font-size: 1.05rem;">${titreHTML}</div>
-                    <span style="font-size:0.65rem; color:gray; display:block; margin-top:2px;">Proposé par ${j.proposePar} (Jeu de <b>${j.appartientA || '?'}</b>)</span>
-                    ${seatsHTML}
-                    ${actionsHTML}
+                const appartientHTML = j.appartientA ? `<span style="font-size:0.6rem; color:gray; display:block; margin-top:2px;">Proposé par ${j.proposePar} (Jeu de <b>${j.appartientA}</b>)</span>` : `<span style="font-size:0.6rem; color:gray; display:block; margin-top:2px;">Proposé par ${j.proposePar}</span>`;
+
+                return `<div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:10px 15px; border-radius:12px; border:1px solid var(--wood-highlight); margin-bottom:8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+                    <div>
+                        <div style="font-weight:700; color:var(--green-deep); font-size: 0.95rem;">${titreHTML}</div>
+                        ${appartientHTML}
+                    </div>
+                    <button class="call-btn ${vted ? 'fb-btn' : 'ludo-btn'}" onclick="voterPourJeu('${j.id}', ${vted})" style="width:auto; padding:0 15px; cursor:pointer;">
+                        ${vted ? '✅' : '👍'} ${votants.length}
+                    </button>
                 </div>`;
             }).join('');
         });
     };
 
-    window.actionTable = async function(idTable, action) {
+    window.voterPourJeu = async (id, vted) => {
         if(!auth.currentUser) return;
-        const ref = doc(db, "jeux_proposes", idTable);
-        const docSnap = await getDoc(ref);
-        if(!docSnap.exists()) return;
-        
-        let data = docSnap.data(); 
-        let inscrits = data.inscrits || [];
-        const max = data.maxJoueurs || 4;
-
-        if (action === 'join') {
-            if(inscrits.length < max) {
-                inscrits.push({ 
-                    uid: auth.currentUser.uid, 
-                    nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], 
-                    avatar: localProfile.avatar, 
-                    type: 'main', flex: false, id: Date.now() 
-                });
-            }
-        } 
-        else if (action === 'leave') {
-            // Supprime le joueur principal ET tous ses invités (car ils partagent le même UID de créateur)
-            inscrits = inscrits.filter(i => i.uid !== auth.currentUser.uid);
-        } 
-        else if (action === 'addGuest') {
-            if(inscrits.length < max) {
-                inscrits.push({ 
-                    uid: auth.currentUser.uid, // L'hôte garde le contrôle de l'invité
-                    nom: "Invité", avatar: '👤', type: 'guest', flex: false, id: Date.now() 
-                });
-            }
-        } 
-        else if (action === 'flex') {
-            let moi = inscrits.find(i => i.uid === auth.currentUser.uid && i.type === 'main');
-            if(moi) moi.flex = true;
-        } 
-        else if (action === 'unflex') {
-            let moi = inscrits.find(i => i.uid === auth.currentUser.uid && i.type === 'main');
-            if(moi) moi.flex = false;
-        }
-
+        const ref = doc(db, "jeux_proposes", id);
         try {
-            await updateDoc(ref, { inscrits });
-        } catch(e) { console.error("Erreur action table:", e); }
+            await updateDoc(ref, { votants: vted ? arrayRemove(auth.currentUser.uid) : arrayUnion(auth.currentUser.uid) });
+        } catch(e) { console.error(e); }
     };
 </script>
 </body>
