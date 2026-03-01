@@ -559,16 +559,28 @@
         vote: {
             title: "Au programme ?",
             text: `<div class="panel-card" id="content-vote">
-                <div id="auth-container" style="text-align:center; min-height: 40px;"></div>
                 
-                <p style="text-align: center; margin-top: 0; font-size: 0.9rem;">Proposez un jeu ou votez pour ceux déjà proposés pour la prochaine soirée !</p>
-                <div style="display:flex; gap:10px; margin-bottom: 20px;">
-                    <input type="text" id="nomNouveauJeu" placeholder="Nom du jeu..." class="share-input" style="flex-grow:1; text-align:left;">
-                    <button class="game-btn" style="margin-top:0;" onclick="ajouterJeuFirebase()"><i class="fa-solid fa-plus"></i></button>
+                <div id="view-auth">
+                    <p style="text-align: center; margin-top: 0; font-size: 0.9rem; color: var(--text-brown);">Connecte-toi pour proposer et voter pour tes jeux préférés !</p>
+                    <div id="auth-container"></div>
                 </div>
-                <div id="liste-votes-firebase" style="display:flex; flex-direction:column; gap:10px;">
-                    <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement des jeux... <i class="fa-solid fa-spinner fa-spin"></i></div>
+
+                <div id="view-votes" style="display: none;">
+                    <div style="font-size:0.85rem; color:var(--green-deep); margin-bottom:15px; padding: 8px; background: rgba(58, 99, 81, 0.1); border-radius: 10px; display:flex; justify-content:space-between; align-items:center;">
+                        <span id="user-greeting">Connecté</span> 
+                        <button onclick="logoutFirebase()" style="padding:4px 10px; font-size:0.7rem; font-weight:bold; border-radius:50px; border:1px solid var(--wood-brown); color:var(--wood-brown); background:transparent; cursor:pointer;">Quitter</button>
+                    </div>
+                    
+                    <p style="text-align: center; margin-top: 0; font-size: 0.9rem;">Proposez un jeu ou votez pour ceux déjà proposés pour la prochaine soirée !</p>
+                    <div style="display:flex; gap:10px; margin-bottom: 20px;">
+                        <input type="text" id="nomNouveauJeu" placeholder="Nom du jeu..." class="share-input" style="flex-grow:1; text-align:left;">
+                        <button class="game-btn" style="margin-top:0;" onclick="ajouterJeuFirebase()"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <div id="liste-votes-firebase" style="display:flex; flex-direction:column; gap:10px;">
+                        <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement des jeux... <i class="fa-solid fa-spinner fa-spin"></i></div>
+                    </div>
                 </div>
+
             </div>`
         },
         histoire: { 
@@ -640,13 +652,15 @@
     const mainWrapper = document.getElementById('mainWrapper');
 
     function openSheet(key) {
-        // Activation Firebase pour la page des votes
-        if(key === 'vote' && window.initFirebaseVotes) {
-            setTimeout(window.initFirebaseVotes, 50);
-        }
-
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
         
+        // Mettre à jour l'affichage de l'authentification si on ouvre l'onglet "vote"
+        if(key === 'vote') {
+            setTimeout(() => {
+                if(window.updateVoteUI) window.updateVoteUI();
+            }, 50);
+        }
+
         if(gameStarted && gameState[key] && gameState[key].total > gameState[key].found) {
             let containerId = `content-${key}`; let container = document.getElementById(containerId);
             if(container) {
@@ -931,7 +945,6 @@
         }
     }
 
-    // Lancement de la vérification au démarrage
     checkCookies();
 </script>
 
@@ -958,65 +971,77 @@
 
     let currentUser = null;
     let unsubscribeVotes = null;
-    let authMode = 'login'; // Modes possibles : 'login', 'register', 'reset'
+    let authMode = 'login'; 
 
-    // Fonction pour dessiner l'interface de connexion en fonction du mode
+    // Bascule d'affichage entre Connexion et Interface de Vote
+    window.updateVoteUI = function() {
+        const viewAuth = document.getElementById('view-auth');
+        const viewVotes = document.getElementById('view-votes');
+        const userGreeting = document.getElementById('user-greeting');
+        
+        if(!viewAuth || !viewVotes) return;
+        
+        if(currentUser) {
+            // Utilisateur connecté : on cache le formulaire, on montre les votes
+            viewAuth.style.display = 'none';
+            viewVotes.style.display = 'block';
+            let nameToDisplay = currentUser.displayName || currentUser.email.split('@')[0];
+            userGreeting.innerHTML = `Connecté(e) : <b>${nameToDisplay}</b>`;
+            window.initFirebaseVotes();
+        } else {
+            // Non connecté : on montre le formulaire, on cache les votes
+            viewAuth.style.display = 'block';
+            viewVotes.style.display = 'none';
+            window.renderAuthUI();
+        }
+    };
+
+    // Génération du formulaire (Connexion / Inscription / Mot de passe oublié)
     window.renderAuthUI = function() {
         const authContainer = document.getElementById('auth-container');
         if (!authContainer) return;
 
-        if (currentUser) {
-            // Si connecté
+        if (authMode === 'login') {
             authContainer.innerHTML = `
-                <div style="font-size:0.85rem; color:var(--green-deep); margin-bottom:15px; padding: 8px; background: rgba(58, 99, 81, 0.1); border-radius: 10px;">
-                    Connecté(e) : <b>${currentUser.displayName || currentUser.email}</b> 
-                    <button onclick="logoutFirebase()" style="margin-left:10px; padding:4px 10px; font-size:0.7rem; font-weight:bold; border-radius:50px; border:1px solid var(--wood-brown); color:var(--wood-brown); background:transparent; cursor:pointer;">Quitter</button>
+                <div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
+                    <input type="email" id="auth-email" class="share-input" placeholder="Adresse e-mail">
+                    <input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe">
+                    <button class="game-btn" style="width:100%; justify-content:center;" onclick="loginEmail()"><i class="fa-solid fa-right-to-bracket"></i> Connexion</button>
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:5px; font-weight:bold;">
+                        <span onclick="setAuthMode('register')" style="color:var(--green-deep); cursor:pointer; text-decoration:underline;">Créer un compte</span>
+                        <span onclick="setAuthMode('reset')" style="color:var(--text-brown); cursor:pointer; text-decoration:underline;">Oublié ?</span>
+                    </div>
                 </div>`;
-        } else {
-            // Si non connecté : on affiche le bon formulaire
-            if (authMode === 'login') {
-                authContainer.innerHTML = `
-                    <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05);">
-                        <input type="email" id="auth-email" class="share-input" placeholder="Adresse e-mail">
-                        <input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe">
-                        <button class="game-btn" style="width:100%; justify-content:center;" onclick="loginEmail()"><i class="fa-solid fa-right-to-bracket"></i> Connexion</button>
-                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:5px; font-weight:bold;">
-                            <a href="#" onclick="setAuthMode('register')" style="color:var(--green-deep); text-decoration:none;">Créer un compte</a>
-                            <a href="#" onclick="setAuthMode('reset')" style="color:var(--text-brown); text-decoration:none;">Mot de passe oublié ?</a>
-                        </div>
-                    </div>`;
-            } else if (authMode === 'register') {
-                authContainer.innerHTML = `
-                    <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05);">
-                        <input type="text" id="auth-name" class="share-input" placeholder="Ton pseudo (ex: Julie)">
-                        <input type="email" id="auth-email" class="share-input" placeholder="Adresse e-mail">
-                        <input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe (6 min.)">
-                        <button class="game-btn" style="width:100%; justify-content:center; background:var(--green-deep);" onclick="registerEmail()"><i class="fa-solid fa-user-plus"></i> S'inscrire</button>
-                        <div style="text-align:center; font-size:0.75rem; margin-top:5px; font-weight:bold;">
-                            <a href="#" onclick="setAuthMode('login')" style="color:var(--wood-brown); text-decoration:none;">Déjà inscrit ? Se connecter</a>
-                        </div>
-                    </div>`;
-            } else if (authMode === 'reset') {
-                authContainer.innerHTML = `
-                    <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05);">
-                        <p style="font-size:0.8rem; margin:0 0 5px; color:var(--text-brown);">Un lien de réinitialisation vous sera envoyé.</p>
-                        <input type="email" id="auth-email" class="share-input" placeholder="Adresse e-mail">
-                        <button class="game-btn" style="width:100%; justify-content:center; background:var(--president-color);" onclick="resetPwd()"><i class="fa-solid fa-envelope"></i> Recevoir le lien</button>
-                        <div style="text-align:center; font-size:0.75rem; margin-top:5px; font-weight:bold;">
-                            <a href="#" onclick="setAuthMode('login')" style="color:var(--wood-brown); text-decoration:none;">Retour à la connexion</a>
-                        </div>
-                    </div>`;
-            }
+        } else if (authMode === 'register') {
+            authContainer.innerHTML = `
+                <div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
+                    <input type="text" id="auth-name" class="share-input" placeholder="Ton pseudo (ex: Julie)">
+                    <input type="email" id="auth-email" class="share-input" placeholder="Adresse e-mail">
+                    <input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe (6 min.)">
+                    <button class="game-btn" style="width:100%; justify-content:center; background:var(--green-deep);" onclick="registerEmail()"><i class="fa-solid fa-user-plus"></i> S'inscrire</button>
+                    <div style="text-align:center; font-size:0.75rem; margin-top:5px; font-weight:bold;">
+                        <span onclick="setAuthMode('login')" style="color:var(--wood-brown); cursor:pointer; text-decoration:underline;">Déjà inscrit ? Se connecter</span>
+                    </div>
+                </div>`;
+        } else if (authMode === 'reset') {
+            authContainer.innerHTML = `
+                <div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
+                    <p style="font-size:0.8rem; margin:0 0 5px; color:var(--text-brown);">Un lien de réinitialisation vous sera envoyé.</p>
+                    <input type="email" id="auth-email" class="share-input" placeholder="Adresse e-mail">
+                    <button class="game-btn" style="width:100%; justify-content:center; background:var(--president-color);" onclick="resetPwd()"><i class="fa-solid fa-envelope"></i> Recevoir le lien</button>
+                    <div style="text-align:center; font-size:0.75rem; margin-top:5px; font-weight:bold;">
+                        <span onclick="setAuthMode('login')" style="color:var(--wood-brown); cursor:pointer; text-decoration:underline;">Retour à la connexion</span>
+                    </div>
+                </div>`;
         }
     };
 
-    // Changer le mode d'affichage
     window.setAuthMode = function(mode) {
         authMode = mode;
         window.renderAuthUI();
     };
 
-    // ACTIONS FIREBASE AUTH
+    // ACTIONS FIREBASE
     window.loginEmail = async function() {
         const email = document.getElementById('auth-email').value.trim();
         const pwd = document.getElementById('auth-pwd').value.trim();
@@ -1039,10 +1064,9 @@
 
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, pwd);
-            // On ajoute le pseudo au profil Firebase
             await updateProfile(userCredential.user, { displayName: name });
-            // On force le rafraîchissement de l'UI pour afficher le nom
-            window.renderAuthUI();
+            currentUser = userCredential.user; // Force maj locale
+            window.updateVoteUI(); 
         } catch (e) {
             if(e.code === 'auth/email-already-in-use') alert("Cet email est déjà utilisé.");
             else alert("Erreur lors de l'inscription.");
@@ -1067,17 +1091,13 @@
         try { await signOut(auth); } catch (e) { console.error(e); }
     };
 
-    // ÉCOUTEUR PRINCIPAL : Se déclenche à chaque connexion/déconnexion
+    // ÉCOUTEUR PRINCIPAL : Au changement d'état, on bascule les vues
     onAuthStateChanged(auth, (user) => {
         currentUser = user;
-        window.renderAuthUI(); // Met à jour le formulaire/nom
-        
-        if (document.getElementById('liste-votes-firebase')) {
-            window.initFirebaseVotes(); // Met à jour les boutons de vote
-        }
+        window.updateVoteUI();
     });
 
-    /* --- GESTION DES VOTES (Base de données) --- */
+    /* --- GESTION DES VOTES EN TEMPS RÉEL --- */
     window.initFirebaseVotes = function() {
         if(!window.db) return;
         const jeuxRef = collection(window.db, "jeux_proposes");
@@ -1095,7 +1115,6 @@
                 jeux.push({ id: doc.id, ...doc.data() });
             });
 
-            // Tri par nombre de votes décroissants
             jeux.sort((a, b) => ((b.votants || []).length) - ((a.votants || []).length));
 
             if(jeux.length === 0) {
@@ -1109,7 +1128,6 @@
                     let btnClass = aDejaVote ? "call-btn fb-btn" : "call-btn ludo-btn"; 
                     let btnText = aDejaVote ? `✅ ${nbVotes}` : `👍 ${nbVotes}`;
                     
-                    let clickAction = currentUser ? `onclick="voterPourJeu('${jeu.id}', ${aDejaVote})"` : `onclick="alert('Connectez-vous pour voter !') ; setAuthMode('login')"`;
                     let proposeur = jeu.proposePar ? `<span style="font-size:0.65rem; color:gray; display:block; margin-top:2px;">Proposé par <b>${jeu.proposePar}</b></span>` : '';
 
                     html += `
@@ -1118,7 +1136,7 @@
                             <div style="font-weight:700; color:var(--green-deep);">${jeu.nom}</div>
                             ${proposeur}
                         </div>
-                        <button class="${btnClass}" ${clickAction} style="width:auto; padding:0 15px; cursor:pointer;">
+                        <button class="${btnClass}" onclick="voterPourJeu('${jeu.id}', ${aDejaVote})" style="width:auto; padding:0 15px; cursor:pointer;">
                             ${btnText}
                         </button>
                     </div>`;
@@ -1129,10 +1147,6 @@
     };
 
     window.ajouterJeuFirebase = async function() {
-        if(!currentUser) { 
-            alert("Veuillez vous connecter pour proposer un jeu !"); 
-            return; 
-        }
         const input = document.getElementById('nomNouveauJeu');
         const nom = input.value.trim();
         if(!nom) return;
@@ -1142,8 +1156,7 @@
             await addDoc(collection(window.db, "jeux_proposes"), {
                 nom: nom,
                 votants: [currentUser.uid], 
-                proposePar: currentUser.displayName || "Un Pote", 
-                proposeParUid: currentUser.uid,
+                proposePar: currentUser.displayName || currentUser.email.split('@')[0], 
                 date_ajout: new Date()
             });
         } catch (e) {
@@ -1165,6 +1178,5 @@
         }
     };
 </script>
-
 </body>
 </html>
