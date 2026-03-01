@@ -7,7 +7,7 @@
         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
         font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
         img-src 'self' data: https://www.google.com https://*.google.com https://*.gstatic.com http://googleusercontent.com https://www.googletagmanager.com https://via.placeholder.com;
-        connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://api.open-meteo.com;
+        connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://api.open-meteo.com https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com;
         object-src 'none';
         base-uri 'self';
         form-action 'self';
@@ -64,8 +64,8 @@
         .hero-hitbox { position: absolute; top: 10%; left: 10%; width: 40%; height: 40%; z-index: 15; cursor: pointer; pointer-events: auto; }
         .barn-hitbox { position: absolute; top: 15%; right: 5%; width: 25%; height: 35%; z-index: 15; cursor: pointer; pointer-events: auto; }
 
-        .rdv-card { background: rgba(255, 252, 240, 0.98); width: 85%; padding: 12px 15px; border-radius: 18px; position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; box-shadow: 0 10px 30px rgba(74, 60, 47, 0.15); border: 1px solid white; z-index: 10; pointer-events: auto; cursor: default; }
-        .rdv-info { width: 100%; }
+        .rdv-card { background: rgba(255, 252, 240, 0.98); width: 85%; padding: 12px 15px; border-radius: 18px; position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 30px rgba(74, 60, 47, 0.15); border: 1px solid white; z-index: 10; pointer-events: auto; cursor: default; }
+        .rdv-info { width: 100%; display: flex; align-items: center; justify-content: center; }
         .rdv-info p { margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--green-deep); line-height: 1.3; }
         .rdv-info a { color: var(--green-deep); text-decoration: none; font-weight: 600; font-size: 0.8rem; }
         .rdv-info a .underline { text-decoration: underline; }
@@ -126,10 +126,6 @@
         .share-input { width: 100%; padding: 8px; border-radius: 12px; border: 2px solid var(--wood-brown); background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown); box-sizing: border-box; text-align: center; font-size: 1rem; }
         .wa-btn { background: #25D366; color: white; margin-top: 5px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); } 
         .confetti { position: fixed; width: 10px; height: 10px; background-color: #f00; z-index: 400; top: -10px; pointer-events: none; opacity: 0; }
-
-        /* --- ANIMATIONS GLOBALES --- */
-        @keyframes spin { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.2); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- RESTE DU CSS (Menus, Lightbox) --- */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
@@ -342,10 +338,15 @@
                 <div class="barn-hitbox" onclick="openBarn()"></div>
                 
                 <div class="rdv-card">
-                    <div style="font-size: 1.5rem; margin-right: 12px;">🎲</div>
-                    <div class="rdv-info">
-                        <p id="next-rdv-banner" style="margin:0;">Calcul en cours...</p>
+                    <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
+                        <div style="font-size: 1.5rem; margin-right: 12px;">🎲</div>
+                        <div class="rdv-info" style="flex-direction: column; align-items: flex-start;">
+                            <p id="next-rdv-banner" style="margin:0;">Calcul en cours...</p>
+                        </div>
                     </div>
+                    <button class="btn-ludotheque" style="margin-top: 10px; padding: 6px 15px; font-size: 0.8rem; width: 100%; justify-content: center;" onclick="openSheet('vote')">
+                        <i class="fa-solid fa-check-to-slot"></i> Voter pour les jeux
+                    </button>
                 </div>
             </div>
         </div>
@@ -555,6 +556,19 @@
 
     /* --- 2. DONNÉES DES PAGES --- */
     const pagesData = {
+        vote: {
+            title: "Au programme ?",
+            text: `<div class="panel-card" id="content-vote">
+                <p style="text-align: center; margin-top: 0; font-size: 0.9rem;">Proposez un jeu ou votez pour ceux déjà proposés pour la prochaine soirée !</p>
+                <div style="display:flex; gap:10px; margin-bottom: 20px;">
+                    <input type="text" id="nomNouveauJeu" placeholder="Nom du jeu..." class="share-input" style="flex-grow:1; text-align:left;">
+                    <button class="game-btn" style="margin-top:0;" onclick="ajouterJeuFirebase()"><i class="fa-solid fa-plus"></i></button>
+                </div>
+                <div id="liste-votes-firebase" style="display:flex; flex-direction:column; gap:10px;">
+                    <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement des jeux... <i class="fa-solid fa-spinner fa-spin"></i></div>
+                </div>
+            </div>`
+        },
         histoire: { 
             title: "Le Grimoire", 
             text: `<div class="panel-card" id="content-histoire">
@@ -624,9 +638,14 @@
     const mainWrapper = document.getElementById('mainWrapper');
 
     function openSheet(key) {
+        // Activation Firebase pour la page des votes
+        if(key === 'vote' && window.initFirebaseVotes) {
+            setTimeout(window.initFirebaseVotes, 50);
+        }
+
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
         
-        if(gameStarted && gameState[key].total > gameState[key].found) {
+        if(gameStarted && gameState[key] && gameState[key].total > gameState[key].found) {
             let containerId = `content-${key}`; let container = document.getElementById(containerId);
             if(container) {
                 let remaining = gameState[key].total - gameState[key].found;
@@ -912,6 +931,98 @@
 
     // Lancement de la vérification au démarrage
     checkCookies();
+</script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, updateDoc, doc, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Tes clés Firebase officielles
+    const firebaseConfig = {
+      apiKey: "AIzaSyBwLFuQcpv_Ml8omuhzEL1mvTEPlxsH1Wo",
+      authDomain: "des-potes-a-jeux.firebaseapp.com",
+      projectId: "des-potes-a-jeux",
+      storageBucket: "des-potes-a-jeux.firebasestorage.app",
+      messagingSenderId: "826161718904",
+      appId: "1:826161718904:web:d2bb45b5cdadca5ca76f8d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    window.db = db;
+
+    let unsubscribeVotes = null;
+
+    // Fonction d'initialisation de l'écoute en temps réel
+    window.initFirebaseVotes = function() {
+        if(!window.db) return;
+        const jeuxRef = collection(window.db, "jeux_proposes");
+        
+        // On évite de lancer 50 fois l'écoute si on ouvre/ferme la page plusieurs fois
+        if(unsubscribeVotes) unsubscribeVotes(); 
+        
+        unsubscribeVotes = onSnapshot(jeuxRef, (snapshot) => {
+            const listeDiv = document.getElementById('liste-votes-firebase');
+            if(!listeDiv) return;
+
+            let html = '';
+            let jeux = [];
+            
+            snapshot.forEach(doc => {
+                jeux.push({ id: doc.id, ...doc.data() });
+            });
+
+            // Tri par nombre de votes décroissants
+            jeux.sort((a, b) => (b.votes || 0) - (a.votes || 0));
+
+            if(jeux.length === 0) {
+                html = '<div style="text-align:center; color:var(--text-brown); font-size:0.8rem; font-style:italic;">Aucun jeu proposé pour le moment. Soyez le premier !</div>';
+            } else {
+                jeux.forEach(jeu => {
+                    html += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:10px 15px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+                        <div style="font-weight:700; color:var(--green-deep);">${jeu.nom}</div>
+                        <button class="call-btn ludo-btn" onclick="voterPourJeu('${jeu.id}')" style="width:auto; padding:0 15px;">
+                            👍 ${jeu.votes || 0}
+                        </button>
+                    </div>`;
+                });
+            }
+            listeDiv.innerHTML = html;
+        });
+    };
+
+    // Fonction pour ajouter un nouveau jeu
+    window.ajouterJeuFirebase = async function() {
+        const input = document.getElementById('nomNouveauJeu');
+        const nom = input.value.trim();
+        if(!nom) return;
+
+        input.value = ''; // On vide l'input immédiatement pour l'UX
+        try {
+            await addDoc(collection(window.db, "jeux_proposes"), {
+                nom: nom,
+                votes: 1, // 1 vote automatique à l'ajout
+                date_ajout: new Date()
+            });
+        } catch (e) {
+            console.error("Erreur lors de l'ajout :", e);
+            alert("Oups, impossible d'ajouter le jeu.");
+        }
+    };
+
+    // Fonction pour voter
+    window.voterPourJeu = async function(id) {
+        if(!window.db) return;
+        const jeuRef = doc(window.db, "jeux_proposes", id);
+        try {
+            await updateDoc(jeuRef, {
+                votes: increment(1)
+            });
+        } catch (e) {
+            console.error("Erreur lors du vote :", e);
+        }
+    };
 </script>
 </body>
 </html>
