@@ -91,7 +91,12 @@
         .egg { position: absolute; color: rgba(188, 143, 99, 0.8); font-size: 1.6rem; cursor: pointer; z-index: 100; transition: all 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); }
         .egg:hover { color: var(--wood-brown); transform: scale(1.3); }
         .egg.found { color: #f1c40f; text-shadow: 0 0 15px rgba(241, 196, 15, 1); animation: diceFound 0.8s ease-in-out forwards; pointer-events: none; }
-        @keyframes diceFound { 0% { transform: scale(1) rotate(0deg); opacity: 1; } 40% { transform: scale(1.5) rotate(360deg); opacity: 1; } 100% { transform: scale(0) rotate(720deg); opacity: 0; } }
+        
+        @keyframes diceFound { 
+            0% { transform: scale(1) rotate(0deg); opacity: 1; } 
+            40% { transform: scale(1.5) rotate(360deg); opacity: 1; } 
+            100% { transform: scale(0) rotate(720deg); opacity: 0; } 
+        }
         
         .game-timer { position: absolute; top: 15px; right: 15px; background: rgba(0, 0, 0, 0.8); color: #f1c40f; padding: 5px 12px; border-radius: 15px; font-family: monospace; font-size: 1.1rem; font-weight: bold; z-index: 200; display: none; box-shadow: 0 2px 10px rgba(0,0,0,0.3); pointer-events: none; min-width: 80px; text-align: center; }
         .game-timer.visible { display: block; }
@@ -210,6 +215,16 @@
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
         .photo-game-title { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); color: #fff; font-family: 'Quicksand', sans-serif; font-size: 0.7rem; font-weight: 700; padding: 15px 4px 4px; text-align: center; box-sizing: border-box; pointer-events: none; text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
         .photo-tab-content.active .photo-grid-item { animation: gridItemFade 0.4s cubic-bezier(0.17, 0.84, 0.44, 1) forwards; }
+        .photo-tab-content.active .photo-grid-item:nth-child(1) { animation-delay: 0.05s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(2) { animation-delay: 0.10s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(3) { animation-delay: 0.15s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(4) { animation-delay: 0.20s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(5) { animation-delay: 0.25s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(6) { animation-delay: 0.30s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(7) { animation-delay: 0.35s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(8) { animation-delay: 0.40s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(9) { animation-delay: 0.45s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(n+10) { animation-delay: 0.50s; }
         @keyframes gridItemFade { from { opacity: 0; transform: translateY(15px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
         .photo-year { position: absolute; bottom: 4px; right: 4px; background: rgba(0, 0, 0, 0.6); color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; pointer-events: none; backdrop-filter: blur(2px); }
         .contact-person { display: flex; flex-direction: column; padding: 10px 12px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
@@ -568,29 +583,13 @@
                 <div id="view-votes" style="display: none;">
                     
                     <div class="vote-tabs">
-                        <button class="vote-tab active" onclick="window.switchVoteTab('arene', this)"><i class="fa-solid fa-chess-board"></i> L'Arène</button>
-                        <button class="vote-tab" onclick="window.switchVoteTab('profil', this)"><i class="fa-solid fa-user"></i> Mon Profil</button>
+                        <button class="vote-tab active" onclick="window.switchVoteTab('profil', this)"><i class="fa-solid fa-user"></i> Mon Profil</button>
+                        <button class="vote-tab" onclick="window.switchVoteTab('arene', this)"><i class="fa-solid fa-chess-board"></i> L'Arène</button>
                     </div>
 
                     <div id="vote-swipe-area" style="position: relative; width: 100%; touch-action: pan-y;">
                         
-                        <div id="tab-arene" class="vote-tab-content active">
-                            <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed rgba(188,143,99,0.3);">
-                                <label style="font-weight:bold; font-size:0.8rem; display:block; margin-bottom:5px; color:var(--text-brown);">Ouvrir une nouvelle table :</label>
-                                <input type="text" id="input-jeu-search" list="jeux-datalist" class="share-input" style="width:100%; margin-bottom:10px; text-align:left;" placeholder="Rechercher un jeu (ou ajout manuel)">
-                                <datalist id="jeux-datalist"></datalist>
-                                <button class="game-btn game-btn-green" style="margin-top:0; width:100%; justify-content:center;" onclick="window.proposerJeu()"><i class="fa-solid fa-plus"></i> Créer la table</button>
-                            </div>
-
-                            <h3 style="font-family:'Shadows Into Light', cursive; color:var(--green-deep); font-size:1.5rem; text-align:center; margin: 0 0 5px;">L'Arène (Les Tables)</h3>
-                            <div style="font-size:0.7rem; color:gray; text-align:center; margin-bottom:15px; line-height:1.4;"><i class="fa-solid fa-info-circle"></i> <b>Flexible (👼)</b> : Prêt(e) à libérer sa place pour équilibrer les tables.</div>
-                            
-                            <div id="liste-votes-firebase" style="display:flex; flex-direction:column;">
-                                <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement des tables... <i class="fa-solid fa-spinner fa-spin"></i></div>
-                            </div>
-                        </div>
-
-                        <div id="tab-profil" class="vote-tab-content">
+                        <div id="tab-profil" class="vote-tab-content active">
                             
                             <div id="user-greeting" style="display:flex; flex-direction:column; align-items:center; font-weight:bold; color:var(--green-deep); font-size:1.5rem; margin-bottom:15px;"></div>
                             
@@ -612,6 +611,24 @@
 
                             <div style="text-align:center; margin-top: 25px;">
                                 <span onclick="window.logoutFirebase()" style="font-size:0.8rem; color:#e74c3c; text-decoration:underline; cursor:pointer;"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</span>
+                            </div>
+
+                        </div>
+
+                        <div id="tab-arene" class="vote-tab-content">
+                            
+                            <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed rgba(188,143,99,0.3);">
+                                <label style="font-weight:bold; font-size:0.8rem; display:block; margin-bottom:5px; color:var(--text-brown);">Ouvrir une nouvelle table :</label>
+                                <input type="text" id="input-jeu-search" list="jeux-datalist" class="share-input" style="width:100%; margin-bottom:10px; text-align:left;" placeholder="Rechercher un jeu (ou ajout manuel)">
+                                <datalist id="jeux-datalist"></datalist>
+                                <button class="game-btn game-btn-green" style="margin-top:0; width:100%; justify-content:center;" onclick="window.proposerJeu()"><i class="fa-solid fa-plus"></i> Créer la table</button>
+                            </div>
+
+                            <h3 style="font-family:'Shadows Into Light', cursive; color:var(--green-deep); font-size:1.5rem; text-align:center; margin: 0 0 5px;">L'Arène (Les Tables)</h3>
+                            <div style="font-size:0.7rem; color:gray; text-align:center; margin-bottom:15px; line-height:1.4;"><i class="fa-solid fa-info-circle"></i> <b>Flexible (👼)</b> : Prêt(e) à libérer sa place pour équilibrer les tables.</div>
+                            
+                            <div id="liste-votes-firebase" style="display:flex; flex-direction:column;">
+                                <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement des tables... <i class="fa-solid fa-spinner fa-spin"></i></div>
                             </div>
 
                         </div>
@@ -718,15 +735,25 @@
 
     /* --- LIGHTBOX --- */
     const lb = document.getElementById('lightbox'); const lbContainer = document.getElementById('lbContainer'); const lbImg = document.getElementById('lightboxImg'); const lbNavPrev = document.getElementById('lbNavPrev'); const lbNavNext = document.getElementById('lbNavNext');
-    let currentGallery = []; let currentPhotoIndex = 0; let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
+    let currentGallery = []; let currentPhotoIndex = 0;
+    let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
     
     function openLightbox(src, isSingleImage = false) { 
         lbImg.src = src; lb.style.display = 'flex'; resetZoom(); setTimeout(() => lb.classList.add('active'), 10); 
         const captionEl = document.getElementById('lightboxCaption');
-        if (isSingleImage) { currentGallery = [{src: src, title: ''}]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; captionEl.innerText = ''; } 
-        else { const activeTab = document.querySelector('.photo-tab-content.active'); const items = activeTab.querySelectorAll('.photo-grid-item img'); currentGallery = Array.from(items).map(img => ({ src: img.getAttribute('src'), title: img.getAttribute('alt') || '' })); currentPhotoIndex = currentGallery.findIndex(g => g.src === src); if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } captionEl.innerText = currentGallery[currentPhotoIndex].title; } 
+        if (isSingleImage) { 
+            currentGallery = [{src: src, title: ''}]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; captionEl.innerText = '';
+        } else { 
+            const activeTab = document.querySelector('.photo-tab-content.active');
+            const items = activeTab.querySelectorAll('.photo-grid-item img'); 
+            currentGallery = Array.from(items).map(img => ({ src: img.getAttribute('src'), title: img.getAttribute('alt') || '' })); 
+            currentPhotoIndex = currentGallery.findIndex(g => g.src === src); 
+            if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } 
+            captionEl.innerText = currentGallery[currentPhotoIndex].title;
+        } 
         if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } 
     }
+    
     function hideLightboxDOM() { lb.classList.remove('active'); setTimeout(() => { lb.style.display='none'; resetZoom(); }, 300); }
     function closeLightboxForce(fromHistory = false) { if (!lb.classList.contains('active')) return; if (history.state && history.state.type === 'lightbox') { history.back(); } else { hideLightboxDOM(); } }
     lbContainer.addEventListener('click', (e) => { if(e.target !== lbImg && currentScale === 1 && !e.target.closest('.lightbox-nav')) closeLightboxForce(); });
@@ -735,7 +762,16 @@
     lbContainer.addEventListener('touchstart', (e) => { if(e.target.closest('.lightbox-nav')) return; if (e.touches.length === 2) { isZooming = true; initialDistance = getDistance(e.touches); } else if (e.touches.length === 1) { lastPanX = e.touches[0].clientX; lastPanY = e.touches[0].clientY; swipeStartX = e.touches[0].clientX; currentSwipeX = 0; } }, {passive: false});
     lbContainer.addEventListener('touchmove', (e) => { if (e.touches.length === 2) { e.preventDefault(); const currentDistance = getDistance(e.touches); const scaleChange = currentDistance / initialDistance; currentScale = Math.min(Math.max(1, currentScale * scaleChange), 4); lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; initialDistance = currentDistance; } else if (e.touches.length === 1) { let currentX = e.touches[0].clientX; let currentY = e.touches[0].clientY; if (currentScale > 1) { e.preventDefault(); posX += (currentX - lastPanX) / currentScale; posY += (currentY - lastPanY) / currentScale; lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; lastPanX = currentX; lastPanY = currentY; } else if (!isZooming && currentGallery.length > 1) { e.preventDefault(); currentSwipeX = currentX - swipeStartX; lbContainer.style.transform = `translateX(${currentSwipeX}px)`; } } }, {passive: false});
     lbContainer.addEventListener('touchend', (e) => { if (e.touches.length < 2) { isZooming = false; } if (currentScale === 1 && currentGallery.length > 1) { if (currentSwipeX > 70) { changePhotoDir('prev'); } else if (currentSwipeX < -70) { changePhotoDir('next'); } else { lbContainer.style.transform = `translateX(0px)`; } currentSwipeX = 0; } });
-    function changePhotoDir(dir) { if (currentGallery.length <= 1) return; if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } lbImg.style.opacity = 0; document.getElementById('lightboxCaption').style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; setTimeout(() => { let newObj = currentGallery[currentPhotoIndex]; lbImg.src = newObj.src; document.getElementById('lightboxCaption').innerText = newObj.title; lbImg.style.opacity = 1; document.getElementById('lightboxCaption').style.opacity = 1; }, 150); }
+    
+    function changePhotoDir(dir) { 
+        if (currentGallery.length <= 1) return; 
+        if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } 
+        lbImg.style.opacity = 0; document.getElementById('lightboxCaption').style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; 
+        setTimeout(() => { 
+            let newObj = currentGallery[currentPhotoIndex]; lbImg.src = newObj.src; document.getElementById('lightboxCaption').innerText = newObj.title;
+            lbImg.style.opacity = 1; document.getElementById('lightboxCaption').style.opacity = 1;
+        }, 150); 
+    }
 
     /* --- JEU DES DES --- */
     let gameStarted = false; let eggCount = 0; const totalEggs = 10;
@@ -755,26 +791,107 @@
         document.getElementById('gameModalBackdrop').classList.add('visible');
         if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
     }
-    function initGame() { closeGameModalForce(); hideSheetDOM(); if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) { history.replaceState({ type: 'main' }, ''); } resetGameData(); gameStarted = true; startTimer(); const btnVoter = document.getElementById('btn-voter-accueil'); if (btnVoter) btnVoter.style.display = 'none'; const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque']; for(let i=0; i<9; i++) { let randomSec = sections[Math.floor(Math.random() * sections.length)]; gameState[randomSec].total++; } gameState['home'].total = 1; renderHomeEgg(); showToast("Le chrono est lancé ! ⏱️"); }
-    function resetGameData() { gameStarted = false; eggCount = 0; clearInterval(timerInterval); document.getElementById('gameTimer').classList.remove('visible'); document.getElementById('gameTimer').innerText = "00:00:00"; document.getElementById('gameTimer').style.color = '#f1c40f'; for(let key in gameState) { gameState[key].total = 0; gameState[key].found = 0; } document.querySelectorAll('.egg').forEach(el => el.remove()); const btnVoter = document.getElementById('btn-voter-accueil'); if (btnVoter) btnVoter.style.display = 'flex'; }
-    function startTimer() { startTime = Date.now(); document.getElementById('gameTimer').classList.add('visible'); timerInterval = setInterval(() => { let delta = Date.now() - startTime; let minutes = Math.floor(delta / 60000); let seconds = Math.floor((delta % 60000) / 1000); let centiseconds = Math.floor((delta % 1000) / 10); document.getElementById('gameTimer').innerText = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds) + ":" + (centiseconds < 10 ? "0" + centiseconds : centiseconds); }, 10); }
-    function foundEgg(el, sectionKey) { if(el.classList.contains('found')) return; if(eggCount >= 10) return; gameState[sectionKey].found++; eggCount++; el.style.pointerEvents = 'none'; el.classList.add('found'); setTimeout(() => el.remove(), 800); let msg = `Bravo ! ${eggCount}/${totalEggs}`; if(eggCount === totalEggs) { clearInterval(timerInterval); let rawMs = Date.now() - startTime; finishGame(rawMs); } else if(eggCount > 5) { msg = `Tu chauffes ! ${eggCount}/${totalEggs}`; showToast(msg); } else { showToast(msg); } if(navigator.vibrate) navigator.vibrate(50); }
-    function finishGame(rawMs) { let finalTime = document.getElementById('gameTimer').innerText; document.getElementById('gameTimer').style.color = '#2ecc71'; gameStarted = false; let seconds = rawMs / 1000; let rank = ""; let message = ""; let rankNum = 0; if (seconds < 5) { rankNum=1; rank = "DIEU DU DÉ ⚡"; message = "Inhumain ! T'as triché ?"; } else if (seconds < 10) { rankNum=2; rank = "GRAND MAÎTRE JEDI ⚔️"; message = "La Force est puissante en toi."; } else if (seconds < 15) { rankNum=3; rank = "CHUCK NORRIS 👊"; message = "Chuck Norris ne cherche pas les dés, ils se dénoncent."; } else if (seconds < 20) { rankNum=4; rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre."; } else if (seconds < 25) { rankNum=5; rank = "ŒIL DE LYNX 😼"; message = "Une vision perçante."; } else if (seconds < 35) { rankNum=6; rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Enquête méthodique."; } else if (seconds < 45) { rankNum=7; rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; } else if (seconds < 60) { rankNum=8; rank = "LE DIESEL 🚜"; message = "Lent au démarrage, mais tu es arrivé !"; } else { rankNum=9; rank = "L'ESCARGOT 🐌"; message = "L'important c'est de participer... non ?"; } finalGameData.time = finalTime; finalGameData.rank = rank; finalGameData.rankNumber = rankNum; finalGameData.message = message; finalGameData.rawMs = rawMs; const btnVoter = document.getElementById('btn-voter-accueil'); if (btnVoter) btnVoter.style.display = 'flex'; setTimeout(() => { const modal = document.getElementById('modalContent'); modal.innerHTML = `<div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div><div class="victory-icon"><i class="fa-solid fa-medal"></i></div><h3 class="victory-title">Félicitations !</h3><div class="victory-stats"><div style="font-size:1.1rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div><div style="font-size:1.3rem; color:#2c3e50; margin: 2px 0;">${rank}</div><div style="font-size:2rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div><div class="victory-message">"${message}"</div></div><div id="shareContainer" class="share-container"><input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15"><button class="game-btn wa-btn" style="width:100%;" onclick="shareWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Partager mon score</button></div><button class="game-btn game-btn-green" onclick="initGame()"><i class="fa-solid fa-rotate-right"></i> Rejouer</button>`; document.getElementById('gameModalBackdrop').classList.add('visible'); if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); } startConfetti(); }, 1000); }
+    
+    function initGame() {
+        closeGameModalForce(); hideSheetDOM();
+        if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) { history.replaceState({ type: 'main' }, ''); }
+        resetGameData(); gameStarted = true; startTimer();
+        
+        const btnVoter = document.getElementById('btn-voter-accueil');
+        if (btnVoter) btnVoter.style.display = 'none';
+
+        const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque'];
+        for(let i=0; i<9; i++) { let randomSec = sections[Math.floor(Math.random() * sections.length)]; gameState[randomSec].total++; }
+        gameState['home'].total = 1; renderHomeEgg(); showToast("Le chrono est lancé ! ⏱️");
+    }
+    
+    function resetGameData() {
+        gameStarted = false; eggCount = 0; clearInterval(timerInterval);
+        document.getElementById('gameTimer').classList.remove('visible'); document.getElementById('gameTimer').innerText = "00:00:00"; document.getElementById('gameTimer').style.color = '#f1c40f'; 
+        for(let key in gameState) { gameState[key].total = 0; gameState[key].found = 0; }
+        document.querySelectorAll('.egg').forEach(el => el.remove());
+
+        const btnVoter = document.getElementById('btn-voter-accueil');
+        if (btnVoter) btnVoter.style.display = 'flex';
+    }
+    
+    function startTimer() {
+        startTime = Date.now(); document.getElementById('gameTimer').classList.add('visible');
+        timerInterval = setInterval(() => {
+            let delta = Date.now() - startTime; let minutes = Math.floor(delta / 60000); let seconds = Math.floor((delta % 60000) / 1000); let centiseconds = Math.floor((delta % 1000) / 10);
+            document.getElementById('gameTimer').innerText = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds) + ":" + (centiseconds < 10 ? "0" + centiseconds : centiseconds);
+        }, 10);
+    }
+    
+    function foundEgg(el, sectionKey) {
+        if(el.classList.contains('found')) return; if(eggCount >= 10) return;
+        gameState[sectionKey].found++; eggCount++; el.style.pointerEvents = 'none'; el.classList.add('found'); 
+        
+        setTimeout(() => el.remove(), 800); 
+
+        let msg = `Bravo ! ${eggCount}/${totalEggs}`;
+        if(eggCount === totalEggs) { clearInterval(timerInterval); let rawMs = Date.now() - startTime; finishGame(rawMs); } 
+        else if(eggCount > 5) { msg = `Tu chauffes ! ${eggCount}/${totalEggs}`; showToast(msg); } else { showToast(msg); }
+        if(navigator.vibrate) navigator.vibrate(50);
+    }
+    
+    function finishGame(rawMs) {
+        let finalTime = document.getElementById('gameTimer').innerText; document.getElementById('gameTimer').style.color = '#2ecc71'; gameStarted = false;
+        let seconds = rawMs / 1000; let rank = ""; let message = ""; let rankNum = 0;
+        if (seconds < 5) { rankNum=1; rank = "DIEU DU DÉ ⚡"; message = "Inhumain ! T'as triché ?"; } else if (seconds < 10) { rankNum=2; rank = "GRAND MAÎTRE JEDI ⚔️"; message = "La Force est puissante en toi."; } else if (seconds < 15) { rankNum=3; rank = "CHUCK NORRIS 👊"; message = "Chuck Norris ne cherche pas les dés, ils se dénoncent."; } else if (seconds < 20) { rankNum=4; rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre."; } else if (seconds < 25) { rankNum=5; rank = "ŒIL DE LYNX 😼"; message = "Une vision perçante."; } else if (seconds < 35) { rankNum=6; rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Enquête méthodique."; } else if (seconds < 45) { rankNum=7; rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; } else if (seconds < 60) { rankNum=8; rank = "LE DIESEL 🚜"; message = "Lent au démarrage, mais tu es arrivé !"; } else { rankNum=9; rank = "L'ESCARGOT 🐌"; message = "L'important c'est de participer... non ?"; }
+        finalGameData.time = finalTime; finalGameData.rank = rank; finalGameData.rankNumber = rankNum; finalGameData.message = message; finalGameData.rawMs = rawMs;
+        
+        const btnVoter = document.getElementById('btn-voter-accueil');
+        if (btnVoter) btnVoter.style.display = 'flex';
+
+        setTimeout(() => {
+            const modal = document.getElementById('modalContent');
+            modal.innerHTML = `
+                <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
+                <div class="victory-icon"><i class="fa-solid fa-medal"></i></div>
+                <h3 class="victory-title">Félicitations !</h3>
+                <div class="victory-stats"><div style="font-size:1.1rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div><div style="font-size:1.3rem; color:#2c3e50; margin: 2px 0;">${rank}</div><div style="font-size:2rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div><div class="victory-message">"${message}"</div></div>
+                <div id="shareContainer" class="share-container"><input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15"><button class="game-btn wa-btn" style="width:100%;" onclick="shareWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Partager mon score</button></div>
+                <button class="game-btn game-btn-green" onclick="initGame()"><i class="fa-solid fa-rotate-right"></i> Rejouer</button>
+            `;
+            document.getElementById('gameModalBackdrop').classList.add('visible'); 
+            if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
+            startConfetti();
+        }, 1000);
+    }
+    
     function generateChecksum(ms) { return Math.floor((ms * 17) + 2026).toString(36).toUpperCase(); }
-    function shareWhatsapp() { let pseudo = document.getElementById('playerPseudo').value.trim() || "Un Pote"; let check = generateChecksum(finalGameData.rawMs); let siteUrl = "https://despotesajeux.github.io/"; let text = `🎲 *DÉFI DES POTES À JEUX* 🎲%0A%0A🕵️ J'ai trouvé les 10 dés cachés !%0A%0A👤 *Joueur :* ${pseudo}%0A⏱️ *Temps :* ${finalGameData.time}%0A🏅 *Rang N°${finalGameData.rankNumber} :* ${finalGameData.rank}%0A📝 _"${finalGameData.message}"_%0A%0ATu penses faire mieux ? Tente ta chance ici :%0A👉 ${siteUrl}%0A%0A🔐 _Verif : ${check}_`; window.open(`https://wa.me/?text=${text}`, '_blank'); }
+    function shareWhatsapp() {
+        let pseudo = document.getElementById('playerPseudo').value.trim() || "Un Pote"; let check = generateChecksum(finalGameData.rawMs); let siteUrl = "https://despotesajeux.github.io/";
+        let text = `🎲 *DÉFI DES POTES À JEUX* 🎲%0A%0A🕵️ J'ai trouvé les 10 dés cachés !%0A%0A👤 *Joueur :* ${pseudo}%0A⏱️ *Temps :* ${finalGameData.time}%0A🏅 *Rang N°${finalGameData.rankNumber} :* ${finalGameData.rank}%0A📝 _"${finalGameData.message}"_%0A%0ATu penses faire mieux ? Tente ta chance ici :%0A👉 ${siteUrl}%0A%0A🔐 _Verif : ${check}_`;
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+    
     function showToast(msg) { const toast = document.getElementById('gameToast'); toast.innerText = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
     function renderHomeEgg() { let container = document.getElementById('homeEggContainer'); container.innerHTML = ''; if(gameState['home'].total > gameState['home'].found) { createEgg(container, 'home', false); } }
-    function createEgg(container, sectionKey, isFound, isTab = false) { let egg = document.createElement('i'); egg.className = 'fa-solid fa-dice egg'; if (isFound) return; egg.onclick = function(event) { foundEgg(this, sectionKey); event.stopPropagation(); }; egg.style.pointerEvents = 'auto'; if(!isTab) { egg.style.top = (Math.random() * 80 + 10) + '%'; egg.style.left = (Math.random() * 80 + 10) + '%'; } else { egg.style.position = 'absolute'; egg.style.top = '-8px'; egg.style.right = '5px'; egg.style.margin = '0'; egg.style.fontSize = '1.2rem'; egg.style.filter = 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))'; } container.appendChild(egg); }
-    function startConfetti() { const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6']; for(let i=0; i<30; i++) { setTimeout(() => { const confetti = document.createElement('div'); confetti.classList.add('confetti'); confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`; document.body.appendChild(confetti); setTimeout(() => confetti.remove(), 5000); }, i * 50); } if(!document.getElementById('confetti-style')) { const style = document.createElement('style'); style.id = 'confetti-style'; style.innerHTML = `@keyframes fall { 0% { top: -10px; opacity: 1; transform: rotate(0deg); } 100% { top: 100vh; opacity: 0; transform: rotate(720deg); } }`; document.head.appendChild(style); } }
+    function createEgg(container, sectionKey, isFound, isTab = false) {
+        let egg = document.createElement('i'); egg.className = 'fa-solid fa-dice egg'; if (isFound) return; 
+        egg.onclick = function(event) { foundEgg(this, sectionKey); event.stopPropagation(); }; egg.style.pointerEvents = 'auto';
+        if(!isTab) { egg.style.top = (Math.random() * 80 + 10) + '%'; egg.style.left = (Math.random() * 80 + 10) + '%'; } else { egg.style.position = 'absolute'; egg.style.top = '-8px'; egg.style.right = '5px'; egg.style.margin = '0'; egg.style.fontSize = '1.2rem'; egg.style.filter = 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))'; }
+        container.appendChild(egg);
+    }
+    function startConfetti() {
+        const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6'];
+        for(let i=0; i<30; i++) { setTimeout(() => { const confetti = document.createElement('div'); confetti.classList.add('confetti'); confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`; document.body.appendChild(confetti); setTimeout(() => confetti.remove(), 5000); }, i * 50); }
+        if(!document.getElementById('confetti-style')) { const style = document.createElement('style'); style.id = 'confetti-style'; style.innerHTML = `@keyframes fall { 0% { top: -10px; opacity: 1; transform: rotate(0deg); } 100% { top: 100vh; opacity: 0; transform: rotate(720deg); } }`; document.head.appendChild(style); }
+    }
 
     /* --- GESTION DES COOKIES & ANALYTICS --- */
-    function loadGoogleAnalytics() { const script = document.createElement('script'); script.async = true; script.src = "https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY"; document.head.appendChild(script); window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-YPHH9PELKY'); }
+    function loadGoogleAnalytics() {
+        const script = document.createElement('script'); script.async = true; script.src = "https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY"; document.head.appendChild(script);
+        window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-YPHH9PELKY');
+    }
     function checkCookies() { const consent = localStorage.getItem('potes_cookie_consent'); if (consent === 'accepted') { loadGoogleAnalytics(); } else if (!consent) { setTimeout(() => { document.getElementById('cookiePopup').classList.add('show'); }, 1000); } }
     function handleCookies(choice) { localStorage.setItem('potes_cookie_consent', choice); document.getElementById('cookiePopup').classList.remove('show'); if (choice === 'accepted') { loadGoogleAnalytics(); } }
     checkCookies();
 
     // ==========================================
-    // LOGIQUE DE SWIPE DES ONGLETS VOTE
+    // LOGIQUE SANS SWIPE DES ONGLETS VOTE
     // ==========================================
     window.switchVoteTab = function(tabId, element) {
         document.querySelectorAll('.vote-tab').forEach(btn => btn.classList.remove('active'));
@@ -791,24 +908,6 @@
         if(activeContent) activeContent.classList.add('active');
     };
 
-    let voteTouchStartX = 0;
-    let voteTouchEndX = 0;
-    document.addEventListener('touchstart', e => {
-        if (e.target.closest('#vote-swipe-area')) {
-            voteTouchStartX = e.changedTouches[0].screenX;
-        }
-    }, {passive: true});
-
-    document.addEventListener('touchend', e => {
-        if (e.target.closest('#vote-swipe-area')) {
-            voteTouchEndX = e.changedTouches[0].screenX;
-            if (voteTouchEndX < voteTouchStartX - 50) {
-                window.switchVoteTab('profil'); // Swipe gauche -> va vers profil
-            } else if (voteTouchEndX > voteTouchStartX + 50) {
-                window.switchVoteTab('arene'); // Swipe droite -> va vers arene
-            }
-        }
-    }, {passive: true});
 </script>
 
 <script type="module">
@@ -834,7 +933,7 @@
     let unsubscribeRSVP = null;
     let localProfile = { avatar: '🎲', titre: 'Membre', jeuFavori: '', styleJoueur: 'Touche-à-tout' };
     window.tousLesJeux = []; 
-    window.myCurrentRSVP = null; // Variable globale pour le toggle RSVP
+    window.myCurrentRSVP = null; 
 
     getRedirectResult(auth).then((result) => { if (result) console.log("Utilisateur Google:", result.user.displayName); }).catch((error) => { console.error("Erreur Google:", error); });
 
@@ -855,8 +954,7 @@
             viewAuth.style.display = 'none'; viewVotes.style.display = 'block';
             await window.loadProfile();
             let displayName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
-            userGreeting.innerHTML = `<div style="font-size:3rem; margin-bottom:5px; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> Salut ${displayName} !`;
-            
+            userGreeting.innerHTML = `<div style="font-size:3.5rem; margin-bottom:5px; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> Salut ${displayName} !`;
             window.initFirebaseRSVP();
             window.initFirebaseVotes();
             window.chargerListeCollection(); 
@@ -894,7 +992,7 @@
             </div>`;
         }
     };
-
+    
     window.authMode = 'login';
     window.loginGoogle = () => signInWithRedirect(auth, new GoogleAuthProvider());
     window.registerGoogle = () => { if(document.getElementById('auth-secret').value.trim().toUpperCase() !== CODE_ASSO) return window.showCustomAlert("Erreur", "Code secret invalide", "fa-user-shield"); window.loginGoogle(); };
@@ -966,7 +1064,7 @@
         localProfile.nom = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
         
         await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile, {merge:true});
-        document.getElementById('user-greeting').innerHTML = `<div style="font-size:3rem; margin-bottom:5px; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> Salut ${localProfile.nom} !`;
+        document.getElementById('user-greeting').innerHTML = `<div style="font-size:3.5rem; margin-bottom:5px; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> Salut ${localProfile.nom} !`;
         closeGameModalForce();
     };
 
@@ -998,7 +1096,6 @@
         const dateStr = window.getNextEventDateStr();
         const ref = doc(db, "presences", auth.currentUser.uid);
         
-        // Si on clique sur le même bouton, on supprime le choix (Toggle off)
         if (window.myCurrentRSVP === status) {
             await deleteDoc(ref);
         } else {
@@ -1019,7 +1116,7 @@
 
         unsubscribeRSVP = onSnapshot(collection(db, "presences"), (snap) => {
             let presents = []; let absents = []; let maybes = [];
-            window.myCurrentRSVP = null; // Remise à zéro locale
+            window.myCurrentRSVP = null; 
 
             snap.forEach(d => {
                 const data = d.data();
@@ -1123,7 +1220,7 @@
         };
 
         try {
-            await addDoc(collection(db, "jeux_proposes"), {
+            const tableRef = await addDoc(collection(db, "jeux_proposes"), {
                 nom: titre,
                 proposePar: moi.nom,
                 createurUid: auth.currentUser.uid, 
@@ -1266,7 +1363,7 @@
             }
         } 
         else if (action === 'removeSeat') {
-            inscrits = inscrits.filter(i => i.id !== seatId);
+            inscrits = inscrits.filter(i => i.id !== seatId); // Retire juste le siège cliqué
         }
         else if (action === 'addGuest') {
             if(inscrits.length < max) {
