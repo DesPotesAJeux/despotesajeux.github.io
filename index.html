@@ -34,18 +34,33 @@
             --fb-blue: #1877F2;
             --wa-green: #25D366; 
             --myludo-color: #2c3e50; 
-            --gold-game: #f39c12;
+            --gold-game: #f39c12; /* Modifié pour les sièges dorés */
             --president-color: #e67e22;
             --bg-image: url('images/backgrounds/hero_soir.png');
         }
 
-        body { margin: 0; background-color: #1a1a1a; display: flex; justify-content: center; align-items: flex-start; font-family: 'Quicksand', sans-serif; color: var(--text-brown); overflow: hidden; height: 100vh; height: 100dvh; }
-        .phone { width: 100%; max-width: 414px; height: 100%; background: var(--bg-beige); position: relative; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.5); transition: all 0.4s ease; }
+        body {
+            margin: 0; background-color: #1a1a1a; display: flex; justify-content: center; align-items: flex-start; 
+            font-family: 'Quicksand', sans-serif; color: var(--text-brown); overflow: hidden;
+            touch-action: manipulation; height: 100vh; height: 100dvh; 
+        }
+
+        .phone {
+            width: 100%; max-width: 414px; height: 100%; background: var(--bg-beige); position: relative;
+            overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            transition: all 0.4s ease;
+        }
+
         .main-wrapper { display: flex; flex-direction: column; height: 100%; width: 100%; transition: filter 0.4s ease; }
         .main-wrapper.blurred { filter: blur(5px); }
 
         .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
-        .hero { width: 100%; height: 360px; background: var(--bg-image) center top / cover no-repeat; position: relative; z-index: 1; -webkit-user-select: none; user-select: none; pointer-events: none; }
+        .hero { 
+            width: 100%; height: 360px; background: var(--bg-image) center top / cover no-repeat; 
+            position: relative; z-index: 1; -webkit-user-select: none; user-select: none; pointer-events: none;
+        }
+
+        /* --- ZONES DE JEU / INTERACTION (HITBOXES) --- */
         .hero-hitbox { position: absolute; top: 10%; left: 10%; width: 40%; height: 40%; z-index: 15; cursor: pointer; pointer-events: auto; }
         .barn-hitbox { position: absolute; top: 15%; right: 5%; width: 25%; height: 35%; z-index: 15; cursor: pointer; pointer-events: auto; }
 
@@ -53,31 +68,45 @@
         .rdv-info { width: 100%; display: flex; align-items: center; justify-content: center; }
         .rdv-info p { margin: 0; font-size: 0.9rem; font-weight: 700; color: var(--green-deep); line-height: 1.3; }
         .rdv-info a { color: var(--green-deep); text-decoration: none; font-weight: 600; font-size: 0.8rem; }
+        .rdv-info a .underline { text-decoration: underline; }
 
         .content { background: var(--bg-beige); padding: 45px 0 20px 0; position: relative; flex-grow: 1; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .quote-box { padding: 15px 30px; text-align: center; position: relative; display: flex; flex-direction: column; align-items: center; width: 100%; box-sizing: border-box; }
         .quote-text { font-family: 'Shadows Into Light', cursive; font-size: 1.5rem; line-height: 1.2; color: var(--green-deep); margin: 0; }
         .separator { width: 50px; height: 3px; background: var(--wood-highlight); margin: 12px auto; border-radius: 10px; opacity: 0.6; }
 
+        /* Boutons de base */
         .game-btn { background: var(--wood-brown); color: white; border: none; padding: 10px 25px; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); transition: transform 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; }
         .game-btn:active { transform: scale(0.95); }
         
+        /* Boutons d'action verts (Validation, Validation, Connexion...) */
         .game-btn-green { background: var(--green-deep); box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); }
 
         .btn-ludotheque { background: var(--wood-brown); color: white; border: none; padding: 10px 22px; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); cursor: pointer; transition: transform 0.2s; }
         .btn-ludotheque:active { transform: scale(0.95); }
 
+        /* =========================================
+           UI JEU 1 : CHERCHE LES DÉS
+           ========================================= */
         .egg { position: absolute; color: rgba(188, 143, 99, 0.8); font-size: 1.6rem; cursor: pointer; z-index: 100; transition: all 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); }
         .egg:hover { color: var(--wood-brown); transform: scale(1.3); }
         .egg.found { color: #f1c40f; text-shadow: 0 0 15px rgba(241, 196, 15, 1); animation: diceFound 0.8s ease-in-out forwards; pointer-events: none; }
-        @keyframes diceFound { 0% { transform: scale(1) rotate(0deg); opacity: 1; } 40% { transform: scale(1.5) rotate(360deg); opacity: 1; } 100% { transform: scale(0) rotate(720deg); opacity: 0; } }
+        
+        @keyframes diceFound { 
+            0% { transform: scale(1) rotate(0deg); opacity: 1; } 
+            40% { transform: scale(1.5) rotate(360deg); opacity: 1; } 
+            100% { transform: scale(0) rotate(720deg); opacity: 0; } 
+        }
         
         .game-timer { position: absolute; top: 15px; right: 15px; background: rgba(0, 0, 0, 0.8); color: #f1c40f; padding: 5px 12px; border-radius: 15px; font-family: monospace; font-size: 1.1rem; font-weight: bold; z-index: 200; display: none; box-shadow: 0 2px 10px rgba(0,0,0,0.3); pointer-events: none; min-width: 80px; text-align: center; }
         .game-timer.visible { display: block; }
-        
+        /* Toast en vert profond */
         .game-toast { position: absolute; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--green-deep); color: white; padding: 8px 20px; border-radius: 50px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 5px 15px rgba(58, 99, 81, 0.3); z-index: 300; opacity: 0; pointer-events: none; transition: all 0.3s ease; white-space: nowrap; }
         .game-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+        /* =========================================
+           VUE INTÉRIEUR GRANGE
+           ========================================= */
         .barn-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('images/backgrounds/grange_interieur.png') center center / cover no-repeat; z-index: 250; display: flex; flex-direction: column; justify-content: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
         .barn-overlay::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0)); pointer-events: none; z-index: 1; }
         .barn-overlay.active { opacity: 1; pointer-events: auto; }
@@ -88,6 +117,9 @@
         .barn-message h3 { font-family: 'Shadows Into Light', cursive; color: var(--gold-game); font-size: 2.2rem; margin: 0 0 5px 0; text-shadow: 0 2px 5px rgba(0,0,0,0.9); }
         .barn-message p { font-size: 1.1rem; color: #fff; margin: 0; font-weight: 600; line-height: 1.4; text-shadow: 0 2px 4px rgba(0,0,0,0.9); }
 
+        /* =========================================
+           MODALES COMMUNES
+           ========================================= */
         .game-modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 300; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; backdrop-filter: blur(4px); }
         .game-modal-backdrop.visible { opacity: 1; pointer-events: auto; }
         .game-modal-content { position: relative; width: 85%; max-width: 350px; background: var(--bg-beige); border: 4px solid var(--wood-brown); border-radius: 20px; padding: 15px 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); text-align: center; transform: scale(0.8); opacity: 0; transition: all 0.4s cubic-bezier(0.17, 0.84, 0.44, 1); display: flex; flex-direction: column; align-items: center; }
@@ -103,7 +135,6 @@
         .victory-message::after { content: "❞"; color: var(--wood-brown); font-size: 1.5rem; vertical-align: -0.4rem; margin-left: 5px; opacity: 0.6; }
         .game-desc-box { background: #fff; border-radius: 15px; padding: 15px; width: 100%; box-sizing: border-box; margin-bottom: 20px; border: 1px solid rgba(188, 143, 99, 0.2); }
         .game-desc-box p { font-size: 0.95rem; line-height: 1.5; color: var(--text-brown); margin: 0; }
-        
         .share-container { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 5px; margin-bottom: 10px; }
         .share-input { width: 100%; padding: 8px; border-radius: 12px; border: 2px solid var(--wood-brown); background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown); box-sizing: border-box; text-align: left; font-size: 1rem; }
         .wa-btn { background: #25D366; color: white; margin-top: 5px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); } 
@@ -111,6 +142,9 @@
         .myludo-link { color: var(--green-deep); text-decoration: none; border-bottom: 1px dashed var(--wood-brown); font-weight: 800; transition: color 0.2s; }
         .myludo-link:hover { color: var(--wood-brown); }
 
+        /* =========================================
+           ONGLETS DE VOTE (ARENE / PROFIL)
+           ========================================= */
         .vote-tabs { display: flex; background: rgba(188, 143, 99, 0.15); border-radius: 50px; padding: 5px; margin: 0 auto 20px; max-width: 320px; position: relative; }
         .vote-tab { flex: 1; text-align: center; padding: 10px 15px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--wood-brown); cursor: pointer; transition: background 0.1s, color 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
         .vote-tab.active { background: var(--wood-brown); color: white; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); }
@@ -118,6 +152,9 @@
         .vote-tab-content.active { display: block; }
         @keyframes fadeInTab { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
+        /* =========================================
+           STYLES SPECIFIQUES (RSVP + TABLES)
+           ========================================= */
         .rsvp-btn { flex: 1; padding: 8px 5px; font-size: 0.75rem; font-family: 'Quicksand', sans-serif; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: all 0.2s; background: #ecf0f1; color: #7f8c8d; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .rsvp-btn:active { transform: scale(0.95); }
         .table-card { background:#fff; padding:12px; border-radius:15px; border:1px solid #dbb38a; margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,0.03); text-align: left; }
@@ -137,6 +174,7 @@
         .rsvp-badge { display:inline-block; padding:4px 8px; background:white; border:1px solid rgba(188,143,99,0.5); border-radius:50px; font-size:0.75rem; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.05); font-weight:bold; color:var(--green-deep); transition:all 0.2s; margin: 2px; }
         .rsvp-badge:active { transform: scale(0.95); background: var(--bg-beige); }
 
+        /* --- RESTE DU CSS (Menus, Lightbox) --- */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
         .lightbox-img-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease-out; transform-origin: center center; position: relative; }
         .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; transform: scale(0.9); opacity: 0; transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); will-change: transform; }
@@ -410,7 +448,7 @@
     }
     fetchWeatherUpdate();
 
-    /* --- FONCTIONS MODALES UNIVERSELLES --- */
+    /* --- FONCTIONS MODALES UNIVERSELLES (Alerte / Jeu) --- */
     function closeGameModalForce() {
         document.getElementById('gameModalBackdrop').classList.remove('visible');
         if(typeof confettiInterval !== 'undefined') { clearInterval(confettiInterval); document.querySelectorAll('.confetti').forEach(c => c.remove()); }
@@ -435,7 +473,7 @@
         if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
     };
 
-    /* --- GESTION DU BOUTON RETOUR ANDROID --- */
+    /* --- GESTION DU BOUTON RETOUR ANDROID (HISTORY API) --- */
     window.addEventListener('popstate', (e) => { 
         if (lb.classList.contains('active')) { hideLightboxDOM(); } 
         else if (document.getElementById('barnOverlay').classList.contains('active')) { closeBarnForce(); } 
@@ -459,7 +497,7 @@
         element.classList.add('active'); document.getElementById('grid-' + tabId).classList.add('active');
     }
 
-    /* --- CALCULS DATE --- */
+    /* --- 1. CALCULS DATE & HTML SORTIES --- */
     const sortiesConfig = [ { year: 2025, count: 5 }, { year: 2024, count: 7 }, { year: 2023, count: 7 }, { year: 2022, count: 9 }, { year: 2021, count: 2 }, { year: 2019, count: 1 } ];
 
     function getNextLastFridays() {
@@ -495,7 +533,7 @@
         `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:3px; gap:5px;">
             <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="flex-shrink:0;">📍 <span class="underline">Maison des Associations</span></a>
             <button id="btn-voter-accueil" class="btn-ludotheque" style="margin:0; padding: 4px 12px; font-size: 0.75rem; white-space: nowrap; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">
-                <i class="fa-solid fa-check-to-slot" style="margin-right:4px;"></i>Tables
+                <i class="fa-solid fa-check-to-slot" style="margin-right:4px;"></i>Voter
             </button>
         </div>`;
 
@@ -538,7 +576,7 @@
             title: "Au programme ?",
             text: `<div class="panel-card" id="content-vote" style="padding: 15px 10px; position: relative;">
                 <div id="view-auth">
-                    <p style="text-align: center; margin-top: 0; font-size: 0.9rem; color: var(--text-brown);">Connecte-toi pour confirmer ta présence et voir les tables !</p>
+                    <p style="text-align: center; margin-top: 0; font-size: 0.9rem; color: var(--text-brown);">Connecte-toi pour proposer et voter pour tes jeux préférés !</p>
                     <div id="auth-container"></div>
                 </div>
                 
@@ -549,14 +587,14 @@
                         <button class="vote-tab" onclick="window.switchVoteTab('arene', this)"><i class="fa-solid fa-chess-board"></i> L'Arène</button>
                     </div>
 
-                    <div id="vote-swipe-area" style="position: relative; width: 100%;">
+                    <div id="vote-swipe-area" style="position: relative; width: 100%; touch-action: pan-y;">
                         
                         <div id="tab-profil" class="vote-tab-content active">
                             
                             <div id="user-greeting" style="display:flex; flex-direction:column; align-items:center; font-weight:bold; color:var(--green-deep); font-size:1.5rem; margin-bottom:15px;"></div>
                             
                             <div style="text-align:center; margin-bottom:20px;">
-                                <button class="game-btn" style="margin:0; padding:8px 15px; font-size:0.85rem; background:transparent; border:1px solid var(--wood-brown); color:var(--wood-brown); box-shadow:none;" onclick="window.openProfileModal()"><i class="fa-solid fa-pen"></i> Modifier mon profil</button>
+                                <button class="game-btn" style="margin:0; padding:8px 15px; font-size:0.85rem; background:transparent; border:1px solid var(--wood-brown); color:var(--wood-brown); box-shadow:none;" onclick="window.openProfileModal()">✏️ Modifier mon profil</button>
                             </div>
 
                             <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px solid rgba(58, 99, 81, 0.2); text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
@@ -643,43 +681,229 @@
             title: "Nos Ludothèques", 
             text: `<div class="panel-card" id="content-ludotheque">
                 <p style="text-align: center; margin-top: 0; margin-bottom: 15px; font-size: 0.9rem; line-height: 1.5;">L'asso n'a pas de jeux, mais nos membres en ont des centaines ! 📦 Chaque dernier vendredi du mois, chacun apporte ses coups de cœur du moment pour les faire découvrir aux autres. N'hésitez pas à fouiller dans leurs collections <b>Myludo</b> pour leur réclamer une partie à la prochaine soirée !</p>
-                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Carine</h4><a href="https://www.myludo.fr/#!/profil/carine-duneuf-jardin-85877" target="_blank" class="call-btn game-btn-green">Voir</a></div></div>
-                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Ronan</h4><a href="https://www.myludo.fr/#!/profil/ronan-29-67622" target="_blank" class="call-btn game-btn-green">Voir</a></div></div>
-                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sébastien</h4><a href="https://www.myludo.fr/#!/profil/sebastien-g-107305" target="_blank" class="call-btn game-btn-green">Voir</a></div></div>
-                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Stéphane</h4><a href="https://www.myludo.fr/#!/profil/stephane-rio-26496" target="_blank" class="call-btn game-btn-green">Voir</a></div></div>
-                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sylvain</h4><a href="https://www.myludo.fr/#!/profil/sylvain-bedouet-64234" target="_blank" class="call-btn game-btn-green">Voir</a></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Carine</h4><a href="https://www.myludo.fr/#!/profil/carine-duneuf-jardin-85877" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Ronan</h4><a href="https://www.myludo.fr/#!/profil/ronan-29-67622" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sébastien</h4><a href="https://www.myludo.fr/#!/profil/sebastien-g-107305" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Stéphane</h4><a href="https://www.myludo.fr/#!/profil/stephane-rio-26496" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sylvain</h4><a href="https://www.myludo.fr/#!/profil/sylvain-bedouet-64234" target="_blank" class="call-btn ludo-btn">Voir</a></div></div>
             </div>` 
         }
     };
 
+    /* --- 3. DOM & NAVIGATION --- */
     const sheet = document.getElementById('bottomSheet');
     const overlay = document.getElementById('overlay');
     const sheetContent = document.getElementById('sheetContent');
+    const sheetBody = document.getElementById('sheetBody');
     const mainWrapper = document.getElementById('mainWrapper');
 
     function openSheet(key) {
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
-        if(key === 'vote') setTimeout(() => { if(window.updateVoteUI) window.updateVoteUI(); }, 50);
+        
+        if(key === 'vote') {
+            setTimeout(() => { if(window.updateVoteUI) window.updateVoteUI(); }, 50);
+        }
+
+        if(gameStarted && gameState[key] && gameState[key].total > gameState[key].found) {
+            let containerId = `content-${key}`; let container = document.getElementById(containerId);
+            if(container) {
+                let remaining = gameState[key].total - gameState[key].found;
+                if(key === 'photos') {
+                    let tabs = container.querySelectorAll('.photo-tab');
+                    for(let i=0; i<remaining; i++) createEgg(tabs[i % tabs.length], key, false, true);
+                } else {
+                    container.style.position = 'relative';
+                    for(let i=0; i<remaining; i++) createEgg(container, key, false, false);
+                }
+            }
+        }
         
         overlay.style.display = 'block'; mainWrapper.classList.add('blurred');
         if (window.innerWidth <= 768) { sheet.style.transition = 'none'; sheet.style.transform = ''; void sheet.offsetWidth; sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)"; }
         setTimeout(() => { overlay.style.opacity = '1'; sheet.classList.add('open'); }, 10);
-        if (!history.state || history.state.type !== 'sheet') history.pushState({ type: 'sheet' }, '');
+        if (!history.state || history.state.type !== 'sheet') { history.pushState({ type: 'sheet' }, ''); }
     }
 
     function hideSheetDOM() { if (window.innerWidth <= 768) { sheet.style.transition = "transform 0.25s ease-in"; } sheet.style.transform = ''; sheet.classList.remove('open'); overlay.style.opacity = '0'; mainWrapper.classList.remove('blurred'); setTimeout(() => { overlay.style.display = 'none'; }, 250); }
-    function closeSheet() { hideSheetDOM(); }
+    function closeSheet() { if (!sheet.classList.contains('open')) return; if (history.state && history.state.type === 'sheet') { history.back(); } else { hideSheetDOM(); } }
     overlay.onclick = () => closeSheet();
 
+    let startY = 0; let isDragging = false;
+    sheet.addEventListener('touchstart', (e) => { if (window.innerWidth > 768) return; if (sheetBody.scrollTop <= 0) { startY = e.touches[0].clientY; isDragging = true; sheet.style.transition = 'none'; } }, { passive: true });
+    sheet.addEventListener('touchmove', (e) => { if (!isDragging || window.innerWidth > 768) return; let diff = e.touches[0].clientY - startY; if (diff > 0) { e.preventDefault(); sheet.style.transform = `translateY(calc(-100% + ${diff}px))`; } }, { passive: false });
+    sheet.addEventListener('touchend', (e) => { if (!isDragging || window.innerWidth > 768) return; isDragging = false; let diff = e.changedTouches[0].clientY - startY; sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; if (diff > 100) { closeSheet(); } else { sheet.style.transform = ''; } });
+
+    /* --- LIGHTBOX --- */
+    const lb = document.getElementById('lightbox'); const lbContainer = document.getElementById('lbContainer'); const lbImg = document.getElementById('lightboxImg'); const lbNavPrev = document.getElementById('lbNavPrev'); const lbNavNext = document.getElementById('lbNavNext');
+    let currentGallery = []; let currentPhotoIndex = 0;
+    let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
+    
+    function openLightbox(src, isSingleImage = false) { 
+        lbImg.src = src; lb.style.display = 'flex'; resetZoom(); setTimeout(() => lb.classList.add('active'), 10); 
+        const captionEl = document.getElementById('lightboxCaption');
+        if (isSingleImage) { 
+            currentGallery = [{src: src, title: ''}]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; captionEl.innerText = '';
+        } else { 
+            const activeTab = document.querySelector('.photo-tab-content.active');
+            const items = activeTab.querySelectorAll('.photo-grid-item img'); 
+            currentGallery = Array.from(items).map(img => ({ src: img.getAttribute('src'), title: img.getAttribute('alt') || '' })); 
+            currentPhotoIndex = currentGallery.findIndex(g => g.src === src); 
+            if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } 
+            captionEl.innerText = currentGallery[currentPhotoIndex].title;
+        } 
+        if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } 
+    }
+    
+    function hideLightboxDOM() { lb.classList.remove('active'); setTimeout(() => { lb.style.display='none'; resetZoom(); }, 300); }
+    function closeLightboxForce(fromHistory = false) { if (!lb.classList.contains('active')) return; if (history.state && history.state.type === 'lightbox') { history.back(); } else { hideLightboxDOM(); } }
+    lbContainer.addEventListener('click', (e) => { if(e.target !== lbImg && currentScale === 1 && !e.target.closest('.lightbox-nav')) closeLightboxForce(); });
+    function getDistance(touches) { return Math.hypot(touches[0].pageX - touches[1].pageX, touches[0].pageY - touches[1].pageY); }
+    function resetZoom() { currentScale = 1; posX = 0; posY = 0; lastPanX = 0; lastPanY = 0; currentSwipeX = 0; lbImg.style.transform = `scale(1) translate(0px, 0px)`; lbContainer.style.transform = `translateX(0px)`; }
+    lbContainer.addEventListener('touchstart', (e) => { if(e.target.closest('.lightbox-nav')) return; if (e.touches.length === 2) { isZooming = true; initialDistance = getDistance(e.touches); } else if (e.touches.length === 1) { lastPanX = e.touches[0].clientX; lastPanY = e.touches[0].clientY; swipeStartX = e.touches[0].clientX; currentSwipeX = 0; } }, {passive: false});
+    lbContainer.addEventListener('touchmove', (e) => { if (e.touches.length === 2) { e.preventDefault(); const currentDistance = getDistance(e.touches); const scaleChange = currentDistance / initialDistance; currentScale = Math.min(Math.max(1, currentScale * scaleChange), 4); lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; initialDistance = currentDistance; } else if (e.touches.length === 1) { let currentX = e.touches[0].clientX; let currentY = e.touches[0].clientY; if (currentScale > 1) { e.preventDefault(); posX += (currentX - lastPanX) / currentScale; posY += (currentY - lastPanY) / currentScale; lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; lastPanX = currentX; lastPanY = currentY; } else if (!isZooming && currentGallery.length > 1) { e.preventDefault(); currentSwipeX = currentX - swipeStartX; lbContainer.style.transform = `translateX(${currentSwipeX}px)`; } } }, {passive: false});
+    lbContainer.addEventListener('touchend', (e) => { if (e.touches.length < 2) { isZooming = false; } if (currentScale === 1 && currentGallery.length > 1) { if (currentSwipeX > 70) { changePhotoDir('prev'); } else if (currentSwipeX < -70) { changePhotoDir('next'); } else { lbContainer.style.transform = `translateX(0px)`; } currentSwipeX = 0; } });
+    
+    function changePhotoDir(dir) { 
+        if (currentGallery.length <= 1) return; 
+        if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } 
+        lbImg.style.opacity = 0; document.getElementById('lightboxCaption').style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; 
+        setTimeout(() => { 
+            let newObj = currentGallery[currentPhotoIndex]; lbImg.src = newObj.src; document.getElementById('lightboxCaption').innerText = newObj.title;
+            lbImg.style.opacity = 1; document.getElementById('lightboxCaption').style.opacity = 1;
+        }, 150); 
+    }
+
+    /* --- JEU DES DES --- */
+    let gameStarted = false; let eggCount = 0; const totalEggs = 10;
+    let timerInterval; let startTime; let finalGameData = { time: "", rankNumber: 0, rank: "", message: "", rawMs: 0 }; 
+    let confettiInterval; 
+    let gameState = { 'home': { total: 0, found: 0 }, 'histoire': { total: 0, found: 0 }, 'adhesion': { total: 0, found: 0 }, 'cal': { total: 0, found: 0 }, 'photos': { total: 0, found: 0 }, 'contact': { total: 0, found: 0 }, 'ludotheque': { total: 0, found: 0 } };
+
+    function askToPlay() {
+        if(gameStarted) return;
+        const modal = document.getElementById('modalContent');
+        modal.innerHTML = `
+            <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
+            <h3 id="gameTitle">Psst... Joueur ?</h3>
+            <div class="game-desc-box"><p>Comme on est joueurs, <b>10 petits dés</b> <i class="fa-solid fa-dice" style="color:var(--wood-brown); font-size:1.2rem; vertical-align:middle; margin: 0 4px;"></i> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?</p></div>
+            <button class="game-btn game-btn-green" onclick="initGame()"><i class="fa-solid fa-play"></i> C'est parti !</button>
+        `;
+        document.getElementById('gameModalBackdrop').classList.add('visible');
+        if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
+    }
+    
+    function initGame() {
+        closeGameModalForce(); hideSheetDOM();
+        if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) { history.replaceState({ type: 'main' }, ''); }
+        resetGameData(); gameStarted = true; startTimer();
+        
+        const btnVoter = document.getElementById('btn-voter-accueil');
+        if (btnVoter) btnVoter.style.display = 'none';
+
+        const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque'];
+        for(let i=0; i<9; i++) { let randomSec = sections[Math.floor(Math.random() * sections.length)]; gameState[randomSec].total++; }
+        gameState['home'].total = 1; renderHomeEgg(); showToast("Le chrono est lancé ! ⏱️");
+    }
+    
+    function resetGameData() {
+        gameStarted = false; eggCount = 0; clearInterval(timerInterval);
+        document.getElementById('gameTimer').classList.remove('visible'); document.getElementById('gameTimer').innerText = "00:00:00"; document.getElementById('gameTimer').style.color = '#f1c40f'; 
+        for(let key in gameState) { gameState[key].total = 0; gameState[key].found = 0; }
+        document.querySelectorAll('.egg').forEach(el => el.remove());
+
+        const btnVoter = document.getElementById('btn-voter-accueil');
+        if (btnVoter) btnVoter.style.display = 'flex';
+    }
+    
+    function startTimer() {
+        startTime = Date.now(); document.getElementById('gameTimer').classList.add('visible');
+        timerInterval = setInterval(() => {
+            let delta = Date.now() - startTime; let minutes = Math.floor(delta / 60000); let seconds = Math.floor((delta % 60000) / 1000); let centiseconds = Math.floor((delta % 1000) / 10);
+            document.getElementById('gameTimer').innerText = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds) + ":" + (centiseconds < 10 ? "0" + centiseconds : centiseconds);
+        }, 10);
+    }
+    
+    function foundEgg(el, sectionKey) {
+        if(el.classList.contains('found')) return; if(eggCount >= 10) return;
+        gameState[sectionKey].found++; eggCount++; el.style.pointerEvents = 'none'; el.classList.add('found'); 
+        
+        setTimeout(() => el.remove(), 800); 
+
+        let msg = `Bravo ! ${eggCount}/${totalEggs}`;
+        if(eggCount === totalEggs) { clearInterval(timerInterval); let rawMs = Date.now() - startTime; finishGame(rawMs); } 
+        else if(eggCount > 5) { msg = `Tu chauffes ! ${eggCount}/${totalEggs}`; showToast(msg); } else { showToast(msg); }
+        if(navigator.vibrate) navigator.vibrate(50);
+    }
+    
+    function finishGame(rawMs) {
+        let finalTime = document.getElementById('gameTimer').innerText; document.getElementById('gameTimer').style.color = '#2ecc71'; gameStarted = false;
+        let seconds = rawMs / 1000; let rank = ""; let message = ""; let rankNum = 0;
+        if (seconds < 5) { rankNum=1; rank = "DIEU DU DÉ ⚡"; message = "Inhumain ! T'as triché ?"; } else if (seconds < 10) { rankNum=2; rank = "GRAND MAÎTRE JEDI ⚔️"; message = "La Force est puissante en toi."; } else if (seconds < 15) { rankNum=3; rank = "CHUCK NORRIS 👊"; message = "Chuck Norris ne cherche pas les dés, ils se dénoncent."; } else if (seconds < 20) { rankNum=4; rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre."; } else if (seconds < 25) { rankNum=5; rank = "ŒIL DE LYNX 😼"; message = "Une vision perçante."; } else if (seconds < 35) { rankNum=6; rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Enquête méthodique."; } else if (seconds < 45) { rankNum=7; rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; } else if (seconds < 60) { rankNum=8; rank = "LE DIESEL 🚜"; message = "Lent au démarrage, mais tu es arrivé !"; } else { rankNum=9; rank = "L'ESCARGOT 🐌"; message = "L'important c'est de participer... non ?"; }
+        finalGameData.time = finalTime; finalGameData.rank = rank; finalGameData.rankNumber = rankNum; finalGameData.message = message; finalGameData.rawMs = rawMs;
+        
+        const btnVoter = document.getElementById('btn-voter-accueil');
+        if (btnVoter) btnVoter.style.display = 'flex';
+
+        setTimeout(() => {
+            const modal = document.getElementById('modalContent');
+            modal.innerHTML = `
+                <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
+                <div class="victory-icon"><i class="fa-solid fa-medal"></i></div>
+                <h3 class="victory-title">Félicitations !</h3>
+                <div class="victory-stats"><div style="font-size:1.1rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div><div style="font-size:1.3rem; color:#2c3e50; margin: 2px 0;">${rank}</div><div style="font-size:2rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div><div class="victory-message">"${message}"</div></div>
+                <div id="shareContainer" class="share-container"><input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15"><button class="game-btn wa-btn" style="width:100%;" onclick="shareWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Partager mon score</button></div>
+                <button class="game-btn game-btn-green" onclick="initGame()"><i class="fa-solid fa-rotate-right"></i> Rejouer</button>
+            `;
+            document.getElementById('gameModalBackdrop').classList.add('visible'); 
+            if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
+            startConfetti();
+        }, 1000);
+    }
+    
+    function generateChecksum(ms) { return Math.floor((ms * 17) + 2026).toString(36).toUpperCase(); }
+    function shareWhatsapp() {
+        let pseudo = document.getElementById('playerPseudo').value.trim() || "Un Pote"; let check = generateChecksum(finalGameData.rawMs); let siteUrl = "https://despotesajeux.github.io/";
+        let text = `🎲 *DÉFI DES POTES À JEUX* 🎲%0A%0A🕵️ J'ai trouvé les 10 dés cachés !%0A%0A👤 *Joueur :* ${pseudo}%0A⏱️ *Temps :* ${finalGameData.time}%0A🏅 *Rang N°${finalGameData.rankNumber} :* ${finalGameData.rank}%0A📝 _"${finalGameData.message}"_%0A%0ATu penses faire mieux ? Tente ta chance ici :%0A👉 ${siteUrl}%0A%0A🔐 _Verif : ${check}_`;
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+    
+    function showToast(msg) { const toast = document.getElementById('gameToast'); toast.innerText = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
+    function renderHomeEgg() { let container = document.getElementById('homeEggContainer'); container.innerHTML = ''; if(gameState['home'].total > gameState['home'].found) { createEgg(container, 'home', false); } }
+    function createEgg(container, sectionKey, isFound, isTab = false) {
+        let egg = document.createElement('i'); egg.className = 'fa-solid fa-dice egg'; if (isFound) return; 
+        egg.onclick = function(event) { foundEgg(this, sectionKey); event.stopPropagation(); }; egg.style.pointerEvents = 'auto';
+        if(!isTab) { egg.style.top = (Math.random() * 80 + 10) + '%'; egg.style.left = (Math.random() * 80 + 10) + '%'; } else { egg.style.position = 'absolute'; egg.style.top = '-8px'; egg.style.right = '5px'; egg.style.margin = '0'; egg.style.fontSize = '1.2rem'; egg.style.filter = 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))'; }
+        container.appendChild(egg);
+    }
+    function startConfetti() {
+        const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6'];
+        for(let i=0; i<30; i++) { setTimeout(() => { const confetti = document.createElement('div'); confetti.classList.add('confetti'); confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`; document.body.appendChild(confetti); setTimeout(() => confetti.remove(), 5000); }, i * 50); }
+        if(!document.getElementById('confetti-style')) { const style = document.createElement('style'); style.id = 'confetti-style'; style.innerHTML = `@keyframes fall { 0% { top: -10px; opacity: 1; transform: rotate(0deg); } 100% { top: 100vh; opacity: 0; transform: rotate(720deg); } }`; document.head.appendChild(style); }
+    }
+
+    /* --- GESTION DES COOKIES & ANALYTICS --- */
+    function loadGoogleAnalytics() {
+        const script = document.createElement('script'); script.async = true; script.src = "https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY"; document.head.appendChild(script);
+        window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-YPHH9PELKY');
+    }
+    function checkCookies() { const consent = localStorage.getItem('potes_cookie_consent'); if (consent === 'accepted') { loadGoogleAnalytics(); } else if (!consent) { setTimeout(() => { document.getElementById('cookiePopup').classList.add('show'); }, 1000); } }
+    function handleCookies(choice) { localStorage.setItem('potes_cookie_consent', choice); document.getElementById('cookiePopup').classList.remove('show'); if (choice === 'accepted') { loadGoogleAnalytics(); } }
+    checkCookies();
+
     // ==========================================
-    // LOGIQUE DE NAVIGATION DES ONGLETS VOTE
-    // (Swipe retiré pour éviter les conflits)
+    // LOGIQUE SANS SWIPE DES ONGLETS VOTE
     // ==========================================
     window.switchVoteTab = function(tabId, element) {
         document.querySelectorAll('.vote-tab').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.vote-tab-content').forEach(content => content.classList.remove('active'));
-        if(element) { element.classList.add('active'); } 
-        else { const btn = document.querySelector(`.vote-tab[onclick*="${tabId}"]`); if(btn) btn.classList.add('active'); }
+        
+        if(element) {
+            element.classList.add('active');
+        } else {
+            const btn = document.querySelector(`.vote-tab[onclick*="${tabId}"]`);
+            if(btn) btn.classList.add('active');
+        }
+        
         const activeContent = document.getElementById('tab-' + tabId);
         if(activeContent) activeContent.classList.add('active');
     };
@@ -689,7 +913,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, updateDoc, doc, deleteDoc, onSnapshot, getDocs, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const CODE_ASSO = "POTES56";
     const firebaseConfig = {
@@ -711,16 +935,21 @@
     window.tousLesJeux = []; 
     window.myCurrentRSVP = null; 
 
+    getRedirectResult(auth).then((result) => { if (result) console.log("Utilisateur Google:", result.user.displayName); }).catch((error) => { console.error("Erreur Google:", error); });
+
     window.toggleVisibility = function(inputId, iconId) {
         const input = document.getElementById(inputId), icon = document.getElementById(iconId);
         if (input.type === "password") { input.type = "text"; icon.classList.replace("fa-eye", "fa-eye-slash"); }
         else { input.type = "password"; icon.classList.replace("fa-eye-slash", "fa-eye"); }
     };
 
-    // --- AUTHENTIFICATION ---
+    // ==========================================
+    // UI ET GESTION DES PROFILS
+    // ==========================================
     window.updateVoteUI = async function() {
         const viewAuth = document.getElementById('view-auth'), viewVotes = document.getElementById('view-votes'), userGreeting = document.getElementById('user-greeting');
         if(!viewAuth || !viewVotes) return;
+        
         if(auth.currentUser) {
             viewAuth.style.display = 'none'; viewVotes.style.display = 'block';
             await window.loadProfile();
@@ -738,20 +967,24 @@
     window.renderAuthUI = function() {
         const authContainer = document.getElementById('auth-container'); if (!authContainer) return;
         if (window.authMode === 'register') {
-            authContainer.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px;">
+            authContainer.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
                 <input type="text" id="auth-secret" class="share-input" placeholder="Code secret de l'asso" style="border-color:var(--president-color); background:rgba(230,126,34,0.05);">
                 <input type="text" id="auth-name" class="share-input" placeholder="Pseudo">
                 <input type="email" id="auth-email" class="share-input" placeholder="Email">
                 <div style="position:relative;"><input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe" style="width:100%;"><i class="fa-solid fa-eye" id="t-pwd" onclick="toggleVisibility('auth-pwd','t-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
                 <div style="position:relative;"><input type="password" id="auth-pwd-confirm" class="share-input" placeholder="Confirmer" style="width:100%;"><i class="fa-solid fa-eye" id="t-pwd-c" onclick="toggleVisibility('auth-pwd-confirm','t-pwd-c')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
                 <button class="game-btn game-btn-green" onclick="registerEmail()" style="width:100%; justify-content:center;"><i class="fa-solid fa-user-plus"></i> S'inscrire</button>
+                <div style="text-align:center; margin: 5px 0; color:gray; font-size:0.8rem;">— ou —</div>
+                <button class="game-btn" style="background:#4285F4; width:100%; justify-content:center;" onclick="registerGoogle()"><i class="fa-brands fa-google"></i> S'inscrire via Google</button>
                 <span onclick="window.authMode='login'; renderAuthUI()" style="font-size:0.75rem; text-align:center; display:block; margin-top:10px; cursor:pointer; text-decoration:underline;">Déjà inscrit ? Connexion</span>
             </div>`;
         } else {
-            authContainer.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px;">
+            authContainer.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
                 <input type="email" id="auth-email" class="share-input" placeholder="Email">
                 <div style="position:relative;"><input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe" style="width:100%;"><i class="fa-solid fa-eye" id="t-pwd" onclick="toggleVisibility('auth-pwd','t-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
                 <button class="game-btn game-btn-green" onclick="loginEmail()" style="width:100%; justify-content:center;"><i class="fa-solid fa-right-to-bracket"></i> Connexion</button>
+                <div style="text-align:center; margin: 5px 0; color:gray; font-size:0.8rem;">— ou —</div>
+                <button class="game-btn" style="background:#4285F4; width:100%; justify-content:center;" onclick="loginGoogle()"><i class="fa-brands fa-google"></i> Continuer avec Google</button>
                 <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:10px;">
                     <span onclick="window.authMode='register'; renderAuthUI()" style="cursor:pointer; text-decoration:underline;">Créer un compte</span>
                     <span onclick="resetPwd()" style="cursor:pointer; text-decoration:underline;">Oublié ?</span>
@@ -761,17 +994,19 @@
     };
     
     window.authMode = 'login';
+    window.loginGoogle = () => signInWithRedirect(auth, new GoogleAuthProvider());
+    window.registerGoogle = () => { if(document.getElementById('auth-secret').value.trim().toUpperCase() !== CODE_ASSO) return window.showCustomAlert("Erreur", "Code secret invalide", "fa-user-shield"); window.loginGoogle(); };
     window.loginEmail = async () => { try { await signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pwd').value); } catch (e) { window.showCustomAlert("Erreur", "Identifiants invalides", "fa-circle-xmark"); } };
     window.registerEmail = async () => {
-        if(document.getElementById('auth-secret').value.trim().toUpperCase() !== CODE_ASSO) return window.showCustomAlert("Refusé", "Code secret invalide");
-        if(document.getElementById('auth-pwd').value !== document.getElementById('auth-pwd-confirm').value) return window.showCustomAlert("Erreur", "Mots de passe différents");
+        if(document.getElementById('auth-secret').value.trim().toUpperCase() !== CODE_ASSO) return window.showCustomAlert("Refusé", "Code secret invalide", "fa-user-shield");
+        if(document.getElementById('auth-pwd').value !== document.getElementById('auth-pwd-confirm').value) return window.showCustomAlert("Erreur", "Mots de passe différents", "fa-dice");
         try {
             let name = document.getElementById('auth-name').value || 'Membre';
             const res = await createUserWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pwd').value);
             await updateProfile(res.user, { displayName: name });
             await setDoc(doc(db, "utilisateurs", res.user.uid), { avatar: '🎲', titre: 'Novice', nom: name });
-            window.showCustomAlert("Succès", "Compte créé !");
-        } catch (e) { window.showCustomAlert("Erreur", e.message); }
+            window.showCustomAlert("Succès", "Compte créé ! Vérifie tes spams.", "fa-champagne-glasses");
+        } catch (e) { window.showCustomAlert("Erreur", e.message, "fa-bug"); }
     };
     window.logoutFirebase = () => signOut(auth);
     window.resetPwd = async () => {
@@ -780,35 +1015,42 @@
         try { await sendPasswordResetEmail(auth, mail); window.showCustomAlert("Envoyé", "Vérifie tes spams.", "fa-paper-plane"); } catch(e) { window.showCustomAlert("Erreur", "Email inconnu", "fa-question"); }
     };
 
-    // --- PROFIL ---
     window.loadProfile = async function() {
         const d = await getDoc(doc(db, "utilisateurs", auth.currentUser.uid));
-        if(d.exists()) { localProfile = d.data(); } 
-        else { localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout' }; await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile); }
+        if(d.exists()) {
+            localProfile = d.data();
+        } else {
+            localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout' };
+            await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile);
+        }
     };
 
     window.openProfileModal = function() {
         document.getElementById('modalContent').innerHTML = `
             <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
             <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; font-size:1.8rem; margin:0 0 15px;">Mon Profil</h3>
+            
             <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px; margin-bottom:10px; text-align:left;">
                 <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Avatar (Emoji)</label><input type="text" id="prof-avatar" class="share-input" value="${localProfile.avatar || '🎲'}" maxlength="2" style="font-size:1.2rem;"></div>
                 <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Titre (Fun)</label><input type="text" id="prof-titre" class="share-input" value="${localProfile.titre || 'Membre'}" placeholder="Le Stratège"></div>
             </div>
+
             <div style="text-align:left; margin-bottom:10px;">
-                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon jeu préféré :</label>
+                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon jeu préféré de tous les temps :</label>
                 <input type="text" id="prof-jeu" class="share-input" value="${localProfile.jeuFavori || ''}" placeholder="Ex: Terraforming Mars">
             </div>
+
             <div style="text-align:left; margin-bottom:15px;">
-                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon style :</label>
+                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon style de jeu :</label>
                 <select id="prof-style" class="share-input">
                     <option value="Touche-à-tout" ${localProfile.styleJoueur==='Touche-à-tout'?'selected':''}>Touche-à-tout</option>
                     <option value="Eurogame (Gestion)" ${localProfile.styleJoueur==='Eurogame (Gestion)'?'selected':''}>Eurogame (Gestion)</option>
-                    <option value="Ameritrash (Dés & Fig.)" ${localProfile.styleJoueur==='Ameritrash (Dés & Fig.)'?'selected':''}>Ameritrash</option>
+                    <option value="Ameritrash (Dés & Fig.)" ${localProfile.styleJoueur==='Ameritrash (Dés & Fig.)'?'selected':''}>Ameritrash (Dés & Fig.)</option>
                     <option value="Jeux d'Ambiance" ${localProfile.styleJoueur==='Jeux d\'Ambiance'?'selected':''}>Jeux d'Ambiance</option>
                     <option value="Coopératif" ${localProfile.styleJoueur==='Coopératif'?'selected':''}>Coopératif</option>
                 </select>
             </div>
+
             <button class="game-btn game-btn-green" style="width:100%; justify-content:center;" onclick="saveProfile()"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button>
         `;
         document.getElementById('gameModalBackdrop').classList.add('visible');
@@ -820,6 +1062,7 @@
         localProfile.jeuFavori = document.getElementById('prof-jeu').value || '';
         localProfile.styleJoueur = document.getElementById('prof-style').value || 'Touche-à-tout';
         localProfile.nom = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
+        
         await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile, {merge:true});
         document.getElementById('user-greeting').innerHTML = `<div style="font-size:3.5rem; margin-bottom:5px; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> Salut ${localProfile.nom} !`;
         closeGameModalForce();
@@ -835,6 +1078,7 @@
             <div style="font-size: 3.5rem; margin-bottom: 5px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${p.avatar || '👤'}</div>
             <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; font-size:1.8rem; margin:0 0 5px;">${p.nom}</h3>
             <div style="font-size:0.8rem; color:var(--wood-brown); font-weight:bold; text-transform:uppercase; letter-spacing:1px; margin-bottom:15px;">${p.titre || 'Membre'}</div>
+            
             <div style="background: rgba(188,143,99,0.1); border-radius: 12px; padding: 15px; text-align:left; font-size:0.85rem; line-height: 1.4; color: var(--text-brown);">
                 <div style="margin-bottom:10px;"><i class="fa-solid fa-heart" style="color:#e74c3c; width:20px; text-align:center;"></i> <b>Jeu favori :</b><br> ${p.jeuFavori || 'Non renseigné'}</div>
                 <div><i class="fa-solid fa-chess-knight" style="color:var(--green-deep); width:20px; text-align:center;"></i> <b>Style :</b><br> ${p.styleJoueur || 'Inconnu'}</div>
@@ -844,7 +1088,9 @@
         document.getElementById('gameModalBackdrop').classList.add('visible');
     };
 
-    // --- RSVP ---
+    // ==========================================
+    // SYSTEME DE PRÉSENCE (RSVP)
+    // ==========================================
     window.setRSVP = async function(status) {
         if(!auth.currentUser) return;
         const dateStr = window.getNextEventDateStr();
@@ -853,28 +1099,43 @@
         if (window.myCurrentRSVP === status) {
             await deleteDoc(ref);
         } else {
-            await setDoc(ref, { uid: auth.currentUser.uid, nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar || '🎲', statut: status, date_event: dateStr, timestamp: new Date() });
+            await setDoc(ref, {
+                uid: auth.currentUser.uid,
+                nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
+                avatar: localProfile.avatar || '🎲',
+                statut: status,
+                date_event: dateStr,
+                timestamp: new Date()
+            });
         }
     };
 
     window.initFirebaseRSVP = function() {
         if(unsubscribeRSVP) unsubscribeRSVP(); 
         const dateStr = window.getNextEventDateStr();
+
         unsubscribeRSVP = onSnapshot(collection(db, "presences"), (snap) => {
             let presents = []; let absents = []; let maybes = [];
             window.myCurrentRSVP = null; 
+
             snap.forEach(d => {
                 const data = d.data();
                 if(data.date_event === dateStr) {
                     if(data.uid === auth.currentUser.uid) window.myCurrentRSVP = data.statut;
-                    if(data.statut === 'present') presents.push(data); else if(data.statut === 'absent') absents.push(data); else if(data.statut === 'maybe') maybes.push(data);
+                    if(data.statut === 'present') presents.push(data);
+                    else if(data.statut === 'absent') absents.push(data);
+                    else if(data.statut === 'maybe') maybes.push(data);
                 }
             });
+
             let myStatus = window.myCurrentRSVP;
+
             document.getElementById('btn-rsvp-present').style.background = myStatus === 'present' ? 'var(--wa-green)' : '#ecf0f1';
             document.getElementById('btn-rsvp-present').style.color = myStatus === 'present' ? '#fff' : '#7f8c8d';
+            
             document.getElementById('btn-rsvp-maybe').style.background = myStatus === 'maybe' ? 'var(--gold-game)' : '#ecf0f1';
             document.getElementById('btn-rsvp-maybe').style.color = myStatus === 'maybe' ? '#fff' : '#7f8c8d';
+            
             document.getElementById('btn-rsvp-absent').style.background = myStatus === 'absent' ? '#e74c3c' : '#ecf0f1';
             document.getElementById('btn-rsvp-absent').style.color = myStatus === 'absent' ? '#fff' : '#7f8c8d';
 
@@ -882,94 +1143,154 @@
             if(presents.length > 0) html += `<div style="margin-bottom:8px;"><b>✅ ${presents.length} Présent(s) :</b><br> <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:4px;">${presents.map(p => `<span class="rsvp-badge" onclick="window.viewProfile('${p.uid}')">${p.avatar} ${p.nom.split(' ')[0]}</span>`).join('')}</div></div>`;
             if(maybes.length > 0) html += `<div style="margin-bottom:8px;"><b>🤷 ${maybes.length} Indécis :</b><br> <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:4px;">${maybes.map(p => `<span class="rsvp-badge" onclick="window.viewProfile('${p.uid}')">${p.avatar} ${p.nom.split(' ')[0]}</span>`).join('')}</div></div>`;
             if(absents.length > 0) html += `<div><b>❌ ${absents.length} Absent(s) :</b><br> <span style="opacity:0.8; font-size:0.75rem;">${absents.map(p => p.nom.split(' ')[0]).join(', ')}</span></div>`;
+
             document.getElementById('rsvp-lists').innerHTML = html || '<div style="text-align:center; font-style:italic;">Personne ne s\'est encore prononcé pour la prochaine soirée.</div>';
         });
     };
 
-    // --- CREATION DE TABLE (AUTO / MANUEL) ---
+    // ==========================================
+    // GESTION DES TABLES DE JEUX AVEC RECHERCHE
+    // ==========================================
     window.chargerListeCollection = async function() {
         const datalist = document.getElementById('jeux-datalist');
         if(!datalist) return;
+
         const proprietaires = ['sebastien', 'julie', 'ronan', 'carine', 'stephane', 'sylvain'];
         window.tousLesJeux = [];
+
         for (const p of proprietaires) {
-            try { const snap = await getDocs(collection(db, `collection_${p}`)); snap.forEach(d => { window.tousLesJeux.push({ ...d.data(), proprio: p }); }); } catch(e) {}
+            try {
+                const snap = await getDocs(collection(db, `collection_${p}`));
+                snap.forEach(d => { window.tousLesJeux.push({ ...d.data(), proprio: p }); });
+            } catch(e) {}
         }
-        window.tousLesJeux.sort((a, b) => a.titre.localeCompare(b.titre));
-        let options = ''; window.tousLesJeux.forEach(j => { options += `<option value="${j.titre}">De ${j.proprio} (${j.joueurs || '2-4'} j)</option>`; });
+
+        let options = '';
+        window.tousLesJeux.forEach(j => {
+            options += `<option value="${j.titre}">De ${j.proprio} (${j.joueurs || '2-4'} j)</option>`;
+        });
         datalist.innerHTML = options;
     };
 
     window.proposerJeu = async function() {
         const input = document.getElementById('input-jeu-search');
         const titre = input.value.trim();
-        if(!titre) return window.showCustomAlert("Attention", "Saisis ou choisis un nom de jeu !");
         
+        if(!titre) return window.showCustomAlert("Attention", "Saisis ou choisis un nom de jeu !", "fa-hand-pointer");
+
         const jeuTrouve = window.tousLesJeux.find(j => j.titre.toLowerCase() === titre.toLowerCase());
+
         let minJ = 2, maxJ = 4, proprioDuJeu = "Moi", lienMyludo = "", dureeJeu = "?", styleJeu = "Classique";
 
         if (jeuTrouve) {
-            proprioDuJeu = jeuTrouve.proprio; lienMyludo = jeuTrouve.lien || ""; dureeJeu = jeuTrouve.duree || "?";
-            if (jeuTrouve.style) styleJeu = jeuTrouve.style; else if (jeuTrouve.categories && jeuTrouve.categories.length > 0) styleJeu = jeuTrouve.categories[0]; else if (jeuTrouve.type) styleJeu = jeuTrouve.type;
-            const parts = (jeuTrouve.joueurs || "2-4").match(/\d+/g);
+            proprioDuJeu = jeuTrouve.proprio;
+            lienMyludo = jeuTrouve.lien || "";
+            
+            dureeJeu = jeuTrouve.duree || "?";
+            if (jeuTrouve.style) styleJeu = jeuTrouve.style;
+            else if (jeuTrouve.categories && jeuTrouve.categories.length > 0) styleJeu = jeuTrouve.categories[0];
+            else if (jeuTrouve.type) styleJeu = jeuTrouve.type;
+
+            const joueursStr = jeuTrouve.joueurs || "2-4";
+            const parts = joueursStr.match(/\d+/g);
             if (parts && parts.length > 0) minJ = parseInt(parts[0]);
-            if (parts && parts.length > 1) maxJ = parseInt(parts[1]); else maxJ = minJ;
+            if (parts && parts.length > 1) maxJ = parseInt(parts[1]);
+            else maxJ = minJ;
         } else {
             proprioDuJeu = auth.currentUser.displayName || "Moi";
             let maxStr = prompt(`Le jeu "${titre}" n'a pas été trouvé dans la ludothèque de l'asso.\nCombien de joueurs MAXIMUM peuvent jouer à ce jeu ?`, "4");
             if (maxStr === null) return; 
-            maxJ = parseInt(maxStr) || 4; minJ = 2; 
+            maxJ = parseInt(maxStr) || 4;
+            minJ = 2; 
+
             let dureeStr = prompt(`Quelle est la durée moyenne de la partie (en minutes) ?`, "60");
             if (dureeStr !== null) dureeJeu = dureeStr;
+
             let styleStr = prompt(`Quel est le style de ce jeu (ex: Coopératif, Ambiance, Gestion...) ?`, "Jeu de plateau");
             if (styleStr !== null) styleJeu = styleStr;
         }
 
-        const moi = { uid: auth.currentUser.uid, nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar, type: 'main', flex: false, id: Date.now() };
+        const moi = { 
+            uid: auth.currentUser.uid, 
+            nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], 
+            avatar: localProfile.avatar, 
+            type: 'main', 
+            flex: false, 
+            id: Date.now() 
+        };
 
         try {
             const tableRef = await addDoc(collection(db, "jeux_proposes"), {
-                nom: titre, proposePar: moi.nom, createurUid: auth.currentUser.uid, appartientA: proprioDuJeu, myludoLien: lienMyludo,
-                minJoueurs: minJ, maxJoueurs: maxJ, duree: dureeJeu, style: styleJeu, inscrits: [moi], date_ajout: new Date()
+                nom: titre,
+                proposePar: moi.nom,
+                createurUid: auth.currentUser.uid, 
+                appartientA: proprioDuJeu,
+                myludoLien: lienMyludo,
+                minJoueurs: minJ,
+                maxJoueurs: maxJ,
+                duree: dureeJeu,
+                style: styleJeu,
+                inscrits: [moi],
+                date_ajout: new Date()
             });
-            window.notifierParticipants(tableRef.id, 'creation', moi.nom);
             window.showCustomAlert("Table Ouverte !", "Les autres joueurs peuvent maintenant te rejoindre.", "fa-champagne-glasses");
             input.value = ""; 
         } catch(e) { console.error(e); }
     };
 
-    window.notifierParticipants = async function(tableId, actionType, actorName) {
-        console.log(`[Backend requis] Simulation demande envoi Email: ${actorName} a fait l'action '${actionType}' sur la table ${tableId}`);
-        // Code à décommenter quand l'extension "Trigger Email" est installée sur Firebase
-    };
-
     window.supprimerTable = async function(id) {
-        if(confirm("Es-tu sûr de vouloir supprimer cette table de l'arène ?")) await deleteDoc(doc(db, "jeux_proposes", id));
+        if(confirm("Es-tu sûr de vouloir supprimer cette table de l'arène ?")) {
+            await deleteDoc(doc(db, "jeux_proposes", id));
+        }
     };
 
     window.initFirebaseVotes = function() {
+        if(!window.db) return;
         if(unsubscribeVotes) unsubscribeVotes(); 
+        
         unsubscribeVotes = onSnapshot(collection(db, "jeux_proposes"), (snap) => {
-            const div = document.getElementById('liste-votes-firebase'); if(!div) return;
-            let jeux = []; snap.forEach(d => jeux.push({ id: d.id, ...d.data() }));
+            const div = document.getElementById('liste-votes-firebase');
+            if(!div) return;
+            
+            let jeux = [];
+            snap.forEach(d => jeux.push({ id: d.id, ...d.data() }));
             jeux.sort((a, b) => (b.inscrits || []).length - (a.inscrits || []).length);
             
-            if(jeux.length === 0) { div.innerHTML = '<div style="text-align:center; font-size:0.8rem; color:gray; padding: 20px; border:1px dashed rgba(0,0,0,0.2); border-radius:15px; background:#fff;">Aucune table ouverte pour le moment. Crée la première !</div>'; return; }
+            if(jeux.length === 0) {
+                div.innerHTML = '<div style="text-align:center; font-size:0.8rem; color:gray; padding: 20px; border:1px dashed rgba(0,0,0,0.2); border-radius:15px; background:#fff;">Aucune table ouverte pour le moment. Crée la première !</div>';
+                return;
+            }
 
             div.innerHTML = jeux.map(j => {
                 let inscrits = j.inscrits || [];
-                let min = j.minJoueurs || 2; let max = j.maxJoueurs || 4;
+                let min = j.minJoueurs || 2; 
+                let max = j.maxJoueurs || 4;
                 
+                // 1. DESSINER LES SIEGES
                 let seatsHTML = '<div style="display:flex; flex-wrap:wrap; gap:4px; margin: 10px 0;">';
                 for(let i=0; i<max; i++) {
-                    let isGreen = i < min; let occupant = inscrits[i];
+                    let isGreen = i < min;
+                    let occupant = inscrits[i];
+                    
                     if(occupant) {
                         let flexBadge = occupant.flex ? ' (Flex)' : '';
                         let colorClass = isGreen ? 'green' : 'gold';
-                        let crossHTML = (occupant.uid === auth.currentUser.uid) ? `<span class="remove-seat" onclick="event.stopPropagation(); window.actionTable('${j.id}', 'removeSeat', ${occupant.id})"><i class="fa-solid fa-xmark"></i></span>` : '';
-                        let clickAction = occupant.type === 'guest' ? `onclick="window.showCustomAlert('Invité', 'Ceci est l\\'invité(e) de ${occupant.hostName}.', 'fa-user-group')"` : `onclick="window.viewProfile('${occupant.uid}')"`;
+                        
+                        let crossHTML = (occupant.uid === auth.currentUser.uid) 
+                            ? `<span class="remove-seat" onclick="event.stopPropagation(); window.actionTable('${j.id}', 'removeSeat', ${occupant.id})"><i class="fa-solid fa-xmark"></i></span>` 
+                            : '';
 
-                        seatsHTML += `<div class="seat ${colorClass} clickable" ${clickAction}>${occupant.avatar||'👤'} ${occupant.nom.split(' ')[0]}${flexBadge} ${crossHTML}</div>`;
+                        let clickAction = "";
+                        if (occupant.type === 'guest') {
+                            clickAction = `onclick="window.showCustomAlert('Invité', 'Ceci est l\\'invité(e) de ${occupant.hostName}.', 'fa-user-group')"`;
+                        } else {
+                            clickAction = `onclick="window.viewProfile('${occupant.uid}')"`;
+                        }
+
+                        let displayName = occupant.nom.split(' ')[0];
+                        seatsHTML += `<div class="seat ${colorClass} clickable" ${clickAction}>
+                            ${occupant.avatar||'👤'} ${displayName}${flexBadge} ${crossHTML}
+                        </div>`;
                     } else {
                         let emptyClass = isGreen ? 'empty-green' : 'empty-gold';
                         seatsHTML += `<div class="seat ${emptyClass}">🪑 Libre</div>`;
@@ -977,52 +1298,101 @@
                 }
                 seatsHTML += '</div>';
 
+                // 2. DESSINER LES BOUTONS D'ACTION
                 let mySeats = inscrits.filter(i => i.uid === auth.currentUser.uid);
-                let amISitting = mySeats.length > 0; let amIFlex = mySeats.some(i => i.flex); let isFull = inscrits.length >= max;
+                let amISitting = mySeats.length > 0;
+                let amIFlex = mySeats.some(i => i.flex);
+                let isFull = inscrits.length >= max;
 
                 let actionsHTML = '<div class="action-bar">';
                 if (amISitting) {
-                    actionsHTML += `<button class="btn-small" style="background:#e74c3c;" onclick="actionTable('${j.id}', 'leave')"><i class="fa-solid fa-person-walking-arrow-right"></i> Tout Quitter</button>`;
                     if(!amIFlex) actionsHTML += `<button class="btn-small" style="background:#3498db;" onclick="actionTable('${j.id}', 'flex')">👼 Être Flexible</button>`;
                     else actionsHTML += `<button class="btn-small" style="background:#95a5a6;" onclick="actionTable('${j.id}', 'unflex')">Ne plus être flex.</button>`;
+                    
                     if(!isFull) actionsHTML += `<button class="btn-small" style="background:var(--wood-brown);" onclick="actionTable('${j.id}', 'addGuest')"><i class="fa-solid fa-user-plus"></i> +1 Invité</button>`;
                 } else {
                     if(!isFull) actionsHTML += `<button class="btn-small game-btn-green" onclick="actionTable('${j.id}', 'join')">🪑 M'asseoir</button>`;
                     else actionsHTML += `<span style="font-size:0.75rem; color:gray; font-style:italic; padding:4px;">Table complète 🔒</span>`;
                 }
-                if (j.createurUid === auth.currentUser.uid) actionsHTML += `<button class="btn-small" style="background:#e74c3c;" onclick="window.supprimerTable('${j.id}')" title="Supprimer la table"><i class="fa-solid fa-trash"></i></button>`;
+
+                if (j.createurUid === auth.currentUser.uid) {
+                    actionsHTML += `<button class="btn-small" style="background:#e74c3c;" onclick="window.supprimerTable('${j.id}')" title="Supprimer la table"><i class="fa-solid fa-trash"></i></button>`;
+                }
+
                 actionsHTML += '</div>';
 
-                const titreHTML = j.myludoLien ? `<a href="${j.myludoLien}" target="_blank" class="myludo-link">${j.nom}</a>` : j.nom;
-                const infosSup = `<div style="font-size:0.75rem; color:var(--wood-brown); font-weight:bold; margin-top:4px;"><i class="fa-regular fa-clock"></i> ${j.duree || '?'} min &nbsp; | &nbsp; <i class="fa-solid fa-dice-d20"></i> ${j.style || 'Jeu'}</div>`;
+                // 3. TITRE ET INFOS JEU
+                const titreHTML = j.myludoLien 
+                    ? `<a href="${j.myludoLien}" target="_blank" class="myludo-link">${j.nom}</a>`
+                    : j.nom;
 
-                return `<div class="table-card"><div style="font-weight:800; color:var(--green-deep); font-size: 1.05rem;">${titreHTML}</div>${infosSup}<span style="font-size:0.65rem; color:gray; display:block; margin-top:4px;">Proposé par ${j.proposePar} (Jeu de <b>${j.appartientA || '?'}</b>)</span>${seatsHTML}${actionsHTML}</div>`;
+                const infosSup = `<div style="font-size:0.75rem; color:var(--wood-brown); font-weight:bold; margin-top:4px;">
+                    <i class="fa-regular fa-clock"></i> ${j.duree || '?'} min &nbsp; | &nbsp; <i class="fa-solid fa-dice-d20"></i> ${j.style || 'Jeu de société'}
+                </div>`;
+
+                return `
+                <div class="table-card">
+                    <div style="font-weight:800; color:var(--green-deep); font-size: 1.05rem;">${titreHTML}</div>
+                    ${infosSup}
+                    <span style="font-size:0.65rem; color:gray; display:block; margin-top:4px;">Proposé par ${j.proposePar} (Jeu de <b>${j.appartientA || '?'}</b>)</span>
+                    ${seatsHTML}
+                    ${actionsHTML}
+                </div>`;
             }).join('');
         });
     };
 
     window.actionTable = async function(idTable, action, seatId) {
         if(!auth.currentUser) return;
-        const ref = doc(db, "jeux_proposes", idTable); const docSnap = await getDoc(ref);
+        const ref = doc(db, "jeux_proposes", idTable);
+        const docSnap = await getDoc(ref);
         if(!docSnap.exists()) return;
-        let data = docSnap.data(); let inscrits = data.inscrits || []; const max = data.maxJoueurs || 4;
-
-        if (action === 'join' && inscrits.length < max) {
-            inscrits.push({ uid: auth.currentUser.uid, nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar, type: 'main', flex: false, id: Date.now() });
-            window.notifierParticipants(idTable, 'rejoint', auth.currentUser.displayName);
-        } 
-        else if (action === 'removeSeat') { inscrits = inscrits.filter(i => i.id !== seatId); }
-        else if (action === 'leave') { inscrits = inscrits.filter(i => i.uid !== auth.currentUser.uid); }
-        else if (action === 'addGuest' && inscrits.length < max) {
-            let guestName = prompt("Prénom de l'invité(e) ?");
-            if (guestName === null) return; 
-            if (guestName.trim() === "") guestName = "Invité";
-            inscrits.push({ uid: auth.currentUser.uid, nom: guestName.trim(), avatar: '👤', type: 'guest', flex: false, id: Date.now(), hostName: auth.currentUser.displayName || auth.currentUser.email.split('@')[0] });
-        } 
-        else if (action === 'flex') { let moi = inscrits.find(i => i.uid === auth.currentUser.uid && i.type === 'main'); if(moi) moi.flex = true; } 
-        else if (action === 'unflex') { let moi = inscrits.find(i => i.uid === auth.currentUser.uid && i.type === 'main'); if(moi) moi.flex = false; }
         
-        try { await updateDoc(ref, { inscrits }); } catch(e) { console.error(e); }
+        let data = docSnap.data(); 
+        let inscrits = data.inscrits || [];
+        const max = data.maxJoueurs || 4;
+
+        if (action === 'join') {
+            if(inscrits.length < max) {
+                inscrits.push({ 
+                    uid: auth.currentUser.uid, 
+                    nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], 
+                    avatar: localProfile.avatar, 
+                    type: 'main', flex: false, id: Date.now() 
+                });
+            }
+        } 
+        else if (action === 'removeSeat') {
+            inscrits = inscrits.filter(i => i.id !== seatId); // Retire juste le siège cliqué
+        }
+        else if (action === 'addGuest') {
+            if(inscrits.length < max) {
+                let guestName = prompt("Prénom de l'invité(e) ?");
+                if (guestName === null) return; 
+                if (guestName.trim() === "") guestName = "Invité";
+                let myName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
+                
+                inscrits.push({ 
+                    uid: auth.currentUser.uid, 
+                    nom: guestName.trim(), 
+                    avatar: '👤', 
+                    type: 'guest', 
+                    flex: false, 
+                    id: Date.now(),
+                    hostName: myName
+                });
+            }
+        } 
+        else if (action === 'flex') {
+            let moi = inscrits.find(i => i.uid === auth.currentUser.uid && i.type === 'main');
+            if(moi) moi.flex = true;
+        } 
+        else if (action === 'unflex') {
+            let moi = inscrits.find(i => i.uid === auth.currentUser.uid && i.type === 'main');
+            if(moi) moi.flex = false;
+        }
+
+        try { await updateDoc(ref, { inscrits }); } catch(e) { console.error("Erreur:", e); }
     };
 
     onAuthStateChanged(auth, (user) => { window.updateVoteUI(); });
