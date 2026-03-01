@@ -79,8 +79,8 @@
         .game-btn { background: var(--wood-brown); color: white; border: none; padding: 10px 25px; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); transition: transform 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; }
         .game-btn:active { transform: scale(0.95); }
         
-        /* Boutons d'action verts (Validation, Connexion, Créer Table...) */
-        .game-btn-green { background: var(--green-deep); box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); color: white; }
+        /* Boutons d'action verts (Validation, Validation, Connexion...) */
+        .game-btn-green { background: var(--green-deep); box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); }
 
         .btn-ludotheque { background: var(--wood-brown); color: white; border: none; padding: 10px 22px; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); cursor: pointer; transition: transform 0.2s; }
         .btn-ludotheque:active { transform: scale(0.95); }
@@ -143,21 +143,21 @@
         .myludo-link:hover { color: var(--wood-brown); }
 
         /* =========================================
-           ONGLETS DE VOTE (PROFIL / LUDO / ARENE)
+           ONGLETS DE VOTE (ARENE / PROFIL)
            ========================================= */
-        .vote-tabs { display: flex; background: rgba(188, 143, 99, 0.15); border-radius: 50px; padding: 4px; margin: 0 auto 20px; width: 100%; max-width: 380px; position: relative; }
-        .vote-tab { flex: 1; text-align: center; padding: 8px 4px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.75rem; color: var(--wood-brown); cursor: pointer; transition: background 0.1s, color 0.1s; display: flex; align-items: center; justify-content: center; gap: 4px; position: relative; }
+        .vote-tabs { display: flex; background: rgba(188, 143, 99, 0.15); border-radius: 50px; padding: 5px; margin: 0 auto 20px; max-width: 320px; position: relative; }
+        .vote-tab { flex: 1; text-align: center; padding: 10px 15px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--wood-brown); cursor: pointer; transition: background 0.1s, color 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
         .vote-tab.active { background: var(--wood-brown); color: white; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); }
         .vote-tab-content { display: none; animation: fadeInTab 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); }
         .vote-tab-content.active { display: block; }
         @keyframes fadeInTab { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
         /* =========================================
-           STYLES SPECIFIQUES (RSVP + TABLES + SACS)
+           STYLES SPECIFIQUES (RSVP + TABLES)
            ========================================= */
         .rsvp-btn { flex: 1; padding: 8px 5px; font-size: 0.75rem; font-family: 'Quicksand', sans-serif; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: all 0.2s; background: #ecf0f1; color: #7f8c8d; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .rsvp-btn:active { transform: scale(0.95); }
-        .table-card { background:#fff; padding:12px; border-radius:15px; border:1px solid #dbb38a; margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,0.03); text-align: left; position: relative; }
+        .table-card { background:#fff; padding:12px; border-radius:15px; border:1px solid #dbb38a; margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,0.03); text-align: left; }
         .seat { display:inline-flex; align-items:center; gap:4px; padding:4px 8px; border-radius:8px; font-size:0.75rem; font-weight:bold; margin:2px; transition: opacity 0.2s; }
         .seat.clickable { cursor: pointer; }
         .seat.clickable:active { opacity: 0.7; }
@@ -173,10 +173,6 @@
         
         .rsvp-badge { display:inline-block; padding:4px 8px; background:white; border:1px solid rgba(188,143,99,0.5); border-radius:50px; font-size:0.75rem; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.05); font-weight:bold; color:var(--green-deep); transition:all 0.2s; margin: 2px; }
         .rsvp-badge:active { transform: scale(0.95); background: var(--bg-beige); }
-
-        .ludo-avatar-card { display:flex; flex-direction:column; align-items:center; gap:5px; text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); min-width:65px; box-shadow:0 2px 5px rgba(0,0,0,0.05); transition:transform 0.2s; flex-shrink: 0; }
-        .ludo-avatar-card:active { transform: scale(0.95); }
-        .ludo-avatar-card img { width:24px; height:24px; border-radius:4px; }
 
         /* --- RESTE DU CSS (Menus, Lightbox) --- */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
@@ -412,7 +408,47 @@
 </div>
 
 <script>
-    /* --- FONCTIONS MODALES UNIVERSELLES --- */
+    /* --- CONFIGURATION DES CHEMINS --- */
+    const cheminTries = "images/jeux_de_societe/tries/";
+    const cheminNonIdentifies = "images/jeux_de_societe/non_identifies/";
+    const cheminPresse = "images/presse/";
+    const cheminSorties = "images/sorties/";
+    const extensionJeux = ".jpg"; 
+
+    /* --- GESTION DU FOND ASYNCHRONE (Météo Plouay + Heure) --- */
+    async function fetchWeatherUpdate() {
+        const now = new Date();
+        const month = now.getMonth() + 1; 
+        const day = now.getDate();
+        const hour = now.getHours();
+
+        if ((month === 12 && day === 25) || (month === 10 && day === 31)) return;
+
+        let baseName = "hero_soir"; 
+        if (hour >= 6 && hour < 12) baseName = "hero_matin";
+        else if (hour >= 12 && hour < 18) baseName = "hero_aprem";
+
+        try {
+            const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=47.91&longitude=-3.33&current=weather_code');
+            const data = await response.json();
+            const code = data.current.weather_code;
+
+            let newCondition = "";
+            if (code >= 1 && code <= 3) newCondition = "_nuage";
+            else if (code >= 51 && code <= 67) newCondition = "_pluie";
+            else if (code >= 80 && code <= 99) newCondition = "_orage";
+            else if (code >= 71 && code <= 77) newCondition = "_neige";
+
+            localStorage.setItem('plouay_weather', newCondition);
+            document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}${newCondition}.png')`);
+        } catch (error) {
+            console.error("Erreur météo:", error);
+            document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}.png')`);
+        }
+    }
+    fetchWeatherUpdate();
+
+    /* --- FONCTIONS MODALES UNIVERSELLES (Alerte / Jeu) --- */
     function closeGameModalForce() {
         document.getElementById('gameModalBackdrop').classList.remove('visible');
         if(typeof confettiInterval !== 'undefined') { clearInterval(confettiInterval); document.querySelectorAll('.confetti').forEach(c => c.remove()); }
@@ -437,6 +473,7 @@
         if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
     };
 
+    /* --- GESTION DU BOUTON RETOUR ANDROID (HISTORY API) --- */
     window.addEventListener('popstate', (e) => { 
         if (lb.classList.contains('active')) { hideLightboxDOM(); } 
         else if (document.getElementById('barnOverlay').classList.contains('active')) { closeBarnForce(); } 
@@ -444,6 +481,7 @@
         else if (sheet.classList.contains('open')) { hideSheetDOM(); } 
     });
 
+    /* --- GESTION DE LA GRANGE --- */
     function openBarn() {
         document.getElementById('barnOverlay').classList.add('active');
         document.getElementById('mainWrapper').classList.add('blurred');
@@ -452,13 +490,14 @@
     function closeBarn() { if (history.state && history.state.type === 'barn') { history.back(); } else { closeBarnForce(); } }
     function closeBarnForce() { document.getElementById('barnOverlay').classList.remove('active'); document.getElementById('mainWrapper').classList.remove('blurred'); }
 
+    /* --- GESTION DES ONGLETS PHOTOS --- */
     function switchPhotoTab(tabId, element) {
         document.querySelectorAll('.photo-tab').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.photo-tab-content').forEach(content => content.classList.remove('active'));
         element.classList.add('active'); document.getElementById('grid-' + tabId).classList.add('active');
     }
 
-    /* --- CALCULS DATE --- */
+    /* --- 1. CALCULS DATE & HTML SORTIES --- */
     const sortiesConfig = [ { year: 2025, count: 5 }, { year: 2024, count: 7 }, { year: 2023, count: 7 }, { year: 2022, count: 9 }, { year: 2021, count: 2 }, { year: 2019, count: 1 } ];
 
     function getNextLastFridays() {
@@ -479,15 +518,9 @@
     const diffTime = new Date(nextDate.getFullYear(), nextDate.getMonth(), nextDate.getDate()) - new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    // Utile pour la BDD (RSVP / Sacs)
+    // Fonction globale pour le RSVP
     window.getNextEventDateStr = function() {
         return nextDate.toISOString().split('T')[0];
-    };
-
-    // Format propre pour le RSVP ("28 février")
-    window.getFormattedEventDate = function() {
-        const months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
-        return `${nextDate.getDate()} ${months[nextDate.getMonth()]}`;
     };
     
     let dayPart = (diffDays === 0) ? " : JOUR J !" : ` : J-${diffDays}`;
@@ -500,7 +533,7 @@
         `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:3px; gap:5px;">
             <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="flex-shrink:0;">📍 <span class="underline">Maison des Associations</span></a>
             <button id="btn-voter-accueil" class="btn-ludotheque" style="margin:0; padding: 4px 12px; font-size: 0.75rem; white-space: nowrap; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">
-                <i class="fa-solid fa-check-to-slot" style="margin-right:4px;"></i>S'organiser
+                <i class="fa-solid fa-check-to-slot" style="margin-right:4px;"></i>Voter
             </button>
         </div>`;
 
@@ -524,25 +557,26 @@
         "jeu_living_forest", "jeu_menara", "jeu_mysterium", "jeu_nemesis", "jeu_noé", "jeu_paleo", "jeu_pandemic", "jeu_parks",
         "jeu_the_island", "jeu_tokaido", "jeu_tumblin_dice", "jeu_wingspan", "jeu_witness"
     ];
+    const nombreDeJeuxNumerotes = 7;
 
     let photosJeuxHTML = '<div class="photo-grid">';
     jeuxNommes.forEach(jeu => {
         let nomJeu = jeu.replace('jeu_', '').replace(/_/g, ' '); nomJeu = nomJeu.charAt(0).toUpperCase() + nomJeu.slice(1); let fichierComplet = cheminTries + jeu + extensionJeux;
         photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')"><img src="${fichierComplet}" loading="lazy" decoding="async" alt="${nomJeu}" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"><div class="photo-game-title">${nomJeu}</div></div>`;
     });
-    for (let i = 1; i <= 7; i++) {
+    for (let i = 1; i <= nombreDeJeuxNumerotes; i++) {
         let nomFichier = "jeu" + i; let fichierComplet = cheminNonIdentifies + nomFichier + extensionJeux;
         photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')"><img src="${fichierComplet}" loading="lazy" decoding="async" alt="" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"></div>`;
     }
     photosJeuxHTML += '</div>';
 
-    /* --- DONNÉES DES PAGES --- */
+    /* --- 2. DONNÉES DES PAGES --- */
     const pagesData = {
         vote: {
             title: "Au programme ?",
             text: `<div class="panel-card" id="content-vote" style="padding: 15px 10px; position: relative;">
                 <div id="view-auth">
-                    <p style="text-align: center; margin-top: 0; font-size: 0.9rem; color: var(--text-brown);">Connecte-toi pour confirmer ta présence et voir les tables de la soirée !</p>
+                    <p style="text-align: center; margin-top: 0; font-size: 0.9rem; color: var(--text-brown);">Connecte-toi pour proposer et voter pour tes jeux préférés !</p>
                     <div id="auth-container"></div>
                 </div>
                 
@@ -550,13 +584,13 @@
                     
                     <div class="vote-tabs">
                         <button class="vote-tab active" onclick="window.switchVoteTab('profil', this)"><i class="fa-solid fa-user"></i> Mon Profil</button>
-                        <button class="vote-tab" onclick="window.switchVoteTab('ludo', this)"><i class="fa-solid fa-box-open"></i> La Réserve</button>
                         <button class="vote-tab" onclick="window.switchVoteTab('arene', this)"><i class="fa-solid fa-chess-board"></i> L'Arène</button>
                     </div>
 
                     <div id="vote-swipe-area" style="position: relative; width: 100%;">
                         
                         <div id="tab-profil" class="vote-tab-content active">
+                            
                             <div id="user-greeting" style="display:flex; flex-direction:column; align-items:center; font-weight:bold; color:var(--green-deep); font-size:1.5rem; margin-bottom:15px;"></div>
                             
                             <div style="text-align:center; margin-bottom:20px;">
@@ -564,8 +598,8 @@
                             </div>
 
                             <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px solid rgba(58, 99, 81, 0.2); text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
-                                <h4 id="rsvp-date-title" style="margin: 0 0 10px; color: var(--green-deep); font-size: 1rem;">Présence</h4>
-                                <div style="font-size:0.75rem; color:var(--text-brown); margin-bottom:10px; font-style:italic;">Dis-nous si tu penses venir ! (Aucune obligation, c'est juste pour donner la tendance 😉)</div>
+                                <h4 style="margin: 0 0 10px; color: var(--green-deep); font-size: 1rem;">Présence (Vendredi)</h4>
+                                <div style="font-size:0.75rem; color:var(--text-brown); margin-bottom:10px; font-style:italic;">Dis-nous si tu viens ! (Mais c'est pas grave si tu changes d'avis 😉)</div>
                                 <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 12px;">
                                     <button class="rsvp-btn" id="btn-rsvp-present" onclick="window.setRSVP('present')">✅ Oui</button>
                                     <button class="rsvp-btn" id="btn-rsvp-maybe" onclick="window.setRSVP('maybe')">🤷 P-ê.</button>
@@ -579,47 +613,23 @@
                             <div style="text-align:center; margin-top: 25px;">
                                 <span onclick="window.logoutFirebase()" style="font-size:0.8rem; color:#e74c3c; text-decoration:underline; cursor:pointer;"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</span>
                             </div>
-                        </div>
 
-                        <div id="tab-ludo" class="vote-tab-content">
-                            <p style="font-size:0.8rem; text-align:center; color:var(--text-brown); margin: 0 0 15px; line-height:1.4;">Accède aux collections des membres pour demander d'apporter un jeu !</p>
-                            
-                            <div style="display:flex; overflow-x:auto; gap:10px; padding-bottom:10px; margin-bottom:15px; scrollbar-width:none;">
-                                <a href="https://www.myludo.fr/#!/profil/carine-duneuf-jardin-85877" target="_blank" class="ludo-avatar-card"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" alt="Myludo"> Carine</a>
-                                <a href="https://www.myludo.fr/#!/profil/ronan-29-67622" target="_blank" class="ludo-avatar-card"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" alt="Myludo"> Ronan</a>
-                                <a href="https://www.myludo.fr/#!/profil/sebastien-g-107305" target="_blank" class="ludo-avatar-card"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" alt="Myludo"> Séb</a>
-                                <a href="https://www.myludo.fr/#!/profil/stephane-rio-26496" target="_blank" class="ludo-avatar-card"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" alt="Myludo"> Stéphane</a>
-                                <a href="https://www.myludo.fr/#!/profil/sylvain-bedouet-64234" target="_blank" class="ludo-avatar-card"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" alt="Myludo"> Sylvain</a>
-                            </div>
-
-                            <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed rgba(188,143,99,0.3);">
-                                <label style="font-weight:bold; font-size:0.8rem; display:block; margin-bottom:5px; color:var(--text-brown);">Qu'est-ce qu'on amène ?</label>
-                                <input type="text" id="ludo-bag-search" class="share-input" style="width:100%; margin-bottom:10px; text-align:left;" placeholder="Rechercher un jeu de l'asso..." onkeyup="window.searchBagLudo(this.value)">
-                                <div id="ludo-bag-results" style="display:flex; flex-direction:column; gap:5px;"></div>
-                            </div>
-
-                            <h3 style="font-family:'Shadows Into Light', cursive; color:var(--green-deep); font-size:1.5rem; text-align:center; margin: 0 0 10px;">Dans les sacs ce soir-là</h3>
-                            <div id="liste-sacs-firebase" style="display:flex; flex-direction:column;">
-                                <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement... <i class="fa-solid fa-spinner fa-spin"></i></div>
-                            </div>
                         </div>
 
                         <div id="tab-arene" class="vote-tab-content">
                             
-                            <div style="background:#fff; padding:10px 15px; border-radius:15px; margin-bottom:20px; border:1px solid rgba(0,0,0,0.05); text-align:center;">
-                                <p style="font-size:0.8rem; color:var(--text-brown); margin:0 0 10px; line-height:1.4;">L'Arène sert à s'organiser pour les gros jeux en début de soirée. <b>Rien d'obligatoire !</b><br><span style="font-style:italic; font-size:0.75rem;">Respirez, venez jouer, il y aura toujours de la place sur un jeu ou autour d'un coup à boire. 🍻</span></p>
-                                
-                                <label style="font-weight:bold; font-size:0.8rem; display:block; margin-bottom:5px; margin-top:15px; color:var(--text-brown); text-align:left;">Ouvrir une nouvelle table :</label>
-                                <input type="text" id="input-jeu-search" list="jeux-datalist" class="share-input" style="width:100%; margin-bottom:10px; text-align:left;" placeholder="Rechercher MyLudo (ou taper nom manuel)">
+                            <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed rgba(188,143,99,0.3);">
+                                <label style="font-weight:bold; font-size:0.8rem; display:block; margin-bottom:5px; color:var(--text-brown);">Ouvrir une nouvelle table :</label>
+                                <input type="text" id="input-jeu-search" list="jeux-datalist" class="share-input" style="width:100%; margin-bottom:10px; text-align:left;" placeholder="Rechercher un jeu (ou ajout manuel)">
                                 <datalist id="jeux-datalist"></datalist>
-                                
-                                <div style="display:flex; gap:10px;">
-                                    <button class="game-btn game-btn-green" style="flex:2; margin:0; justify-content:center;" onclick="window.proposerJeu()"><i class="fa-solid fa-check"></i> Créer la table</button>
-                                </div>
+                                <button class="game-btn game-btn-green" style="margin-top:0; width:100%; justify-content:center;" onclick="window.proposerJeu()"><i class="fa-solid fa-plus"></i> Créer la table</button>
                             </div>
 
-                            <h3 style="font-family:'Shadows Into Light', cursive; color:var(--green-deep); font-size:1.5rem; text-align:center; margin: 0 0 5px;">Les Tables Ouvertes</h3>
-                            <div style="font-size:0.7rem; color:gray; text-align:center; margin-bottom:15px; line-height:1.4;"><i class="fa-solid fa-info-circle"></i> <b>Flexible (👼)</b> : Prêt(e) à libérer sa place pour équilibrer les tables.</div>
+                            <h3 style="font-family:'Shadows Into Light', cursive; color:var(--green-deep); font-size:1.5rem; text-align:center; margin: 0 0 5px;">L'Arène (Les Tables)</h3>
+                            <div style="font-size:0.7rem; color:gray; text-align:center; margin-bottom:15px; line-height:1.4;">
+                                <i class="fa-solid fa-info-circle"></i> <b>Flexible (👼)</b> : Prêt(e) à libérer sa place pour équilibrer les tables.<br>
+                                <span style="font-style:italic;">Pas d'inquiétude, l'Arène est là pour s'organiser, il y aura toujours de la place sur un jeu le jour J !</span>
+                            </div>
                             
                             <div id="liste-votes-firebase" style="display:flex; flex-direction:column;">
                                 <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement des tables... <i class="fa-solid fa-spinner fa-spin"></i></div>
@@ -684,21 +694,205 @@
         }
     };
 
+    /* --- 3. DOM & NAVIGATION --- */
     const sheet = document.getElementById('bottomSheet');
     const overlay = document.getElementById('overlay');
     const sheetContent = document.getElementById('sheetContent');
+    const sheetBody = document.getElementById('sheetBody');
     const mainWrapper = document.getElementById('mainWrapper');
 
     function openSheet(key) {
-        if(!pagesData[key]) return;
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
-        if(key === 'vote') setTimeout(() => { if(window.updateVoteUI) window.updateVoteUI(); }, 50);
+        
+        if(key === 'vote') {
+            setTimeout(() => { if(window.updateVoteUI) window.updateVoteUI(); }, 50);
+        }
+
+        if(gameStarted && gameState[key] && gameState[key].total > gameState[key].found) {
+            let containerId = `content-${key}`; let container = document.getElementById(containerId);
+            if(container) {
+                let remaining = gameState[key].total - gameState[key].found;
+                if(key === 'photos') {
+                    let tabs = container.querySelectorAll('.photo-tab');
+                    for(let i=0; i<remaining; i++) createEgg(tabs[i % tabs.length], key, false, true);
+                } else {
+                    container.style.position = 'relative';
+                    for(let i=0; i<remaining; i++) createEgg(container, key, false, false);
+                }
+            }
+        }
+        
         overlay.style.display = 'block'; mainWrapper.classList.add('blurred');
+        if (window.innerWidth <= 768) { sheet.style.transition = 'none'; sheet.style.transform = ''; void sheet.offsetWidth; sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)"; }
         setTimeout(() => { overlay.style.opacity = '1'; sheet.classList.add('open'); }, 10);
+        if (!history.state || history.state.type !== 'sheet') { history.pushState({ type: 'sheet' }, ''); }
     }
-    function hideSheetDOM() { sheet.classList.remove('open'); overlay.style.opacity = '0'; mainWrapper.classList.remove('blurred'); setTimeout(() => { overlay.style.display = 'none'; }, 250); }
-    function closeSheet() { hideSheetDOM(); }
+
+    function hideSheetDOM() { if (window.innerWidth <= 768) { sheet.style.transition = "transform 0.25s ease-in"; } sheet.style.transform = ''; sheet.classList.remove('open'); overlay.style.opacity = '0'; mainWrapper.classList.remove('blurred'); setTimeout(() => { overlay.style.display = 'none'; }, 250); }
+    function closeSheet() { if (!sheet.classList.contains('open')) return; if (history.state && history.state.type === 'sheet') { history.back(); } else { hideSheetDOM(); } }
     overlay.onclick = () => closeSheet();
+
+    let startY = 0; let isDragging = false;
+    sheet.addEventListener('touchstart', (e) => { if (window.innerWidth > 768) return; if (sheetBody.scrollTop <= 0) { startY = e.touches[0].clientY; isDragging = true; sheet.style.transition = 'none'; } }, { passive: true });
+    sheet.addEventListener('touchmove', (e) => { if (!isDragging || window.innerWidth > 768) return; let diff = e.touches[0].clientY - startY; if (diff > 0) { e.preventDefault(); sheet.style.transform = `translateY(calc(-100% + ${diff}px))`; } }, { passive: false });
+    sheet.addEventListener('touchend', (e) => { if (!isDragging || window.innerWidth > 768) return; isDragging = false; let diff = e.changedTouches[0].clientY - startY; sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; if (diff > 100) { closeSheet(); } else { sheet.style.transform = ''; } });
+
+    /* --- LIGHTBOX --- */
+    const lb = document.getElementById('lightbox'); const lbContainer = document.getElementById('lbContainer'); const lbImg = document.getElementById('lightboxImg'); const lbNavPrev = document.getElementById('lbNavPrev'); const lbNavNext = document.getElementById('lbNavNext');
+    let currentGallery = []; let currentPhotoIndex = 0;
+    let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
+    
+    function openLightbox(src, isSingleImage = false) { 
+        lbImg.src = src; lb.style.display = 'flex'; resetZoom(); setTimeout(() => lb.classList.add('active'), 10); 
+        const captionEl = document.getElementById('lightboxCaption');
+        if (isSingleImage) { 
+            currentGallery = [{src: src, title: ''}]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; captionEl.innerText = '';
+        } else { 
+            const activeTab = document.querySelector('.photo-tab-content.active');
+            const items = activeTab.querySelectorAll('.photo-grid-item img'); 
+            currentGallery = Array.from(items).map(img => ({ src: img.getAttribute('src'), title: img.getAttribute('alt') || '' })); 
+            currentPhotoIndex = currentGallery.findIndex(g => g.src === src); 
+            if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } 
+            captionEl.innerText = currentGallery[currentPhotoIndex].title;
+        } 
+        if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } 
+    }
+    
+    function hideLightboxDOM() { lb.classList.remove('active'); setTimeout(() => { lb.style.display='none'; resetZoom(); }, 300); }
+    function closeLightboxForce(fromHistory = false) { if (!lb.classList.contains('active')) return; if (history.state && history.state.type === 'lightbox') { history.back(); } else { hideLightboxDOM(); } }
+    lbContainer.addEventListener('click', (e) => { if(e.target !== lbImg && currentScale === 1 && !e.target.closest('.lightbox-nav')) closeLightboxForce(); });
+    function getDistance(touches) { return Math.hypot(touches[0].pageX - touches[1].pageX, touches[0].pageY - touches[1].pageY); }
+    function resetZoom() { currentScale = 1; posX = 0; posY = 0; lastPanX = 0; lastPanY = 0; currentSwipeX = 0; lbImg.style.transform = `scale(1) translate(0px, 0px)`; lbContainer.style.transform = `translateX(0px)`; }
+    lbContainer.addEventListener('touchstart', (e) => { if(e.target.closest('.lightbox-nav')) return; if (e.touches.length === 2) { isZooming = true; initialDistance = getDistance(e.touches); } else if (e.touches.length === 1) { lastPanX = e.touches[0].clientX; lastPanY = e.touches[0].clientY; swipeStartX = e.touches[0].clientX; currentSwipeX = 0; } }, {passive: false});
+    lbContainer.addEventListener('touchmove', (e) => { if (e.touches.length === 2) { e.preventDefault(); const currentDistance = getDistance(e.touches); const scaleChange = currentDistance / initialDistance; currentScale = Math.min(Math.max(1, currentScale * scaleChange), 4); lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; initialDistance = currentDistance; } else if (e.touches.length === 1) { let currentX = e.touches[0].clientX; let currentY = e.touches[0].clientY; if (currentScale > 1) { e.preventDefault(); posX += (currentX - lastPanX) / currentScale; posY += (currentY - lastPanY) / currentScale; lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; lastPanX = currentX; lastPanY = currentY; } else if (!isZooming && currentGallery.length > 1) { e.preventDefault(); currentSwipeX = currentX - swipeStartX; lbContainer.style.transform = `translateX(${currentSwipeX}px)`; } } }, {passive: false});
+    lbContainer.addEventListener('touchend', (e) => { if (e.touches.length < 2) { isZooming = false; } if (currentScale === 1 && currentGallery.length > 1) { if (currentSwipeX > 70) { changePhotoDir('prev'); } else if (currentSwipeX < -70) { changePhotoDir('next'); } else { lbContainer.style.transform = `translateX(0px)`; } currentSwipeX = 0; } });
+    
+    function changePhotoDir(dir) { 
+        if (currentGallery.length <= 1) return; 
+        if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } 
+        lbImg.style.opacity = 0; document.getElementById('lightboxCaption').style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; 
+        setTimeout(() => { 
+            let newObj = currentGallery[currentPhotoIndex]; lbImg.src = newObj.src; document.getElementById('lightboxCaption').innerText = newObj.title;
+            lbImg.style.opacity = 1; document.getElementById('lightboxCaption').style.opacity = 1;
+        }, 150); 
+    }
+
+    /* --- JEU DES DES --- */
+    let gameStarted = false; let eggCount = 0; const totalEggs = 10;
+    let timerInterval; let startTime; let finalGameData = { time: "", rankNumber: 0, rank: "", message: "", rawMs: 0 }; 
+    let confettiInterval; 
+    let gameState = { 'home': { total: 0, found: 0 }, 'histoire': { total: 0, found: 0 }, 'adhesion': { total: 0, found: 0 }, 'cal': { total: 0, found: 0 }, 'photos': { total: 0, found: 0 }, 'contact': { total: 0, found: 0 }, 'ludotheque': { total: 0, found: 0 } };
+
+    function askToPlay() {
+        if(gameStarted) return;
+        const modal = document.getElementById('modalContent');
+        modal.innerHTML = `
+            <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
+            <h3 id="gameTitle">Psst... Joueur ?</h3>
+            <div class="game-desc-box"><p>Comme on est joueurs, <b>10 petits dés</b> <i class="fa-solid fa-dice" style="color:var(--wood-brown); font-size:1.2rem; vertical-align:middle; margin: 0 4px;"></i> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?</p></div>
+            <button class="game-btn game-btn-green" onclick="initGame()"><i class="fa-solid fa-play"></i> C'est parti !</button>
+        `;
+        document.getElementById('gameModalBackdrop').classList.add('visible');
+        if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
+    }
+    
+    function initGame() {
+        closeGameModalForce(); hideSheetDOM();
+        if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) { history.replaceState({ type: 'main' }, ''); }
+        resetGameData(); gameStarted = true; startTimer();
+        
+        const btnVoter = document.getElementById('btn-voter-accueil');
+        if (btnVoter) btnVoter.style.display = 'none';
+
+        const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque'];
+        for(let i=0; i<9; i++) { let randomSec = sections[Math.floor(Math.random() * sections.length)]; gameState[randomSec].total++; }
+        gameState['home'].total = 1; renderHomeEgg(); showToast("Le chrono est lancé ! ⏱️");
+    }
+    
+    function resetGameData() {
+        gameStarted = false; eggCount = 0; clearInterval(timerInterval);
+        document.getElementById('gameTimer').classList.remove('visible'); document.getElementById('gameTimer').innerText = "00:00:00"; document.getElementById('gameTimer').style.color = '#f1c40f'; 
+        for(let key in gameState) { gameState[key].total = 0; gameState[key].found = 0; }
+        document.querySelectorAll('.egg').forEach(el => el.remove());
+
+        const btnVoter = document.getElementById('btn-voter-accueil');
+        if (btnVoter) btnVoter.style.display = 'flex';
+    }
+    
+    function startTimer() {
+        startTime = Date.now(); document.getElementById('gameTimer').classList.add('visible');
+        timerInterval = setInterval(() => {
+            let delta = Date.now() - startTime; let minutes = Math.floor(delta / 60000); let seconds = Math.floor((delta % 60000) / 1000); let centiseconds = Math.floor((delta % 1000) / 10);
+            document.getElementById('gameTimer').innerText = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds) + ":" + (centiseconds < 10 ? "0" + centiseconds : centiseconds);
+        }, 10);
+    }
+    
+    function foundEgg(el, sectionKey) {
+        if(el.classList.contains('found')) return; if(eggCount >= 10) return;
+        gameState[sectionKey].found++; eggCount++; el.style.pointerEvents = 'none'; el.classList.add('found'); 
+        
+        setTimeout(() => el.remove(), 800); 
+
+        let msg = `Bravo ! ${eggCount}/${totalEggs}`;
+        if(eggCount === totalEggs) { clearInterval(timerInterval); let rawMs = Date.now() - startTime; finishGame(rawMs); } 
+        else if(eggCount > 5) { msg = `Tu chauffes ! ${eggCount}/${totalEggs}`; showToast(msg); } else { showToast(msg); }
+        if(navigator.vibrate) navigator.vibrate(50);
+    }
+    
+    function finishGame(rawMs) {
+        let finalTime = document.getElementById('gameTimer').innerText; document.getElementById('gameTimer').style.color = '#2ecc71'; gameStarted = false;
+        let seconds = rawMs / 1000; let rank = ""; let message = ""; let rankNum = 0;
+        if (seconds < 5) { rankNum=1; rank = "DIEU DU DÉ ⚡"; message = "Inhumain ! T'as triché ?"; } else if (seconds < 10) { rankNum=2; rank = "GRAND MAÎTRE JEDI ⚔️"; message = "La Force est puissante en toi."; } else if (seconds < 15) { rankNum=3; rank = "CHUCK NORRIS 👊"; message = "Chuck Norris ne cherche pas les dés, ils se dénoncent."; } else if (seconds < 20) { rankNum=4; rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre."; } else if (seconds < 25) { rankNum=5; rank = "ŒIL DE LYNX 😼"; message = "Une vision perçante."; } else if (seconds < 35) { rankNum=6; rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Enquête méthodique."; } else if (seconds < 45) { rankNum=7; rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; } else if (seconds < 60) { rankNum=8; rank = "LE DIESEL 🚜"; message = "Lent au démarrage, mais tu es arrivé !"; } else { rankNum=9; rank = "L'ESCARGOT 🐌"; message = "L'important c'est de participer... non ?"; }
+        finalGameData.time = finalTime; finalGameData.rank = rank; finalGameData.rankNumber = rankNum; finalGameData.message = message; finalGameData.rawMs = rawMs;
+        
+        const btnVoter = document.getElementById('btn-voter-accueil');
+        if (btnVoter) btnVoter.style.display = 'flex';
+
+        setTimeout(() => {
+            const modal = document.getElementById('modalContent');
+            modal.innerHTML = `
+                <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
+                <div class="victory-icon"><i class="fa-solid fa-medal"></i></div>
+                <h3 class="victory-title">Félicitations !</h3>
+                <div class="victory-stats"><div style="font-size:1.1rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div><div style="font-size:1.3rem; color:#2c3e50; margin: 2px 0;">${rank}</div><div style="font-size:2rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div><div class="victory-message">"${message}"</div></div>
+                <div id="shareContainer" class="share-container"><input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15"><button class="game-btn wa-btn" style="width:100%;" onclick="shareWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Partager mon score</button></div>
+                <button class="game-btn game-btn-green" onclick="initGame()"><i class="fa-solid fa-rotate-right"></i> Rejouer</button>
+            `;
+            document.getElementById('gameModalBackdrop').classList.add('visible'); 
+            if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
+            startConfetti();
+        }, 1000);
+    }
+    
+    function generateChecksum(ms) { return Math.floor((ms * 17) + 2026).toString(36).toUpperCase(); }
+    function shareWhatsapp() {
+        let pseudo = document.getElementById('playerPseudo').value.trim() || "Un Pote"; let check = generateChecksum(finalGameData.rawMs); let siteUrl = "https://despotesajeux.github.io/";
+        let text = `🎲 *DÉFI DES POTES À JEUX* 🎲%0A%0A🕵️ J'ai trouvé les 10 dés cachés !%0A%0A👤 *Joueur :* ${pseudo}%0A⏱️ *Temps :* ${finalGameData.time}%0A🏅 *Rang N°${finalGameData.rankNumber} :* ${finalGameData.rank}%0A📝 _"${finalGameData.message}"_%0A%0ATu penses faire mieux ? Tente ta chance ici :%0A👉 ${siteUrl}%0A%0A🔐 _Verif : ${check}_`;
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+    
+    function showToast(msg) { const toast = document.getElementById('gameToast'); toast.innerText = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
+    function renderHomeEgg() { let container = document.getElementById('homeEggContainer'); container.innerHTML = ''; if(gameState['home'].total > gameState['home'].found) { createEgg(container, 'home', false); } }
+    function createEgg(container, sectionKey, isFound, isTab = false) {
+        let egg = document.createElement('i'); egg.className = 'fa-solid fa-dice egg'; if (isFound) return; 
+        egg.onclick = function(event) { foundEgg(this, sectionKey); event.stopPropagation(); }; egg.style.pointerEvents = 'auto';
+        if(!isTab) { egg.style.top = (Math.random() * 80 + 10) + '%'; egg.style.left = (Math.random() * 80 + 10) + '%'; } else { egg.style.position = 'absolute'; egg.style.top = '-8px'; egg.style.right = '5px'; egg.style.margin = '0'; egg.style.fontSize = '1.2rem'; egg.style.filter = 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))'; }
+        container.appendChild(egg);
+    }
+    function startConfetti() {
+        const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6'];
+        for(let i=0; i<30; i++) { setTimeout(() => { const confetti = document.createElement('div'); confetti.classList.add('confetti'); confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`; document.body.appendChild(confetti); setTimeout(() => confetti.remove(), 5000); }, i * 50); }
+        if(!document.getElementById('confetti-style')) { const style = document.createElement('style'); style.id = 'confetti-style'; style.innerHTML = `@keyframes fall { 0% { top: -10px; opacity: 1; transform: rotate(0deg); } 100% { top: 100vh; opacity: 0; transform: rotate(720deg); } }`; document.head.appendChild(style); }
+    }
+
+    /* --- GESTION DES COOKIES & ANALYTICS --- */
+    function loadGoogleAnalytics() {
+        const script = document.createElement('script'); script.async = true; script.src = "https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY"; document.head.appendChild(script);
+        window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-YPHH9PELKY');
+    }
+    function checkCookies() { const consent = localStorage.getItem('potes_cookie_consent'); if (consent === 'accepted') { loadGoogleAnalytics(); } else if (!consent) { setTimeout(() => { document.getElementById('cookiePopup').classList.add('show'); }, 1000); } }
+    function handleCookies(choice) { localStorage.setItem('potes_cookie_consent', choice); document.getElementById('cookiePopup').classList.remove('show'); if (choice === 'accepted') { loadGoogleAnalytics(); } }
+    checkCookies();
 
     // ==========================================
     // LOGIQUE SANS SWIPE DES ONGLETS VOTE
@@ -706,13 +900,18 @@
     window.switchVoteTab = function(tabId, element) {
         document.querySelectorAll('.vote-tab').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.vote-tab-content').forEach(content => content.classList.remove('active'));
-        if(element) { element.classList.add('active'); } 
-        else { const btn = document.querySelector(`.vote-tab[onclick*="${tabId}"]`); if(btn) btn.classList.add('active'); }
+        
+        if(element) {
+            element.classList.add('active');
+        } else {
+            const btn = document.querySelector(`.vote-tab[onclick*="${tabId}"]`);
+            if(btn) btn.classList.add('active');
+        }
+        
         const activeContent = document.getElementById('tab-' + tabId);
         if(activeContent) activeContent.classList.add('active');
     };
 
-    function askToPlay() { window.showCustomAlert("Surprise !", "Le mini-jeu des dés arrive bientôt...", "fa-dice"); }
 </script>
 
 <script type="module">
@@ -746,26 +945,18 @@
         else { input.type = "password"; icon.classList.replace("fa-eye-slash", "fa-eye"); }
     };
 
-    // ==========================================
-    // UI ET GESTION DES PROFILS
-    // ==========================================
+    // --- AUTHENTIFICATION ---
     window.updateVoteUI = async function() {
         const viewAuth = document.getElementById('view-auth'), viewVotes = document.getElementById('view-votes'), userGreeting = document.getElementById('user-greeting');
         if(!viewAuth || !viewVotes) return;
         if(auth.currentUser) {
             viewAuth.style.display = 'none'; viewVotes.style.display = 'block';
             await window.loadProfile();
-            
-            const rsvpTitle = document.getElementById('rsvp-date-title');
-            if(rsvpTitle) rsvpTitle.innerText = "Présence du " + window.getFormattedEventDate();
-
             let displayName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
             userGreeting.innerHTML = `<div style="font-size:3.5rem; margin-bottom:5px; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> Salut ${displayName} !`;
-            
             window.initFirebaseRSVP();
             window.initFirebaseVotes();
             window.chargerListeCollection(); 
-            window.initFirebaseSacs();
         } else {
             viewAuth.style.display = 'block'; viewVotes.style.display = 'none';
             window.renderAuthUI();
@@ -807,7 +998,7 @@
             const res = await createUserWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pwd').value);
             await updateProfile(res.user, { displayName: name });
             await setDoc(doc(db, "utilisateurs", res.user.uid), { avatar: '🎲', titre: 'Novice', nom: name });
-            window.showCustomAlert("Succès", "Compte créé !");
+            window.showCustomAlert("Succès", "Compte créé ! Vérifie tes spams.", "fa-champagne-glasses");
         } catch (e) { window.showCustomAlert("Erreur", e.message, "fa-bug"); }
     };
     window.logoutFirebase = () => signOut(auth);
@@ -819,22 +1010,29 @@
 
     window.loadProfile = async function() {
         const d = await getDoc(doc(db, "utilisateurs", auth.currentUser.uid));
-        if(d.exists()) { localProfile = d.data(); } 
-        else { localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout' }; await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile); }
+        if(d.exists()) {
+            localProfile = d.data();
+        } else {
+            localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout' };
+            await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile);
+        }
     };
 
     window.openProfileModal = function() {
         document.getElementById('modalContent').innerHTML = `
             <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
             <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; font-size:1.8rem; margin:0 0 15px;">Mon Profil</h3>
+            
             <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px; margin-bottom:10px; text-align:left;">
                 <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Avatar (Emoji)</label><input type="text" id="prof-avatar" class="share-input" value="${localProfile.avatar || '🎲'}" maxlength="2" style="font-size:1.2rem;"></div>
                 <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Titre (Fun)</label><input type="text" id="prof-titre" class="share-input" value="${localProfile.titre || 'Membre'}" placeholder="Le Stratège"></div>
             </div>
+
             <div style="text-align:left; margin-bottom:10px;">
                 <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon jeu préféré :</label>
                 <input type="text" id="prof-jeu" class="share-input" value="${localProfile.jeuFavori || ''}" placeholder="Ex: Terraforming Mars">
             </div>
+
             <div style="text-align:left; margin-bottom:15px;">
                 <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon style :</label>
                 <select id="prof-style" class="share-input">
@@ -845,6 +1043,7 @@
                     <option value="Coopératif" ${localProfile.styleJoueur==='Coopératif'?'selected':''}>Coopératif</option>
                 </select>
             </div>
+
             <button class="game-btn game-btn-green" style="width:100%; justify-content:center;" onclick="saveProfile()"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button>
         `;
         document.getElementById('gameModalBackdrop').classList.add('visible');
@@ -882,9 +1081,7 @@
         document.getElementById('gameModalBackdrop').classList.add('visible');
     };
 
-    // ==========================================
-    // SYSTEME DE PRÉSENCE (RSVP)
-    // ==========================================
+    // --- RSVP ---
     window.setRSVP = async function(status) {
         if(!auth.currentUser) return;
         const dateStr = window.getNextEventDateStr();
@@ -942,98 +1139,7 @@
         });
     };
 
-    // ==========================================
-    // ONGLET LA RESERVE (SACS)
-    // ==========================================
-    window.searchBagLudo = function(q) {
-        const resDiv = document.getElementById('ludo-bag-results');
-        if(!q || q.length < 2) { resDiv.innerHTML = ''; return; }
-        
-        const query = q.toLowerCase();
-        const filtered = window.tousLesJeux.filter(j => j.titre.toLowerCase().includes(query)).slice(0, 10);
-        
-        if(filtered.length === 0) {
-            resDiv.innerHTML = '<div style="font-size:0.75rem; color:gray; text-align:center;">Jeu introuvable dans l\'asso.</div>';
-            return;
-        }
-
-        let html = '';
-        let myName = (auth.currentUser.displayName || auth.currentUser.email.split('@')[0]).toLowerCase();
-
-        filtered.forEach(j => {
-            const isMe = j.proprio.toLowerCase() === myName;
-            const btn = isMe 
-                ? `<button class="btn-small game-btn-green" style="margin:0;" onclick="window.actionSac('${j.titre.replace(/'/g, "\\'")}', '${j.proprio.replace(/'/g, "\\'")}', 'apporter')">J'amène</button>`
-                : `<button class="btn-small" style="margin:0; background:var(--wood-brown);" onclick="window.actionSac('${j.titre.replace(/'/g, "\\'")}', '${j.proprio.replace(/'/g, "\\'")}', 'demander')">Demander</button>`;
-            
-            html += `<div style="display:flex; justify-content:space-between; align-items:center; background:#f9f9f9; padding:6px 10px; border-radius:8px; border:1px solid #eee; margin-bottom:5px;">
-                <div style="flex:1; min-width:0; padding-right:10px;">
-                    <div style="font-size:0.8rem; font-weight:bold; color:var(--green-deep); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${j.titre}</div>
-                    <div style="font-size:0.6rem; color:gray; display:block;">Boîte de ${j.proprio}</div>
-                </div>
-                ${btn}
-            </div>`;
-        });
-        resDiv.innerHTML = html;
-    };
-
-    window.actionSac = async function(titre, proprio, action) {
-        let demandeur = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
-        let statut = action === 'apporter' ? 'confirmé' : 'demandé';
-        
-        await addDoc(collection(db, "sacs_jeux"), {
-            titre: titre, proprio: proprio, demandeur: demandeur, statut: statut, date_event: window.getNextEventDateStr(), timestamp: new Date()
-        });
-        
-        document.getElementById('ludo-bag-search').value = "";
-        document.getElementById('ludo-bag-results').innerHTML = "";
-        window.showCustomAlert("Fait !", action === 'apporter' ? "Jeu ajouté à ton sac." : `Demande envoyée pour ${titre}.`, "fa-box-open");
-    };
-
-    window.supprimerSac = async function(id) {
-        if(confirm("Retirer ce jeu de la liste des sacs ?")) {
-            await deleteDoc(doc(db, "sacs_jeux", id));
-        }
-    };
-
-    window.initFirebaseSacs = function() {
-        if(window.unsubscribeSacs) window.unsubscribeSacs();
-        window.unsubscribeSacs = onSnapshot(collection(db, "sacs_jeux"), (snap) => {
-            const div = document.getElementById('liste-sacs-firebase'); if(!div) return;
-            
-            let sacs = []; 
-            const dateCible = window.getNextEventDateStr();
-            snap.forEach(d => { if(d.data().date_event === dateCible) sacs.push({id: d.id, ...d.data()}) });
-            
-            sacs.sort((a, b) => b.timestamp - a.timestamp);
-
-            if(sacs.length === 0) { 
-                div.innerHTML = '<div style="text-align:center; font-size:0.8rem; color:gray;">Aucun jeu n\'est prévu dans les sacs pour l\'instant.</div>'; 
-                return; 
-            }
-            
-            div.innerHTML = sacs.map(s => {
-                let icon = s.statut === "confirmé" ? "📦" : "🙏";
-                let text = s.statut === "confirmé" ? `<b>${s.proprio}</b> amène ce jeu.` : `Demandé à <b>${s.proprio}</b> par ${s.demandeur}`;
-                
-                let myName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
-                let canDelete = (s.demandeur.toLowerCase() === myName.toLowerCase() || s.proprio.toLowerCase() === myName.toLowerCase());
-                let delBtn = canDelete ? `<span onclick="window.supprimerSac('${s.id}')" style="color:var(--text-brown); opacity:0.5; padding:5px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></span>` : '';
-
-                return `<div style="background:#fff; padding:10px 15px; border-radius:12px; border:1px solid rgba(0,0,0,0.05); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
-                    <div style="flex:1; min-width:0; padding-right:10px;">
-                        <div style="font-weight:bold; color:var(--green-deep); font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${icon} ${s.titre}</div>
-                        <div style="font-size:0.65rem; color:gray; margin-top:2px;">${text}</div>
-                    </div>
-                    ${delBtn}
-                </div>`;
-            }).join('');
-        });
-    };
-
-    // ==========================================
-    // GESTION DES TABLES DE JEUX AVEC RECHERCHE
-    // ==========================================
+    // --- CREATION DE TABLE ---
     window.chargerListeCollection = async function() {
         const datalist = document.getElementById('jeux-datalist');
         if(!datalist) return;
@@ -1055,56 +1161,6 @@
         datalist.innerHTML = options;
     };
 
-    window.openManualCreateModal = function(titrePrefill = "") {
-        document.getElementById('modalContent').innerHTML = `
-            <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
-            <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; margin-bottom: 15px;">Table Manuelle</h3>
-            <input type="text" id="man-nom" class="share-input" placeholder="Nom du jeu *" value="${titrePrefill}" required style="text-align:left;">
-            
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
-                <input type="number" id="man-min" class="share-input" placeholder="Min j. (ex: 2)" min="1">
-                <input type="number" id="man-max" class="share-input" placeholder="Max j. (ex: 4)" min="1">
-            </div>
-            
-            <div style="display:grid; grid-template-columns:1fr 1.5fr; gap:10px; margin-bottom:10px;">
-                <input type="number" id="man-duree" class="share-input" placeholder="Durée (min)">
-                <select id="man-style" class="share-input" style="font-size:0.8rem;">
-                    <option value="Ambiance">Ambiance</option>
-                    <option value="Stratégie">Stratégie</option>
-                    <option value="Coopératif">Coopératif</option>
-                    <option value="Autre">Autre</option>
-                </select>
-            </div>
-            
-            <input type="text" id="man-lien" class="share-input" placeholder="Lien MyLudo (Optionnel)" style="text-align:left;">
-            <button class="game-btn game-btn-green" style="width:100%; justify-content:center;" onclick="window.proposerJeuManuel()"><i class="fa-solid fa-check"></i> Créer la table</button>
-        `;
-        document.getElementById('gameModalBackdrop').classList.add('visible');
-    };
-
-    window.proposerJeuManuel = async function() {
-        const titre = document.getElementById('man-nom').value.trim();
-        if(!titre) return window.showCustomAlert("Attention", "Le nom du jeu est obligatoire.");
-        let minJ = parseInt(document.getElementById('man-min').value) || 2;
-        let maxJ = parseInt(document.getElementById('man-max').value) || 4;
-        if(maxJ < minJ) maxJ = minJ;
-        
-        let dureeJeu = document.getElementById('man-duree').value.trim() || "?";
-        let styleJeu = document.getElementById('man-style').value;
-        let lienMyludo = document.getElementById('man-lien').value.trim();
-        
-        const moi = { uid: auth.currentUser.uid, nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar, type: 'main', flex: false, id: Date.now() };
-
-        try {
-            await addDoc(collection(db, "jeux_proposes"), {
-                nom: titre, proposePar: moi.nom, createurUid: auth.currentUser.uid, appartientA: moi.nom, myludoLien: lienMyludo,
-                minJoueurs: minJ, maxJoueurs: maxJ, duree: dureeJeu, style: styleJeu, inscrits: [moi], date_ajout: new Date()
-            });
-            window.showCustomAlert("Table Ouverte !", "Les autres joueurs peuvent maintenant te rejoindre.", "fa-champagne-glasses");
-            closeGameModalForce();
-        } catch(e) { console.error(e); }
-    };
-
     window.proposerJeu = async function() {
         const input = document.getElementById('input-jeu-search');
         const titre = input.value.trim();
@@ -1113,21 +1169,35 @@
 
         const jeuTrouve = window.tousLesJeux.find(j => j.titre.toLowerCase() === titre.toLowerCase());
 
-        if (!jeuTrouve) {
-            window.openManualCreateModal(titre);
-            return;
+        let minJ = 2, maxJ = 4, proprioDuJeu = "Moi", lienMyludo = "", dureeJeu = "?", styleJeu = "Classique";
+
+        if (jeuTrouve) {
+            proprioDuJeu = jeuTrouve.proprio;
+            lienMyludo = jeuTrouve.lien || "";
+            
+            dureeJeu = jeuTrouve.duree || "?";
+            if (jeuTrouve.style) styleJeu = jeuTrouve.style;
+            else if (jeuTrouve.categories && jeuTrouve.categories.length > 0) styleJeu = jeuTrouve.categories[0];
+            else if (jeuTrouve.type) styleJeu = jeuTrouve.type;
+
+            const joueursStr = jeuTrouve.joueurs || "2-4";
+            const parts = joueursStr.match(/\d+/g);
+            if (parts && parts.length > 0) minJ = parseInt(parts[0]);
+            if (parts && parts.length > 1) maxJ = parseInt(parts[1]);
+            else maxJ = minJ;
+        } else {
+            proprioDuJeu = auth.currentUser.displayName || "Moi";
+            let maxStr = prompt(`Le jeu "${titre}" n'a pas été trouvé dans la ludothèque de l'asso.\nCombien de joueurs MAXIMUM peuvent jouer à ce jeu ?`, "4");
+            if (maxStr === null) return; 
+            maxJ = parseInt(maxStr) || 4;
+            minJ = 2; 
+
+            let dureeStr = prompt(`Quelle est la durée moyenne de la partie (en minutes) ?`, "60");
+            if (dureeStr !== null) dureeJeu = dureeStr;
+
+            let styleStr = prompt(`Quel est le style de ce jeu (ex: Coopératif, Ambiance, Gestion...) ?`, "Jeu de plateau");
+            if (styleStr !== null) styleJeu = styleStr;
         }
-
-        let proprioDuJeu = jeuTrouve.proprio;
-        let lienMyludo = jeuTrouve.lien || "";
-        let dureeJeu = jeuTrouve.duree || "?";
-        let styleJeu = jeuTrouve.style || (jeuTrouve.categories && jeuTrouve.categories.length > 0 ? jeuTrouve.categories[0] : "Jeu de plateau");
-
-        let minJ = 2, maxJ = 4;
-        const parts = (jeuTrouve.joueurs || "2-4").match(/\d+/g);
-        if (parts && parts.length > 0) minJ = parseInt(parts[0]);
-        if (parts && parts.length > 1) maxJ = parseInt(parts[1]);
-        else maxJ = minJ;
 
         const moi = { 
             uid: auth.currentUser.uid, 
