@@ -6,7 +6,7 @@
 		script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com https://apis.google.com;
 		style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
 		font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
-		img-src 'self' data: https://www.google.com https://*.google.com https://*.gstatic.com http://googleusercontent.com https://www.googletagmanager.com https://via.placeholder.com https://lh3.googleusercontent.com;
+		img-src 'self' data: https://www.google.com https://*.google.com https://*.gstatic.com http://googleusercontent.com https://www.googletagmanager.com https://via.placeholder.com https://lh3.googleusercontent.com https://www.myludo.fr;
 		connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://api.open-meteo.com https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com;
 		object-src 'none';
 		base-uri 'self';
@@ -133,6 +133,7 @@
         .share-input { width: 100%; padding: 8px; border-radius: 12px; border: 2px solid var(--wood-brown); background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown); box-sizing: border-box; text-align: center; font-size: 1rem; }
         .wa-btn { background: #25D366; color: white; margin-top: 5px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); } 
         .confetti { position: fixed; width: 10px; height: 10px; background-color: #f00; z-index: 400; top: -10px; pointer-events: none; opacity: 0; }
+        .myludo-link { color: var(--green-deep); text-decoration: none; border-bottom: 1px dashed var(--wood-brown); font-weight: 800; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -541,11 +542,15 @@
                         <span id="user-greeting">Connecté</span> 
                         <button onclick="logoutFirebase()" style="padding:4px 10px; font-size:0.7rem; font-weight:bold; border-radius:50px; border:1px solid var(--wood-brown); color:var(--wood-brown); background:transparent; cursor:pointer;">Quitter</button>
                     </div>
-                    <p style="text-align: center; margin-top: 0; font-size: 0.9rem;">Proposez un jeu ou votez pour ceux déjà proposés pour la prochaine soirée !</p>
-                    <div style="display:flex; gap:10px; margin-bottom: 20px;">
-                        <input type="text" id="nomNouveauJeu" placeholder="Nom du jeu..." class="share-input" style="flex-grow:1; text-align:left;">
-                        <button class="game-btn" style="margin-top:0;" onclick="ajouterJeuFirebase()"><i class="fa-solid fa-plus"></i></button>
+                    <p style="text-align: center; margin-top: 0; font-size: 0.9rem;">Proposez un jeu de la ludothèque ou votez !</p>
+                    
+                    <div style="display:flex; flex-direction:column; gap:10px; margin-bottom: 20px;">
+                        <select id="select-jeu-collection" class="share-input" style="width:100%; margin-bottom:0;">
+                            <option value="">-- Chargement de la collection... --</option>
+                        </select>
+                        <button class="game-btn" style="margin-top:0; width:100%; justify-content:center;" onclick="proposerJeuSelectionne()"><i class="fa-solid fa-plus"></i> Proposer ce jeu</button>
                     </div>
+
                     <div id="liste-votes-firebase" style="display:flex; flex-direction:column; gap:10px;">
                         <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement des jeux... <i class="fa-solid fa-spinner fa-spin"></i></div>
                     </div>
@@ -809,7 +814,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, arrayUnion, arrayRemove, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const CODE_ASSO = "POTES56";
@@ -829,6 +834,7 @@
 
     window.db = db;
     window.auth = auth;
+    let unsubscribeVotes = null;
 
     // --- FIX : Traitement automatique au retour de Google ---
     getRedirectResult(auth).then((result) => {
@@ -857,12 +863,17 @@
         const viewVotes = document.getElementById('view-votes');
         const userGreeting = document.getElementById('user-greeting');
         if(!viewAuth || !viewVotes) return;
+        
         if(auth.currentUser) {
-            viewAuth.style.display = 'none'; viewVotes.style.display = 'block';
-            userGreeting.innerHTML = `Connecté(e) : <b>${auth.currentUser.displayName || auth.currentUser.email}</b>`;
+            viewAuth.style.display = 'none'; 
+            viewVotes.style.display = 'block';
+            let displayName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
+            userGreeting.innerHTML = `Connecté(e) : <b>${displayName}</b>`;
             window.initFirebaseVotes();
+            window.chargerListeCollection(); // Charge la liste MyLudo
         } else {
-            viewAuth.style.display = 'block'; viewVotes.style.display = 'none';
+            viewAuth.style.display = 'block'; 
+            viewVotes.style.display = 'none';
             window.renderAuthUI();
         }
     };
@@ -878,18 +889,18 @@
                 <input type="email" id="auth-email" class="share-input" placeholder="Email">
                 <div style="position:relative;"><input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe"><i class="fa-solid fa-eye" id="t-pwd" onclick="toggleVisibility('auth-pwd','t-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
                 <div style="position:relative;"><input type="password" id="auth-pwd-confirm" class="share-input" placeholder="Confirmer"><i class="fa-solid fa-eye" id="t-pwd-c" onclick="toggleVisibility('auth-pwd-confirm','t-pwd-c')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
-                <button class="game-btn" onclick="registerEmail()">S'inscrire</button>
+                <button class="game-btn" onclick="registerEmail()" style="width:100%; justify-content:center;">S'inscrire</button>
                 <div style="text-align:center; margin: 5px 0; color:gray; font-size:0.8rem;">— ou —</div>
-                <button class="game-btn" style="background:#4285F4;" onclick="registerGoogle()"><i class="fa-brands fa-google"></i> S'inscrire via Google</button>
+                <button class="game-btn" style="background:#4285F4; width:100%; justify-content:center;" onclick="registerGoogle()"><i class="fa-brands fa-google"></i> S'inscrire via Google</button>
                 <span onclick="window.authMode='login'; renderAuthUI()" style="font-size:0.75rem; text-align:center; display:block; margin-top:10px; cursor:pointer; text-decoration:underline;">Déjà inscrit ? Connexion</span>
             </div>`;
         } else {
             html = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
                 <input type="email" id="auth-email" class="share-input" placeholder="Email">
                 <div style="position:relative;"><input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe"><i class="fa-solid fa-eye" id="t-pwd" onclick="toggleVisibility('auth-pwd','t-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
-                <button class="game-btn" onclick="loginEmail()">Connexion</button>
+                <button class="game-btn" onclick="loginEmail()" style="width:100%; justify-content:center;">Connexion</button>
                 <div style="text-align:center; margin: 5px 0; color:gray; font-size:0.8rem;">— ou —</div>
-                <button class="game-btn" style="background:#4285F4;" onclick="loginGoogle()"><i class="fa-brands fa-google"></i> Continuer avec Google</button>
+                <button class="game-btn" style="background:#4285F4; width:100%; justify-content:center;" onclick="loginGoogle()"><i class="fa-brands fa-google"></i> Continuer avec Google</button>
                 <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:10px;">
                     <span onclick="window.authMode='register'; renderAuthUI()" style="cursor:pointer; text-decoration:underline;">Créer un compte</span>
                     <span onclick="resetPwd()" style="cursor:pointer; text-decoration:underline;">Oublié ?</span>
@@ -927,38 +938,111 @@
         try { await sendPasswordResetEmail(auth, mail); window.showCustomAlert("Envoyé", "Vérifie tes spams.", "fa-paper-plane"); } catch(e) { window.showCustomAlert("Erreur", "Email inconnu", "fa-question"); }
     };
 
+    // --- GESTION DE LA COLLECTION MULTI-PROPRIOS ---
+    window.chargerListeCollection = async function() {
+        const select = document.getElementById('select-jeu-collection');
+        if(!select) return;
+
+        const proprietaires = ['sebastien', 'julie', 'ronan', 'carine', 'stephane', 'sylvain'];
+        let tousLesJeux = [];
+
+        // Parcourt les collections existantes
+        for (const p of proprietaires) {
+            try {
+                const snap = await getDocs(collection(db, `collection_${p}`));
+                snap.forEach(d => {
+                    tousLesJeux.push({ ...d.data(), proprio: p });
+                });
+            } catch(e) {
+                // Ignore si la collection n'existe pas encore
+            }
+        }
+
+        tousLesJeux.sort((a, b) => a.titre.localeCompare(b.titre));
+
+        let options = '<option value="">-- Sélectionner un jeu --</option>';
+        tousLesJeux.forEach(j => {
+            options += `<option value="${j.titre}" data-proprio="${j.proprio}" data-lien="${j.lien || ''}">${j.titre} (${j.proprio})</option>`;
+        });
+        
+        select.innerHTML = options;
+    };
+
+    window.proposerJeuSelectionne = async function() {
+        const select = document.getElementById('select-jeu-collection');
+        const selectedOption = select.options[select.selectedIndex];
+        const titre = select.value;
+        const proprioDuJeu = selectedOption.getAttribute('data-proprio');
+        const lienMyludo = selectedOption.getAttribute('data-lien');
+        
+        if(!titre) return window.showCustomAlert("Attention", "Choisis un jeu de la liste !", "fa-hand-pointer");
+
+        try {
+            await addDoc(collection(db, "jeux_proposes"), {
+                nom: titre,
+                votants: [auth.currentUser.uid],
+                proposePar: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
+                appartientA: proprioDuJeu,
+                myludoLien: lienMyludo,
+                date_ajout: new Date()
+            });
+            window.showCustomAlert("Succès", `Le jeu de ${proprioDuJeu} est ajouté aux votes !`, "fa-check");
+            select.selectedIndex = 0; // Remet à zéro
+        } catch(e) { 
+            console.error(e); 
+            window.showCustomAlert("Erreur", "Impossible de rajouter ce jeu.", "fa-bug");
+        }
+    };
+
     onAuthStateChanged(auth, (user) => { window.updateVoteUI(); });
 
     window.initFirebaseVotes = function() {
         if(!window.db) return;
         if(unsubscribeVotes) unsubscribeVotes(); 
+        
         unsubscribeVotes = onSnapshot(collection(db, "jeux_proposes"), (snap) => {
             const div = document.getElementById('liste-votes-firebase');
             if(!div) return;
+            
             let jeux = [];
             snap.forEach(d => jeux.push({ id: d.id, ...d.data() }));
             jeux.sort((a, b) => (b.votants || []).length - (a.votants || []).length);
+            
+            if(jeux.length === 0) {
+                div.innerHTML = '<div style="text-align:center; font-size:0.8rem; color:gray; padding: 20px;">Aucun jeu proposé pour le moment.</div>';
+                return;
+            }
+
             div.innerHTML = jeux.map(j => {
                 const votants = j.votants || [];
                 const vted = auth.currentUser && votants.includes(auth.currentUser.uid);
-                return `<div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:10px; border-radius:12px; border:1px solid #dbb38a; margin-bottom:8px;">
-                    <div><div style="font-weight:700; color:#3a6351;">${j.nom}</div><span style="font-size:0.6rem; color:gray;">Par ${j.proposePar}</span></div>
-                    <button class="call-btn ${vted ? 'fb-btn' : 'ludo-btn'}" onclick="voterPourJeu('${j.id}', ${vted})" style="width:auto; padding:0 12px;">${vted ? '✅' : '👍'} ${votants.length}</button>
-                </div>`;
-            }).join('') || '<div style="text-align:center; font-size:0.8rem; color:gray;">Aucun jeu proposé.</div>';
-        });
-    };
+                
+                // Titre cliquable si le lien est présent
+                const titreHTML = j.myludoLien 
+                    ? `<a href="${j.myludoLien}" target="_blank" style="color:var(--green-deep); text-decoration:none; border-bottom:1px dashed var(--wood-brown);">${j.nom}</a>`
+                    : j.nom;
 
-    window.ajouterJeuFirebase = async () => {
-        const nom = document.getElementById('nomNouveauJeu').value.trim();
-        if(!nom) return;
-        try { await addDoc(collection(db, "jeux_proposes"), { nom: nom, votants: [auth.currentUser.uid], proposePar: auth.currentUser.displayName || "Un pote", date: new Date() }); document.getElementById('nomNouveauJeu').value=''; } catch(e) { console.log(e); }
+                const appartientHTML = j.appartientA ? `<span style="font-size:0.6rem; color:gray; display:block; margin-top:2px;">Proposé par ${j.proposePar} (Jeu de <b>${j.appartientA}</b>)</span>` : `<span style="font-size:0.6rem; color:gray; display:block; margin-top:2px;">Proposé par ${j.proposePar}</span>`;
+
+                return `<div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:10px 15px; border-radius:12px; border:1px solid var(--wood-highlight); margin-bottom:8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+                    <div>
+                        <div style="font-weight:700; color:var(--green-deep); font-size: 0.95rem;">${titreHTML}</div>
+                        ${appartientHTML}
+                    </div>
+                    <button class="call-btn ${vted ? 'fb-btn' : 'ludo-btn'}" onclick="voterPourJeu('${j.id}', ${vted})" style="width:auto; padding:0 15px; cursor:pointer;">
+                        ${vted ? '✅' : '👍'} ${votants.length}
+                    </button>
+                </div>`;
+            }).join('');
+        });
     };
 
     window.voterPourJeu = async (id, vted) => {
         if(!auth.currentUser) return;
         const ref = doc(db, "jeux_proposes", id);
-        await updateDoc(ref, { votants: vted ? arrayRemove(auth.currentUser.uid) : arrayUnion(auth.currentUser.uid) });
+        try {
+            await updateDoc(ref, { votants: vted ? arrayRemove(auth.currentUser.uid) : arrayUnion(auth.currentUser.uid) });
+        } catch(e) { console.error(e); }
     };
 </script>
 </body>
