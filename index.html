@@ -34,18 +34,33 @@
             --fb-blue: #1877F2;
             --wa-green: #25D366; 
             --myludo-color: #2c3e50; 
-            --gold-game: #f39c12;
+            --gold-game: #f39c12; /* Modifié pour les sièges dorés */
             --president-color: #e67e22;
             --bg-image: url('images/backgrounds/hero_soir.png');
         }
 
-        body { margin: 0; background-color: #1a1a1a; display: flex; justify-content: center; align-items: flex-start; font-family: 'Quicksand', sans-serif; color: var(--text-brown); overflow: hidden; height: 100vh; height: 100dvh; }
-        .phone { width: 100%; max-width: 414px; height: 100%; background: var(--bg-beige); position: relative; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.5); transition: all 0.4s ease; }
+        body {
+            margin: 0; background-color: #1a1a1a; display: flex; justify-content: center; align-items: flex-start; 
+            font-family: 'Quicksand', sans-serif; color: var(--text-brown); overflow: hidden;
+            touch-action: manipulation; height: 100vh; height: 100dvh; 
+        }
+
+        .phone {
+            width: 100%; max-width: 414px; height: 100%; background: var(--bg-beige); position: relative;
+            overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            transition: all 0.4s ease;
+        }
+
         .main-wrapper { display: flex; flex-direction: column; height: 100%; width: 100%; transition: filter 0.4s ease; }
         .main-wrapper.blurred { filter: blur(5px); }
 
         .hero-container { width: 100%; flex-shrink: 0; background: var(--bg-beige); position: relative; }
-        .hero { width: 100%; height: 360px; background: var(--bg-image) center top / cover no-repeat; position: relative; z-index: 1; -webkit-user-select: none; user-select: none; pointer-events: none; }
+        .hero { 
+            width: 100%; height: 360px; background: var(--bg-image) center top / cover no-repeat; 
+            position: relative; z-index: 1; -webkit-user-select: none; user-select: none; pointer-events: none;
+        }
+
+        /* --- ZONES DE JEU / INTERACTION (HITBOXES) --- */
         .hero-hitbox { position: absolute; top: 10%; left: 10%; width: 40%; height: 40%; z-index: 15; cursor: pointer; pointer-events: auto; }
         .barn-hitbox { position: absolute; top: 15%; right: 5%; width: 25%; height: 35%; z-index: 15; cursor: pointer; pointer-events: auto; }
 
@@ -116,7 +131,7 @@
         .game-desc-box { background: #fff; border-radius: 15px; padding: 15px; width: 100%; box-sizing: border-box; margin-bottom: 20px; border: 1px solid rgba(188, 143, 99, 0.2); }
         .game-desc-box p { font-size: 0.95rem; line-height: 1.5; color: var(--text-brown); margin: 0; }
         .share-container { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 5px; margin-bottom: 10px; }
-        .share-input { width: 100%; padding: 8px; border-radius: 12px; border: 2px solid var(--wood-brown); background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown); box-sizing: border-box; text-align: center; font-size: 1rem; }
+        .share-input { width: 100%; padding: 8px; border-radius: 12px; border: 2px solid var(--wood-brown); background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown); box-sizing: border-box; text-align: left; font-size: 1rem; }
         .wa-btn { background: #25D366; color: white; margin-top: 5px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); } 
         .confetti { position: fixed; width: 10px; height: 10px; background-color: #f00; z-index: 400; top: -10px; pointer-events: none; opacity: 0; }
         .myludo-link { color: var(--green-deep); text-decoration: none; border-bottom: 1px dashed var(--wood-brown); font-weight: 800; transition: color 0.2s; }
@@ -153,8 +168,6 @@
         
         .rsvp-badge { display:inline-block; padding:4px 8px; background:white; border:1px solid rgba(188,143,99,0.5); border-radius:50px; font-size:0.75rem; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.05); font-weight:bold; color:var(--green-deep); transition:all 0.2s; margin: 2px; }
         .rsvp-badge:active { transform: scale(0.95); background: var(--bg-beige); }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- RESTE DU CSS (Menus, Lightbox) --- */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
@@ -705,25 +718,15 @@
 
     /* --- LIGHTBOX --- */
     const lb = document.getElementById('lightbox'); const lbContainer = document.getElementById('lbContainer'); const lbImg = document.getElementById('lightboxImg'); const lbNavPrev = document.getElementById('lbNavPrev'); const lbNavNext = document.getElementById('lbNavNext');
-    let currentGallery = []; let currentPhotoIndex = 0;
-    let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
+    let currentGallery = []; let currentPhotoIndex = 0; let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
     
     function openLightbox(src, isSingleImage = false) { 
         lbImg.src = src; lb.style.display = 'flex'; resetZoom(); setTimeout(() => lb.classList.add('active'), 10); 
         const captionEl = document.getElementById('lightboxCaption');
-        if (isSingleImage) { 
-            currentGallery = [{src: src, title: ''}]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; captionEl.innerText = '';
-        } else { 
-            const activeTab = document.querySelector('.photo-tab-content.active');
-            const items = activeTab.querySelectorAll('.photo-grid-item img'); 
-            currentGallery = Array.from(items).map(img => ({ src: img.getAttribute('src'), title: img.getAttribute('alt') || '' })); 
-            currentPhotoIndex = currentGallery.findIndex(g => g.src === src); 
-            if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } 
-            captionEl.innerText = currentGallery[currentPhotoIndex].title;
-        } 
+        if (isSingleImage) { currentGallery = [{src: src, title: ''}]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; captionEl.innerText = ''; } 
+        else { const activeTab = document.querySelector('.photo-tab-content.active'); const items = activeTab.querySelectorAll('.photo-grid-item img'); currentGallery = Array.from(items).map(img => ({ src: img.getAttribute('src'), title: img.getAttribute('alt') || '' })); currentPhotoIndex = currentGallery.findIndex(g => g.src === src); if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } captionEl.innerText = currentGallery[currentPhotoIndex].title; } 
         if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } 
     }
-    
     function hideLightboxDOM() { lb.classList.remove('active'); setTimeout(() => { lb.style.display='none'; resetZoom(); }, 300); }
     function closeLightboxForce(fromHistory = false) { if (!lb.classList.contains('active')) return; if (history.state && history.state.type === 'lightbox') { history.back(); } else { hideLightboxDOM(); } }
     lbContainer.addEventListener('click', (e) => { if(e.target !== lbImg && currentScale === 1 && !e.target.closest('.lightbox-nav')) closeLightboxForce(); });
@@ -732,16 +735,7 @@
     lbContainer.addEventListener('touchstart', (e) => { if(e.target.closest('.lightbox-nav')) return; if (e.touches.length === 2) { isZooming = true; initialDistance = getDistance(e.touches); } else if (e.touches.length === 1) { lastPanX = e.touches[0].clientX; lastPanY = e.touches[0].clientY; swipeStartX = e.touches[0].clientX; currentSwipeX = 0; } }, {passive: false});
     lbContainer.addEventListener('touchmove', (e) => { if (e.touches.length === 2) { e.preventDefault(); const currentDistance = getDistance(e.touches); const scaleChange = currentDistance / initialDistance; currentScale = Math.min(Math.max(1, currentScale * scaleChange), 4); lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; initialDistance = currentDistance; } else if (e.touches.length === 1) { let currentX = e.touches[0].clientX; let currentY = e.touches[0].clientY; if (currentScale > 1) { e.preventDefault(); posX += (currentX - lastPanX) / currentScale; posY += (currentY - lastPanY) / currentScale; lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; lastPanX = currentX; lastPanY = currentY; } else if (!isZooming && currentGallery.length > 1) { e.preventDefault(); currentSwipeX = currentX - swipeStartX; lbContainer.style.transform = `translateX(${currentSwipeX}px)`; } } }, {passive: false});
     lbContainer.addEventListener('touchend', (e) => { if (e.touches.length < 2) { isZooming = false; } if (currentScale === 1 && currentGallery.length > 1) { if (currentSwipeX > 70) { changePhotoDir('prev'); } else if (currentSwipeX < -70) { changePhotoDir('next'); } else { lbContainer.style.transform = `translateX(0px)`; } currentSwipeX = 0; } });
-    
-    function changePhotoDir(dir) { 
-        if (currentGallery.length <= 1) return; 
-        if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } 
-        lbImg.style.opacity = 0; document.getElementById('lightboxCaption').style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; 
-        setTimeout(() => { 
-            let newObj = currentGallery[currentPhotoIndex]; lbImg.src = newObj.src; document.getElementById('lightboxCaption').innerText = newObj.title;
-            lbImg.style.opacity = 1; document.getElementById('lightboxCaption').style.opacity = 1;
-        }, 150); 
-    }
+    function changePhotoDir(dir) { if (currentGallery.length <= 1) return; if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } lbImg.style.opacity = 0; document.getElementById('lightboxCaption').style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; setTimeout(() => { let newObj = currentGallery[currentPhotoIndex]; lbImg.src = newObj.src; document.getElementById('lightboxCaption').innerText = newObj.title; lbImg.style.opacity = 1; document.getElementById('lightboxCaption').style.opacity = 1; }, 150); }
 
     /* --- JEU DES DES --- */
     let gameStarted = false; let eggCount = 0; const totalEggs = 10;
@@ -761,101 +755,20 @@
         document.getElementById('gameModalBackdrop').classList.add('visible');
         if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
     }
-    
-    function initGame() {
-        closeGameModalForce(); hideSheetDOM();
-        if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) { history.replaceState({ type: 'main' }, ''); }
-        resetGameData(); gameStarted = true; startTimer();
-        
-        const btnVoter = document.getElementById('btn-voter-accueil');
-        if (btnVoter) btnVoter.style.display = 'none';
-
-        const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque'];
-        for(let i=0; i<9; i++) { let randomSec = sections[Math.floor(Math.random() * sections.length)]; gameState[randomSec].total++; }
-        gameState['home'].total = 1; renderHomeEgg(); showToast("Le chrono est lancé ! ⏱️");
-    }
-    
-    function resetGameData() {
-        gameStarted = false; eggCount = 0; clearInterval(timerInterval);
-        document.getElementById('gameTimer').classList.remove('visible'); document.getElementById('gameTimer').innerText = "00:00:00"; document.getElementById('gameTimer').style.color = '#f1c40f'; 
-        for(let key in gameState) { gameState[key].total = 0; gameState[key].found = 0; }
-        document.querySelectorAll('.egg').forEach(el => el.remove());
-
-        const btnVoter = document.getElementById('btn-voter-accueil');
-        if (btnVoter) btnVoter.style.display = 'flex';
-    }
-    
-    function startTimer() {
-        startTime = Date.now(); document.getElementById('gameTimer').classList.add('visible');
-        timerInterval = setInterval(() => {
-            let delta = Date.now() - startTime; let minutes = Math.floor(delta / 60000); let seconds = Math.floor((delta % 60000) / 1000); let centiseconds = Math.floor((delta % 1000) / 10);
-            document.getElementById('gameTimer').innerText = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds) + ":" + (centiseconds < 10 ? "0" + centiseconds : centiseconds);
-        }, 10);
-    }
-    
-    function foundEgg(el, sectionKey) {
-        if(el.classList.contains('found')) return; if(eggCount >= 10) return;
-        gameState[sectionKey].found++; eggCount++; el.style.pointerEvents = 'none'; el.classList.add('found'); 
-        
-        setTimeout(() => el.remove(), 800); 
-
-        let msg = `Bravo ! ${eggCount}/${totalEggs}`;
-        if(eggCount === totalEggs) { clearInterval(timerInterval); let rawMs = Date.now() - startTime; finishGame(rawMs); } 
-        else if(eggCount > 5) { msg = `Tu chauffes ! ${eggCount}/${totalEggs}`; showToast(msg); } else { showToast(msg); }
-        if(navigator.vibrate) navigator.vibrate(50);
-    }
-    
-    function finishGame(rawMs) {
-        let finalTime = document.getElementById('gameTimer').innerText; document.getElementById('gameTimer').style.color = '#2ecc71'; gameStarted = false;
-        let seconds = rawMs / 1000; let rank = ""; let message = ""; let rankNum = 0;
-        if (seconds < 5) { rankNum=1; rank = "DIEU DU DÉ ⚡"; message = "Inhumain ! T'as triché ?"; } else if (seconds < 10) { rankNum=2; rank = "GRAND MAÎTRE JEDI ⚔️"; message = "La Force est puissante en toi."; } else if (seconds < 15) { rankNum=3; rank = "CHUCK NORRIS 👊"; message = "Chuck Norris ne cherche pas les dés, ils se dénoncent."; } else if (seconds < 20) { rankNum=4; rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre."; } else if (seconds < 25) { rankNum=5; rank = "ŒIL DE LYNX 😼"; message = "Une vision perçante."; } else if (seconds < 35) { rankNum=6; rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Enquête méthodique."; } else if (seconds < 45) { rankNum=7; rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; } else if (seconds < 60) { rankNum=8; rank = "LE DIESEL 🚜"; message = "Lent au démarrage, mais tu es arrivé !"; } else { rankNum=9; rank = "L'ESCARGOT 🐌"; message = "L'important c'est de participer... non ?"; }
-        finalGameData.time = finalTime; finalGameData.rank = rank; finalGameData.rankNumber = rankNum; finalGameData.message = message; finalGameData.rawMs = rawMs;
-        
-        const btnVoter = document.getElementById('btn-voter-accueil');
-        if (btnVoter) btnVoter.style.display = 'flex';
-
-        setTimeout(() => {
-            const modal = document.getElementById('modalContent');
-            modal.innerHTML = `
-                <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
-                <div class="victory-icon"><i class="fa-solid fa-medal"></i></div>
-                <h3 class="victory-title">Félicitations !</h3>
-                <div class="victory-stats"><div style="font-size:1.1rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div><div style="font-size:1.3rem; color:#2c3e50; margin: 2px 0;">${rank}</div><div style="font-size:2rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div><div class="victory-message">"${message}"</div></div>
-                <div id="shareContainer" class="share-container"><input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15"><button class="game-btn wa-btn" style="width:100%;" onclick="shareWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Partager mon score</button></div>
-                <button class="game-btn game-btn-green" onclick="initGame()"><i class="fa-solid fa-rotate-right"></i> Rejouer</button>
-            `;
-            document.getElementById('gameModalBackdrop').classList.add('visible'); 
-            if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
-            startConfetti();
-        }, 1000);
-    }
-    
+    function initGame() { closeGameModalForce(); hideSheetDOM(); if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) { history.replaceState({ type: 'main' }, ''); } resetGameData(); gameStarted = true; startTimer(); const btnVoter = document.getElementById('btn-voter-accueil'); if (btnVoter) btnVoter.style.display = 'none'; const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque']; for(let i=0; i<9; i++) { let randomSec = sections[Math.floor(Math.random() * sections.length)]; gameState[randomSec].total++; } gameState['home'].total = 1; renderHomeEgg(); showToast("Le chrono est lancé ! ⏱️"); }
+    function resetGameData() { gameStarted = false; eggCount = 0; clearInterval(timerInterval); document.getElementById('gameTimer').classList.remove('visible'); document.getElementById('gameTimer').innerText = "00:00:00"; document.getElementById('gameTimer').style.color = '#f1c40f'; for(let key in gameState) { gameState[key].total = 0; gameState[key].found = 0; } document.querySelectorAll('.egg').forEach(el => el.remove()); const btnVoter = document.getElementById('btn-voter-accueil'); if (btnVoter) btnVoter.style.display = 'flex'; }
+    function startTimer() { startTime = Date.now(); document.getElementById('gameTimer').classList.add('visible'); timerInterval = setInterval(() => { let delta = Date.now() - startTime; let minutes = Math.floor(delta / 60000); let seconds = Math.floor((delta % 60000) / 1000); let centiseconds = Math.floor((delta % 1000) / 10); document.getElementById('gameTimer').innerText = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds) + ":" + (centiseconds < 10 ? "0" + centiseconds : centiseconds); }, 10); }
+    function foundEgg(el, sectionKey) { if(el.classList.contains('found')) return; if(eggCount >= 10) return; gameState[sectionKey].found++; eggCount++; el.style.pointerEvents = 'none'; el.classList.add('found'); setTimeout(() => el.remove(), 800); let msg = `Bravo ! ${eggCount}/${totalEggs}`; if(eggCount === totalEggs) { clearInterval(timerInterval); let rawMs = Date.now() - startTime; finishGame(rawMs); } else if(eggCount > 5) { msg = `Tu chauffes ! ${eggCount}/${totalEggs}`; showToast(msg); } else { showToast(msg); } if(navigator.vibrate) navigator.vibrate(50); }
+    function finishGame(rawMs) { let finalTime = document.getElementById('gameTimer').innerText; document.getElementById('gameTimer').style.color = '#2ecc71'; gameStarted = false; let seconds = rawMs / 1000; let rank = ""; let message = ""; let rankNum = 0; if (seconds < 5) { rankNum=1; rank = "DIEU DU DÉ ⚡"; message = "Inhumain ! T'as triché ?"; } else if (seconds < 10) { rankNum=2; rank = "GRAND MAÎTRE JEDI ⚔️"; message = "La Force est puissante en toi."; } else if (seconds < 15) { rankNum=3; rank = "CHUCK NORRIS 👊"; message = "Chuck Norris ne cherche pas les dés, ils se dénoncent."; } else if (seconds < 20) { rankNum=4; rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre."; } else if (seconds < 25) { rankNum=5; rank = "ŒIL DE LYNX 😼"; message = "Une vision perçante."; } else if (seconds < 35) { rankNum=6; rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Enquête méthodique."; } else if (seconds < 45) { rankNum=7; rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; } else if (seconds < 60) { rankNum=8; rank = "LE DIESEL 🚜"; message = "Lent au démarrage, mais tu es arrivé !"; } else { rankNum=9; rank = "L'ESCARGOT 🐌"; message = "L'important c'est de participer... non ?"; } finalGameData.time = finalTime; finalGameData.rank = rank; finalGameData.rankNumber = rankNum; finalGameData.message = message; finalGameData.rawMs = rawMs; const btnVoter = document.getElementById('btn-voter-accueil'); if (btnVoter) btnVoter.style.display = 'flex'; setTimeout(() => { const modal = document.getElementById('modalContent'); modal.innerHTML = `<div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div><div class="victory-icon"><i class="fa-solid fa-medal"></i></div><h3 class="victory-title">Félicitations !</h3><div class="victory-stats"><div style="font-size:1.1rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div><div style="font-size:1.3rem; color:#2c3e50; margin: 2px 0;">${rank}</div><div style="font-size:2rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div><div class="victory-message">"${message}"</div></div><div id="shareContainer" class="share-container"><input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15"><button class="game-btn wa-btn" style="width:100%;" onclick="shareWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Partager mon score</button></div><button class="game-btn game-btn-green" onclick="initGame()"><i class="fa-solid fa-rotate-right"></i> Rejouer</button>`; document.getElementById('gameModalBackdrop').classList.add('visible'); if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); } startConfetti(); }, 1000); }
     function generateChecksum(ms) { return Math.floor((ms * 17) + 2026).toString(36).toUpperCase(); }
-    function shareWhatsapp() {
-        let pseudo = document.getElementById('playerPseudo').value.trim() || "Un Pote"; let check = generateChecksum(finalGameData.rawMs); let siteUrl = "https://despotesajeux.github.io/";
-        let text = `🎲 *DÉFI DES POTES À JEUX* 🎲%0A%0A🕵️ J'ai trouvé les 10 dés cachés !%0A%0A👤 *Joueur :* ${pseudo}%0A⏱️ *Temps :* ${finalGameData.time}%0A🏅 *Rang N°${finalGameData.rankNumber} :* ${finalGameData.rank}%0A📝 _"${finalGameData.message}"_%0A%0ATu penses faire mieux ? Tente ta chance ici :%0A👉 ${siteUrl}%0A%0A🔐 _Verif : ${check}_`;
-        window.open(`https://wa.me/?text=${text}`, '_blank');
-    }
-    
+    function shareWhatsapp() { let pseudo = document.getElementById('playerPseudo').value.trim() || "Un Pote"; let check = generateChecksum(finalGameData.rawMs); let siteUrl = "https://despotesajeux.github.io/"; let text = `🎲 *DÉFI DES POTES À JEUX* 🎲%0A%0A🕵️ J'ai trouvé les 10 dés cachés !%0A%0A👤 *Joueur :* ${pseudo}%0A⏱️ *Temps :* ${finalGameData.time}%0A🏅 *Rang N°${finalGameData.rankNumber} :* ${finalGameData.rank}%0A📝 _"${finalGameData.message}"_%0A%0ATu penses faire mieux ? Tente ta chance ici :%0A👉 ${siteUrl}%0A%0A🔐 _Verif : ${check}_`; window.open(`https://wa.me/?text=${text}`, '_blank'); }
     function showToast(msg) { const toast = document.getElementById('gameToast'); toast.innerText = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
     function renderHomeEgg() { let container = document.getElementById('homeEggContainer'); container.innerHTML = ''; if(gameState['home'].total > gameState['home'].found) { createEgg(container, 'home', false); } }
-    function createEgg(container, sectionKey, isFound, isTab = false) {
-        let egg = document.createElement('i'); egg.className = 'fa-solid fa-dice egg'; if (isFound) return; 
-        egg.onclick = function(event) { foundEgg(this, sectionKey); event.stopPropagation(); }; egg.style.pointerEvents = 'auto';
-        if(!isTab) { egg.style.top = (Math.random() * 80 + 10) + '%'; egg.style.left = (Math.random() * 80 + 10) + '%'; } else { egg.style.position = 'absolute'; egg.style.top = '-8px'; egg.style.right = '5px'; egg.style.margin = '0'; egg.style.fontSize = '1.2rem'; egg.style.filter = 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))'; }
-        container.appendChild(egg);
-    }
-    function startConfetti() {
-        const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6'];
-        for(let i=0; i<30; i++) { setTimeout(() => { const confetti = document.createElement('div'); confetti.classList.add('confetti'); confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`; document.body.appendChild(confetti); setTimeout(() => confetti.remove(), 5000); }, i * 50); }
-        if(!document.getElementById('confetti-style')) { const style = document.createElement('style'); style.id = 'confetti-style'; style.innerHTML = `@keyframes fall { 0% { top: -10px; opacity: 1; transform: rotate(0deg); } 100% { top: 100vh; opacity: 0; transform: rotate(720deg); } }`; document.head.appendChild(style); }
-    }
+    function createEgg(container, sectionKey, isFound, isTab = false) { let egg = document.createElement('i'); egg.className = 'fa-solid fa-dice egg'; if (isFound) return; egg.onclick = function(event) { foundEgg(this, sectionKey); event.stopPropagation(); }; egg.style.pointerEvents = 'auto'; if(!isTab) { egg.style.top = (Math.random() * 80 + 10) + '%'; egg.style.left = (Math.random() * 80 + 10) + '%'; } else { egg.style.position = 'absolute'; egg.style.top = '-8px'; egg.style.right = '5px'; egg.style.margin = '0'; egg.style.fontSize = '1.2rem'; egg.style.filter = 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))'; } container.appendChild(egg); }
+    function startConfetti() { const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6']; for(let i=0; i<30; i++) { setTimeout(() => { const confetti = document.createElement('div'); confetti.classList.add('confetti'); confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`; document.body.appendChild(confetti); setTimeout(() => confetti.remove(), 5000); }, i * 50); } if(!document.getElementById('confetti-style')) { const style = document.createElement('style'); style.id = 'confetti-style'; style.innerHTML = `@keyframes fall { 0% { top: -10px; opacity: 1; transform: rotate(0deg); } 100% { top: 100vh; opacity: 0; transform: rotate(720deg); } }`; document.head.appendChild(style); } }
 
     /* --- GESTION DES COOKIES & ANALYTICS --- */
-    function loadGoogleAnalytics() {
-        const script = document.createElement('script'); script.async = true; script.src = "https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY"; document.head.appendChild(script);
-        window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-YPHH9PELKY');
-    }
+    function loadGoogleAnalytics() { const script = document.createElement('script'); script.async = true; script.src = "https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY"; document.head.appendChild(script); window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-YPHH9PELKY'); }
     function checkCookies() { const consent = localStorage.getItem('potes_cookie_consent'); if (consent === 'accepted') { loadGoogleAnalytics(); } else if (!consent) { setTimeout(() => { document.getElementById('cookiePopup').classList.add('show'); }, 1000); } }
     function handleCookies(choice) { localStorage.setItem('potes_cookie_consent', choice); document.getElementById('cookiePopup').classList.remove('show'); if (choice === 'accepted') { loadGoogleAnalytics(); } }
     checkCookies();
@@ -896,7 +809,6 @@
             }
         }
     }, {passive: true});
-
 </script>
 
 <script type="module">
@@ -922,6 +834,7 @@
     let unsubscribeRSVP = null;
     let localProfile = { avatar: '🎲', titre: 'Membre', jeuFavori: '', styleJoueur: 'Touche-à-tout' };
     window.tousLesJeux = []; 
+    window.myCurrentRSVP = null; // Variable globale pour le toggle RSVP
 
     getRedirectResult(auth).then((result) => { if (result) console.log("Utilisateur Google:", result.user.displayName); }).catch((error) => { console.error("Erreur Google:", error); });
 
@@ -1084,14 +997,20 @@
         if(!auth.currentUser) return;
         const dateStr = window.getNextEventDateStr();
         const ref = doc(db, "presences", auth.currentUser.uid);
-        await setDoc(ref, {
-            uid: auth.currentUser.uid,
-            nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
-            avatar: localProfile.avatar || '🎲',
-            statut: status,
-            date_event: dateStr,
-            timestamp: new Date()
-        });
+        
+        // Si on clique sur le même bouton, on supprime le choix (Toggle off)
+        if (window.myCurrentRSVP === status) {
+            await deleteDoc(ref);
+        } else {
+            await setDoc(ref, {
+                uid: auth.currentUser.uid,
+                nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
+                avatar: localProfile.avatar || '🎲',
+                statut: status,
+                date_event: dateStr,
+                timestamp: new Date()
+            });
+        }
     };
 
     window.initFirebaseRSVP = function() {
@@ -1100,22 +1019,26 @@
 
         unsubscribeRSVP = onSnapshot(collection(db, "presences"), (snap) => {
             let presents = []; let absents = []; let maybes = [];
-            let myStatus = null;
+            window.myCurrentRSVP = null; // Remise à zéro locale
 
             snap.forEach(d => {
                 const data = d.data();
                 if(data.date_event === dateStr) {
-                    if(data.uid === auth.currentUser.uid) myStatus = data.statut;
+                    if(data.uid === auth.currentUser.uid) window.myCurrentRSVP = data.statut;
                     if(data.statut === 'present') presents.push(data);
                     else if(data.statut === 'absent') absents.push(data);
                     else if(data.statut === 'maybe') maybes.push(data);
                 }
             });
 
+            let myStatus = window.myCurrentRSVP;
+
             document.getElementById('btn-rsvp-present').style.background = myStatus === 'present' ? 'var(--wa-green)' : '#ecf0f1';
             document.getElementById('btn-rsvp-present').style.color = myStatus === 'present' ? '#fff' : '#7f8c8d';
+            
             document.getElementById('btn-rsvp-maybe').style.background = myStatus === 'maybe' ? 'var(--gold-game)' : '#ecf0f1';
             document.getElementById('btn-rsvp-maybe').style.color = myStatus === 'maybe' ? '#fff' : '#7f8c8d';
+            
             document.getElementById('btn-rsvp-absent').style.background = myStatus === 'absent' ? '#e74c3c' : '#ecf0f1';
             document.getElementById('btn-rsvp-absent').style.color = myStatus === 'absent' ? '#fff' : '#7f8c8d';
 
@@ -1160,11 +1083,17 @@
 
         const jeuTrouve = window.tousLesJeux.find(j => j.titre.toLowerCase() === titre.toLowerCase());
 
-        let minJ = 2, maxJ = 4, proprioDuJeu = "Moi", lienMyludo = "";
+        let minJ = 2, maxJ = 4, proprioDuJeu = "Moi", lienMyludo = "", dureeJeu = "?", styleJeu = "Classique";
 
         if (jeuTrouve) {
             proprioDuJeu = jeuTrouve.proprio;
             lienMyludo = jeuTrouve.lien || "";
+            
+            dureeJeu = jeuTrouve.duree || "?";
+            if (jeuTrouve.style) styleJeu = jeuTrouve.style;
+            else if (jeuTrouve.categories && jeuTrouve.categories.length > 0) styleJeu = jeuTrouve.categories[0];
+            else if (jeuTrouve.type) styleJeu = jeuTrouve.type;
+
             const joueursStr = jeuTrouve.joueurs || "2-4";
             const parts = joueursStr.match(/\d+/g);
             if (parts && parts.length > 0) minJ = parseInt(parts[0]);
@@ -1174,9 +1103,14 @@
             proprioDuJeu = auth.currentUser.displayName || "Moi";
             let maxStr = prompt(`Le jeu "${titre}" n'a pas été trouvé dans la ludothèque de l'asso.\nCombien de joueurs MAXIMUM peuvent jouer à ce jeu ?`, "4");
             if (maxStr === null) return; 
-            
             maxJ = parseInt(maxStr) || 4;
             minJ = 2; 
+
+            let dureeStr = prompt(`Quelle est la durée moyenne de la partie (en minutes) ?`, "60");
+            if (dureeStr !== null) dureeJeu = dureeStr;
+
+            let styleStr = prompt(`Quel est le style de ce jeu (ex: Coopératif, Ambiance, Gestion...) ?`, "Jeu de plateau");
+            if (styleStr !== null) styleJeu = styleStr;
         }
 
         const moi = { 
@@ -1197,6 +1131,8 @@
                 myludoLien: lienMyludo,
                 minJoueurs: minJ,
                 maxJoueurs: maxJ,
+                duree: dureeJeu,
+                style: styleJeu,
                 inscrits: [moi],
                 date_ajout: new Date()
             });
@@ -1278,7 +1214,7 @@
                     
                     if(!isFull) actionsHTML += `<button class="btn-small" style="background:var(--wood-brown);" onclick="actionTable('${j.id}', 'addGuest')"><i class="fa-solid fa-user-plus"></i> +1 Invité</button>`;
                 } else {
-                    if(!isFull) actionsHTML += `<button class="btn-small" style="background:var(--green-deep);" onclick="actionTable('${j.id}', 'join')">🪑 M'asseoir</button>`;
+                    if(!isFull) actionsHTML += `<button class="btn-small game-btn-green" onclick="actionTable('${j.id}', 'join')">🪑 M'asseoir</button>`;
                     else actionsHTML += `<span style="font-size:0.75rem; color:gray; font-style:italic; padding:4px;">Table complète 🔒</span>`;
                 }
 
@@ -1288,14 +1224,20 @@
 
                 actionsHTML += '</div>';
 
+                // 3. TITRE ET INFOS JEU
                 const titreHTML = j.myludoLien 
                     ? `<a href="${j.myludoLien}" target="_blank" class="myludo-link">${j.nom}</a>`
                     : j.nom;
 
+                const infosSup = `<div style="font-size:0.75rem; color:var(--wood-brown); font-weight:bold; margin-top:4px;">
+                    <i class="fa-regular fa-clock"></i> ${j.duree || '?'} min &nbsp; | &nbsp; <i class="fa-solid fa-dice-d20"></i> ${j.style || 'Jeu de société'}
+                </div>`;
+
                 return `
                 <div class="table-card">
                     <div style="font-weight:800; color:var(--green-deep); font-size: 1.05rem;">${titreHTML}</div>
-                    <span style="font-size:0.65rem; color:gray; display:block; margin-top:2px;">Proposé par ${j.proposePar} (Jeu de <b>${j.appartientA || '?'}</b>)</span>
+                    ${infosSup}
+                    <span style="font-size:0.65rem; color:gray; display:block; margin-top:4px;">Proposé par ${j.proposePar} (Jeu de <b>${j.appartientA || '?'}</b>)</span>
                     ${seatsHTML}
                     ${actionsHTML}
                 </div>`;
