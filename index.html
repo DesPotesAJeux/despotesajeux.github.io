@@ -306,17 +306,20 @@
     </style>
 
     <script>
-        // On initialise ces variables globalement pour qu'elles soient dispo tout de suite
-        let gameStarted = false; 
-        let eggCount = 0; const totalEggs = 10;
-        let timerInterval; let startTime; let finalGameData = { time: "", rankNumber: 0, rank: "", message: "", rawMs: 0 }; 
-        let confettiInterval; 
-        let gameState = { 'home': { total: 0, found: 0 }, 'histoire': { total: 0, found: 0 }, 'adhesion': { total: 0, found: 0 }, 'cal': { total: 0, found: 0 }, 'photos': { total: 0, found: 0 }, 'contact': { total: 0, found: 0 }, 'ludotheque': { total: 0, found: 0 } };
-
         (function() {
-            const hour = new Date().getHours();
-            let baseName = (hour >= 6 && hour < 12) ? "hero_matin" : (hour >= 12 && hour < 18) ? "hero_aprem" : "hero_soir";
-            document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}.png')`);
+            const now = new Date();
+            const month = now.getMonth() + 1; 
+            const day = now.getDate();
+            const hour = now.getHours();
+
+            if ((month === 12 && day === 25) || (month === 10 && day === 31)) return;
+
+            let baseName = "hero_soir"; 
+            if (hour >= 6 && hour < 12) baseName = "hero_matin";
+            else if (hour >= 12 && hour < 18) baseName = "hero_aprem";
+
+            let condition = localStorage.getItem('plouay_weather') || "";
+            document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}${condition}.png')`);
         })();
     </script>
 </head>
@@ -326,10 +329,10 @@
     
     <div id="cookiePopup" class="cookie-popup">
         <h3 class="cookie-title">🍪 Une petite faim ?</h3>
-        <p class="cookie-text">On utilise quelques cookies pour analyser les visites via Google Analytics.</p>
+        <p class="cookie-text">On utilise quelques cookies (pas ceux qu'on grignote en jouant) pour analyser les visites via Google Analytics. Ça nous aide à savoir si notre asso gagne en visibilité !</p>
         <div class="cookie-buttons">
             <button class="cookie-btn decline" onclick="handleCookies('declined')">Non merci</button>
-            <button class="cookie-btn accept game-btn-green" onclick="handleCookies('accepted')">Accepter</button>
+            <button class="cookie-btn accept" onclick="handleCookies('accepted')">Accepter</button>
         </div>
     </div>
     
@@ -345,13 +348,17 @@
     </div>
 
     <div class="game-modal-backdrop" id="gameModalBackdrop" onclick="closeGameModalForce()">
-        <div class="game-modal-content" id="modalContent" onclick="event.stopPropagation()"></div>
+        <div class="game-modal-content" id="modalContent" onclick="event.stopPropagation()">
+        </div>
     </div>
 
     <div class="lightbox" id="lightbox">
-        <div class="lightbox-btn" style="position:absolute; top:25px; right:25px;" onclick="closeLightboxForce()"><i class="fa-solid fa-xmark"></i></div>
+        <div class="lightbox-nav prev" id="lbNavPrev" onclick="changePhotoDir('prev')"><i class="fa-solid fa-chevron-left"></i></div>
+        <div class="lightbox-nav next" id="lbNavNext" onclick="changePhotoDir('next')"><i class="fa-solid fa-chevron-right"></i></div>
+        <div class="lightbox-controls"><div class="lightbox-btn" onclick="closeLightboxForce()"><i class="fa-solid fa-xmark"></i></div></div>
         <div class="lightbox-img-container" id="lbContainer">
             <img id="lightboxImg" src="" alt="Aperçu plein écran">
+            <div id="lightboxCaption" class="lightbox-caption"></div>
         </div>
     </div>
 
@@ -361,11 +368,13 @@
         <div class="hero-container">
             <div class="hero">
                 <div class="hero-hitbox" onclick="askToPlay()"></div>
+                <div class="barn-hitbox" onclick="openBarn()"></div>
+                
                 <div class="rdv-card">
                     <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
                         <div style="font-size: 1.5rem; margin-right: 12px;">🎲</div>
                         <div class="rdv-info" style="flex-direction: column; align-items: flex-start; width: 100%;">
-                            <div id="next-rdv-banner" style="margin:0; width: 100%;"></div>
+                            <div id="next-rdv-banner" style="margin:0; width: 100%;">Calcul en cours...</div>
                         </div>
                     </div>
                 </div>
@@ -374,16 +383,18 @@
 
         <div class="content">
             <div id="homeEggContainer" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></div>
+            
             <div class="quote-box">
                 <p class="quote-text">"Ici on ne compte pas les points,<br>on compte les <strong>souvenirs</strong>."</p>
                 <div class="separator"></div>
-                <button class="game-btn game-btn-green" onclick="openSheet('vote')" style="margin: 5px auto 10px auto; width: 100%; max-width: 250px; justify-content: center; font-size: 0.9rem; padding: 10px 15px;"><i class="fa-solid fa-dice-d20"></i> S'organiser pour jouer</button>
+                <button class="btn-ludotheque" onclick="openSheet('ludotheque')"><i class="fa-solid fa-dice-d20"></i> Découvrir nos jeux</button>
+                <p style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; opacity: 0.4; margin-top: 5px;">Association loi 1901 • Plouay • Bretagne</p>
             </div>
         </div>
 
         <nav class="footer-nav">
-            <div class="menu-item" onclick="openSheet('vote')"><div class="icon-box"><i class="fa-solid fa-check-to-slot"></i></div><span>Tables</span></div>
             <div class="menu-item" onclick="openSheet('histoire')"><div class="icon-box"><i class="fa-solid fa-layer-group"></i></div><span>Histoire</span></div>
+            <div class="menu-item" onclick="openSheet('adhesion')"><div class="icon-box"><i class="fa-solid fa-user-check"></i></div><span>Adhésion</span></div>
             <div class="menu-item" onclick="openSheet('cal')"><div class="icon-box"><i class="fa-solid fa-calendar-day"></i></div><span>Agenda</span></div>
             <div class="menu-item" onclick="openSheet('photos')"><div class="icon-box"><i class="fa-solid fa-camera-retro"></i></div><span>Photos</span></div>
             <div class="menu-item" onclick="openSheet('contact')"><div class="icon-box"><i class="fa-solid fa-envelope"></i></div><span>Contact</span></div>
@@ -397,74 +408,201 @@
 </div>
 
 <script>
-    // --- GESTION DE LA DATE ---
-    window.getNextEventDate = function() {
-        let now = new Date(); let currentYear = now.getFullYear(); let currentMonth = now.getMonth();
-        let d = new Date(currentYear, currentMonth + 1, 0); 
-        while (d.getDay() !== 5) d.setDate(d.getDate() - 1); 
-        if (d < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
-            d = new Date(currentYear, currentMonth + 2, 0);
-            while (d.getDay() !== 5) d.setDate(d.getDate() - 1);
+    /* --- CONFIGURATION DES CHEMINS --- */
+    const cheminTries = "images/jeux_de_societe/tries/";
+    const cheminNonIdentifies = "images/jeux_de_societe/non_identifies/";
+    const cheminPresse = "images/presse/";
+    const cheminSorties = "images/sorties/";
+    const extensionJeux = ".jpg"; 
+
+    /* --- GESTION DU FOND ASYNCHRONE (Météo Plouay + Heure) --- */
+    async function fetchWeatherUpdate() {
+        const now = new Date();
+        const month = now.getMonth() + 1; 
+        const day = now.getDate();
+        const hour = now.getHours();
+
+        if ((month === 12 && day === 25) || (month === 10 && day === 31)) return;
+
+        let baseName = "hero_soir"; 
+        if (hour >= 6 && hour < 12) baseName = "hero_matin";
+        else if (hour >= 12 && hour < 18) baseName = "hero_aprem";
+
+        try {
+            const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=47.91&longitude=-3.33&current=weather_code');
+            const data = await response.json();
+            const code = data.current.weather_code;
+
+            let newCondition = "";
+            if (code >= 1 && code <= 3) newCondition = "_nuage";
+            else if (code >= 51 && code <= 67) newCondition = "_pluie";
+            else if (code >= 80 && code <= 99) newCondition = "_orage";
+            else if (code >= 71 && code <= 77) newCondition = "_neige";
+
+            localStorage.setItem('plouay_weather', newCondition);
+            document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}${newCondition}.png')`);
+        } catch (error) {
+            console.error("Erreur météo:", error);
+            document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}.png')`);
         }
-        return d;
-    };
-    window.getNextEventDateStr = function() { return window.getNextEventDate().toISOString().split('T')[0]; };
-    window.getFormattedEventDate = function() {
-        const d = window.getNextEventDate();
-        const months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
-        return `${d.getDate()} ${months[d.getMonth()]}`;
-    };
+    }
+    fetchWeatherUpdate();
 
-    (function() {
-        const d = window.getNextEventDate();
-        const shortMonths = ["janv.", "fév.", "mars", "avril", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
-        document.getElementById('next-rdv-banner').innerHTML = 
-            `<span style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase; font-weight:700;">PROCHAIN RDV</span><br>
-            <span style="font-size:0.9rem; font-weight:700; color:var(--green-deep);">Ven. ${d.getDate()} ${shortMonths[d.getMonth()]} à 20h30</span>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:3px; gap:5px;">
-                <a href="#" style="font-size:0.8rem; color:var(--green-deep);">📍 Maison des Assos</a>
-                <button class="game-btn game-btn-green" style="margin:0; padding: 4px 8px; font-size: 0.7rem; white-space: nowrap;" onclick="openSheet('vote')">S'organiser</button>
-            </div>`;
-    })();
+    /* --- FONCTIONS MODALES UNIVERSELLES (Alerte / Jeu) --- */
+    function closeGameModalForce() {
+        document.getElementById('gameModalBackdrop').classList.remove('visible');
+        if(typeof confettiInterval !== 'undefined') { clearInterval(confettiInterval); document.querySelectorAll('.confetti').forEach(c => c.remove()); }
+    }
 
-    /* --- FONCTIONS MODALES UNIVERSELLES --- */
-    function closeGameModalForce() { document.getElementById('gameModalBackdrop').classList.remove('visible'); if(typeof confettiInterval !== 'undefined') clearInterval(confettiInterval); }
+    function closeGameModal() {
+        if (document.getElementById('gameModalBackdrop').classList.contains('visible')) {
+            if (history.state && (history.state.type === 'gamemodal')) { history.back(); } else { closeGameModalForce(); }
+        }
+    }
+
     window.showCustomAlert = function(title, message, iconClass = "fa-circle-info") {
-        document.getElementById('modalContent').innerHTML = `
+        const modal = document.getElementById('modalContent');
+        modal.innerHTML = `
             <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
             <div class="victory-icon" style="color: var(--wood-brown); font-size: 2.5rem; margin-bottom: 10px;"><i class="fa-solid ${iconClass}"></i></div>
-            <h3 style="font-size: 1.6rem; color: var(--green-deep); margin:0 0 10px;">${title}</h3>
+            <h3 class="victory-title" style="font-size: 1.6rem; color: var(--green-deep);">${title}</h3>
             <div style="font-size: 0.95rem; line-height: 1.4; color: var(--text-brown); margin: 10px 0 20px;">${message}</div>
             <button class="game-btn game-btn-green" onclick="closeGameModalForce()"><i class="fa-solid fa-check"></i> Compris</button>
         `;
         document.getElementById('gameModalBackdrop').classList.add('visible');
+        if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
     };
 
-    /* --- DONNEES DES ONGLETS --- */
+    /* --- GESTION DU BOUTON RETOUR ANDROID (HISTORY API) --- */
+    window.addEventListener('popstate', (e) => { 
+        if (lb.classList.contains('active')) { hideLightboxDOM(); } 
+        else if (document.getElementById('barnOverlay').classList.contains('active')) { closeBarnForce(); } 
+        else if (document.getElementById('gameModalBackdrop').classList.contains('visible')) { closeGameModalForce(); } 
+        else if (sheet.classList.contains('open')) { hideSheetDOM(); } 
+    });
+
+    /* --- GESTION DE LA GRANGE --- */
+    function openBarn() {
+        document.getElementById('barnOverlay').classList.add('active');
+        document.getElementById('mainWrapper').classList.add('blurred');
+        if (!history.state || history.state.type !== 'barn') { history.pushState({ type: 'barn' }, ''); }
+    }
+    function closeBarn() { if (history.state && history.state.type === 'barn') { history.back(); } else { closeBarnForce(); } }
+    function closeBarnForce() { document.getElementById('barnOverlay').classList.remove('active'); document.getElementById('mainWrapper').classList.remove('blurred'); }
+
+    /* --- GESTION DES ONGLETS PHOTOS --- */
+    function switchPhotoTab(tabId, element) {
+        document.querySelectorAll('.photo-tab').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.photo-tab-content').forEach(content => content.classList.remove('active'));
+        element.classList.add('active'); document.getElementById('grid-' + tabId).classList.add('active');
+    }
+
+    /* --- 1. CALCULS DATE & HTML SORTIES --- */
+    const sortiesConfig = [ { year: 2025, count: 5 }, { year: 2024, count: 7 }, { year: 2023, count: 7 }, { year: 2022, count: 9 }, { year: 2021, count: 2 }, { year: 2019, count: 1 } ];
+
+    function getNextLastFridays() {
+        let dates = []; let now = new Date(); let currentYear = now.getFullYear(); let currentMonth = now.getMonth();
+        while (dates.length < 4) {
+            let d = new Date(currentYear, currentMonth + 1, 0); 
+            while (d.getDay() !== 5) { d.setDate(d.getDate() - 1); }
+            let checkDate = new Date(d); checkDate.setHours(23, 59, 59);
+            if (checkDate >= now) { dates.push(new Date(d)); }
+            currentMonth++;
+        }
+        return dates;
+    }
+
+    const upcomingDates = getNextLastFridays();
+    const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+    const today = new Date(); const nextDate = upcomingDates[0];
+    const diffTime = new Date(nextDate.getFullYear(), nextDate.getMonth(), nextDate.getDate()) - new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    // Fonction globale pour le RSVP
+    window.getNextEventDateStr = function() {
+        return nextDate.toISOString().split('T')[0];
+    };
+    
+    // NOUVEAU : Fonction globale pour formater la date pour l'onglet Profil
+    window.getFormattedEventDate = function() {
+        const months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+        return `${nextDate.getDate()} ${months[nextDate.getMonth()]}`;
+    };
+
+    let dayPart = (diffDays === 0) ? " : JOUR J !" : ` : J-${diffDays}`;
+    let dateStr = nextDate.toLocaleDateString('fr-FR', dateOptions);
+    dateStr = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+
+    document.getElementById('next-rdv-banner').innerHTML = 
+        `<span style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase; font-weight:700;">PROCHAIN RDV${dayPart}</span><br>` +
+        `<span style="font-size:0.9rem; font-weight:700; color:var(--green-deep);">${dateStr} à 20h30</span>` +
+        `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:3px; gap:5px;">
+            <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="flex-shrink:0;">📍 <span class="underline">Maison des Associations</span></a>
+            <button id="btn-voter-accueil" class="btn-ludotheque" style="margin:0; padding: 4px 12px; font-size: 0.75rem; white-space: nowrap; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">
+                <i class="fa-solid fa-check-to-slot" style="margin-right:4px;"></i>Voter
+            </button>
+        </div>`;
+
+    let agendaHTML = '<div class="cal-list">' + upcomingDates.map(date => {
+        let formatted = date.toLocaleDateString('fr-FR', dateOptions);
+        return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem; flex-shrink:0;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank">Maison des Associations</a></div></div></div>`;
+    }).join('') + '</div>';
+
+    let photosSortiesHTML = '<div class="photo-grid">';
+    sortiesConfig.forEach(cfg => {
+        for(let i=1; i<=cfg.count; i++) {
+            let filename = `${cheminSorties}${cfg.year}/sortie_${cfg.year}_${i}.jpg`;
+            photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('${filename}')"><img src="${filename}" loading="lazy" decoding="async" alt="" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"><span class="photo-year">${cfg.year}</span></div>`;
+        }
+    });
+    photosSortiesHTML += '</div>';
+
+    const jeuxNommes = [
+        "jeu_abyss", "jeu_azul", "jeu_camel_cup", "jeu_century", "jeu_code_names", "jeu_dice_town", "jeu_flamme_rouge", "jeu_heimlich&co",
+        "jeu_imagine", "jeu_jamaïca", "jeu_king_of_tokyo", "jeu_kingdomino", "jeu_la_cour_des_miracles", "jeu_le_mystere_de_Whitehall", "jeu_les_aventuriers_du_rail",
+        "jeu_living_forest", "jeu_menara", "jeu_mysterium", "jeu_nemesis", "jeu_noé", "jeu_paleo", "jeu_pandemic", "jeu_parks",
+        "jeu_the_island", "jeu_tokaido", "jeu_tumblin_dice", "jeu_wingspan", "jeu_witness"
+    ];
+    const nombreDeJeuxNumerotes = 7;
+
+    let photosJeuxHTML = '<div class="photo-grid">';
+    jeuxNommes.forEach(jeu => {
+        let nomJeu = jeu.replace('jeu_', '').replace(/_/g, ' '); nomJeu = nomJeu.charAt(0).toUpperCase() + nomJeu.slice(1); let fichierComplet = cheminTries + jeu + extensionJeux;
+        photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')"><img src="${fichierComplet}" loading="lazy" decoding="async" alt="${nomJeu}" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"><div class="photo-game-title">${nomJeu}</div></div>`;
+    });
+    for (let i = 1; i <= nombreDeJeuxNumerotes; i++) {
+        let nomFichier = "jeu" + i; let fichierComplet = cheminNonIdentifies + nomFichier + extensionJeux;
+        photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')"><img src="${fichierComplet}" loading="lazy" decoding="async" alt="" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"></div>`;
+    }
+    photosJeuxHTML += '</div>';
+
+    /* --- 2. DONNÉES DES PAGES --- */
     const pagesData = {
         vote: {
             title: "Au programme ?",
-            text: `<div id="content-vote" style="position: relative;">
+            text: `<div class="panel-card" id="content-vote" style="padding: 15px 10px; position: relative;">
                 <div id="view-auth">
-                    <p style="text-align: center; margin-top: 0; font-size: 0.9rem; color: var(--text-brown);">Connecte-toi pour confirmer ta présence et t'organiser !</p>
+                    <p style="text-align: center; margin-top: 0; font-size: 0.9rem; color: var(--text-brown);">Connecte-toi pour proposer et voter pour tes jeux préférés !</p>
                     <div id="auth-container"></div>
                 </div>
                 
                 <div id="view-votes" style="display: none;">
+                    
                     <div class="vote-tabs">
                         <button class="vote-tab active" onclick="window.switchVoteTab('profil', this)"><i class="fa-solid fa-user"></i> Mon Profil</button>
-                        <button class="vote-tab" onclick="window.switchVoteTab('ludo', this)"><i class="fa-solid fa-box-open"></i> La Réserve</button>
+                        <button class="vote-tab" onclick="window.switchVoteTab('reserve', this)"><i class="fa-solid fa-box-open"></i> La Réserve</button>
                         <button class="vote-tab" onclick="window.switchVoteTab('arene', this)"><i class="fa-solid fa-chess-board"></i> L'Arène</button>
                     </div>
 
-                    <div id="vote-area-container" style="position: relative; width: 100%;">
+                    <div id="vote-swipe-area" style="position: relative; width: 100%;">
                         
                         <div id="tab-profil" class="vote-tab-content active">
-                            <div id="user-greeting" style="display:flex; justify-content:center; align-items:center; font-weight:bold; color:var(--green-deep); font-size:1.5rem; margin-bottom:15px;"></div>
+                            
+                            <div id="user-greeting" style="display:flex; flex-direction:column; align-items:center; font-weight:bold; color:var(--green-deep); font-size:1.5rem; margin-bottom:15px;"></div>
 
                             <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px solid rgba(58, 99, 81, 0.2); text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
                                 <h4 id="rsvp-date-title" style="margin: 0 0 10px; color: var(--green-deep); font-size: 1rem;">Présence</h4>
-                                <div style="font-size:0.75rem; color:var(--text-brown); margin-bottom:10px; font-style:italic;">Dis-nous si tu penses venir ! (Aucune obligation, c'est juste pour donner la tendance 😉)</div>
+                                <div style="font-size:0.75rem; color:var(--text-brown); margin-bottom:10px; font-style:italic;">Dis-nous si tu viens ! (Mais c'est pas grave si tu changes d'avis 😉)</div>
                                 <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 12px;">
                                     <button class="rsvp-btn" id="btn-rsvp-present" onclick="window.setRSVP('present')">✅ Oui</button>
                                     <button class="rsvp-btn" id="btn-rsvp-maybe" onclick="window.setRSVP('maybe')">🤷 P-ê.</button>
@@ -474,20 +612,22 @@
                                     <div style="text-align:center; font-style:italic;">Chargement...</div>
                                 </div>
                             </div>
+
                             <div style="text-align:center; margin-top: 25px;">
                                 <span onclick="window.logoutFirebase()" style="font-size:0.8rem; color:#e74c3c; text-decoration:underline; cursor:pointer;"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</span>
                             </div>
+
                         </div>
 
-                        <div id="tab-ludo" class="vote-tab-content">
+                        <div id="tab-reserve" class="vote-tab-content">
                             <p style="font-size:0.8rem; text-align:center; color:var(--text-brown); margin: 0 0 15px; line-height:1.4;">Accède aux collections des membres pour demander un jeu !</p>
                             
                             <div style="display:flex; overflow-x:auto; gap:10px; padding-bottom:10px; margin-bottom:15px; scrollbar-width:none;">
-                                <a href="https://www.myludo.fr/#!/profil/carine-duneuf-jardin-85877" target="_blank" class="ludo-avatar-card"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" alt="Myludo"> Carine</a>
-                                <a href="https://www.myludo.fr/#!/profil/ronan-29-67622" target="_blank" class="ludo-avatar-card"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" alt="Myludo"> Ronan</a>
-                                <a href="https://www.myludo.fr/#!/profil/sebastien-g-107305" target="_blank" class="ludo-avatar-card"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" alt="Myludo"> Séb</a>
-                                <a href="https://www.myludo.fr/#!/profil/stephane-rio-26496" target="_blank" class="ludo-avatar-card"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" alt="Myludo"> Stéphane</a>
-                                <a href="https://www.myludo.fr/#!/profil/sylvain-bedouet-64234" target="_blank" class="ludo-avatar-card"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" alt="Myludo"> Sylvain</a>
+                                <a href="https://www.myludo.fr/#!/profil/carine-duneuf-jardin-85877" target="_blank" style="text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow:0 2px 5px rgba(0,0,0,0.05); flex-shrink:0; text-align:center;"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; vertical-align:middle; margin-right:4px;"> Carine</a>
+                                <a href="https://www.myludo.fr/#!/profil/ronan-29-67622" target="_blank" style="text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow:0 2px 5px rgba(0,0,0,0.05); flex-shrink:0; text-align:center;"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; vertical-align:middle; margin-right:4px;"> Ronan</a>
+                                <a href="https://www.myludo.fr/#!/profil/sebastien-g-107305" target="_blank" style="text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow:0 2px 5px rgba(0,0,0,0.05); flex-shrink:0; text-align:center;"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; vertical-align:middle; margin-right:4px;"> Séb</a>
+                                <a href="https://www.myludo.fr/#!/profil/stephane-rio-26496" target="_blank" style="text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow:0 2px 5px rgba(0,0,0,0.05); flex-shrink:0; text-align:center;"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; vertical-align:middle; margin-right:4px;"> Stéphane</a>
+                                <a href="https://www.myludo.fr/#!/profil/sylvain-bedouet-64234" target="_blank" style="text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow:0 2px 5px rgba(0,0,0,0.05); flex-shrink:0; text-align:center;"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; vertical-align:middle; margin-right:4px;"> Sylvain</a>
                             </div>
 
                             <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed rgba(188,143,99,0.3);">
@@ -496,75 +636,314 @@
                                 <div id="ludo-bag-results" style="display:flex; flex-direction:column; gap:5px;"></div>
                             </div>
 
+                            <h3 style="font-family:'Shadows Into Light', cursive; color:var(--green-deep); font-size:1.5rem; text-align:center; margin: 0 0 10px;">Dans les sacs ce soir-là</h3>
                             <div id="liste-sacs-firebase" style="display:flex; flex-direction:column;">
                                 <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement... <i class="fa-solid fa-spinner fa-spin"></i></div>
                             </div>
                         </div>
 
                         <div id="tab-arene" class="vote-tab-content">
-                            <div style="background:#fff; padding:10px 15px; border-radius:15px; margin-bottom:20px; border:1px solid rgba(0,0,0,0.05); text-align:center;">
-                                <p style="font-size:0.8rem; color:var(--text-brown); margin:0 0 10px; line-height:1.4;">L'Arène sert à s'organiser pour les gros jeux en début de soirée. <b>Rien d'obligatoire !</b><br><span style="font-style:italic; font-size:0.75rem;">Respirez, venez jouer, il y aura toujours des places libres et des jeux d'ambiance sur place. 🍻</span></p>
-                                
-                                <label style="font-weight:bold; font-size:0.8rem; display:block; margin-bottom:5px; margin-top:15px; color:var(--text-brown); text-align:left;">Ouvrir une nouvelle table :</label>
-                                <input type="text" id="input-jeu-search" list="jeux-datalist" class="share-input" style="width:100%; margin-bottom:10px; text-align:left;" placeholder="Rechercher MyLudo (ou taper nom manuel)">
+                            
+                            <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed rgba(188,143,99,0.3);">
+                                <label style="font-weight:bold; font-size:0.8rem; display:block; margin-bottom:5px; color:var(--text-brown);">Ouvrir une nouvelle table :</label>
+                                <input type="text" id="input-jeu-search" list="jeux-datalist" class="share-input" style="width:100%; margin-bottom:10px; text-align:left;" placeholder="Rechercher un jeu (ou ajout manuel)">
                                 <datalist id="jeux-datalist"></datalist>
-                                
-                                <div style="display:flex; gap:10px;">
-                                    <button class="game-btn game-btn-green" style="flex:2; margin:0; justify-content:center;" onclick="window.proposerJeu()"><i class="fa-solid fa-check"></i> Créer table</button>
-                                </div>
+                                <button class="game-btn game-btn-green" style="margin-top:0; width:100%; justify-content:center;" onclick="window.proposerJeu()"><i class="fa-solid fa-plus"></i> Créer la table</button>
                             </div>
 
-                            <h3 style="font-family:'Shadows Into Light', cursive; color:var(--green-deep); font-size:1.5rem; text-align:center; margin: 0 0 5px;">Les Tables Ouvertes</h3>
-                            <div style="font-size:0.7rem; color:gray; text-align:center; margin-bottom:15px; line-height:1.4;"><i class="fa-solid fa-info-circle"></i> <b>Flexible (👼)</b> : Prêt(e) à libérer sa place pour équilibrer.</div>
+                            <h3 style="font-family:'Shadows Into Light', cursive; color:var(--green-deep); font-size:1.5rem; text-align:center; margin: 0 0 5px;">L'Arène (Les Tables)</h3>
+                            <div style="font-size:0.7rem; color:gray; text-align:center; margin-bottom:15px; line-height:1.4;">
+                                <i class="fa-solid fa-info-circle"></i> <b>Flexible (👼)</b> : Prêt(e) à libérer sa place pour équilibrer les tables.<br>
+                                <span style="font-style:italic;">Pas d'inquiétude, l'Arène est là pour s'organiser, il y aura toujours de la place sur un jeu le jour J !</span>
+                            </div>
                             
                             <div id="liste-votes-firebase" style="display:flex; flex-direction:column;">
                                 <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement des tables... <i class="fa-solid fa-spinner fa-spin"></i></div>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>`
         },
-        histoire: { title: "Le Grimoire", text: "<p style='text-align:center'>L'aventure a commencé en 2014 entre collègues...</p>" },
-        cal: { title: "Agenda", text: "<p style='text-align:center'>Dernier vendredi du mois à 20h30 à la Maison des Assos.</p>" },
-        contact: { title: "Contact", text: "<p style='text-align:center'>despotesajeux@protonmail.com</p>" }
+        histoire: { 
+            title: "Le Grimoire", 
+            text: `<div class="panel-card" id="content-histoire">
+                <div class="phase-label first">Phase 1</div><div class="phase-title"><i class="fa-solid fa-layer-group phase-icon"></i><span>La Pioche (2014)</span></div>
+                <p class="grimoire-text">Tout a commencé au travail, un peu par hasard, en entendant des collègues débattre sur le jeu <b>Small World</b>. Très vite, le virus se transmet et les premières soirées jeux s'organisent chez les uns et les autres.</p>
+                <div class="phase-label">Phase 2</div><div class="phase-title"><i class="fa-solid fa-chess-board phase-icon"></i><span>La Mise en Place (2015)</span></div>
+                <p class="grimoire-text">L'aventure prend une nouvelle dimension avec l'acquisition du classique <b>Agricola</b>. Entre la gestion des champs et l'élevage de moutons en bois, la passion devient dévorante ! Très vite, <b>7 Wonders</b> rejoint la table pour des parties endiablées.</p>
+                <div class="phase-label">Phase 3</div><div class="phase-title"><i class="fa-solid fa-people-group phase-icon"></i><span>Le Plateau Central (2019)</span></div>
+                <p class="grimoire-text">Animés par l'envie de partager notre passion avec d'autres joueurs, nous sommes quatre amis à franchir le pas. L'association <b>Des Potes à Jeux</b> naît officiellement.</p>
+                <div style="text-align: center; margin-top: 15px;"><button class="btn-article" onclick="openLightbox('${cheminPresse}article_journal.jpg', true)"><i class="fa-solid fa-newspaper"></i> Voir l'article de journal</button></div>
+                <div class="phase-label">Phase 4</div><div class="phase-title"><i class="fa-solid fa-puzzle-piece phase-icon"></i><span>L'Extension (2026)</span></div>
+                <p class="grimoire-text">Nous voici aujourd'hui en <b>2026</b>. Une solide base de fidèles s'est créée, comptant désormais une <b>vingtaine d'adhérents</b> passionnés cette année. L'aventure ne fait que continuer avec vous !</p>
+            </div>`
+        },
+        adhesion: { 
+            title: "Rejoindre l'asso", 
+            text: `<div class="panel-card" id="content-adhesion">
+                <p style="text-align:center; margin-top:0;">Devenir membre est simple et convivial !</p>
+                <div style="background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.2); color: #dc3545; padding: 10px 15px; border-radius: 12px; text-align: center; font-weight: 700; margin: 15px auto; max-width: 280px; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation"></i> Autorisé aux plus de 18 ans</div>
+                <div class="pricing-container"><div class="price-card featured"><div class="amount">15€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Solo</p></div><div class="price-card featured"><div class="amount">20€<span style="font-size:0.8rem; opacity:0.6;">/an</span></div><p style="font-size:0.65rem; margin:0;">Couple</p></div></div>
+                <ul class="benefits-list" style="max-width: 280px; margin: 15px auto 0;"><li><i class="fa-solid fa-circle-check"></i> Accès illimité aux soirées</li><li><i class="fa-solid fa-circle-check"></i> Première séance offerte</li><li><i class="fa-solid fa-circle-check"></i> Soirée escape game</li><li><i class="fa-solid fa-circle-check"></i> Repas de fin d'année</li></ul>
+            </div>`
+        },
+        cal: { title: "Agenda Ludique", text: `<div class="panel-card" id="content-cal"><p style="text-align: center; color: var(--green-deep); margin-top: 0; font-size: 0.95rem;">On se retrouve chaque <b>dernier vendredi du mois</b>. Voici les prochaines sessions :</p>${agendaHTML}<p style="text-align: center; font-size:0.8rem; margin-bottom: 0;">N'oubliez pas d'apporter votre bonne humeur !</p></div>` },
+        photos: { 
+            title: "Souvenirs", 
+            text: `<div id="content-photos" style="padding-top: 10px; overflow: hidden; position: relative; background: transparent; box-shadow: none;">
+                <div class="photo-tabs"><button class="photo-tab active" onclick="switchPhotoTab('jeux', this)"><i class="fa-solid fa-puzzle-piece"></i> Les Jeux</button><button class="photo-tab" onclick="switchPhotoTab('sorties', this)"><i class="fa-solid fa-users"></i> Les Sorties</button></div>
+                <div id="grid-jeux" class="photo-tab-content active">${photosJeuxHTML}</div>
+                <div id="grid-sorties" class="photo-tab-content">${photosSortiesHTML}</div>
+            </div>` 
+        },
+        contact: { 
+            title: "Nous Contacter", 
+            text: `<div class="panel-card" id="content-contact">
+                <div class="contact-person"><div class="contact-top"><div class="avatar president-icon"><i class="fa-solid fa-crown"></i></div><div style="display:flex; flex-direction:column; justify-content:center;"><h4 style="margin:0;">Julie</h4><span style="font-size:0.75rem; color:var(--wood-brown); font-weight:bold; margin-top:2px;">Présidente</span></div></div></div>
+                <div class="contact-person"><div class="contact-top"><div class="avatar mail-icon"><i class="fa-solid fa-envelope-open-text"></i></div><h4>Email</h4><a href="mailto:despotesajeux@protonmail.com" class="call-btn mail-btn">Écrire</a></div><div class="contact-bottom"><span>Pour toute question ou demande</span></div></div>
+                <div class="contact-person"><div class="contact-top"><div class="avatar fb-icon"><i class="fa-brands fa-facebook-f"></i></div><h4>Facebook</h4><a href="https://www.facebook.com/groups/despotesajeux/" target="_blank" class="call-btn fb-btn">Rejoindre</a></div><div class="contact-bottom"><span>Pour suivre la communauté en ligne</span></div></div>
+                <div class="contact-person"><div class="contact-top"><div class="avatar wa-icon"><i class="fa-brands fa-whatsapp"></i></div><h4>WhatsApp</h4><a href="https://chat.whatsapp.com/GE6whGWavky2alGNskA5yL?mode=gi_t" target="_blank" class="call-btn wa-btn">Papoter</a></div><div class="contact-bottom"><span>Rejoindre le groupe de discussion</span></div></div>
+            </div>` 
+        },
+        ludotheque: { 
+            title: "Nos Ludothèques", 
+            text: `<div class="panel-card" id="content-ludotheque">
+                <p style="text-align: center; margin-top: 0; margin-bottom: 15px; font-size: 0.9rem; line-height: 1.5;">L'asso n'a pas de jeux, mais nos membres en ont des centaines ! 📦 Chaque dernier vendredi du mois, chacun apporte ses coups de cœur du moment pour les faire découvrir aux autres. N'hésitez pas à fouiller dans leurs collections <b>Myludo</b> pour leur réclamer une partie à la prochaine soirée !</p>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Carine</h4><a href="https://www.myludo.fr/#!/profil/carine-duneuf-jardin-85877" target="_blank" class="call-btn game-btn-green">Voir</a></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Ronan</h4><a href="https://www.myludo.fr/#!/profil/ronan-29-67622" target="_blank" class="call-btn game-btn-green">Voir</a></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sébastien</h4><a href="https://www.myludo.fr/#!/profil/sebastien-g-107305" target="_blank" class="call-btn game-btn-green">Voir</a></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Stéphane</h4><a href="https://www.myludo.fr/#!/profil/stephane-rio-26496" target="_blank" class="call-btn game-btn-green">Voir</a></div></div>
+                <div class="contact-person compact-item"><div class="contact-top"><div class="avatar ludo-icon"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=128" alt="Myludo"></div><h4>Sylvain</h4><a href="https://www.myludo.fr/#!/profil/sylvain-bedouet-64234" target="_blank" class="call-btn game-btn-green">Voir</a></div></div>
+            </div>` 
+        }
     };
 
+    /* --- 3. DOM & NAVIGATION --- */
     const sheet = document.getElementById('bottomSheet');
     const overlay = document.getElementById('overlay');
     const sheetContent = document.getElementById('sheetContent');
+    const sheetBody = document.getElementById('sheetBody');
     const mainWrapper = document.getElementById('mainWrapper');
 
     function openSheet(key) {
-        if(!pagesData[key]) return;
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
-        if(key === 'vote') setTimeout(() => { if(window.updateVoteUI) window.updateVoteUI(); }, 50);
+        
+        if(key === 'vote') {
+            setTimeout(() => { if(window.updateVoteUI) window.updateVoteUI(); }, 50);
+        }
+
+        if(gameStarted && gameState[key] && gameState[key].total > gameState[key].found) {
+            let containerId = `content-${key}`; let container = document.getElementById(containerId);
+            if(container) {
+                let remaining = gameState[key].total - gameState[key].found;
+                if(key === 'photos') {
+                    let tabs = container.querySelectorAll('.photo-tab');
+                    for(let i=0; i<remaining; i++) createEgg(tabs[i % tabs.length], key, false, true);
+                } else {
+                    container.style.position = 'relative';
+                    for(let i=0; i<remaining; i++) createEgg(container, key, false, false);
+                }
+            }
+        }
+        
         overlay.style.display = 'block'; mainWrapper.classList.add('blurred');
+        if (window.innerWidth <= 768) { sheet.style.transition = 'none'; sheet.style.transform = ''; void sheet.offsetWidth; sheet.style.transition = "transform 0.5s cubic-bezier(0.17, 0.84, 0.44, 1)"; }
         setTimeout(() => { overlay.style.opacity = '1'; sheet.classList.add('open'); }, 10);
+        if (!history.state || history.state.type !== 'sheet') { history.pushState({ type: 'sheet' }, ''); }
     }
-    function hideSheetDOM() { sheet.classList.remove('open'); overlay.style.opacity = '0'; mainWrapper.classList.remove('blurred'); setTimeout(() => { overlay.style.display = 'none'; }, 250); }
-    function closeSheet() { hideSheetDOM(); }
+
+    function hideSheetDOM() { if (window.innerWidth <= 768) { sheet.style.transition = "transform 0.25s ease-in"; } sheet.style.transform = ''; sheet.classList.remove('open'); overlay.style.opacity = '0'; mainWrapper.classList.remove('blurred'); setTimeout(() => { overlay.style.display = 'none'; }, 250); }
+    function closeSheet() { if (!sheet.classList.contains('open')) return; if (history.state && history.state.type === 'sheet') { history.back(); } else { hideSheetDOM(); } }
     overlay.onclick = () => closeSheet();
 
+    let startY = 0; let isDragging = false;
+    sheet.addEventListener('touchstart', (e) => { if (window.innerWidth > 768) return; if (sheetBody.scrollTop <= 0) { startY = e.touches[0].clientY; isDragging = true; sheet.style.transition = 'none'; } }, { passive: true });
+    sheet.addEventListener('touchmove', (e) => { if (!isDragging || window.innerWidth > 768) return; let diff = e.touches[0].clientY - startY; if (diff > 0) { e.preventDefault(); sheet.style.transform = `translateY(calc(-100% + ${diff}px))`; } }, { passive: false });
+    sheet.addEventListener('touchend', (e) => { if (!isDragging || window.innerWidth > 768) return; isDragging = false; let diff = e.changedTouches[0].clientY - startY; sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; if (diff > 100) { closeSheet(); } else { sheet.style.transform = ''; } });
+
+    /* --- LIGHTBOX --- */
+    const lb = document.getElementById('lightbox'); const lbContainer = document.getElementById('lbContainer'); const lbImg = document.getElementById('lightboxImg'); const lbNavPrev = document.getElementById('lbNavPrev'); const lbNavNext = document.getElementById('lbNavNext');
+    let currentGallery = []; let currentPhotoIndex = 0;
+    let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
+    
+    function openLightbox(src, isSingleImage = false) { 
+        lbImg.src = src; lb.style.display = 'flex'; resetZoom(); setTimeout(() => lb.classList.add('active'), 10); 
+        const captionEl = document.getElementById('lightboxCaption');
+        if (isSingleImage) { 
+            currentGallery = [{src: src, title: ''}]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; captionEl.innerText = '';
+        } else { 
+            const activeTab = document.querySelector('.photo-tab-content.active');
+            const items = activeTab.querySelectorAll('.photo-grid-item img'); 
+            currentGallery = Array.from(items).map(img => ({ src: img.getAttribute('src'), title: img.getAttribute('alt') || '' })); 
+            currentPhotoIndex = currentGallery.findIndex(g => g.src === src); 
+            if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } 
+            captionEl.innerText = currentGallery[currentPhotoIndex].title;
+        } 
+        if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } 
+    }
+    
+    function hideLightboxDOM() { lb.classList.remove('active'); setTimeout(() => { lb.style.display='none'; resetZoom(); }, 300); }
+    function closeLightboxForce(fromHistory = false) { if (!lb.classList.contains('active')) return; if (history.state && history.state.type === 'lightbox') { history.back(); } else { hideLightboxDOM(); } }
+    lbContainer.addEventListener('click', (e) => { if(e.target !== lbImg && currentScale === 1 && !e.target.closest('.lightbox-nav')) closeLightboxForce(); });
+    function getDistance(touches) { return Math.hypot(touches[0].pageX - touches[1].pageX, touches[0].pageY - touches[1].pageY); }
+    function resetZoom() { currentScale = 1; posX = 0; posY = 0; lastPanX = 0; lastPanY = 0; currentSwipeX = 0; lbImg.style.transform = `scale(1) translate(0px, 0px)`; lbContainer.style.transform = `translateX(0px)`; }
+    lbContainer.addEventListener('touchstart', (e) => { if(e.target.closest('.lightbox-nav')) return; if (e.touches.length === 2) { isZooming = true; initialDistance = getDistance(e.touches); } else if (e.touches.length === 1) { lastPanX = e.touches[0].clientX; lastPanY = e.touches[0].clientY; swipeStartX = e.touches[0].clientX; currentSwipeX = 0; } }, {passive: false});
+    lbContainer.addEventListener('touchmove', (e) => { if (e.touches.length === 2) { e.preventDefault(); const currentDistance = getDistance(e.touches); const scaleChange = currentDistance / initialDistance; currentScale = Math.min(Math.max(1, currentScale * scaleChange), 4); lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; initialDistance = currentDistance; } else if (e.touches.length === 1) { let currentX = e.touches[0].clientX; let currentY = e.touches[0].clientY; if (currentScale > 1) { e.preventDefault(); posX += (currentX - lastPanX) / currentScale; posY += (currentY - lastPanY) / currentScale; lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; lastPanX = currentX; lastPanY = currentY; } else if (!isZooming && currentGallery.length > 1) { e.preventDefault(); currentSwipeX = currentX - swipeStartX; lbContainer.style.transform = `translateX(${currentSwipeX}px)`; } } }, {passive: false});
+    lbContainer.addEventListener('touchend', (e) => { if (e.touches.length < 2) { isZooming = false; } if (currentScale === 1 && currentGallery.length > 1) { if (currentSwipeX > 70) { changePhotoDir('prev'); } else if (currentSwipeX < -70) { changePhotoDir('next'); } else { lbContainer.style.transform = `translateX(0px)`; } currentSwipeX = 0; } });
+    
+    function changePhotoDir(dir) { 
+        if (currentGallery.length <= 1) return; 
+        if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } 
+        lbImg.style.opacity = 0; document.getElementById('lightboxCaption').style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; 
+        setTimeout(() => { 
+            let newObj = currentGallery[currentPhotoIndex]; lbImg.src = newObj.src; document.getElementById('lightboxCaption').innerText = newObj.title;
+            lbImg.style.opacity = 1; document.getElementById('lightboxCaption').style.opacity = 1;
+        }, 150); 
+    }
+
+    /* --- JEU DES DES --- */
+    let gameStarted = false; let eggCount = 0; const totalEggs = 10;
+    let timerInterval; let startTime; let finalGameData = { time: "", rankNumber: 0, rank: "", message: "", rawMs: 0 }; 
+    let confettiInterval; 
+    let gameState = { 'home': { total: 0, found: 0 }, 'histoire': { total: 0, found: 0 }, 'adhesion': { total: 0, found: 0 }, 'cal': { total: 0, found: 0 }, 'photos': { total: 0, found: 0 }, 'contact': { total: 0, found: 0 }, 'ludotheque': { total: 0, found: 0 } };
+
+    function askToPlay() {
+        if(gameStarted) return;
+        const modal = document.getElementById('modalContent');
+        modal.innerHTML = `
+            <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
+            <h3 id="gameTitle">Psst... Joueur ?</h3>
+            <div class="game-desc-box"><p>Comme on est joueurs, <b>10 petits dés</b> <i class="fa-solid fa-dice" style="color:var(--wood-brown); font-size:1.2rem; vertical-align:middle; margin: 0 4px;"></i> ont été cachés subtilement dans tout le site (Accueil, Histoire, Photos...).<br><br>Sauras-tu tous les retrouver ?</p></div>
+            <button class="game-btn game-btn-green" onclick="initGame()"><i class="fa-solid fa-play"></i> C'est parti !</button>
+        `;
+        document.getElementById('gameModalBackdrop').classList.add('visible');
+        if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
+    }
+    
+    function initGame() {
+        closeGameModalForce(); hideSheetDOM();
+        if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) { history.replaceState({ type: 'main' }, ''); }
+        resetGameData(); gameStarted = true; startTimer();
+        
+        const btnVoter = document.getElementById('btn-voter-accueil');
+        if (btnVoter) btnVoter.style.display = 'none';
+
+        const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque'];
+        for(let i=0; i<9; i++) { let randomSec = sections[Math.floor(Math.random() * sections.length)]; gameState[randomSec].total++; }
+        gameState['home'].total = 1; renderHomeEgg(); showToast("Le chrono est lancé ! ⏱️");
+    }
+    
+    function resetGameData() {
+        gameStarted = false; eggCount = 0; clearInterval(timerInterval);
+        document.getElementById('gameTimer').classList.remove('visible'); document.getElementById('gameTimer').innerText = "00:00:00"; document.getElementById('gameTimer').style.color = '#f1c40f'; 
+        for(let key in gameState) { gameState[key].total = 0; gameState[key].found = 0; }
+        document.querySelectorAll('.egg').forEach(el => el.remove());
+
+        const btnVoter = document.getElementById('btn-voter-accueil');
+        if (btnVoter) btnVoter.style.display = 'flex';
+    }
+    
+    function startTimer() {
+        startTime = Date.now(); document.getElementById('gameTimer').classList.add('visible');
+        timerInterval = setInterval(() => {
+            let delta = Date.now() - startTime; let minutes = Math.floor(delta / 60000); let seconds = Math.floor((delta % 60000) / 1000); let centiseconds = Math.floor((delta % 1000) / 10);
+            document.getElementById('gameTimer').innerText = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds) + ":" + (centiseconds < 10 ? "0" + centiseconds : centiseconds);
+        }, 10);
+    }
+    
+    function foundEgg(el, sectionKey) {
+        if(el.classList.contains('found')) return; if(eggCount >= 10) return;
+        gameState[sectionKey].found++; eggCount++; el.style.pointerEvents = 'none'; el.classList.add('found'); 
+        
+        setTimeout(() => el.remove(), 800); 
+
+        let msg = `Bravo ! ${eggCount}/${totalEggs}`;
+        if(eggCount === totalEggs) { clearInterval(timerInterval); let rawMs = Date.now() - startTime; finishGame(rawMs); } 
+        else if(eggCount > 5) { msg = `Tu chauffes ! ${eggCount}/${totalEggs}`; showToast(msg); } else { showToast(msg); }
+        if(navigator.vibrate) navigator.vibrate(50);
+    }
+    
+    function finishGame(rawMs) {
+        let finalTime = document.getElementById('gameTimer').innerText; document.getElementById('gameTimer').style.color = '#2ecc71'; gameStarted = false;
+        let seconds = rawMs / 1000; let rank = ""; let message = ""; let rankNum = 0;
+        if (seconds < 5) { rankNum=1; rank = "DIEU DU DÉ ⚡"; message = "Inhumain ! T'as triché ?"; } else if (seconds < 10) { rankNum=2; rank = "GRAND MAÎTRE JEDI ⚔️"; message = "La Force est puissante en toi."; } else if (seconds < 15) { rankNum=3; rank = "CHUCK NORRIS 👊"; message = "Chuck Norris ne cherche pas les dés, ils se dénoncent."; } else if (seconds < 20) { rankNum=4; rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre."; } else if (seconds < 25) { rankNum=5; rank = "ŒIL DE LYNX 😼"; message = "Une vision perçante."; } else if (seconds < 35) { rankNum=6; rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Enquête méthodique."; } else if (seconds < 45) { rankNum=7; rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; } else if (seconds < 60) { rankNum=8; rank = "LE DIESEL 🚜"; message = "Lent au démarrage, mais tu es arrivé !"; } else { rankNum=9; rank = "L'ESCARGOT 🐌"; message = "L'important c'est de participer... non ?"; }
+        finalGameData.time = finalTime; finalGameData.rank = rank; finalGameData.rankNumber = rankNum; finalGameData.message = message; finalGameData.rawMs = rawMs;
+        
+        const btnVoter = document.getElementById('btn-voter-accueil');
+        if (btnVoter) btnVoter.style.display = 'flex';
+
+        setTimeout(() => {
+            const modal = document.getElementById('modalContent');
+            modal.innerHTML = `
+                <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
+                <div class="victory-icon"><i class="fa-solid fa-medal"></i></div>
+                <h3 class="victory-title">Félicitations !</h3>
+                <div class="victory-stats"><div style="font-size:1.1rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div><div style="font-size:1.3rem; color:#2c3e50; margin: 2px 0;">${rank}</div><div style="font-size:2rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div><div class="victory-message">"${message}"</div></div>
+                <div id="shareContainer" class="share-container"><input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15"><button class="game-btn wa-btn" style="width:100%;" onclick="shareWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Partager mon score</button></div>
+                <button class="game-btn game-btn-green" onclick="initGame()"><i class="fa-solid fa-rotate-right"></i> Rejouer</button>
+            `;
+            document.getElementById('gameModalBackdrop').classList.add('visible'); 
+            if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
+            startConfetti();
+        }, 1000);
+    }
+    
+    function generateChecksum(ms) { return Math.floor((ms * 17) + 2026).toString(36).toUpperCase(); }
+    function shareWhatsapp() {
+        let pseudo = document.getElementById('playerPseudo').value.trim() || "Un Pote"; let check = generateChecksum(finalGameData.rawMs); let siteUrl = "https://despotesajeux.github.io/";
+        let text = `🎲 *DÉFI DES POTES À JEUX* 🎲%0A%0A🕵️ J'ai trouvé les 10 dés cachés !%0A%0A👤 *Joueur :* ${pseudo}%0A⏱️ *Temps :* ${finalGameData.time}%0A🏅 *Rang N°${finalGameData.rankNumber} :* ${finalGameData.rank}%0A📝 _"${finalGameData.message}"_%0A%0ATu penses faire mieux ? Tente ta chance ici :%0A👉 ${siteUrl}%0A%0A🔐 _Verif : ${check}_`;
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+    
+    function showToast(msg) { const toast = document.getElementById('gameToast'); toast.innerText = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
+    function renderHomeEgg() { let container = document.getElementById('homeEggContainer'); container.innerHTML = ''; if(gameState['home'].total > gameState['home'].found) { createEgg(container, 'home', false); } }
+    function createEgg(container, sectionKey, isFound, isTab = false) {
+        let egg = document.createElement('i'); egg.className = 'fa-solid fa-dice egg'; if (isFound) return; 
+        egg.onclick = function(event) { foundEgg(this, sectionKey); event.stopPropagation(); }; egg.style.pointerEvents = 'auto';
+        if(!isTab) { egg.style.top = (Math.random() * 80 + 10) + '%'; egg.style.left = (Math.random() * 80 + 10) + '%'; } else { egg.style.position = 'absolute'; egg.style.top = '-8px'; egg.style.right = '5px'; egg.style.margin = '0'; egg.style.fontSize = '1.2rem'; egg.style.filter = 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))'; }
+        container.appendChild(egg);
+    }
+    function startConfetti() {
+        const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6'];
+        for(let i=0; i<30; i++) { setTimeout(() => { const confetti = document.createElement('div'); confetti.classList.add('confetti'); confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`; document.body.appendChild(confetti); setTimeout(() => confetti.remove(), 5000); }, i * 50); }
+        if(!document.getElementById('confetti-style')) { const style = document.createElement('style'); style.id = 'confetti-style'; style.innerHTML = `@keyframes fall { 0% { top: -10px; opacity: 1; transform: rotate(0deg); } 100% { top: 100vh; opacity: 0; transform: rotate(720deg); } }`; document.head.appendChild(style); }
+    }
+
+    /* --- GESTION DES COOKIES & ANALYTICS --- */
+    function loadGoogleAnalytics() {
+        const script = document.createElement('script'); script.async = true; script.src = "https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY"; document.head.appendChild(script);
+        window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-YPHH9PELKY');
+    }
+    function checkCookies() { const consent = localStorage.getItem('potes_cookie_consent'); if (consent === 'accepted') { loadGoogleAnalytics(); } else if (!consent) { setTimeout(() => { document.getElementById('cookiePopup').classList.add('show'); }, 1000); } }
+    function handleCookies(choice) { localStorage.setItem('potes_cookie_consent', choice); document.getElementById('cookiePopup').classList.remove('show'); if (choice === 'accepted') { loadGoogleAnalytics(); } }
+    checkCookies();
+
     // ==========================================
-    // LOGIQUE DE NAVIGATION DES ONGLETS VOTE
+    // LOGIQUE SANS SWIPE DES ONGLETS VOTE
     // ==========================================
     window.switchVoteTab = function(tabId, element) {
         document.querySelectorAll('.vote-tab').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.vote-tab-content').forEach(content => content.classList.remove('active'));
-        if(element) { element.classList.add('active'); } 
-        else { const btn = document.querySelector(`.vote-tab[onclick*="${tabId}"]`); if(btn) btn.classList.add('active'); }
+        
+        if(element) {
+            element.classList.add('active');
+        } else {
+            const btn = document.querySelector(`.vote-tab[onclick*="${tabId}"]`);
+            if(btn) btn.classList.add('active');
+        }
+        
         const activeContent = document.getElementById('tab-' + tabId);
         if(activeContent) activeContent.classList.add('active');
     };
 
-    function askToPlay() { window.showCustomAlert("Surprise !", "Le mini-jeu des dés arrive bientôt...", "fa-dice"); }
 </script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, updateDoc, doc, deleteDoc, onSnapshot, getDocs, getDoc, setDoc, collectionGroup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const CODE_ASSO = "POTES56";
     const firebaseConfig = {
@@ -582,7 +961,7 @@
     window.auth = auth;
     let unsubscribeVotes = null;
     let unsubscribeRSVP = null;
-    let localProfile = { avatar: '🎲', titre: 'Membre', jeuFavori: '', styleJoueur: 'Touche-à-tout', pseudoMyludo: '' };
+    let localProfile = { avatar: '🎲', titre: 'Membre', jeuFavori: '', styleJoueur: 'Touche-à-tout' };
     window.tousLesJeux = []; 
     window.myCurrentRSVP = null; 
 
@@ -592,13 +971,10 @@
         else { input.type = "password"; icon.classList.replace("fa-eye-slash", "fa-eye"); }
     };
 
-    // ==========================================
-    // UI ET GESTION DES PROFILS
-    // ==========================================
+    // --- AUTHENTIFICATION ---
     window.updateVoteUI = async function() {
         const viewAuth = document.getElementById('view-auth'), viewVotes = document.getElementById('view-votes'), userGreeting = document.getElementById('user-greeting');
         if(!viewAuth || !viewVotes) return;
-        
         if(auth.currentUser) {
             viewAuth.style.display = 'none'; viewVotes.style.display = 'block';
             await window.loadProfile();
@@ -607,18 +983,16 @@
             if(rsvpTitle) rsvpTitle.innerText = "Présence du " + window.getFormattedEventDate();
 
             let displayName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
-            
-            // MODIFICATION PROFIL : Emoji plus petit et bouton modifier inline
-            userGreeting.innerHTML = `
-                <div style="font-size:2.5rem; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2)); margin-right: 10px;">${localProfile.avatar}</div> 
+            userGreeting.innerHTML = `<div style="display:flex; align-items:center; gap:10px;">
+                <div style="font-size:2.5rem; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> 
                 <span style="font-size:1.5rem;">Salut ${displayName} !</span>
-                <i class="fa-solid fa-pen" style="color:var(--wood-brown); font-size:1rem; cursor:pointer; padding:5px 5px 5px 15px;" onclick="window.openProfileModal()"></i>
-            `;
+                <i class="fa-solid fa-pen" style="color:var(--wood-brown); font-size:0.9rem; cursor:pointer; padding:5px;" onclick="window.openProfileModal()"></i>
+            </div>`;
             
             window.initFirebaseRSVP();
             window.initFirebaseVotes();
             window.chargerListeCollection(); 
-            if(window.initFirebaseSacs) window.initFirebaseSacs();
+            window.initFirebaseSacs();
         } else {
             viewAuth.style.display = 'block'; viewVotes.style.display = 'none';
             window.renderAuthUI();
@@ -628,7 +1002,7 @@
     window.renderAuthUI = function() {
         const authContainer = document.getElementById('auth-container'); if (!authContainer) return;
         if (window.authMode === 'register') {
-            authContainer.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
+            authContainer.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px;">
                 <input type="text" id="auth-secret" class="share-input" placeholder="Code secret de l'asso" style="border-color:var(--president-color); background:rgba(230,126,34,0.05);">
                 <input type="text" id="auth-name" class="share-input" placeholder="Pseudo">
                 <input type="email" id="auth-email" class="share-input" placeholder="Email">
@@ -638,7 +1012,7 @@
                 <span onclick="window.authMode='login'; renderAuthUI()" style="font-size:0.75rem; text-align:center; display:block; margin-top:10px; cursor:pointer; text-decoration:underline;">Déjà inscrit ? Connexion</span>
             </div>`;
         } else {
-            authContainer.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
+            authContainer.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px;">
                 <input type="email" id="auth-email" class="share-input" placeholder="Email">
                 <div style="position:relative;"><input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe" style="width:100%;"><i class="fa-solid fa-eye" id="t-pwd" onclick="toggleVisibility('auth-pwd','t-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
                 <button class="game-btn game-btn-green" onclick="loginEmail()" style="width:100%; justify-content:center;"><i class="fa-solid fa-right-to-bracket"></i> Connexion</button>
@@ -659,7 +1033,7 @@
             let name = document.getElementById('auth-name').value || 'Membre';
             const res = await createUserWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pwd').value);
             await updateProfile(res.user, { displayName: name });
-            await setDoc(doc(db, "utilisateurs", res.user.uid), { avatar: '🎲', titre: 'Novice', nom: name, pseudoMyludo: '' });
+            await setDoc(doc(db, "utilisateurs", res.user.uid), { avatar: '🎲', titre: 'Novice', nom: name });
             window.showCustomAlert("Succès", "Compte créé !", "fa-champagne-glasses");
         } catch (e) { window.showCustomAlert("Erreur", e.message, "fa-bug"); }
     };
@@ -675,7 +1049,7 @@
         if(d.exists()) {
             localProfile = d.data();
         } else {
-            localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout', pseudoMyludo: '' };
+            localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout' };
             await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile);
         }
     };
@@ -690,18 +1064,13 @@
                 <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Titre (Fun)</label><input type="text" id="prof-titre" class="share-input" value="${localProfile.titre || 'Membre'}" placeholder="Le Stratège"></div>
             </div>
 
-            <div style="text-align:left; margin-bottom:10px; background:rgba(44, 62, 80, 0.1); padding:8px; border-radius:8px; border:1px dashed #2c3e50;">
-                <label style="font-size:0.7rem; font-weight:bold; color:#2c3e50;">🔗 Ton pseudo exact de Ludothèque MyLudo :</label>
-                <input type="text" id="prof-myludo" class="share-input" value="${localProfile.pseudoMyludo || ''}" placeholder="Ex: sebastien, julie..." style="margin-top:4px;">
-            </div>
-
             <div style="text-align:left; margin-bottom:10px;">
-                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon jeu préféré de tous les temps :</label>
+                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon jeu préféré :</label>
                 <input type="text" id="prof-jeu" class="share-input" value="${localProfile.jeuFavori || ''}" placeholder="Ex: Terraforming Mars">
             </div>
 
             <div style="text-align:left; margin-bottom:15px;">
-                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon style de jeu :</label>
+                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon style :</label>
                 <select id="prof-style" class="share-input">
                     <option value="Touche-à-tout" ${localProfile.styleJoueur==='Touche-à-tout'?'selected':''}>Touche-à-tout</option>
                     <option value="Eurogame (Gestion)" ${localProfile.styleJoueur==='Eurogame (Gestion)'?'selected':''}>Eurogame (Gestion)</option>
@@ -721,14 +1090,13 @@
         localProfile.titre = document.getElementById('prof-titre').value || 'Membre';
         localProfile.jeuFavori = document.getElementById('prof-jeu').value || '';
         localProfile.styleJoueur = document.getElementById('prof-style').value || 'Touche-à-tout';
-        localProfile.pseudoMyludo = document.getElementById('prof-myludo') ? document.getElementById('prof-myludo').value.trim() : '';
         localProfile.nom = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
         
         await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile, {merge:true});
         document.getElementById('user-greeting').innerHTML = `<div style="display:flex; align-items:center; gap:10px;">
             <div style="font-size:2.5rem; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> 
             <span style="font-size:1.5rem;">Salut ${localProfile.nom} !</span>
-            <i class="fa-solid fa-pen" style="color:var(--wood-brown); font-size:1rem; cursor:pointer; padding:5px 5px 5px 15px;" onclick="window.openProfileModal()"></i>
+            <i class="fa-solid fa-pen" style="color:var(--wood-brown); font-size:0.9rem; cursor:pointer; padding:5px;" onclick="window.openProfileModal()"></i>
         </div>`;
         closeGameModalForce();
     };
@@ -826,10 +1194,9 @@
 
         let html = '';
         let myName = (auth.currentUser.displayName || auth.currentUser.email.split('@')[0]).toLowerCase();
-        let checkLudoId = (localProfile.pseudoMyludo || myName).toLowerCase();
 
         filtered.forEach(j => {
-            const isMe = j.proprio.toLowerCase() === checkLudoId;
+            const isMe = j.proprio.toLowerCase() === myName;
             const btn = isMe 
                 ? `<button class="btn-small game-btn-green" style="margin:0;" onclick="window.actionSac('${j.titre.replace(/'/g, "\\'")}', '${j.proprio.replace(/'/g, "\\'")}', 'apporter')">J'amène</button>`
                 : `<button class="btn-small" style="margin:0; background:var(--wood-brown);" onclick="window.actionSac('${j.titre.replace(/'/g, "\\'")}', '${j.proprio.replace(/'/g, "\\'")}', 'demander')">Demander</button>`;
@@ -863,27 +1230,6 @@
         }
     };
 
-    window.buildSacCard = function(s, myName, myLudoId) {
-        let icon = s.statut === "confirmé" ? "📦" : "🙏";
-        let text = "";
-        if (s.statut === "confirmé") {
-            text = s.proprio.toLowerCase() === myLudoId ? `Je l'amène.` : `<b>${s.proprio}</b> l'amène.`;
-        } else {
-            text = s.demandeur.toLowerCase() === myName.toLowerCase() ? `J'ai demandé à <b>${s.proprio}</b>` : `Demandé à <b>${s.proprio}</b> par ${s.demandeur}`;
-        }
-        
-        let canDelete = (s.demandeur.toLowerCase() === myName.toLowerCase() || s.proprio.toLowerCase() === myLudoId);
-        let delBtn = canDelete ? `<span onclick="window.supprimerSac('${s.id}')" style="color:var(--text-brown); opacity:0.5; padding:5px; cursor:pointer; font-size:1.2rem;"><i class="fa-solid fa-xmark"></i></span>` : '';
-
-        return `<div style="background:#fff; padding:8px 12px; border-radius:12px; border:1px solid rgba(0,0,0,0.05); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
-            <div style="flex:1; min-width:0; padding-right:10px;">
-                <div style="font-weight:bold; color:var(--green-deep); font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${icon} ${s.titre}</div>
-                <div style="font-size:0.65rem; color:gray; margin-top:2px;">${text}</div>
-            </div>
-            ${delBtn}
-        </div>`;
-    };
-
     window.initFirebaseSacs = function() {
         if(window.unsubscribeSacs) window.unsubscribeSacs();
         window.unsubscribeSacs = onSnapshot(collection(db, "sacs_jeux"), (snap) => {
@@ -895,29 +1241,27 @@
             
             sacs.sort((a, b) => b.timestamp - a.timestamp);
 
-            let myName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
-            let myLudoId = (localProfile.pseudoMyludo || myName).toLowerCase();
-
-            let mesSacs = sacs.filter(s => s.proprio.toLowerCase() === myLudoId);
-            let autresSacs = sacs.filter(s => s.proprio.toLowerCase() !== myLudoId);
-
-            let html = '';
-            
-            if (mesSacs.length > 0) {
-                html += `<h4 style="font-size:0.85rem; color:var(--green-deep); margin:0 0 5px; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:3px;">🎒 Mon Sac</h4>`;
-                html += mesSacs.map(s => window.buildSacCard(s, myName, myLudoId)).join('');
-            }
-            
-            if (autresSacs.length > 0) {
-                html += `<h4 style="font-size:0.85rem; color:var(--wood-brown); margin:10px 0 5px; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:3px;">🎲 Les autres sacs</h4>`;
-                html += autresSacs.map(s => window.buildSacCard(s, myName, myLudoId)).join('');
-            }
-
             if(sacs.length === 0) { 
-                html = '<div style="text-align:center; font-size:0.8rem; color:gray;">Aucun jeu n\'est prévu dans les sacs pour l\'instant.</div>'; 
+                div.innerHTML = '<div style="text-align:center; font-size:0.8rem; color:gray;">Aucun jeu n\'est prévu dans les sacs pour l\'instant.</div>'; 
+                return; 
             }
             
-            div.innerHTML = html;
+            div.innerHTML = sacs.map(s => {
+                let icon = s.statut === "confirmé" ? "📦" : "🙏";
+                let text = s.statut === "confirmé" ? `<b>${s.proprio}</b> amène ce jeu.` : `Demandé à <b>${s.proprio}</b> par ${s.demandeur}`;
+                
+                let myName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
+                let canDelete = (s.demandeur.toLowerCase() === myName.toLowerCase() || s.proprio.toLowerCase() === myName.toLowerCase());
+                let delBtn = canDelete ? `<span onclick="window.supprimerSac('${s.id}')" style="color:var(--text-brown); opacity:0.5; padding:5px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></span>` : '';
+
+                return `<div style="background:#fff; padding:10px 15px; border-radius:12px; border:1px solid rgba(0,0,0,0.05); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
+                    <div style="flex:1; min-width:0; padding-right:10px;">
+                        <div style="font-weight:bold; color:var(--green-deep); font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${icon} ${s.titre}</div>
+                        <div style="font-size:0.65rem; color:gray; margin-top:2px;">${text}</div>
+                    </div>
+                    ${delBtn}
+                </div>`;
+            }).join('');
         });
     };
 
@@ -954,28 +1298,58 @@
 
         const jeuTrouve = window.tousLesJeux.find(j => j.titre.toLowerCase() === titre.toLowerCase());
 
-        // Si le jeu n'est pas dans MyLudo, on bascule vers la création manuelle
-        if (!jeuTrouve) {
-            window.openManualCreateModal(titre);
-            return;
+        let minJ = 2, maxJ = 4, proprioDuJeu = "Moi", lienMyludo = "", dureeJeu = "?", styleJeu = "Classique";
+
+        if (jeuTrouve) {
+            proprioDuJeu = jeuTrouve.proprio;
+            lienMyludo = jeuTrouve.lien || "";
+            
+            dureeJeu = jeuTrouve.duree || "?";
+            if (jeuTrouve.style) styleJeu = jeuTrouve.style;
+            else if (jeuTrouve.categories && jeuTrouve.categories.length > 0) styleJeu = jeuTrouve.categories[0];
+            else if (jeuTrouve.type) styleJeu = jeuTrouve.type;
+
+            const joueursStr = jeuTrouve.joueurs || "2-4";
+            const parts = joueursStr.match(/\d+/g);
+            if (parts && parts.length > 0) minJ = parseInt(parts[0]);
+            if (parts && parts.length > 1) maxJ = parseInt(parts[1]);
+            else maxJ = minJ;
+        } else {
+            proprioDuJeu = auth.currentUser.displayName || "Moi";
+            let maxStr = prompt(`Le jeu "${titre}" n'a pas été trouvé dans la ludothèque de l'asso.\nCombien de joueurs MAXIMUM peuvent jouer à ce jeu ?`, "4");
+            if (maxStr === null) return; 
+            maxJ = parseInt(maxStr) || 4;
+            minJ = 2; 
+
+            let dureeStr = prompt(`Quelle est la durée moyenne de la partie (en minutes) ?`, "60");
+            if (dureeStr !== null) dureeJeu = dureeStr;
+
+            let styleStr = prompt(`Quel est le style de ce jeu (ex: Coopératif, Ambiance, Gestion...) ?`, "Jeu de plateau");
+            if (styleStr !== null) styleJeu = styleStr;
         }
 
-        let proprioDuJeu = jeuTrouve.proprio; 
-        let lienMyludo = jeuTrouve.lien || ""; 
-        let dureeJeu = jeuTrouve.duree || "?";
-        let styleJeu = jeuTrouve.style || (jeuTrouve.categories && jeuTrouve.categories.length > 0 ? jeuTrouve.categories[0] : "Jeu de plateau");
-
-        let minJ = 2, maxJ = 4;
-        const parts = (jeuTrouve.joueurs || "2-4").match(/\d+/g);
-        if (parts && parts.length > 0) minJ = parseInt(parts[0]);
-        if (parts && parts.length > 1) maxJ = parseInt(parts[1]); else maxJ = minJ;
-
-        const moi = { uid: auth.currentUser.uid, nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar, type: 'main', flex: false, id: Date.now() };
+        const moi = { 
+            uid: auth.currentUser.uid, 
+            nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], 
+            avatar: localProfile.avatar, 
+            type: 'main', 
+            flex: false, 
+            id: Date.now() 
+        };
 
         try {
             await addDoc(collection(db, "jeux_proposes"), {
-                nom: jeuTrouve.titre, proposePar: moi.nom, createurUid: auth.currentUser.uid, appartientA: proprioDuJeu, myludoLien: lienMyludo,
-                minJoueurs: minJ, maxJoueurs: maxJ, duree: dureeJeu, style: styleJeu, inscrits: [moi], date_ajout: new Date()
+                nom: titre,
+                proposePar: moi.nom,
+                createurUid: auth.currentUser.uid, 
+                appartientA: proprioDuJeu,
+                myludoLien: lienMyludo,
+                minJoueurs: minJ,
+                maxJoueurs: maxJ,
+                duree: dureeJeu,
+                style: styleJeu,
+                inscrits: [moi],
+                date_ajout: new Date()
             });
             window.showCustomAlert("Table Ouverte !", "Les autres joueurs peuvent maintenant te rejoindre.", "fa-champagne-glasses");
             input.value = ""; 
