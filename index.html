@@ -215,6 +215,16 @@
         .photo-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
         .photo-game-title { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); color: #fff; font-family: 'Quicksand', sans-serif; font-size: 0.7rem; font-weight: 700; padding: 15px 4px 4px; text-align: center; box-sizing: border-box; pointer-events: none; text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
         .photo-tab-content.active .photo-grid-item { animation: gridItemFade 0.4s cubic-bezier(0.17, 0.84, 0.44, 1) forwards; }
+        .photo-tab-content.active .photo-grid-item:nth-child(1) { animation-delay: 0.05s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(2) { animation-delay: 0.10s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(3) { animation-delay: 0.15s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(4) { animation-delay: 0.20s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(5) { animation-delay: 0.25s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(6) { animation-delay: 0.30s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(7) { animation-delay: 0.35s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(8) { animation-delay: 0.40s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(9) { animation-delay: 0.45s; }
+        .photo-tab-content.active .photo-grid-item:nth-child(n+10) { animation-delay: 0.50s; }
         @keyframes gridItemFade { from { opacity: 0; transform: translateY(15px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
         .photo-year { position: absolute; bottom: 4px; right: 4px; background: rgba(0, 0, 0, 0.6); color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; pointer-events: none; backdrop-filter: blur(2px); }
         .contact-person { display: flex; flex-direction: column; padding: 10px 12px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
@@ -584,11 +594,12 @@
                             <div id="user-greeting" style="display:flex; flex-direction:column; align-items:center; font-weight:bold; color:var(--green-deep); font-size:1.5rem; margin-bottom:15px;"></div>
                             
                             <div style="text-align:center; margin-bottom:20px;">
-                                <button class="game-btn" style="margin:0; padding:8px 15px; font-size:0.85rem; background:transparent; border:1px solid var(--wood-brown); color:var(--wood-brown); box-shadow:none;" onclick="window.openProfileModal()">✏️ Modifier mon profil</button>
+                                <button class="game-btn game-btn-green" style="margin:0; padding:8px 15px; font-size:0.85rem;" onclick="window.openProfileModal()"><i class="fa-solid fa-pen"></i> Modifier mon profil</button>
                             </div>
 
                             <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px solid rgba(58, 99, 81, 0.2); text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
                                 <h4 style="margin: 0 0 10px; color: var(--green-deep); font-size: 1rem;">Présence (Vendredi)</h4>
+                                <div style="font-size:0.75rem; color:var(--text-brown); margin-bottom:10px; font-style:italic;">Dis-nous si tu viens ! (Mais c'est pas grave si tu changes d'avis 😉)</div>
                                 <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 12px;">
                                     <button class="rsvp-btn" id="btn-rsvp-present" onclick="window.setRSVP('present')">✅ Oui</button>
                                     <button class="rsvp-btn" id="btn-rsvp-maybe" onclick="window.setRSVP('maybe')">🤷 P-ê.</button>
@@ -615,7 +626,10 @@
                             </div>
 
                             <h3 style="font-family:'Shadows Into Light', cursive; color:var(--green-deep); font-size:1.5rem; text-align:center; margin: 0 0 5px;">L'Arène (Les Tables)</h3>
-                            <div style="font-size:0.7rem; color:gray; text-align:center; margin-bottom:15px; line-height:1.4;"><i class="fa-solid fa-info-circle"></i> <b>Flexible (👼)</b> : Prêt(e) à libérer sa place pour équilibrer les tables.</div>
+                            <div style="font-size:0.7rem; color:gray; text-align:center; margin-bottom:15px; line-height:1.4;">
+                                <i class="fa-solid fa-info-circle"></i> <b>Flexible (👼)</b> : Prêt(e) à libérer sa place pour équilibrer les tables.<br>
+                                <span style="font-style:italic;">Pas d'inquiétude, l'Arène est là pour s'organiser, il y aura toujours de la place sur un jeu le jour J !</span>
+                            </div>
                             
                             <div id="liste-votes-firebase" style="display:flex; flex-direction:column;">
                                 <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement des tables... <i class="fa-solid fa-spinner fa-spin"></i></div>
@@ -994,25 +1008,31 @@
         try { await sendPasswordResetEmail(auth, mail); window.showCustomAlert("Envoyé", "Vérifie tes spams.", "fa-paper-plane"); } catch(e) { window.showCustomAlert("Erreur", "Email inconnu", "fa-question"); }
     };
 
-    // --- PROFIL ---
     window.loadProfile = async function() {
         const d = await getDoc(doc(db, "utilisateurs", auth.currentUser.uid));
-        if(d.exists()) { localProfile = d.data(); } 
-        else { localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout' }; await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile); }
+        if(d.exists()) {
+            localProfile = d.data();
+        } else {
+            localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout' };
+            await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile);
+        }
     };
 
     window.openProfileModal = function() {
         document.getElementById('modalContent').innerHTML = `
             <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
             <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; font-size:1.8rem; margin:0 0 15px;">Mon Profil</h3>
+            
             <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px; margin-bottom:10px; text-align:left;">
                 <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Avatar (Emoji)</label><input type="text" id="prof-avatar" class="share-input" value="${localProfile.avatar || '🎲'}" maxlength="2" style="font-size:1.2rem;"></div>
                 <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Titre (Fun)</label><input type="text" id="prof-titre" class="share-input" value="${localProfile.titre || 'Membre'}" placeholder="Le Stratège"></div>
             </div>
+
             <div style="text-align:left; margin-bottom:10px;">
                 <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon jeu préféré :</label>
                 <input type="text" id="prof-jeu" class="share-input" value="${localProfile.jeuFavori || ''}" placeholder="Ex: Terraforming Mars">
             </div>
+
             <div style="text-align:left; margin-bottom:15px;">
                 <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon style :</label>
                 <select id="prof-style" class="share-input">
@@ -1023,6 +1043,7 @@
                     <option value="Coopératif" ${localProfile.styleJoueur==='Coopératif'?'selected':''}>Coopératif</option>
                 </select>
             </div>
+
             <button class="game-btn game-btn-green" style="width:100%; justify-content:center;" onclick="saveProfile()"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button>
         `;
         document.getElementById('gameModalBackdrop').classList.add('visible');
@@ -1034,6 +1055,7 @@
         localProfile.jeuFavori = document.getElementById('prof-jeu').value || '';
         localProfile.styleJoueur = document.getElementById('prof-style').value || 'Touche-à-tout';
         localProfile.nom = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
+        
         await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile, {merge:true});
         document.getElementById('user-greeting').innerHTML = `<div style="font-size:3.5rem; margin-bottom:5px; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> Salut ${localProfile.nom} !`;
         closeGameModalForce();
@@ -1049,6 +1071,7 @@
             <div style="font-size: 3.5rem; margin-bottom: 5px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${p.avatar || '👤'}</div>
             <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; font-size:1.8rem; margin:0 0 5px;">${p.nom}</h3>
             <div style="font-size:0.8rem; color:var(--wood-brown); font-weight:bold; text-transform:uppercase; letter-spacing:1px; margin-bottom:15px;">${p.titre || 'Membre'}</div>
+            
             <div style="background: rgba(188,143,99,0.1); border-radius: 12px; padding: 15px; text-align:left; font-size:0.85rem; line-height: 1.4; color: var(--text-brown);">
                 <div style="margin-bottom:10px;"><i class="fa-solid fa-heart" style="color:#e74c3c; width:20px; text-align:center;"></i> <b>Jeu favori :</b><br> ${p.jeuFavori || 'Non renseigné'}</div>
                 <div><i class="fa-solid fa-chess-knight" style="color:var(--green-deep); width:20px; text-align:center;"></i> <b>Style :</b><br> ${p.styleJoueur || 'Inconnu'}</div>
@@ -1067,28 +1090,43 @@
         if (window.myCurrentRSVP === status) {
             await deleteDoc(ref);
         } else {
-            await setDoc(ref, { uid: auth.currentUser.uid, nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar || '🎲', statut: status, date_event: dateStr, timestamp: new Date() });
+            await setDoc(ref, {
+                uid: auth.currentUser.uid,
+                nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
+                avatar: localProfile.avatar || '🎲',
+                statut: status,
+                date_event: dateStr,
+                timestamp: new Date()
+            });
         }
     };
 
     window.initFirebaseRSVP = function() {
         if(unsubscribeRSVP) unsubscribeRSVP(); 
         const dateStr = window.getNextEventDateStr();
+
         unsubscribeRSVP = onSnapshot(collection(db, "presences"), (snap) => {
             let presents = []; let absents = []; let maybes = [];
             window.myCurrentRSVP = null; 
+
             snap.forEach(d => {
                 const data = d.data();
                 if(data.date_event === dateStr) {
                     if(data.uid === auth.currentUser.uid) window.myCurrentRSVP = data.statut;
-                    if(data.statut === 'present') presents.push(data); else if(data.statut === 'absent') absents.push(data); else if(data.statut === 'maybe') maybes.push(data);
+                    if(data.statut === 'present') presents.push(data);
+                    else if(data.statut === 'absent') absents.push(data);
+                    else if(data.statut === 'maybe') maybes.push(data);
                 }
             });
+
             let myStatus = window.myCurrentRSVP;
+
             document.getElementById('btn-rsvp-present').style.background = myStatus === 'present' ? 'var(--wa-green)' : '#ecf0f1';
             document.getElementById('btn-rsvp-present').style.color = myStatus === 'present' ? '#fff' : '#7f8c8d';
+            
             document.getElementById('btn-rsvp-maybe').style.background = myStatus === 'maybe' ? 'var(--gold-game)' : '#ecf0f1';
             document.getElementById('btn-rsvp-maybe').style.color = myStatus === 'maybe' ? '#fff' : '#7f8c8d';
+            
             document.getElementById('btn-rsvp-absent').style.background = myStatus === 'absent' ? '#e74c3c' : '#ecf0f1';
             document.getElementById('btn-rsvp-absent').style.color = myStatus === 'absent' ? '#fff' : '#7f8c8d';
 
@@ -1096,55 +1134,93 @@
             if(presents.length > 0) html += `<div style="margin-bottom:8px;"><b>✅ ${presents.length} Présent(s) :</b><br> <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:4px;">${presents.map(p => `<span class="rsvp-badge" onclick="window.viewProfile('${p.uid}')">${p.avatar} ${p.nom.split(' ')[0]}</span>`).join('')}</div></div>`;
             if(maybes.length > 0) html += `<div style="margin-bottom:8px;"><b>🤷 ${maybes.length} Indécis :</b><br> <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:4px;">${maybes.map(p => `<span class="rsvp-badge" onclick="window.viewProfile('${p.uid}')">${p.avatar} ${p.nom.split(' ')[0]}</span>`).join('')}</div></div>`;
             if(absents.length > 0) html += `<div><b>❌ ${absents.length} Absent(s) :</b><br> <span style="opacity:0.8; font-size:0.75rem;">${absents.map(p => p.nom.split(' ')[0]).join(', ')}</span></div>`;
+
             document.getElementById('rsvp-lists').innerHTML = html || '<div style="text-align:center; font-style:italic;">Personne ne s\'est encore prononcé pour la prochaine soirée.</div>';
         });
     };
 
-    // --- CREATION DE TABLE (AUTO / MANUEL) ---
+    // --- CREATION DE TABLE ---
     window.chargerListeCollection = async function() {
         const datalist = document.getElementById('jeux-datalist');
         if(!datalist) return;
+
         const proprietaires = ['sebastien', 'julie', 'ronan', 'carine', 'stephane', 'sylvain'];
         window.tousLesJeux = [];
+
         for (const p of proprietaires) {
-            try { const snap = await getDocs(collection(db, `collection_${p}`)); snap.forEach(d => { window.tousLesJeux.push({ ...d.data(), proprio: p }); }); } catch(e) {}
+            try {
+                const snap = await getDocs(collection(db, `collection_${p}`));
+                snap.forEach(d => { window.tousLesJeux.push({ ...d.data(), proprio: p }); });
+            } catch(e) {}
         }
-        window.tousLesJeux.sort((a, b) => a.titre.localeCompare(b.titre));
-        let options = ''; window.tousLesJeux.forEach(j => { options += `<option value="${j.titre}">De ${j.proprio} (${j.joueurs || '2-4'} j)</option>`; });
+
+        let options = '';
+        window.tousLesJeux.forEach(j => {
+            options += `<option value="${j.titre}">De ${j.proprio} (${j.joueurs || '2-4'} j)</option>`;
+        });
         datalist.innerHTML = options;
     };
 
     window.proposerJeu = async function() {
         const input = document.getElementById('input-jeu-search');
         const titre = input.value.trim();
-        if(!titre) return window.showCustomAlert("Attention", "Saisis ou choisis un nom de jeu !");
         
+        if(!titre) return window.showCustomAlert("Attention", "Saisis ou choisis un nom de jeu !", "fa-hand-pointer");
+
         const jeuTrouve = window.tousLesJeux.find(j => j.titre.toLowerCase() === titre.toLowerCase());
+
         let minJ = 2, maxJ = 4, proprioDuJeu = "Moi", lienMyludo = "", dureeJeu = "?", styleJeu = "Classique";
 
         if (jeuTrouve) {
-            proprioDuJeu = jeuTrouve.proprio; lienMyludo = jeuTrouve.lien || ""; dureeJeu = jeuTrouve.duree || "?";
-            if (jeuTrouve.style) styleJeu = jeuTrouve.style; else if (jeuTrouve.categories && jeuTrouve.categories.length > 0) styleJeu = jeuTrouve.categories[0]; else if (jeuTrouve.type) styleJeu = jeuTrouve.type;
-            const parts = (jeuTrouve.joueurs || "2-4").match(/\d+/g);
+            proprioDuJeu = jeuTrouve.proprio;
+            lienMyludo = jeuTrouve.lien || "";
+            
+            dureeJeu = jeuTrouve.duree || "?";
+            if (jeuTrouve.style) styleJeu = jeuTrouve.style;
+            else if (jeuTrouve.categories && jeuTrouve.categories.length > 0) styleJeu = jeuTrouve.categories[0];
+            else if (jeuTrouve.type) styleJeu = jeuTrouve.type;
+
+            const joueursStr = jeuTrouve.joueurs || "2-4";
+            const parts = joueursStr.match(/\d+/g);
             if (parts && parts.length > 0) minJ = parseInt(parts[0]);
-            if (parts && parts.length > 1) maxJ = parseInt(parts[1]); else maxJ = minJ;
+            if (parts && parts.length > 1) maxJ = parseInt(parts[1]);
+            else maxJ = minJ;
         } else {
             proprioDuJeu = auth.currentUser.displayName || "Moi";
             let maxStr = prompt(`Le jeu "${titre}" n'a pas été trouvé dans la ludothèque de l'asso.\nCombien de joueurs MAXIMUM peuvent jouer à ce jeu ?`, "4");
             if (maxStr === null) return; 
-            maxJ = parseInt(maxStr) || 4; minJ = 2; 
+            maxJ = parseInt(maxStr) || 4;
+            minJ = 2; 
+
             let dureeStr = prompt(`Quelle est la durée moyenne de la partie (en minutes) ?`, "60");
             if (dureeStr !== null) dureeJeu = dureeStr;
+
             let styleStr = prompt(`Quel est le style de ce jeu (ex: Coopératif, Ambiance, Gestion...) ?`, "Jeu de plateau");
             if (styleStr !== null) styleJeu = styleStr;
         }
 
-        const moi = { uid: auth.currentUser.uid, nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar, type: 'main', flex: false, id: Date.now() };
+        const moi = { 
+            uid: auth.currentUser.uid, 
+            nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], 
+            avatar: localProfile.avatar, 
+            type: 'main', 
+            flex: false, 
+            id: Date.now() 
+        };
 
         try {
-            const tableRef = await addDoc(collection(db, "jeux_proposes"), {
-                nom: titre, proposePar: moi.nom, createurUid: auth.currentUser.uid, appartientA: proprioDuJeu, myludoLien: lienMyludo,
-                minJoueurs: minJ, maxJoueurs: maxJ, duree: dureeJeu, style: styleJeu, inscrits: [moi], date_ajout: new Date()
+            await addDoc(collection(db, "jeux_proposes"), {
+                nom: titre,
+                proposePar: moi.nom,
+                createurUid: auth.currentUser.uid, 
+                appartientA: proprioDuJeu,
+                myludoLien: lienMyludo,
+                minJoueurs: minJ,
+                maxJoueurs: maxJ,
+                duree: dureeJeu,
+                style: styleJeu,
+                inscrits: [moi],
+                date_ajout: new Date()
             });
             window.showCustomAlert("Table Ouverte !", "Les autres joueurs peuvent maintenant te rejoindre.", "fa-champagne-glasses");
             input.value = ""; 
@@ -1152,32 +1228,57 @@
     };
 
     window.supprimerTable = async function(id) {
-        if(confirm("Es-tu sûr de vouloir supprimer cette table de l'arène ?")) await deleteDoc(doc(db, "jeux_proposes", id));
+        if(confirm("Es-tu sûr de vouloir supprimer cette table de l'arène ?")) {
+            await deleteDoc(doc(db, "jeux_proposes", id));
+        }
     };
 
     window.initFirebaseVotes = function() {
+        if(!window.db) return;
         if(unsubscribeVotes) unsubscribeVotes(); 
+        
         unsubscribeVotes = onSnapshot(collection(db, "jeux_proposes"), (snap) => {
-            const div = document.getElementById('liste-votes-firebase'); if(!div) return;
-            let jeux = []; snap.forEach(d => jeux.push({ id: d.id, ...d.data() }));
+            const div = document.getElementById('liste-votes-firebase');
+            if(!div) return;
+            
+            let jeux = [];
+            snap.forEach(d => jeux.push({ id: d.id, ...d.data() }));
             jeux.sort((a, b) => (b.inscrits || []).length - (a.inscrits || []).length);
             
-            if(jeux.length === 0) { div.innerHTML = '<div style="text-align:center; font-size:0.8rem; color:gray; padding: 20px; border:1px dashed rgba(0,0,0,0.2); border-radius:15px; background:#fff;">Aucune table ouverte pour le moment. Crée la première !</div>'; return; }
+            if(jeux.length === 0) {
+                div.innerHTML = '<div style="text-align:center; font-size:0.8rem; color:gray; padding: 20px; border:1px dashed rgba(0,0,0,0.2); border-radius:15px; background:#fff;">Aucune table ouverte pour le moment. Crée la première !</div>';
+                return;
+            }
 
             div.innerHTML = jeux.map(j => {
                 let inscrits = j.inscrits || [];
-                let min = j.minJoueurs || 2; let max = j.maxJoueurs || 4;
+                let min = j.minJoueurs || 2; 
+                let max = j.maxJoueurs || 4;
                 
                 let seatsHTML = '<div style="display:flex; flex-wrap:wrap; gap:4px; margin: 10px 0;">';
                 for(let i=0; i<max; i++) {
-                    let isGreen = i < min; let occupant = inscrits[i];
+                    let isGreen = i < min;
+                    let occupant = inscrits[i];
+                    
                     if(occupant) {
                         let flexBadge = occupant.flex ? ' (Flex)' : '';
                         let colorClass = isGreen ? 'green' : 'gold';
-                        let crossHTML = (occupant.uid === auth.currentUser.uid) ? `<span class="remove-seat" onclick="event.stopPropagation(); window.actionTable('${j.id}', 'removeSeat', ${occupant.id})"><i class="fa-solid fa-xmark"></i></span>` : '';
-                        let clickAction = occupant.type === 'guest' ? `onclick="window.showCustomAlert('Invité', 'Ceci est l\\'invité(e) de ${occupant.hostName}.', 'fa-user-group')"` : `onclick="window.viewProfile('${occupant.uid}')"`;
+                        
+                        let crossHTML = (occupant.uid === auth.currentUser.uid) 
+                            ? `<span class="remove-seat" onclick="event.stopPropagation(); window.actionTable('${j.id}', 'removeSeat', ${occupant.id})"><i class="fa-solid fa-xmark"></i></span>` 
+                            : '';
 
-                        seatsHTML += `<div class="seat ${colorClass} clickable" ${clickAction}>${occupant.avatar||'👤'} ${occupant.nom.split(' ')[0]}${flexBadge} ${crossHTML}</div>`;
+                        let clickAction = "";
+                        if (occupant.type === 'guest') {
+                            clickAction = `onclick="window.showCustomAlert('Invité', 'Ceci est l\\'invité(e) de ${occupant.hostName}.', 'fa-user-group')"`;
+                        } else {
+                            clickAction = `onclick="window.viewProfile('${occupant.uid}')"`;
+                        }
+
+                        let displayName = occupant.nom.split(' ')[0];
+                        seatsHTML += `<div class="seat ${colorClass} clickable" ${clickAction}>
+                            ${occupant.avatar||'👤'} ${displayName}${flexBadge} ${crossHTML}
+                        </div>`;
                     } else {
                         let emptyClass = isGreen ? 'empty-green' : 'empty-gold';
                         seatsHTML += `<div class="seat ${emptyClass}">🪑 Libre</div>`;
@@ -1186,48 +1287,98 @@
                 seatsHTML += '</div>';
 
                 let mySeats = inscrits.filter(i => i.uid === auth.currentUser.uid);
-                let amISitting = mySeats.length > 0; let amIFlex = mySeats.some(i => i.flex); let isFull = inscrits.length >= max;
+                let amISitting = mySeats.length > 0;
+                let amIFlex = mySeats.some(i => i.flex);
+                let isFull = inscrits.length >= max;
 
                 let actionsHTML = '<div class="action-bar">';
                 if (amISitting) {
                     if(!amIFlex) actionsHTML += `<button class="btn-small" style="background:#3498db;" onclick="actionTable('${j.id}', 'flex')">👼 Être Flexible</button>`;
                     else actionsHTML += `<button class="btn-small" style="background:#95a5a6;" onclick="actionTable('${j.id}', 'unflex')">Ne plus être flex.</button>`;
+                    
                     if(!isFull) actionsHTML += `<button class="btn-small" style="background:var(--wood-brown);" onclick="actionTable('${j.id}', 'addGuest')"><i class="fa-solid fa-user-plus"></i> +1 Invité</button>`;
                 } else {
                     if(!isFull) actionsHTML += `<button class="btn-small game-btn-green" onclick="actionTable('${j.id}', 'join')">🪑 M'asseoir</button>`;
                     else actionsHTML += `<span style="font-size:0.75rem; color:gray; font-style:italic; padding:4px;">Table complète 🔒</span>`;
                 }
-                if (j.createurUid === auth.currentUser.uid) actionsHTML += `<button class="btn-small" style="background:#e74c3c;" onclick="window.supprimerTable('${j.id}')" title="Supprimer la table"><i class="fa-solid fa-trash"></i></button>`;
+
+                if (j.createurUid === auth.currentUser.uid) {
+                    actionsHTML += `<button class="btn-small" style="background:#e74c3c;" onclick="window.supprimerTable('${j.id}')" title="Supprimer la table"><i class="fa-solid fa-trash"></i></button>`;
+                }
+
                 actionsHTML += '</div>';
 
-                const titreHTML = j.myludoLien ? `<a href="${j.myludoLien}" target="_blank" class="myludo-link">${j.nom}</a>` : j.nom;
-                const infosSup = `<div style="font-size:0.75rem; color:var(--wood-brown); font-weight:bold; margin-top:4px;"><i class="fa-regular fa-clock"></i> ${j.duree || '?'} min &nbsp; | &nbsp; <i class="fa-solid fa-dice-d20"></i> ${j.style || 'Jeu'}</div>`;
+                const titreHTML = j.myludoLien 
+                    ? `<a href="${j.myludoLien}" target="_blank" class="myludo-link">${j.nom}</a>`
+                    : j.nom;
 
-                return `<div class="table-card"><div style="font-weight:800; color:var(--green-deep); font-size: 1.05rem;">${titreHTML}</div>${infosSup}<span style="font-size:0.65rem; color:gray; display:block; margin-top:4px;">Proposé par ${j.proposePar} (Jeu de <b>${j.appartientA || '?'}</b>)</span>${seatsHTML}${actionsHTML}</div>`;
+                const infosSup = `<div style="font-size:0.75rem; color:var(--wood-brown); font-weight:bold; margin-top:4px;">
+                    <i class="fa-regular fa-clock"></i> ${j.duree || '?'} min   |   <i class="fa-solid fa-dice-d20"></i> ${j.style || 'Jeu de société'}
+                </div>`;
+
+                return `
+                <div class="table-card">
+                    <div style="font-weight:800; color:var(--green-deep); font-size: 1.05rem;">${titreHTML}</div>
+                    ${infosSup}
+                    <span style="font-size:0.65rem; color:gray; display:block; margin-top:4px;">Proposé par ${j.proposePar} (Jeu de <b>${j.appartientA || '?'}</b>)</span>
+                    ${seatsHTML}
+                    ${actionsHTML}
+                </div>`;
             }).join('');
         });
     };
 
     window.actionTable = async function(idTable, action, seatId) {
         if(!auth.currentUser) return;
-        const ref = doc(db, "jeux_proposes", idTable); const docSnap = await getDoc(ref);
+        const ref = doc(db, "jeux_proposes", idTable);
+        const docSnap = await getDoc(ref);
         if(!docSnap.exists()) return;
-        let data = docSnap.data(); let inscrits = data.inscrits || []; const max = data.maxJoueurs || 4;
-
-        if (action === 'join' && inscrits.length < max) {
-            inscrits.push({ uid: auth.currentUser.uid, nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar, type: 'main', flex: false, id: Date.now() });
-        } 
-        else if (action === 'removeSeat') { inscrits = inscrits.filter(i => i.id !== seatId); }
-        else if (action === 'addGuest' && inscrits.length < max) {
-            let guestName = prompt("Prénom de l'invité(e) ?");
-            if (guestName === null) return; 
-            if (guestName.trim() === "") guestName = "Invité";
-            inscrits.push({ uid: auth.currentUser.uid, nom: guestName.trim(), avatar: '👤', type: 'guest', flex: false, id: Date.now(), hostName: auth.currentUser.displayName || auth.currentUser.email.split('@')[0] });
-        } 
-        else if (action === 'flex') { let moi = inscrits.find(i => i.uid === auth.currentUser.uid && i.type === 'main'); if(moi) moi.flex = true; } 
-        else if (action === 'unflex') { let moi = inscrits.find(i => i.uid === auth.currentUser.uid && i.type === 'main'); if(moi) moi.flex = false; }
         
-        try { await updateDoc(ref, { inscrits }); } catch(e) { console.error(e); }
+        let data = docSnap.data(); 
+        let inscrits = data.inscrits || [];
+        const max = data.maxJoueurs || 4;
+
+        if (action === 'join') {
+            if(inscrits.length < max) {
+                inscrits.push({ 
+                    uid: auth.currentUser.uid, 
+                    nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], 
+                    avatar: localProfile.avatar, 
+                    type: 'main', flex: false, id: Date.now() 
+                });
+            }
+        } 
+        else if (action === 'removeSeat') {
+            inscrits = inscrits.filter(i => i.id !== seatId); // Retire juste le siège cliqué
+        }
+        else if (action === 'addGuest') {
+            if(inscrits.length < max) {
+                let guestName = prompt("Prénom de l'invité(e) ?");
+                if (guestName === null) return; 
+                if (guestName.trim() === "") guestName = "Invité";
+                let myName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
+                
+                inscrits.push({ 
+                    uid: auth.currentUser.uid, 
+                    nom: guestName.trim(), 
+                    avatar: '👤', 
+                    type: 'guest', 
+                    flex: false, 
+                    id: Date.now(),
+                    hostName: myName
+                });
+            }
+        } 
+        else if (action === 'flex') {
+            let moi = inscrits.find(i => i.uid === auth.currentUser.uid && i.type === 'main');
+            if(moi) moi.flex = true;
+        } 
+        else if (action === 'unflex') {
+            let moi = inscrits.find(i => i.uid === auth.currentUser.uid && i.type === 'main');
+            if(moi) moi.flex = false;
+        }
+
+        try { await updateDoc(ref, { inscrits }); } catch(e) { console.error("Erreur:", e); }
     };
 
     onAuthStateChanged(auth, (user) => { window.updateVoteUI(); });
