@@ -340,13 +340,10 @@
                 <div class="rdv-card">
                     <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
                         <div style="font-size: 1.5rem; margin-right: 12px;">🎲</div>
-                        <div class="rdv-info" style="flex-direction: column; align-items: flex-start;">
-                            <p id="next-rdv-banner" style="margin:0;">Calcul en cours...</p>
+                        <div class="rdv-info" style="flex-direction: column; align-items: flex-start; width: 100%;">
+                            <div id="next-rdv-banner" style="margin:0; width: 100%;">Calcul en cours...</div>
                         </div>
                     </div>
-                    <button class="btn-ludotheque" style="margin-top: 10px; padding: 6px 15px; font-size: 0.8rem; width: 100%; justify-content: center;" onclick="openSheet('vote')">
-                        <i class="fa-solid fa-check-to-slot"></i> Voter pour les jeux
-                    </button>
                 </div>
             </div>
         </div>
@@ -392,7 +389,6 @@
         const day = now.getDate();
         const hour = now.getHours();
 
-        // Si jour spécial, on s'arrête là (déjà géré dans le head)
         if ((month === 12 && day === 25) || (month === 10 && day === 31)) return;
 
         let baseName = "hero_soir"; 
@@ -412,7 +408,6 @@
 
             const cachedCondition = localStorage.getItem('plouay_weather') || "";
 
-            // Si la météo a changé par rapport au cache, on met à jour en arrière-plan
             if (newCondition !== cachedCondition) {
                 localStorage.setItem('plouay_weather', newCondition);
                 document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}${newCondition}.png')`);
@@ -447,7 +442,7 @@
 
     function closeBarn() {
         if (history.state && history.state.type === 'barn') {
-            history.back(); // Laisse le popstate gérer la fermeture
+            history.back();
         } else {
             closeBarnForce();
         }
@@ -458,7 +453,7 @@
         document.getElementById('mainWrapper').classList.remove('blurred');
     }
 
-    /* --- GESTION DES ONGLETS PHOTOS INSTANTANÉE (Optimisée) --- */
+    /* --- GESTION DES ONGLETS PHOTOS --- */
     function switchPhotoTab(tabId, element) {
         document.querySelectorAll('.photo-tab').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.photo-tab-content').forEach(content => content.classList.remove('active'));
@@ -497,15 +492,19 @@
 
     document.getElementById('next-rdv-banner').innerHTML = 
         `<span style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase; font-weight:700;">PROCHAIN RDV${dayPart}</span><br>` +
-        `<span style="font-size:0.9rem; font-weight:700; color:var(--green-deep);">${dateStr} à 20h30</span><br>` +
-        `<a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank">📍 <span class="underline">Maison des Associations</span></a>`;
+        `<span style="font-size:0.9rem; font-weight:700; color:var(--green-deep);">${dateStr} à 20h30</span>` +
+        `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:3px; gap:5px;">
+            <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="flex-shrink:0;">📍 <span class="underline">Maison des Associations</span></a>
+            <button class="btn-ludotheque" style="margin:0; padding: 4px 12px; font-size: 0.75rem; white-space: nowrap; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">
+                <i class="fa-solid fa-check-to-slot" style="margin-right:4px;"></i>Voter
+            </button>
+        </div>`;
 
     let agendaHTML = '<div class="cal-list">' + upcomingDates.map(date => {
         let formatted = date.toLocaleDateString('fr-FR', dateOptions);
         return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem; flex-shrink:0;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank">Maison des Associations</a></div></div></div>`;
     }).join('') + '</div>';
 
-    // Optimisation avec decoding="async"
     let photosSortiesHTML = '<div class="photo-grid">';
     sortiesConfig.forEach(cfg => {
         for(let i=1; i<=cfg.count; i++) {
@@ -515,7 +514,6 @@
     });
     photosSortiesHTML += '</div>';
 
-    /* --- 1.B NOUVELLE GESTION DES JEUX (Avec Arborescence) --- */
     const jeuxNommes = [
         "jeu_abyss", "jeu_azul", "jeu_camel_cup", "jeu_century",
         "jeu_code_names", "jeu_dice_town", "jeu_flamme_rouge", "jeu_heimlich&co",
@@ -528,25 +526,19 @@
     const nombreDeJeuxNumerotes = 7;
 
     let photosJeuxHTML = '<div class="photo-grid">';
-    
-    // Ajout des jeux connus (Optimisé avec decoding="async")
     jeuxNommes.forEach(jeu => {
         let nomJeu = jeu.replace('jeu_', '').replace(/_/g, ' ');
         nomJeu = nomJeu.charAt(0).toUpperCase() + nomJeu.slice(1);
         let fichierComplet = cheminTries + jeu + extensionJeux;
-        
         photosJeuxHTML += `
             <div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')">
                 <img src="${fichierComplet}" loading="lazy" decoding="async" alt="${nomJeu}" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'">
                 <div class="photo-game-title">${nomJeu}</div>
             </div>`;
     });
-
-    // Ajout des jeux inconnus sans le titre de mystère (Optimisé avec decoding="async")
     for (let i = 1; i <= nombreDeJeuxNumerotes; i++) {
         let nomFichier = "jeu" + i;
         let fichierComplet = cheminNonIdentifies + nomFichier + extensionJeux;
-        
         photosJeuxHTML += `
             <div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')">
                 <img src="${fichierComplet}" loading="lazy" decoding="async" alt="" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'">
@@ -710,7 +702,6 @@
             const activeTab = document.querySelector('.photo-tab-content.active');
             const items = activeTab.querySelectorAll('.photo-grid-item img'); 
             
-            // On enregistre l'URL ET le titre (attribut alt)
             currentGallery = Array.from(items).map(img => ({
                 src: img.getAttribute('src'),
                 title: img.getAttribute('alt') || ''
@@ -951,7 +942,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBwLFuQcpv_Ml8omuhzEL1mvTEPlxsH1Wo",
@@ -973,6 +964,21 @@
     let unsubscribeVotes = null;
     let authMode = 'login'; 
 
+    // Fonction pour afficher/masquer les mots de passe
+    window.toggleVisibility = function(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    };
+
     // Bascule d'affichage entre Connexion et Interface de Vote
     window.updateVoteUI = function() {
         const viewAuth = document.getElementById('view-auth');
@@ -982,21 +988,19 @@
         if(!viewAuth || !viewVotes) return;
         
         if(currentUser) {
-            // Utilisateur connecté : on cache le formulaire, on montre les votes
             viewAuth.style.display = 'none';
             viewVotes.style.display = 'block';
             let nameToDisplay = currentUser.displayName || currentUser.email.split('@')[0];
             userGreeting.innerHTML = `Connecté(e) : <b>${nameToDisplay}</b>`;
             window.initFirebaseVotes();
         } else {
-            // Non connecté : on montre le formulaire, on cache les votes
             viewAuth.style.display = 'block';
             viewVotes.style.display = 'none';
             window.renderAuthUI();
         }
     };
 
-    // Génération du formulaire (Connexion / Inscription / Mot de passe oublié)
+    // Génération dynamique du formulaire avec les "yeux"
     window.renderAuthUI = function() {
         const authContainer = document.getElementById('auth-container');
         if (!authContainer) return;
@@ -1005,7 +1009,12 @@
             authContainer.innerHTML = `
                 <div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
                     <input type="email" id="auth-email" class="share-input" placeholder="Adresse e-mail">
-                    <input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe">
+                    
+                    <div style="position:relative;">
+                        <input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe" style="width:100%; padding-right:40px;">
+                        <i class="fa-solid fa-eye" id="toggle-pwd" onclick="toggleVisibility('auth-pwd', 'toggle-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); color:var(--wood-brown); cursor:pointer;"></i>
+                    </div>
+
                     <button class="game-btn" style="width:100%; justify-content:center;" onclick="loginEmail()"><i class="fa-solid fa-right-to-bracket"></i> Connexion</button>
                     <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:5px; font-weight:bold;">
                         <span onclick="setAuthMode('register')" style="color:var(--green-deep); cursor:pointer; text-decoration:underline;">Créer un compte</span>
@@ -1017,7 +1026,17 @@
                 <div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
                     <input type="text" id="auth-name" class="share-input" placeholder="Ton pseudo (ex: Julie)">
                     <input type="email" id="auth-email" class="share-input" placeholder="Adresse e-mail">
-                    <input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe (6 min.)">
+                    
+                    <div style="position:relative;">
+                        <input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe (6 min.)" style="width:100%; padding-right:40px;">
+                        <i class="fa-solid fa-eye" id="toggle-pwd" onclick="toggleVisibility('auth-pwd', 'toggle-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); color:var(--wood-brown); cursor:pointer;"></i>
+                    </div>
+
+                    <div style="position:relative;">
+                        <input type="password" id="auth-pwd-confirm" class="share-input" placeholder="Confirmer mot de passe" style="width:100%; padding-right:40px;">
+                        <i class="fa-solid fa-eye" id="toggle-pwd-confirm" onclick="toggleVisibility('auth-pwd-confirm', 'toggle-pwd-confirm')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); color:var(--wood-brown); cursor:pointer;"></i>
+                    </div>
+
                     <button class="game-btn" style="width:100%; justify-content:center; background:var(--green-deep);" onclick="registerEmail()"><i class="fa-solid fa-user-plus"></i> S'inscrire</button>
                     <div style="text-align:center; font-size:0.75rem; margin-top:5px; font-weight:bold;">
                         <span onclick="setAuthMode('login')" style="color:var(--wood-brown); cursor:pointer; text-decoration:underline;">Déjà inscrit ? Se connecter</span>
@@ -1058,14 +1077,25 @@
         const name = document.getElementById('auth-name').value.trim();
         const email = document.getElementById('auth-email').value.trim();
         const pwd = document.getElementById('auth-pwd').value.trim();
+        const pwdConfirm = document.getElementById('auth-pwd-confirm').value.trim();
         
-        if(!name || !email || !pwd) return alert("Veuillez remplir tous les champs.");
+        if(!name || !email || !pwd || !pwdConfirm) return alert("Veuillez remplir tous les champs.");
+        if(pwd !== pwdConfirm) return alert("Les mots de passe ne correspondent pas ! 🎲");
         if(pwd.length < 6) return alert("Le mot de passe doit faire au moins 6 caractères.");
 
         try {
+            // Création du compte
             const userCredential = await createUserWithEmailAndPassword(auth, email, pwd);
+            
+            // Mise à jour du pseudo
             await updateProfile(userCredential.user, { displayName: name });
-            currentUser = userCredential.user; // Force maj locale
+            
+            // Envoi de l'e-mail de vérification (Géré par Firebase)
+            await sendEmailVerification(userCredential.user);
+            
+            alert("Bienvenue " + name + " ! 🎲 Un e-mail de vérification t'a été envoyé (vérifie tes spams).");
+            
+            currentUser = userCredential.user;
             window.updateVoteUI(); 
         } catch (e) {
             if(e.code === 'auth/email-already-in-use') alert("Cet email est déjà utilisé.");
