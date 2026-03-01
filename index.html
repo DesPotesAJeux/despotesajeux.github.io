@@ -80,7 +80,7 @@
         .game-btn:active { transform: scale(0.95); }
         
         /* Boutons d'action verts (Validation, Validation, Connexion...) */
-        .game-btn-green { background: var(--green-deep); box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); color: white; }
+        .game-btn-green { background: var(--green-deep); box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); }
 
         .btn-ludotheque { background: var(--wood-brown); color: white; border: none; padding: 10px 22px; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); cursor: pointer; transition: transform 0.2s; }
         .btn-ludotheque:active { transform: scale(0.95); }
@@ -173,14 +173,6 @@
         
         .rsvp-badge { display:inline-block; padding:4px 8px; background:white; border:1px solid rgba(188,143,99,0.5); border-radius:50px; font-size:0.75rem; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.05); font-weight:bold; color:var(--green-deep); transition:all 0.2s; margin: 2px; }
         .rsvp-badge:active { transform: scale(0.95); background: var(--bg-beige); }
-
-        /* Ludo Search Items */
-        .ludo-avatar-card { display:flex; flex-direction:column; align-items:center; gap:5px; text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); min-width:65px; box-shadow:0 2px 5px rgba(0,0,0,0.05); transition:transform 0.2s; flex-shrink: 0; }
-        .ludo-avatar-card:active { transform: scale(0.95); }
-        .ludo-avatar-card img { width:24px; height:24px; border-radius:4px; }
-        .search-result-item { display:flex; justify-content:space-between; align-items:center; background:#f9f9f9; padding:8px 10px; border-radius:10px; border:1px solid #eee; text-align: left; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- RESTE DU CSS (Menus, Lightbox) --- */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
@@ -584,7 +576,7 @@
             title: "Au programme ?",
             text: `<div class="panel-card" id="content-vote" style="padding: 15px 10px; position: relative;">
                 <div id="view-auth">
-                    <p style="text-align: center; margin-top: 0; font-size: 0.9rem; color: var(--text-brown);">Connecte-toi pour confirmer ta présence et voir les tables de la soirée !</p>
+                    <p style="text-align: center; margin-top: 0; font-size: 0.9rem; color: var(--text-brown);">Connecte-toi pour proposer et voter pour tes jeux préférés !</p>
                     <div id="auth-container"></div>
                 </div>
                 
@@ -606,7 +598,7 @@
                             </div>
 
                             <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px solid rgba(58, 99, 81, 0.2); text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
-                                <h4 id="rsvp-date-title" style="margin: 0 0 10px; color: var(--green-deep); font-size: 1rem;">Présence</h4>
+                                <h4 style="margin: 0 0 10px; color: var(--green-deep); font-size: 1rem;">Présence (Vendredi)</h4>
                                 <div style="font-size:0.75rem; color:var(--text-brown); margin-bottom:10px; font-style:italic;">Dis-nous si tu viens ! (Mais c'est pas grave si tu changes d'avis 😉)</div>
                                 <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 12px;">
                                     <button class="rsvp-btn" id="btn-rsvp-present" onclick="window.setRSVP('present')">✅ Oui</button>
@@ -634,7 +626,10 @@
                             </div>
 
                             <h3 style="font-family:'Shadows Into Light', cursive; color:var(--green-deep); font-size:1.5rem; text-align:center; margin: 0 0 5px;">L'Arène (Les Tables)</h3>
-                            <div style="font-size:0.7rem; color:gray; text-align:center; margin-bottom:15px; line-height:1.4;"><i class="fa-solid fa-info-circle"></i> <b>Flexible (👼)</b> : Prêt(e) à libérer sa place pour équilibrer les tables.<br><span style="font-style:italic;">Pas d'inquiétude, l'Arène est là pour s'organiser, il y aura toujours de la place sur un jeu le jour J !</span></div>
+                            <div style="font-size:0.7rem; color:gray; text-align:center; margin-bottom:15px; line-height:1.4;">
+                                <i class="fa-solid fa-info-circle"></i> <b>Flexible (👼)</b> : Prêt(e) à libérer sa place pour équilibrer les tables.<br>
+                                <span style="font-style:italic;">Pas d'inquiétude, l'Arène est là pour s'organiser, il y aura toujours de la place sur un jeu le jour J !</span>
+                            </div>
                             
                             <div id="liste-votes-firebase" style="display:flex; flex-direction:column;">
                                 <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement des tables... <i class="fa-solid fa-spinner fa-spin"></i></div>
@@ -954,17 +949,11 @@
     window.updateVoteUI = async function() {
         const viewAuth = document.getElementById('view-auth'), viewVotes = document.getElementById('view-votes'), userGreeting = document.getElementById('user-greeting');
         if(!viewAuth || !viewVotes) return;
-        
         if(auth.currentUser) {
             viewAuth.style.display = 'none'; viewVotes.style.display = 'block';
             await window.loadProfile();
-            
-            const rsvpTitle = document.getElementById('rsvp-date-title');
-            if(rsvpTitle) rsvpTitle.innerText = "Présence du " + window.getFormattedEventDate();
-
             let displayName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
             userGreeting.innerHTML = `<div style="font-size:3.5rem; margin-bottom:5px; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> Salut ${displayName} !`;
-            
             window.initFirebaseRSVP();
             window.initFirebaseVotes();
             window.chargerListeCollection(); 
@@ -1009,7 +998,7 @@
             const res = await createUserWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pwd').value);
             await updateProfile(res.user, { displayName: name });
             await setDoc(doc(db, "utilisateurs", res.user.uid), { avatar: '🎲', titre: 'Novice', nom: name });
-            window.showCustomAlert("Succès", "Compte créé !");
+            window.showCustomAlert("Succès", "Compte créé ! Vérifie tes spams.", "fa-champagne-glasses");
         } catch (e) { window.showCustomAlert("Erreur", e.message, "fa-bug"); }
     };
     window.logoutFirebase = () => signOut(auth);
@@ -1019,25 +1008,31 @@
         try { await sendPasswordResetEmail(auth, mail); window.showCustomAlert("Envoyé", "Vérifie tes spams.", "fa-paper-plane"); } catch(e) { window.showCustomAlert("Erreur", "Email inconnu", "fa-question"); }
     };
 
-    // --- PROFIL ---
     window.loadProfile = async function() {
         const d = await getDoc(doc(db, "utilisateurs", auth.currentUser.uid));
-        if(d.exists()) { localProfile = d.data(); } 
-        else { localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout' }; await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile); }
+        if(d.exists()) {
+            localProfile = d.data();
+        } else {
+            localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout' };
+            await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile);
+        }
     };
 
     window.openProfileModal = function() {
         document.getElementById('modalContent').innerHTML = `
             <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
             <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; font-size:1.8rem; margin:0 0 15px;">Mon Profil</h3>
+            
             <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px; margin-bottom:10px; text-align:left;">
                 <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Avatar (Emoji)</label><input type="text" id="prof-avatar" class="share-input" value="${localProfile.avatar || '🎲'}" maxlength="2" style="font-size:1.2rem;"></div>
                 <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Titre (Fun)</label><input type="text" id="prof-titre" class="share-input" value="${localProfile.titre || 'Membre'}" placeholder="Le Stratège"></div>
             </div>
+
             <div style="text-align:left; margin-bottom:10px;">
                 <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon jeu préféré :</label>
                 <input type="text" id="prof-jeu" class="share-input" value="${localProfile.jeuFavori || ''}" placeholder="Ex: Terraforming Mars">
             </div>
+
             <div style="text-align:left; margin-bottom:15px;">
                 <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon style :</label>
                 <select id="prof-style" class="share-input">
@@ -1048,6 +1043,7 @@
                     <option value="Coopératif" ${localProfile.styleJoueur==='Coopératif'?'selected':''}>Coopératif</option>
                 </select>
             </div>
+
             <button class="game-btn game-btn-green" style="width:100%; justify-content:center;" onclick="saveProfile()"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button>
         `;
         document.getElementById('gameModalBackdrop').classList.add('visible');
@@ -1075,6 +1071,7 @@
             <div style="font-size: 3.5rem; margin-bottom: 5px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${p.avatar || '👤'}</div>
             <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; font-size:1.8rem; margin:0 0 5px;">${p.nom}</h3>
             <div style="font-size:0.8rem; color:var(--wood-brown); font-weight:bold; text-transform:uppercase; letter-spacing:1px; margin-bottom:15px;">${p.titre || 'Membre'}</div>
+            
             <div style="background: rgba(188,143,99,0.1); border-radius: 12px; padding: 15px; text-align:left; font-size:0.85rem; line-height: 1.4; color: var(--text-brown);">
                 <div style="margin-bottom:10px;"><i class="fa-solid fa-heart" style="color:#e74c3c; width:20px; text-align:center;"></i> <b>Jeu favori :</b><br> ${p.jeuFavori || 'Non renseigné'}</div>
                 <div><i class="fa-solid fa-chess-knight" style="color:var(--green-deep); width:20px; text-align:center;"></i> <b>Style :</b><br> ${p.styleJoueur || 'Inconnu'}</div>
@@ -1090,7 +1087,6 @@
         const dateStr = window.getNextEventDateStr();
         const ref = doc(db, "presences", auth.currentUser.uid);
         
-        // C'est ici que s'effectue la désélection si on reclique sur le même statut
         if (window.myCurrentRSVP === status) {
             await deleteDoc(ref);
         } else {
@@ -1143,7 +1139,7 @@
         });
     };
 
-    // --- RECHERCHE LUDOTHEQUE ---
+    // --- CREATION DE TABLE ---
     window.chargerListeCollection = async function() {
         const datalist = document.getElementById('jeux-datalist');
         if(!datalist) return;
@@ -1353,7 +1349,7 @@
             }
         } 
         else if (action === 'removeSeat') {
-            inscrits = inscrits.filter(i => i.id !== seatId);
+            inscrits = inscrits.filter(i => i.id !== seatId); // Retire juste le siège cliqué
         }
         else if (action === 'addGuest') {
             if(inscrits.length < max) {
