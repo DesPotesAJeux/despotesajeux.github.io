@@ -996,7 +996,7 @@
             viewAuth.style.display = 'none'; viewVotes.style.display = 'block';
             await window.loadProfile();
             let displayName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
-            userGreeting.innerHTML = `<div style="font-size:3rem; margin-bottom:5px; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> Salut ${displayName} !`;
+            userGreeting.innerHTML = `<div style="font-size:3.5rem; margin-bottom:5px; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> Salut ${displayName} !`;
             
             window.initFirebaseRSVP();
             window.initFirebaseVotes();
@@ -1036,7 +1036,7 @@
             </div>`;
         }
     };
-
+    
     window.authMode = 'login';
     window.loginGoogle = () => signInWithRedirect(auth, new GoogleAuthProvider());
     window.registerGoogle = () => { if(document.getElementById('auth-secret').value.trim().toUpperCase() !== CODE_ASSO) return window.showCustomAlert("Erreur", "Code secret invalide", "fa-user-shield"); window.loginGoogle(); };
@@ -1048,8 +1048,8 @@
             let name = document.getElementById('auth-name').value || 'Membre';
             const res = await createUserWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pwd').value);
             await updateProfile(res.user, { displayName: name });
-            await setDoc(doc(db, "utilisateurs", res.user.uid), { avatar: '🎲', titre: 'Novice', nom: name, pseudoMyludo: '' });
-            window.showCustomAlert("Succès", "Compte créé ! Vérifie tes spams.", "fa-champagne-glasses");
+            await setDoc(doc(db, "utilisateurs", res.user.uid), { avatar: '🎲', titre: 'Novice', nom: name });
+            window.showCustomAlert("Succès", "Compte créé !", "fa-champagne-glasses");
         } catch (e) { window.showCustomAlert("Erreur", e.message, "fa-bug"); }
     };
     window.logoutFirebase = () => signOut(auth);
@@ -1064,7 +1064,7 @@
         if(d.exists()) {
             localProfile = d.data();
         } else {
-            localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout', pseudoMyludo: '' };
+            localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout' };
             await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile);
         }
     };
@@ -1079,22 +1079,17 @@
                 <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Titre (Fun)</label><input type="text" id="prof-titre" class="share-input" value="${localProfile.titre || 'Membre'}" placeholder="Le Stratège"></div>
             </div>
 
-            <div style="text-align:left; margin-bottom:10px; background:rgba(44, 62, 80, 0.1); padding:8px; border-radius:8px; border:1px dashed #2c3e50;">
-                <label style="font-size:0.7rem; font-weight:bold; color:#2c3e50;">🔗 Ton pseudo exact de Ludothèque MyLudo :</label>
-                <input type="text" id="prof-myludo" class="share-input" value="${localProfile.pseudoMyludo || ''}" placeholder="Ex: sebastien, julie..." style="margin-top:4px;">
-            </div>
-
             <div style="text-align:left; margin-bottom:10px;">
-                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon jeu préféré de tous les temps :</label>
+                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon jeu préféré :</label>
                 <input type="text" id="prof-jeu" class="share-input" value="${localProfile.jeuFavori || ''}" placeholder="Ex: Terraforming Mars">
             </div>
 
             <div style="text-align:left; margin-bottom:15px;">
-                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon style de jeu :</label>
+                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon style :</label>
                 <select id="prof-style" class="share-input">
                     <option value="Touche-à-tout" ${localProfile.styleJoueur==='Touche-à-tout'?'selected':''}>Touche-à-tout</option>
                     <option value="Eurogame (Gestion)" ${localProfile.styleJoueur==='Eurogame (Gestion)'?'selected':''}>Eurogame (Gestion)</option>
-                    <option value="Ameritrash (Dés & Fig.)" ${localProfile.styleJoueur==='Ameritrash (Dés & Fig.)'?'selected':''}>Ameritrash (Dés & Fig.)</option>
+                    <option value="Ameritrash (Dés & Fig.)" ${localProfile.styleJoueur==='Ameritrash (Dés & Fig.)'?'selected':''}>Ameritrash</option>
                     <option value="Jeux d'Ambiance" ${localProfile.styleJoueur==='Jeux d\'Ambiance'?'selected':''}>Jeux d'Ambiance</option>
                     <option value="Coopératif" ${localProfile.styleJoueur==='Coopératif'?'selected':''}>Coopératif</option>
                 </select>
@@ -1110,11 +1105,10 @@
         localProfile.titre = document.getElementById('prof-titre').value || 'Membre';
         localProfile.jeuFavori = document.getElementById('prof-jeu').value || '';
         localProfile.styleJoueur = document.getElementById('prof-style').value || 'Touche-à-tout';
-        localProfile.pseudoMyludo = document.getElementById('prof-myludo') ? document.getElementById('prof-myludo').value.trim() : '';
         localProfile.nom = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
         
         await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile, {merge:true});
-        document.getElementById('user-greeting').innerHTML = `<div style="font-size:3rem; margin-bottom:5px; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> Salut ${localProfile.nom} !`;
+        document.getElementById('user-greeting').innerHTML = `<div style="font-size:3.5rem; margin-bottom:5px; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> Salut ${localProfile.nom} !`;
         closeGameModalForce();
     };
 
@@ -1196,9 +1190,7 @@
         });
     };
 
-    // ==========================================
-    // ONGLET LA RESERVE (SACS DE JEUX)
-    // ==========================================
+    // --- ONGLET LA RESERVE (SACS) ---
     window.searchBagLudo = function(q) {
         const resDiv = document.getElementById('ludo-bag-results');
         if(!q || q.length < 2) { resDiv.innerHTML = ''; return; }
@@ -1207,16 +1199,14 @@
         const filtered = window.tousLesJeux.filter(j => j.titre.toLowerCase().includes(query)).slice(0, 10);
         
         if(filtered.length === 0) {
-            resDiv.innerHTML = '<div style="font-size:0.75rem; color:gray; text-align:center;">Jeu introuvable dans l\'asso.</div>';
-            return;
+            resDiv.innerHTML = '<div style="font-size:0.75rem; color:gray; text-align:center;">Jeu introuvable dans l\'asso.</div>'; return;
         }
 
         let html = '';
         let myName = (auth.currentUser.displayName || auth.currentUser.email.split('@')[0]).toLowerCase();
-        let checkLudoId = (localProfile.pseudoMyludo || myName).toLowerCase();
 
         filtered.forEach(j => {
-            const isMe = j.proprio.toLowerCase() === checkLudoId;
+            const isMe = j.proprio.toLowerCase() === myName;
             const btn = isMe 
                 ? `<button class="btn-small game-btn-green" style="margin:0;" onclick="window.actionSac('${j.titre.replace(/'/g, "\\'")}', '${j.proprio.replace(/'/g, "\\'")}', 'apporter')">J'amène</button>`
                 : `<button class="btn-small" style="margin:0; background:var(--wood-brown);" onclick="window.actionSac('${j.titre.replace(/'/g, "\\'")}', '${j.proprio.replace(/'/g, "\\'")}', 'demander')">Demander</button>`;
@@ -1235,32 +1225,26 @@
     window.actionSac = async function(titre, proprio, action) {
         let demandeur = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
         let statut = action === 'apporter' ? 'confirmé' : 'demandé';
-        
-        await addDoc(collection(db, "sacs_jeux"), {
-            titre: titre, proprio: proprio, demandeur: demandeur, statut: statut, date_event: window.getNextEventDateStr(), timestamp: new Date()
-        });
-        
+        await addDoc(collection(db, "sacs_jeux"), { titre: titre, proprio: proprio, demandeur: demandeur, statut: statut, date_event: window.getNextEventDateStr(), timestamp: new Date() });
         document.getElementById('ludo-bag-search').value = "";
         document.getElementById('ludo-bag-results').innerHTML = "";
         window.showCustomAlert("Fait !", action === 'apporter' ? "Jeu ajouté à ton sac." : `Demande envoyée pour ${titre}.`, "fa-box-open");
     };
 
     window.supprimerSac = async function(id) {
-        if(confirm("Retirer ce jeu de la liste des sacs ?")) {
-            await deleteDoc(doc(db, "sacs_jeux", id));
-        }
+        if(confirm("Retirer ce jeu de la liste des sacs ?")) await deleteDoc(doc(db, "sacs_jeux", id));
     };
 
-    window.buildSacCard = function(s, myName, myLudoId) {
+    window.buildSacCard = function(s, myName) {
         let icon = s.statut === "confirmé" ? "📦" : "🙏";
         let text = "";
         if (s.statut === "confirmé") {
-            text = s.proprio.toLowerCase() === myLudoId ? `Je l'amène.` : `<b>${s.proprio}</b> l'amène.`;
+            text = s.proprio.toLowerCase() === myName ? `Je l'amène.` : `<b>${s.proprio}</b> l'amène.`;
         } else {
-            text = s.demandeur.toLowerCase() === myName.toLowerCase() ? `J'ai demandé à <b>${s.proprio}</b>` : `Demandé à <b>${s.proprio}</b> par ${s.demandeur}`;
+            text = s.demandeur.toLowerCase() === myName ? `J'ai demandé à <b>${s.proprio}</b>` : `Demandé à <b>${s.proprio}</b> par ${s.demandeur}`;
         }
         
-        let canDelete = (s.demandeur.toLowerCase() === myName.toLowerCase() || s.proprio.toLowerCase() === myLudoId);
+        let canDelete = (s.demandeur.toLowerCase() === myName || s.proprio.toLowerCase() === myName);
         let delBtn = canDelete ? `<span onclick="window.supprimerSac('${s.id}')" style="color:var(--text-brown); opacity:0.5; padding:5px; cursor:pointer; font-size:1.2rem;"><i class="fa-solid fa-xmark"></i></span>` : '';
 
         return `<div style="background:#fff; padding:8px 12px; border-radius:12px; border:1px solid rgba(0,0,0,0.05); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
@@ -1276,29 +1260,25 @@
         if(window.unsubscribeSacs) window.unsubscribeSacs();
         window.unsubscribeSacs = onSnapshot(collection(db, "sacs_jeux"), (snap) => {
             const div = document.getElementById('liste-sacs-firebase'); if(!div) return;
-            
-            let sacs = []; 
-            const dateCible = window.getNextEventDateStr();
+            let sacs = []; const dateCible = window.getNextEventDateStr();
             snap.forEach(d => { if(d.data().date_event === dateCible) sacs.push({id: d.id, ...d.data()}) });
-            
             sacs.sort((a, b) => b.timestamp - a.timestamp);
 
-            let myName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
-            let myLudoId = (localProfile.pseudoMyludo || myName).toLowerCase();
+            let myName = (auth.currentUser.displayName || auth.currentUser.email.split('@')[0]).toLowerCase();
 
-            let mesSacs = sacs.filter(s => s.proprio.toLowerCase() === myLudoId);
-            let autresSacs = sacs.filter(s => s.proprio.toLowerCase() !== myLudoId);
+            let mesSacs = sacs.filter(s => s.proprio.toLowerCase() === myName || s.demandeur.toLowerCase() === myName);
+            let autresSacs = sacs.filter(s => s.proprio.toLowerCase() !== myName && s.demandeur.toLowerCase() !== myName);
 
             let html = '';
             
             if (mesSacs.length > 0) {
                 html += `<h4 style="font-size:0.85rem; color:var(--green-deep); margin:0 0 5px; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:3px;">🎒 Mon Sac</h4>`;
-                html += mesSacs.map(s => window.buildSacCard(s, myName, myLudoId)).join('');
+                html += mesSacs.map(s => window.buildSacCard(s, myName)).join('');
             }
             
             if (autresSacs.length > 0) {
                 html += `<h4 style="font-size:0.85rem; color:var(--wood-brown); margin:10px 0 5px; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:3px;">🎲 Les autres sacs</h4>`;
-                html += autresSacs.map(s => window.buildSacCard(s, myName, myLudoId)).join('');
+                html += autresSacs.map(s => window.buildSacCard(s, myName)).join('');
             }
 
             if(sacs.length === 0) { 
