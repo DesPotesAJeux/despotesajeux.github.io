@@ -130,20 +130,17 @@
         .game-btn { background: var(--wood-brown); color: white; border: none; padding: 10px 25px; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); transition: transform 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; }
         .game-btn:active { transform: scale(0.95); }
         .share-container { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 5px; margin-bottom: 10px; }
-        .share-input { width: 100%; padding: 8px; border-radius: 12px; border: 2px solid var(--wood-brown); background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown); box-sizing: border-box; text-align: left; font-size: 1rem; }
+        .share-input { width: 100%; padding: 8px; border-radius: 12px; border: 2px solid var(--wood-brown); background: #fff; font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--text-brown); box-sizing: border-box; text-align: center; font-size: 1rem; }
         .wa-btn { background: #25D366; color: white; margin-top: 5px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); } 
         .confetti { position: fixed; width: 10px; height: 10px; background-color: #f00; z-index: 400; top: -10px; pointer-events: none; opacity: 0; }
         .myludo-link { color: var(--green-deep); text-decoration: none; border-bottom: 1px dashed var(--wood-brown); font-weight: 800; transition: color 0.2s; }
         .myludo-link:hover { color: var(--wood-brown); }
 
         /* =========================================
-           STYLES SPECIFIQUES (RSVP + TABLES + PROFIL)
+           STYLES SPECIFIQUES (RSVP + TABLES)
            ========================================= */
         .rsvp-btn { flex: 1; padding: 8px 5px; font-size: 0.75rem; font-family: 'Quicksand', sans-serif; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: all 0.2s; background: #ecf0f1; color: #7f8c8d; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .rsvp-btn:active { transform: scale(0.95); }
-        .rsvp-badge { display:inline-block; padding:4px 8px; background:white; border:1px solid rgba(188,143,99,0.5); border-radius:50px; font-size:0.75rem; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.05); font-weight:bold; color:var(--green-deep); transition:all 0.2s; margin: 2px; }
-        .rsvp-badge:active { transform: scale(0.95); background: var(--bg-beige); }
-
         .table-card { background:#fff; padding:12px; border-radius:15px; border:1px solid #dbb38a; margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,0.03); text-align: left; }
         .seat { display:inline-flex; align-items:center; gap:4px; padding:4px 8px; border-radius:8px; font-size:0.75rem; font-weight:bold; margin:2px; transition: opacity 0.2s; }
         .seat.clickable { cursor: pointer; }
@@ -152,13 +149,14 @@
         .seat.gold { background: var(--gold-game); color: white; border: 1px solid var(--gold-game); }
         .seat.empty-green { background: transparent; color: var(--wa-green); border: 1px dashed var(--wa-green); }
         .seat.empty-gold { background: transparent; color: var(--gold-game); border: 1px dashed var(--gold-game); }
-        
         .remove-seat { margin-left: 5px; color: rgba(255,255,255,0.8); cursor: pointer; background: rgba(0,0,0,0.2); border-radius: 50%; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; }
         .remove-seat:active { background: rgba(0,0,0,0.5); }
-
         .action-bar { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; border-top: 1px solid #f3f1e5; padding-top: 8px; justify-content: center; }
         .btn-small { padding: 6px 12px; font-size: 0.75rem; font-family: 'Quicksand', sans-serif; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap:4px; color:white; transition: opacity 0.2s; }
         .btn-small:active { opacity: 0.8; }
+        
+        .rsvp-badge { display:inline-block; padding:4px 8px; background:white; border:1px solid rgba(188,143,99,0.5); border-radius:50px; font-size:0.75rem; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.05); font-weight:bold; color:var(--green-deep); transition:all 0.2s; margin: 2px; }
+        .rsvp-badge:active { transform: scale(0.95); background: var(--bg-beige); }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -436,7 +434,7 @@
     }
     fetchWeatherUpdate();
 
-    /* --- FONCTIONS MODALES UNIVERSELLES (Alerte / Jeu) --- */
+    /* --- FONCTIONS MODALES UNIVERSELLES --- */
     function closeGameModalForce() {
         document.getElementById('gameModalBackdrop').classList.remove('visible');
         if(typeof confettiInterval !== 'undefined') { clearInterval(confettiInterval); document.querySelectorAll('.confetti').forEach(c => c.remove()); }
@@ -461,7 +459,7 @@
         if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
     };
 
-    /* --- GESTION DU BOUTON RETOUR ANDROID (HISTORY API) --- */
+    /* --- GESTION DU BOUTON RETOUR ANDROID --- */
     window.addEventListener('popstate', (e) => { 
         if (lb.classList.contains('active')) { hideLightboxDOM(); } 
         else if (document.getElementById('barnOverlay').classList.contains('active')) { closeBarnForce(); } 
@@ -485,7 +483,7 @@
         element.classList.add('active'); document.getElementById('grid-' + tabId).classList.add('active');
     }
 
-    /* --- 1. CALCULS DATE & HTML SORTIES --- */
+    /* --- CALCULS DATE --- */
     const sortiesConfig = [ { year: 2025, count: 5 }, { year: 2024, count: 7 }, { year: 2023, count: 7 }, { year: 2022, count: 9 }, { year: 2021, count: 2 }, { year: 2019, count: 1 } ];
 
     function getNextLastFridays() {
@@ -506,7 +504,6 @@
     const diffTime = new Date(nextDate.getFullYear(), nextDate.getMonth(), nextDate.getDate()) - new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    // Fonction globale pour le RSVP
     window.getNextEventDateStr = function() {
         return nextDate.toISOString().split('T')[0];
     };
@@ -521,7 +518,7 @@
         `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:3px; gap:5px;">
             <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="flex-shrink:0;">📍 <span class="underline">Maison des Associations</span></a>
             <button id="btn-voter-accueil" class="btn-ludotheque" style="margin:0; padding: 4px 12px; font-size: 0.75rem; white-space: nowrap; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">
-                <i class="fa-solid fa-check-to-slot" style="margin-right:4px;"></i>Tables
+                <i class="fa-solid fa-users" style="margin-right:4px;"></i>Tables
             </button>
         </div>`;
 
@@ -539,26 +536,20 @@
     });
     photosSortiesHTML += '</div>';
 
-    const jeuxNommes = [
-        "jeu_abyss", "jeu_azul", "jeu_camel_cup", "jeu_century", "jeu_code_names", "jeu_dice_town", "jeu_flamme_rouge", "jeu_heimlich&co",
-        "jeu_imagine", "jeu_jamaïca", "jeu_king_of_tokyo", "jeu_kingdomino", "jeu_la_cour_des_miracles", "jeu_le_mystere_de_Whitehall", "jeu_les_aventuriers_du_rail",
-        "jeu_living_forest", "jeu_menara", "jeu_mysterium", "jeu_nemesis", "jeu_noé", "jeu_paleo", "jeu_pandemic", "jeu_parks",
-        "jeu_the_island", "jeu_tokaido", "jeu_tumblin_dice", "jeu_wingspan", "jeu_witness"
-    ];
-    const nombreDeJeuxNumerotes = 7;
-
+    const jeuxNommes = ["jeu_abyss", "jeu_azul", "jeu_camel_cup", "jeu_century", "jeu_code_names", "jeu_dice_town", "jeu_flamme_rouge", "jeu_heimlich&co", "jeu_imagine", "jeu_jamaïca", "jeu_king_of_tokyo", "jeu_kingdomino", "jeu_la_cour_des_miracles", "jeu_le_mystere_de_Whitehall", "jeu_les_aventuriers_du_rail", "jeu_living_forest", "jeu_menara", "jeu_mysterium", "jeu_nemesis", "jeu_noé", "jeu_paleo", "jeu_pandemic", "jeu_parks", "jeu_the_island", "jeu_tokaido", "jeu_tumblin_dice", "jeu_wingspan", "jeu_witness"];
+    
     let photosJeuxHTML = '<div class="photo-grid">';
     jeuxNommes.forEach(jeu => {
         let nomJeu = jeu.replace('jeu_', '').replace(/_/g, ' '); nomJeu = nomJeu.charAt(0).toUpperCase() + nomJeu.slice(1); let fichierComplet = cheminTries + jeu + extensionJeux;
         photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')"><img src="${fichierComplet}" loading="lazy" decoding="async" alt="${nomJeu}" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"><div class="photo-game-title">${nomJeu}</div></div>`;
     });
-    for (let i = 1; i <= nombreDeJeuxNumerotes; i++) {
+    for (let i = 1; i <= 7; i++) {
         let nomFichier = "jeu" + i; let fichierComplet = cheminNonIdentifies + nomFichier + extensionJeux;
         photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')"><img src="${fichierComplet}" loading="lazy" decoding="async" alt="" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"></div>`;
     }
     photosJeuxHTML += '</div>';
 
-    /* --- 2. DONNÉES DES PAGES --- */
+    /* --- DONNÉES DES PAGES --- */
     const pagesData = {
         vote: {
             title: "Au programme ?",
@@ -569,9 +560,10 @@
                 </div>
                 
                 <div id="view-votes" style="display: none;">
+                    
                     <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(188,143,99,0.1); padding:10px 15px; border-radius:15px; margin-bottom:15px;">
                         <div id="user-greeting" style="font-weight:bold; color:var(--green-deep); font-size:0.9rem;"></div>
-                        <button class="game-btn" style="margin:0; padding:6px 12px; font-size:0.75rem; background:transparent; border:1px solid var(--wood-brown); color:var(--wood-brown); box-shadow:none;" onclick="window.openProfileModal()">👤 Mon Profil</button>
+                        <button class="game-btn" style="margin:0; padding:6px 12px; font-size:0.75rem; background:transparent; border:1px solid var(--wood-brown); color:var(--wood-brown); box-shadow:none;" onclick="window.openProfileModal()">👤 Profil</button>
                     </div>
 
                     <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px solid rgba(58, 99, 81, 0.2); text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
@@ -588,14 +580,15 @@
                     
                     <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed rgba(188,143,99,0.3);">
                         <label style="font-weight:bold; font-size:0.8rem; display:block; margin-bottom:5px; color:var(--text-brown);">Ouvrir une nouvelle table :</label>
-                        <select id="select-jeu-collection" class="share-input" style="width:100%; margin-bottom:10px;">
-                            <option value="">Chargement de la ludothèque...</option>
-                        </select>
-                        <button class="game-btn" style="margin-top:0; width:100%; justify-content:center;" onclick="window.proposerJeuSelectionne()"><i class="fa-solid fa-plus"></i> Créer la table</button>
+                        
+                        <input type="text" id="input-jeu-search" list="jeux-datalist" class="share-input" style="width:100%; margin-bottom:10px; text-align:left;" placeholder="Rechercher un jeu (ou ajout manuel)">
+                        <datalist id="jeux-datalist"></datalist>
+
+                        <button class="game-btn" style="margin-top:0; width:100%; justify-content:center;" onclick="window.proposerJeu()"><i class="fa-solid fa-plus"></i> Créer la table</button>
                     </div>
 
                     <h3 style="font-family:'Shadows Into Light', cursive; color:var(--green-deep); font-size:1.5rem; text-align:center; margin: 0 0 5px;">L'Arène (Les Tables)</h3>
-                    <div style="font-size:0.7rem; color:gray; text-align:center; margin-bottom:15px; line-height:1.4;"><i class="fa-solid fa-info-circle"></i> <b>Flexible (👼)</b> : Je suis prêt(e) à libérer ma place pour équilibrer les tables.</div>
+                    <div style="font-size:0.7rem; color:gray; text-align:center; margin-bottom:15px; line-height:1.4;"><i class="fa-solid fa-info-circle"></i> <b>Flexible (👼)</b> : Prêt(e) à libérer sa place pour équilibrer les tables.</div>
                     
                     <div id="liste-votes-firebase" style="display:flex; flex-direction:column;">
                         <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement des tables... <i class="fa-solid fa-spinner fa-spin"></i></div>
@@ -661,7 +654,6 @@
         }
     };
 
-    /* --- 3. DOM & NAVIGATION --- */
     const sheet = document.getElementById('bottomSheet');
     const overlay = document.getElementById('overlay');
     const sheetContent = document.getElementById('sheetContent');
@@ -671,9 +663,7 @@
     function openSheet(key) {
         sheetContent.innerHTML = `<h2 class="sheet-content-title">${pagesData[key].title}</h2>${pagesData[key].text}`;
         
-        if(key === 'vote') {
-            setTimeout(() => { if(window.updateVoteUI) window.updateVoteUI(); }, 50);
-        }
+        if(key === 'vote') setTimeout(() => { if(window.updateVoteUI) window.updateVoteUI(); }, 50);
 
         if(gameStarted && gameState[key] && gameState[key].total > gameState[key].found) {
             let containerId = `content-${key}`; let container = document.getElementById(containerId);
@@ -706,25 +696,15 @@
 
     /* --- LIGHTBOX --- */
     const lb = document.getElementById('lightbox'); const lbContainer = document.getElementById('lbContainer'); const lbImg = document.getElementById('lightboxImg'); const lbNavPrev = document.getElementById('lbNavPrev'); const lbNavNext = document.getElementById('lbNavNext');
-    let currentGallery = []; let currentPhotoIndex = 0;
-    let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
+    let currentGallery = []; let currentPhotoIndex = 0; let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
     
     function openLightbox(src, isSingleImage = false) { 
         lbImg.src = src; lb.style.display = 'flex'; resetZoom(); setTimeout(() => lb.classList.add('active'), 10); 
         const captionEl = document.getElementById('lightboxCaption');
-        if (isSingleImage) { 
-            currentGallery = [{src: src, title: ''}]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; captionEl.innerText = '';
-        } else { 
-            const activeTab = document.querySelector('.photo-tab-content.active');
-            const items = activeTab.querySelectorAll('.photo-grid-item img'); 
-            currentGallery = Array.from(items).map(img => ({ src: img.getAttribute('src'), title: img.getAttribute('alt') || '' })); 
-            currentPhotoIndex = currentGallery.findIndex(g => g.src === src); 
-            if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } 
-            captionEl.innerText = currentGallery[currentPhotoIndex].title;
-        } 
+        if (isSingleImage) { currentGallery = [{src: src, title: ''}]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; captionEl.innerText = ''; } 
+        else { const activeTab = document.querySelector('.photo-tab-content.active'); const items = activeTab.querySelectorAll('.photo-grid-item img'); currentGallery = Array.from(items).map(img => ({ src: img.getAttribute('src'), title: img.getAttribute('alt') || '' })); currentPhotoIndex = currentGallery.findIndex(g => g.src === src); if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } captionEl.innerText = currentGallery[currentPhotoIndex].title; } 
         if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } 
     }
-    
     function hideLightboxDOM() { lb.classList.remove('active'); setTimeout(() => { lb.style.display='none'; resetZoom(); }, 300); }
     function closeLightboxForce(fromHistory = false) { if (!lb.classList.contains('active')) return; if (history.state && history.state.type === 'lightbox') { history.back(); } else { hideLightboxDOM(); } }
     lbContainer.addEventListener('click', (e) => { if(e.target !== lbImg && currentScale === 1 && !e.target.closest('.lightbox-nav')) closeLightboxForce(); });
@@ -733,16 +713,7 @@
     lbContainer.addEventListener('touchstart', (e) => { if(e.target.closest('.lightbox-nav')) return; if (e.touches.length === 2) { isZooming = true; initialDistance = getDistance(e.touches); } else if (e.touches.length === 1) { lastPanX = e.touches[0].clientX; lastPanY = e.touches[0].clientY; swipeStartX = e.touches[0].clientX; currentSwipeX = 0; } }, {passive: false});
     lbContainer.addEventListener('touchmove', (e) => { if (e.touches.length === 2) { e.preventDefault(); const currentDistance = getDistance(e.touches); const scaleChange = currentDistance / initialDistance; currentScale = Math.min(Math.max(1, currentScale * scaleChange), 4); lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; initialDistance = currentDistance; } else if (e.touches.length === 1) { let currentX = e.touches[0].clientX; let currentY = e.touches[0].clientY; if (currentScale > 1) { e.preventDefault(); posX += (currentX - lastPanX) / currentScale; posY += (currentY - lastPanY) / currentScale; lbImg.style.transform = `scale(${currentScale}) translate(${posX}px, ${posY}px)`; lastPanX = currentX; lastPanY = currentY; } else if (!isZooming && currentGallery.length > 1) { e.preventDefault(); currentSwipeX = currentX - swipeStartX; lbContainer.style.transform = `translateX(${currentSwipeX}px)`; } } }, {passive: false});
     lbContainer.addEventListener('touchend', (e) => { if (e.touches.length < 2) { isZooming = false; } if (currentScale === 1 && currentGallery.length > 1) { if (currentSwipeX > 70) { changePhotoDir('prev'); } else if (currentSwipeX < -70) { changePhotoDir('next'); } else { lbContainer.style.transform = `translateX(0px)`; } currentSwipeX = 0; } });
-    
-    function changePhotoDir(dir) { 
-        if (currentGallery.length <= 1) return; 
-        if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } 
-        lbImg.style.opacity = 0; document.getElementById('lightboxCaption').style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; 
-        setTimeout(() => { 
-            let newObj = currentGallery[currentPhotoIndex]; lbImg.src = newObj.src; document.getElementById('lightboxCaption').innerText = newObj.title;
-            lbImg.style.opacity = 1; document.getElementById('lightboxCaption').style.opacity = 1;
-        }, 150); 
-    }
+    function changePhotoDir(dir) { if (currentGallery.length <= 1) return; if (dir === 'next') { currentPhotoIndex = (currentPhotoIndex + 1) % currentGallery.length; } else { currentPhotoIndex = (currentPhotoIndex - 1 + currentGallery.length) % currentGallery.length; } lbImg.style.opacity = 0; document.getElementById('lightboxCaption').style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; setTimeout(() => { let newObj = currentGallery[currentPhotoIndex]; lbImg.src = newObj.src; document.getElementById('lightboxCaption').innerText = newObj.title; lbImg.style.opacity = 1; document.getElementById('lightboxCaption').style.opacity = 1; }, 150); }
 
     /* --- JEU DES DES --- */
     let gameStarted = false; let eggCount = 0; const totalEggs = 10;
@@ -762,101 +733,20 @@
         document.getElementById('gameModalBackdrop').classList.add('visible');
         if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
     }
-    
-    function initGame() {
-        closeGameModalForce(); hideSheetDOM();
-        if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) { history.replaceState({ type: 'main' }, ''); }
-        resetGameData(); gameStarted = true; startTimer();
-        
-        const btnVoter = document.getElementById('btn-voter-accueil');
-        if (btnVoter) btnVoter.style.display = 'none';
-
-        const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque'];
-        for(let i=0; i<9; i++) { let randomSec = sections[Math.floor(Math.random() * sections.length)]; gameState[randomSec].total++; }
-        gameState['home'].total = 1; renderHomeEgg(); showToast("Le chrono est lancé ! ⏱️");
-    }
-    
-    function resetGameData() {
-        gameStarted = false; eggCount = 0; clearInterval(timerInterval);
-        document.getElementById('gameTimer').classList.remove('visible'); document.getElementById('gameTimer').innerText = "00:00:00"; document.getElementById('gameTimer').style.color = '#f1c40f'; 
-        for(let key in gameState) { gameState[key].total = 0; gameState[key].found = 0; }
-        document.querySelectorAll('.egg').forEach(el => el.remove());
-
-        const btnVoter = document.getElementById('btn-voter-accueil');
-        if (btnVoter) btnVoter.style.display = 'flex';
-    }
-    
-    function startTimer() {
-        startTime = Date.now(); document.getElementById('gameTimer').classList.add('visible');
-        timerInterval = setInterval(() => {
-            let delta = Date.now() - startTime; let minutes = Math.floor(delta / 60000); let seconds = Math.floor((delta % 60000) / 1000); let centiseconds = Math.floor((delta % 1000) / 10);
-            document.getElementById('gameTimer').innerText = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds) + ":" + (centiseconds < 10 ? "0" + centiseconds : centiseconds);
-        }, 10);
-    }
-    
-    function foundEgg(el, sectionKey) {
-        if(el.classList.contains('found')) return; if(eggCount >= 10) return;
-        gameState[sectionKey].found++; eggCount++; el.style.pointerEvents = 'none'; el.classList.add('found'); 
-        
-        setTimeout(() => el.remove(), 800); 
-
-        let msg = `Bravo ! ${eggCount}/${totalEggs}`;
-        if(eggCount === totalEggs) { clearInterval(timerInterval); let rawMs = Date.now() - startTime; finishGame(rawMs); } 
-        else if(eggCount > 5) { msg = `Tu chauffes ! ${eggCount}/${totalEggs}`; showToast(msg); } else { showToast(msg); }
-        if(navigator.vibrate) navigator.vibrate(50);
-    }
-    
-    function finishGame(rawMs) {
-        let finalTime = document.getElementById('gameTimer').innerText; document.getElementById('gameTimer').style.color = '#2ecc71'; gameStarted = false;
-        let seconds = rawMs / 1000; let rank = ""; let message = ""; let rankNum = 0;
-        if (seconds < 5) { rankNum=1; rank = "DIEU DU DÉ ⚡"; message = "Inhumain ! T'as triché ?"; } else if (seconds < 10) { rankNum=2; rank = "GRAND MAÎTRE JEDI ⚔️"; message = "La Force est puissante en toi."; } else if (seconds < 15) { rankNum=3; rank = "CHUCK NORRIS 👊"; message = "Chuck Norris ne cherche pas les dés, ils se dénoncent."; } else if (seconds < 20) { rankNum=4; rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre."; } else if (seconds < 25) { rankNum=5; rank = "ŒIL DE LYNX 😼"; message = "Une vision perçante."; } else if (seconds < 35) { rankNum=6; rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Enquête méthodique."; } else if (seconds < 45) { rankNum=7; rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; } else if (seconds < 60) { rankNum=8; rank = "LE DIESEL 🚜"; message = "Lent au démarrage, mais tu es arrivé !"; } else { rankNum=9; rank = "L'ESCARGOT 🐌"; message = "L'important c'est de participer... non ?"; }
-        finalGameData.time = finalTime; finalGameData.rank = rank; finalGameData.rankNumber = rankNum; finalGameData.message = message; finalGameData.rawMs = rawMs;
-        
-        const btnVoter = document.getElementById('btn-voter-accueil');
-        if (btnVoter) btnVoter.style.display = 'flex';
-
-        setTimeout(() => {
-            const modal = document.getElementById('modalContent');
-            modal.innerHTML = `
-                <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
-                <div class="victory-icon"><i class="fa-solid fa-medal"></i></div>
-                <h3 class="victory-title">Félicitations !</h3>
-                <div class="victory-stats"><div style="font-size:1.1rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div><div style="font-size:1.3rem; color:#2c3e50; margin: 2px 0;">${rank}</div><div style="font-size:2rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div><div class="victory-message">"${message}"</div></div>
-                <div id="shareContainer" class="share-container"><input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15"><button class="game-btn wa-btn" onclick="shareWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Partager mon score</button></div>
-                <button class="game-btn" onclick="initGame()"><i class="fa-solid fa-rotate-right"></i> Rejouer</button>
-            `;
-            document.getElementById('gameModalBackdrop').classList.add('visible'); 
-            if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
-            startConfetti();
-        }, 1000);
-    }
-    
+    function initGame() { closeGameModalForce(); hideSheetDOM(); if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) { history.replaceState({ type: 'main' }, ''); } resetGameData(); gameStarted = true; startTimer(); const btnVoter = document.getElementById('btn-voter-accueil'); if (btnVoter) btnVoter.style.display = 'none'; const sections = ['histoire', 'adhesion', 'cal', 'photos', 'contact', 'ludotheque']; for(let i=0; i<9; i++) { let randomSec = sections[Math.floor(Math.random() * sections.length)]; gameState[randomSec].total++; } gameState['home'].total = 1; renderHomeEgg(); showToast("Le chrono est lancé ! ⏱️"); }
+    function resetGameData() { gameStarted = false; eggCount = 0; clearInterval(timerInterval); document.getElementById('gameTimer').classList.remove('visible'); document.getElementById('gameTimer').innerText = "00:00:00"; document.getElementById('gameTimer').style.color = '#f1c40f'; for(let key in gameState) { gameState[key].total = 0; gameState[key].found = 0; } document.querySelectorAll('.egg').forEach(el => el.remove()); const btnVoter = document.getElementById('btn-voter-accueil'); if (btnVoter) btnVoter.style.display = 'flex'; }
+    function startTimer() { startTime = Date.now(); document.getElementById('gameTimer').classList.add('visible'); timerInterval = setInterval(() => { let delta = Date.now() - startTime; let minutes = Math.floor(delta / 60000); let seconds = Math.floor((delta % 60000) / 1000); let centiseconds = Math.floor((delta % 1000) / 10); document.getElementById('gameTimer').innerText = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds) + ":" + (centiseconds < 10 ? "0" + centiseconds : centiseconds); }, 10); }
+    function foundEgg(el, sectionKey) { if(el.classList.contains('found')) return; if(eggCount >= 10) return; gameState[sectionKey].found++; eggCount++; el.style.pointerEvents = 'none'; el.classList.add('found'); setTimeout(() => el.remove(), 800); let msg = `Bravo ! ${eggCount}/${totalEggs}`; if(eggCount === totalEggs) { clearInterval(timerInterval); let rawMs = Date.now() - startTime; finishGame(rawMs); } else if(eggCount > 5) { msg = `Tu chauffes ! ${eggCount}/${totalEggs}`; showToast(msg); } else { showToast(msg); } if(navigator.vibrate) navigator.vibrate(50); }
+    function finishGame(rawMs) { let finalTime = document.getElementById('gameTimer').innerText; document.getElementById('gameTimer').style.color = '#2ecc71'; gameStarted = false; let seconds = rawMs / 1000; let rank = ""; let message = ""; let rankNum = 0; if (seconds < 5) { rankNum=1; rank = "DIEU DU DÉ ⚡"; message = "Inhumain ! T'as triché ?"; } else if (seconds < 10) { rankNum=2; rank = "GRAND MAÎTRE JEDI ⚔️"; message = "La Force est puissante en toi."; } else if (seconds < 15) { rankNum=3; rank = "CHUCK NORRIS 👊"; message = "Chuck Norris ne cherche pas les dés, ils se dénoncent."; } else if (seconds < 20) { rankNum=4; rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre."; } else if (seconds < 25) { rankNum=5; rank = "ŒIL DE LYNX 😼"; message = "Une vision perçante."; } else if (seconds < 35) { rankNum=6; rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Enquête méthodique."; } else if (seconds < 45) { rankNum=7; rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; } else if (seconds < 60) { rankNum=8; rank = "LE DIESEL 🚜"; message = "Lent au démarrage, mais tu es arrivé !"; } else { rankNum=9; rank = "L'ESCARGOT 🐌"; message = "L'important c'est de participer... non ?"; } finalGameData.time = finalTime; finalGameData.rank = rank; finalGameData.rankNumber = rankNum; finalGameData.message = message; finalGameData.rawMs = rawMs; const btnVoter = document.getElementById('btn-voter-accueil'); if (btnVoter) btnVoter.style.display = 'flex'; setTimeout(() => { const modal = document.getElementById('modalContent'); modal.innerHTML = `<div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div><div class="victory-icon"><i class="fa-solid fa-medal"></i></div><h3 class="victory-title">Félicitations !</h3><div class="victory-stats"><div style="font-size:1.1rem; text-transform:uppercase; color:var(--wood-brown); font-weight:bold;">Rang N°${rankNum}</div><div style="font-size:1.3rem; color:#2c3e50; margin: 2px 0;">${rank}</div><div style="font-size:2rem; font-family:monospace; color:#e67e22; font-weight:bold;">${finalTime}</div><div class="victory-message">"${message}"</div></div><div id="shareContainer" class="share-container"><input type="text" id="playerPseudo" class="share-input" placeholder="Ton pseudo" maxlength="15"><button class="game-btn wa-btn" onclick="shareWhatsapp()"><i class="fa-brands fa-whatsapp"></i> Partager mon score</button></div><button class="game-btn" onclick="initGame()"><i class="fa-solid fa-rotate-right"></i> Rejouer</button>`; document.getElementById('gameModalBackdrop').classList.add('visible'); if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); } startConfetti(); }, 1000); }
     function generateChecksum(ms) { return Math.floor((ms * 17) + 2026).toString(36).toUpperCase(); }
-    function shareWhatsapp() {
-        let pseudo = document.getElementById('playerPseudo').value.trim() || "Un Pote"; let check = generateChecksum(finalGameData.rawMs); let siteUrl = "https://despotesajeux.github.io/";
-        let text = `🎲 *DÉFI DES POTES À JEUX* 🎲%0A%0A🕵️ J'ai trouvé les 10 dés cachés !%0A%0A👤 *Joueur :* ${pseudo}%0A⏱️ *Temps :* ${finalGameData.time}%0A🏅 *Rang N°${finalGameData.rankNumber} :* ${finalGameData.rank}%0A📝 _"${finalGameData.message}"_%0A%0ATu penses faire mieux ? Tente ta chance ici :%0A👉 ${siteUrl}%0A%0A🔐 _Verif : ${check}_`;
-        window.open(`https://wa.me/?text=${text}`, '_blank');
-    }
-    
+    function shareWhatsapp() { let pseudo = document.getElementById('playerPseudo').value.trim() || "Un Pote"; let check = generateChecksum(finalGameData.rawMs); let siteUrl = "https://despotesajeux.github.io/"; let text = `🎲 *DÉFI DES POTES À JEUX* 🎲%0A%0A🕵️ J'ai trouvé les 10 dés cachés !%0A%0A👤 *Joueur :* ${pseudo}%0A⏱️ *Temps :* ${finalGameData.time}%0A🏅 *Rang N°${finalGameData.rankNumber} :* ${finalGameData.rank}%0A📝 _"${finalGameData.message}"_%0A%0ATu penses faire mieux ? Tente ta chance ici :%0A👉 ${siteUrl}%0A%0A🔐 _Verif : ${check}_`; window.open(`https://wa.me/?text=${text}`, '_blank'); }
     function showToast(msg) { const toast = document.getElementById('gameToast'); toast.innerText = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
     function renderHomeEgg() { let container = document.getElementById('homeEggContainer'); container.innerHTML = ''; if(gameState['home'].total > gameState['home'].found) { createEgg(container, 'home', false); } }
-    function createEgg(container, sectionKey, isFound, isTab = false) {
-        let egg = document.createElement('i'); egg.className = 'fa-solid fa-dice egg'; if (isFound) return; 
-        egg.onclick = function(event) { foundEgg(this, sectionKey); event.stopPropagation(); }; egg.style.pointerEvents = 'auto';
-        if(!isTab) { egg.style.top = (Math.random() * 80 + 10) + '%'; egg.style.left = (Math.random() * 80 + 10) + '%'; } else { egg.style.position = 'absolute'; egg.style.top = '-8px'; egg.style.right = '5px'; egg.style.margin = '0'; egg.style.fontSize = '1.2rem'; egg.style.filter = 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))'; }
-        container.appendChild(egg);
-    }
-    function startConfetti() {
-        const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6'];
-        for(let i=0; i<30; i++) { setTimeout(() => { const confetti = document.createElement('div'); confetti.classList.add('confetti'); confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`; document.body.appendChild(confetti); setTimeout(() => confetti.remove(), 5000); }, i * 50); }
-        if(!document.getElementById('confetti-style')) { const style = document.createElement('style'); style.id = 'confetti-style'; style.innerHTML = `@keyframes fall { 0% { top: -10px; opacity: 1; transform: rotate(0deg); } 100% { top: 100vh; opacity: 0; transform: rotate(720deg); } }`; document.head.appendChild(style); }
-    }
+    function createEgg(container, sectionKey, isFound, isTab = false) { let egg = document.createElement('i'); egg.className = 'fa-solid fa-dice egg'; if (isFound) return; egg.onclick = function(event) { foundEgg(this, sectionKey); event.stopPropagation(); }; egg.style.pointerEvents = 'auto'; if(!isTab) { egg.style.top = (Math.random() * 80 + 10) + '%'; egg.style.left = (Math.random() * 80 + 10) + '%'; } else { egg.style.position = 'absolute'; egg.style.top = '-8px'; egg.style.right = '5px'; egg.style.margin = '0'; egg.style.fontSize = '1.2rem'; egg.style.filter = 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))'; } container.appendChild(egg); }
+    function startConfetti() { const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6']; for(let i=0; i<30; i++) { setTimeout(() => { const confetti = document.createElement('div'); confetti.classList.add('confetti'); confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`; document.body.appendChild(confetti); setTimeout(() => confetti.remove(), 5000); }, i * 50); } if(!document.getElementById('confetti-style')) { const style = document.createElement('style'); style.id = 'confetti-style'; style.innerHTML = `@keyframes fall { 0% { top: -10px; opacity: 1; transform: rotate(0deg); } 100% { top: 100vh; opacity: 0; transform: rotate(720deg); } }`; document.head.appendChild(style); } }
 
     /* --- GESTION DES COOKIES & ANALYTICS --- */
-    function loadGoogleAnalytics() {
-        const script = document.createElement('script'); script.async = true; script.src = "https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY"; document.head.appendChild(script);
-        window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-YPHH9PELKY');
-    }
+    function loadGoogleAnalytics() { const script = document.createElement('script'); script.async = true; script.src = "https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY"; document.head.appendChild(script); window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-YPHH9PELKY'); }
     function checkCookies() { const consent = localStorage.getItem('potes_cookie_consent'); if (consent === 'accepted') { loadGoogleAnalytics(); } else if (!consent) { setTimeout(() => { document.getElementById('cookiePopup').classList.add('show'); }, 1000); } }
     function handleCookies(choice) { localStorage.setItem('potes_cookie_consent', choice); document.getElementById('cookiePopup').classList.remove('show'); if (choice === 'accepted') { loadGoogleAnalytics(); } }
     checkCookies();
@@ -864,17 +754,14 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, getDocs, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, updateDoc, doc, deleteDoc, onSnapshot, getDocs, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const CODE_ASSO = "POTES56";
     const firebaseConfig = {
       apiKey: "AIzaSyBwLFuQcpv_Ml8omuhzEL1mvTEPlxsH1Wo",
       authDomain: "des-potes-a-jeux.firebaseapp.com",
-      projectId: "des-potes-a-jeux",
-      storageBucket: "des-potes-a-jeux.firebasestorage.app",
-      messagingSenderId: "826161718904",
-      appId: "1:826161718904:web:d2bb45b5cdadca5ca76f8d"
+      projectId: "des-potes-a-jeux"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -887,15 +774,9 @@
     let unsubscribeVotes = null;
     let unsubscribeRSVP = null;
     let localProfile = { avatar: '🎲', titre: 'Membre', jeuFavori: '', styleJoueur: 'Touche-à-tout' };
+    window.tousLesJeux = []; // Garde la ludothèque globale en mémoire pour la recherche
 
-    getRedirectResult(auth).then((result) => {
-        if (result) console.log("Utilisateur connecté via Google:", result.user.displayName);
-    }).catch((error) => {
-        console.error("Erreur Redirect Detail:", error);
-        if(error.code === "auth/internal-error") {
-            window.showCustomAlert("Liaison Google interrompue", "Ton navigateur a bloqué le retour de connexion. Essaie de désactiver ton bloqueur de pub ou d'utiliser Chrome/Safari en mode normal.", "fa-circle-xmark");
-        }
-    });
+    getRedirectResult(auth).then((result) => { if (result) console.log("Utilisateur Google:", result.user.displayName); }).catch((error) => { console.error("Erreur Google:", error); });
 
     window.toggleVisibility = function(inputId, iconId) {
         const input = document.getElementById(inputId), icon = document.getElementById(iconId);
@@ -907,15 +788,11 @@
     // UI ET GESTION DES PROFILS
     // ==========================================
     window.updateVoteUI = async function() {
-        const viewAuth = document.getElementById('view-auth');
-        const viewVotes = document.getElementById('view-votes');
-        const userGreeting = document.getElementById('user-greeting');
+        const viewAuth = document.getElementById('view-auth'), viewVotes = document.getElementById('view-votes'), userGreeting = document.getElementById('user-greeting');
         if(!viewAuth || !viewVotes) return;
         
         if(auth.currentUser) {
-            viewAuth.style.display = 'none'; 
-            viewVotes.style.display = 'block';
-            
+            viewAuth.style.display = 'none'; viewVotes.style.display = 'block';
             await window.loadProfile();
             let displayName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
             userGreeting.innerHTML = `<span style="font-size:1.2rem; margin-right:5px;">${localProfile.avatar}</span> Salut ${displayName} !`;
@@ -924,30 +801,27 @@
             window.initFirebaseVotes();
             window.chargerListeCollection(); 
         } else {
-            viewAuth.style.display = 'block'; 
-            viewVotes.style.display = 'none';
+            viewAuth.style.display = 'block'; viewVotes.style.display = 'none';
             window.renderAuthUI();
         }
     };
 
     window.renderAuthUI = function() {
-        const authContainer = document.getElementById('auth-container');
-        if (!authContainer) return;
-        let html = '';
+        const authContainer = document.getElementById('auth-container'); if (!authContainer) return;
         if (window.authMode === 'register') {
-            html = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
+            authContainer.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
                 <input type="text" id="auth-secret" class="share-input" placeholder="Code secret de l'asso" style="border-color:var(--president-color); background:rgba(230,126,34,0.05);">
                 <input type="text" id="auth-name" class="share-input" placeholder="Pseudo">
                 <input type="email" id="auth-email" class="share-input" placeholder="Email">
                 <div style="position:relative;"><input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe" style="width:100%;"><i class="fa-solid fa-eye" id="t-pwd" onclick="toggleVisibility('auth-pwd','t-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
                 <div style="position:relative;"><input type="password" id="auth-pwd-confirm" class="share-input" placeholder="Confirmer" style="width:100%;"><i class="fa-solid fa-eye" id="t-pwd-c" onclick="toggleVisibility('auth-pwd-confirm','t-pwd-c')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
-                <button class="game-btn" onclick="registerEmail()" style="width:100%; justify-content:center;">S'inscrire</button>
+                <button class="game-btn" onclick="registerEmail()" style="width:100%; justify-content:center;"><i class="fa-solid fa-user-plus"></i> S'inscrire</button>
                 <div style="text-align:center; margin: 5px 0; color:gray; font-size:0.8rem;">— ou —</div>
                 <button class="game-btn" style="background:#4285F4; width:100%; justify-content:center;" onclick="registerGoogle()"><i class="fa-brands fa-google"></i> S'inscrire via Google</button>
                 <span onclick="window.authMode='login'; renderAuthUI()" style="font-size:0.75rem; text-align:center; display:block; margin-top:10px; cursor:pointer; text-decoration:underline;">Déjà inscrit ? Connexion</span>
             </div>`;
         } else {
-            html = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
+            authContainer.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
                 <input type="email" id="auth-email" class="share-input" placeholder="Email">
                 <div style="position:relative;"><input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe" style="width:100%;"><i class="fa-solid fa-eye" id="t-pwd" onclick="toggleVisibility('auth-pwd','t-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;"></i></div>
                 <button class="game-btn" onclick="loginEmail()" style="width:100%; justify-content:center;"><i class="fa-solid fa-right-to-bracket"></i> Connexion</button>
@@ -959,29 +833,20 @@
                 </div>
             </div>`;
         }
-        authContainer.innerHTML = html;
     };
 
     window.authMode = 'login';
     window.loginGoogle = () => signInWithRedirect(auth, new GoogleAuthProvider());
-    window.registerGoogle = () => {
-        if(document.getElementById('auth-secret').value.trim().toUpperCase() !== CODE_ASSO) return window.showCustomAlert("Erreur", "Code secret invalide", "fa-user-shield");
-        window.loginGoogle();
-    };
-    window.loginEmail = async () => {
-        try { await signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pwd').value); } 
-        catch (e) { window.showCustomAlert("Erreur", "Identifiants invalides", "fa-circle-xmark"); }
-    };
+    window.registerGoogle = () => { if(document.getElementById('auth-secret').value.trim().toUpperCase() !== CODE_ASSO) return window.showCustomAlert("Erreur", "Code secret invalide", "fa-user-shield"); window.loginGoogle(); };
+    window.loginEmail = async () => { try { await signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pwd').value); } catch (e) { window.showCustomAlert("Erreur", "Identifiants invalides", "fa-circle-xmark"); } };
     window.registerEmail = async () => {
-        const secret = document.getElementById('auth-secret').value.trim().toUpperCase();
-        if(secret !== CODE_ASSO) return window.showCustomAlert("Refusé", "Code secret invalide", "fa-user-shield");
+        if(document.getElementById('auth-secret').value.trim().toUpperCase() !== CODE_ASSO) return window.showCustomAlert("Refusé", "Code secret invalide", "fa-user-shield");
         if(document.getElementById('auth-pwd').value !== document.getElementById('auth-pwd-confirm').value) return window.showCustomAlert("Erreur", "Mots de passe différents", "fa-dice");
         try {
-            let nomUser = document.getElementById('auth-name').value.trim() || 'Membre';
+            let name = document.getElementById('auth-name').value || 'Membre';
             const res = await createUserWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pwd').value);
-            await updateProfile(res.user, { displayName: nomUser });
-            await setDoc(doc(db, "utilisateurs", res.user.uid), { avatar: '🎲', titre: 'Novice', nom: nomUser });
-            await sendEmailVerification(res.user);
+            await updateProfile(res.user, { displayName: name });
+            await setDoc(doc(db, "utilisateurs", res.user.uid), { avatar: '🎲', titre: 'Novice', nom: name });
             window.showCustomAlert("Succès", "Compte créé ! Vérifie tes spams.", "fa-champagne-glasses");
         } catch (e) { window.showCustomAlert("Erreur", e.message, "fa-bug"); }
     };
@@ -1008,14 +873,8 @@
             <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; font-size:1.8rem; margin:0 0 15px;">Mon Profil</h3>
             
             <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px; margin-bottom:10px; text-align:left;">
-                <div>
-                    <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Avatar (Emoji)</label>
-                    <input type="text" id="prof-avatar" class="share-input" value="${localProfile.avatar || '🎲'}" maxlength="2" style="font-size:1.2rem;">
-                </div>
-                <div>
-                    <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Titre (Fun)</label>
-                    <input type="text" id="prof-titre" class="share-input" value="${localProfile.titre || 'Membre'}" placeholder="Le Stratège">
-                </div>
+                <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Avatar (Emoji)</label><input type="text" id="prof-avatar" class="share-input" value="${localProfile.avatar || '🎲'}" maxlength="2" style="font-size:1.2rem;"></div>
+                <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Titre (Fun)</label><input type="text" id="prof-titre" class="share-input" value="${localProfile.titre || 'Membre'}" placeholder="Le Stratège"></div>
             </div>
 
             <div style="text-align:left; margin-bottom:10px;">
@@ -1108,10 +967,8 @@
 
             document.getElementById('btn-rsvp-present').style.background = myStatus === 'present' ? 'var(--wa-green)' : '#ecf0f1';
             document.getElementById('btn-rsvp-present').style.color = myStatus === 'present' ? '#fff' : '#7f8c8d';
-
             document.getElementById('btn-rsvp-maybe').style.background = myStatus === 'maybe' ? 'var(--gold-game)' : '#ecf0f1';
             document.getElementById('btn-rsvp-maybe').style.color = myStatus === 'maybe' ? '#fff' : '#7f8c8d';
-
             document.getElementById('btn-rsvp-absent').style.background = myStatus === 'absent' ? '#e74c3c' : '#ecf0f1';
             document.getElementById('btn-rsvp-absent').style.color = myStatus === 'absent' ? '#fff' : '#7f8c8d';
 
@@ -1125,46 +982,58 @@
     };
 
     // ==========================================
-    // GESTION DES TABLES DE JEUX
+    // GESTION DES TABLES DE JEUX AVEC RECHERCHE
     // ==========================================
     window.chargerListeCollection = async function() {
-        const select = document.getElementById('select-jeu-collection');
-        if(!select) return;
+        const datalist = document.getElementById('jeux-datalist');
+        if(!datalist) return;
 
         const proprietaires = ['sebastien', 'julie', 'ronan', 'carine', 'stephane', 'sylvain'];
-        let tousLesJeux = [];
+        window.tousLesJeux = [];
 
         for (const p of proprietaires) {
             try {
                 const snap = await getDocs(collection(db, `collection_${p}`));
-                snap.forEach(d => { tousLesJeux.push({ ...d.data(), proprio: p }); });
+                snap.forEach(d => { window.tousLesJeux.push({ ...d.data(), proprio: p }); });
             } catch(e) {}
         }
 
-        tousLesJeux.sort((a, b) => a.titre.localeCompare(b.titre));
-
-        let options = '<option value="">-- Sélectionner un jeu --</option>';
-        tousLesJeux.forEach(j => {
-            options += `<option value="${j.titre}" data-proprio="${j.proprio}" data-lien="${j.lien || ''}" data-joueurs="${j.joueurs || '2-4'}">${j.titre} (${j.proprio})</option>`;
+        let options = '';
+        window.tousLesJeux.forEach(j => {
+            options += `<option value="${j.titre}">De ${j.proprio} (${j.joueurs || '2-4'} j)</option>`;
         });
-        select.innerHTML = options;
+        datalist.innerHTML = options;
     };
 
-    window.proposerJeuSelectionne = async function() {
-        const select = document.getElementById('select-jeu-collection');
-        const selectedOption = select.options[select.selectedIndex];
-        const titre = select.value;
+    window.proposerJeu = async function() {
+        const input = document.getElementById('input-jeu-search');
+        const titre = input.value.trim();
         
-        if(!titre) return window.showCustomAlert("Attention", "Choisis un jeu de la liste !", "fa-hand-pointer");
+        if(!titre) return window.showCustomAlert("Attention", "Saisis ou choisis un nom de jeu !", "fa-hand-pointer");
 
-        const proprioDuJeu = selectedOption.getAttribute('data-proprio');
-        const lienMyludo = selectedOption.getAttribute('data-lien');
-        
-        const joueursStr = selectedOption.getAttribute('data-joueurs') || "2-4";
-        const parts = joueursStr.match(/\d+/g);
-        let minJ = parts && parts.length > 0 ? parseInt(parts[0]) : 2;
-        let maxJ = parts && parts.length > 1 ? parseInt(parts[1]) : minJ;
-        if(maxJ < minJ) maxJ = minJ;
+        // On vérifie si le jeu tapé correspond à un jeu de notre base
+        const jeuTrouve = window.tousLesJeux.find(j => j.titre.toLowerCase() === titre.toLowerCase());
+
+        let minJ = 2, maxJ = 4, proprioDuJeu = "Moi", lienMyludo = "";
+
+        if (jeuTrouve) {
+            // Le jeu existe dans MyLudo !
+            proprioDuJeu = jeuTrouve.proprio;
+            lienMyludo = jeuTrouve.lien || "";
+            const joueursStr = jeuTrouve.joueurs || "2-4";
+            const parts = joueursStr.match(/\d+/g);
+            if (parts && parts.length > 0) minJ = parseInt(parts[0]);
+            if (parts && parts.length > 1) maxJ = parseInt(parts[1]);
+            else maxJ = minJ;
+        } else {
+            // Saisie MANUELLE : On demande juste le max pour faire simple
+            proprioDuJeu = auth.currentUser.displayName || "Moi";
+            let maxStr = prompt(`Le jeu "${titre}" n'a pas été trouvé dans la ludothèque de l'asso.\nCombien de joueurs MAXIMUM peuvent jouer à ce jeu ?`, "4");
+            if (maxStr === null) return; // Annulation
+            
+            maxJ = parseInt(maxStr) || 4;
+            minJ = 2; // Par défaut
+        }
 
         const moi = { 
             uid: auth.currentUser.uid, 
@@ -1179,6 +1048,7 @@
             await addDoc(collection(db, "jeux_proposes"), {
                 nom: titre,
                 proposePar: moi.nom,
+                createurUid: auth.currentUser.uid, // <-- Important pour la suppression
                 appartientA: proprioDuJeu,
                 myludoLien: lienMyludo,
                 minJoueurs: minJ,
@@ -1187,8 +1057,14 @@
                 date_ajout: new Date()
             });
             window.showCustomAlert("Table Ouverte !", "Les autres joueurs peuvent maintenant te rejoindre.", "fa-champagne-glasses");
-            select.selectedIndex = 0; 
+            input.value = ""; 
         } catch(e) { console.error(e); }
+    };
+
+    window.supprimerTable = async function(id) {
+        if(confirm("Es-tu sûr de vouloir supprimer cette table de l'arène ?")) {
+            await deleteDoc(doc(db, "jeux_proposes", id));
+        }
     };
 
     window.initFirebaseVotes = function() {
@@ -1255,14 +1131,20 @@
 
                 let actionsHTML = '<div class="action-bar">';
                 if (amISitting) {
-                    actionsHTML += `<button class="btn-small" style="background:#e74c3c;" onclick="actionTable('${j.id}', 'leave')"><i class="fa-solid fa-person-walking-arrow-right"></i> Tout Quitter</button>`;
                     if(!amIFlex) actionsHTML += `<button class="btn-small" style="background:#3498db;" onclick="actionTable('${j.id}', 'flex')">👼 Être Flexible</button>`;
                     else actionsHTML += `<button class="btn-small" style="background:#95a5a6;" onclick="actionTable('${j.id}', 'unflex')">Ne plus être flex.</button>`;
+                    
                     if(!isFull) actionsHTML += `<button class="btn-small" style="background:var(--wood-brown);" onclick="actionTable('${j.id}', 'addGuest')"><i class="fa-solid fa-user-plus"></i> +1 Invité</button>`;
                 } else {
                     if(!isFull) actionsHTML += `<button class="btn-small" style="background:var(--green-deep);" onclick="actionTable('${j.id}', 'join')">🪑 M'asseoir</button>`;
                     else actionsHTML += `<span style="font-size:0.75rem; color:gray; font-style:italic; padding:4px;">Table complète 🔒</span>`;
                 }
+
+                // Bouton suppression réservé au créateur de la table
+                if (j.createurUid === auth.currentUser.uid) {
+                    actionsHTML += `<button class="btn-small" style="background:#e74c3c;" onclick="window.supprimerTable('${j.id}')" title="Supprimer la table"><i class="fa-solid fa-trash"></i></button>`;
+                }
+
                 actionsHTML += '</div>';
 
                 // 3. TITRE CLIQUABLE
@@ -1301,11 +1183,8 @@
                 });
             }
         } 
-        else if (action === 'leave') {
-            inscrits = inscrits.filter(i => i.uid !== auth.currentUser.uid); // Retire tout
-        } 
         else if (action === 'removeSeat') {
-            inscrits = inscrits.filter(i => i.id !== seatId); // Retire juste le siège cliqué
+            inscrits = inscrits.filter(i => i.id !== seatId); // Retire juste le siège cliqué (Moi ou Invité)
         }
         else if (action === 'addGuest') {
             if(inscrits.length < max) {
@@ -1315,7 +1194,7 @@
                 let myName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
                 
                 inscrits.push({ 
-                    uid: auth.currentUser.uid, 
+                    uid: auth.currentUser.uid, // L'hôte garde le contrôle de l'invité (pour la croix rouge)
                     nom: guestName.trim(), 
                     avatar: '👤', 
                     type: 'guest', 
