@@ -7,7 +7,7 @@
 		style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
 		font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
 		img-src 'self' data: https://www.google.com https://*.google.com https://*.gstatic.com http://googleusercontent.com https://www.googletagmanager.com https://via.placeholder.com https://lh3.googleusercontent.com https://www.myludo.fr;
-		connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://api.open-meteo.com https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com;
+		connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://api.open-meteo.com https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://www.gstatic.com;
 		object-src 'none';
 		base-uri 'self';
 		form-action 'self' https://*.firebaseapp.com;
@@ -523,12 +523,6 @@
         return nextDate.toISOString().split('T')[0];
     };
     
-    // NOUVEAU : Fonction globale pour formater la date pour l'onglet Profil
-    window.getFormattedEventDate = function() {
-        const months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
-        return `${nextDate.getDate()} ${months[nextDate.getMonth()]}`;
-    };
-
     let dayPart = (diffDays === 0) ? " : JOUR J !" : ` : J-${diffDays}`;
     let dateStr = nextDate.toLocaleDateString('fr-FR', dateOptions);
     dateStr = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
@@ -538,8 +532,8 @@
         `<span style="font-size:0.9rem; font-weight:700; color:var(--green-deep);">${dateStr} à 20h30</span>` +
         `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:3px; gap:5px;">
             <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="flex-shrink:0;">📍 <span class="underline">Maison des Associations</span></a>
-            <button id="btn-voter-accueil" class="btn-ludotheque" style="margin:0; padding: 4px 12px; font-size: 0.75rem; white-space: nowrap; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">
-                <i class="fa-solid fa-check-to-slot" style="margin-right:4px;"></i>Voter
+            <button id="btn-voter-accueil" class="game-btn game-btn-green" style="margin:0; padding: 4px 8px; font-size: 0.7rem; white-space: nowrap; max-width:100px;" onclick="openSheet('vote')">
+                <i class="fa-solid fa-check-to-slot" style="margin-right:4px;"></i>S'organiser
             </button>
         </div>`;
 
@@ -599,9 +593,13 @@
                         <div id="tab-profil" class="vote-tab-content active">
                             
                             <div id="user-greeting" style="display:flex; flex-direction:column; align-items:center; font-weight:bold; color:var(--green-deep); font-size:1.5rem; margin-bottom:15px;"></div>
+                            
+                            <div style="text-align:center; margin-bottom:20px;">
+                                <button class="game-btn game-btn-green" style="margin:0; padding:8px 15px; font-size:0.85rem;" onclick="window.openProfileModal()"><i class="fa-solid fa-pen"></i> Modifier mon profil</button>
+                            </div>
 
                             <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px solid rgba(58, 99, 81, 0.2); text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
-                                <h4 id="rsvp-date-title" style="margin: 0 0 10px; color: var(--green-deep); font-size: 1rem;">Présence</h4>
+                                <h4 style="margin: 0 0 10px; color: var(--green-deep); font-size: 1rem;">Présence (Vendredi)</h4>
                                 <div style="font-size:0.75rem; color:var(--text-brown); margin-bottom:10px; font-style:italic;">Dis-nous si tu viens ! (Mais c'est pas grave si tu changes d'avis 😉)</div>
                                 <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 12px;">
                                     <button class="rsvp-btn" id="btn-rsvp-present" onclick="window.setRSVP('present')">✅ Oui</button>
@@ -943,7 +941,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, updateDoc, doc, deleteDoc, onSnapshot, getDocs, getDoc, setDoc, collectionGroup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const CODE_ASSO = "POTES56";
     const firebaseConfig = {
@@ -961,7 +959,7 @@
     window.auth = auth;
     let unsubscribeVotes = null;
     let unsubscribeRSVP = null;
-    let localProfile = { avatar: '🎲', titre: 'Membre', jeuFavori: '', styleJoueur: 'Touche-à-tout' };
+    let localProfile = { avatar: '🎲', titre: 'Membre', jeuFavori: '', styleJoueur: 'Touche-à-tout', pseudoMyludo: '' };
     window.tousLesJeux = []; 
     window.myCurrentRSVP = null; 
 
@@ -971,10 +969,13 @@
         else { input.type = "password"; icon.classList.replace("fa-eye-slash", "fa-eye"); }
     };
 
-    // --- AUTHENTIFICATION ---
+    // ==========================================
+    // UI ET GESTION DES PROFILS
+    // ==========================================
     window.updateVoteUI = async function() {
         const viewAuth = document.getElementById('view-auth'), viewVotes = document.getElementById('view-votes'), userGreeting = document.getElementById('user-greeting');
         if(!viewAuth || !viewVotes) return;
+        
         if(auth.currentUser) {
             viewAuth.style.display = 'none'; viewVotes.style.display = 'block';
             await window.loadProfile();
@@ -983,16 +984,16 @@
             if(rsvpTitle) rsvpTitle.innerText = "Présence du " + window.getFormattedEventDate();
 
             let displayName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
-            userGreeting.innerHTML = `<div style="display:flex; align-items:center; gap:10px;">
-                <div style="font-size:2.5rem; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> 
+            userGreeting.innerHTML = `
+                <div style="font-size:2.5rem; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2)); margin-right: 10px; display:inline-block;">${localProfile.avatar}</div> 
                 <span style="font-size:1.5rem;">Salut ${displayName} !</span>
-                <i class="fa-solid fa-pen" style="color:var(--wood-brown); font-size:0.9rem; cursor:pointer; padding:5px;" onclick="window.openProfileModal()"></i>
-            </div>`;
+                <i class="fa-solid fa-pen" style="color:var(--wood-brown); font-size:1rem; cursor:pointer; padding:5px 5px 5px 15px;" onclick="window.openProfileModal()"></i>
+            `;
             
             window.initFirebaseRSVP();
             window.initFirebaseVotes();
             window.chargerListeCollection(); 
-            window.initFirebaseSacs();
+            if(window.initFirebaseSacs) window.initFirebaseSacs();
         } else {
             viewAuth.style.display = 'block'; viewVotes.style.display = 'none';
             window.renderAuthUI();
@@ -1033,8 +1034,8 @@
             let name = document.getElementById('auth-name').value || 'Membre';
             const res = await createUserWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pwd').value);
             await updateProfile(res.user, { displayName: name });
-            await setDoc(doc(db, "utilisateurs", res.user.uid), { avatar: '🎲', titre: 'Novice', nom: name });
-            window.showCustomAlert("Succès", "Compte créé !", "fa-champagne-glasses");
+            await setDoc(doc(db, "utilisateurs", res.user.uid), { avatar: '🎲', titre: 'Novice', nom: name, pseudoMyludo: '' });
+            window.showCustomAlert("Succès", "Compte créé !");
         } catch (e) { window.showCustomAlert("Erreur", e.message, "fa-bug"); }
     };
     window.logoutFirebase = () => signOut(auth);
@@ -1049,7 +1050,7 @@
         if(d.exists()) {
             localProfile = d.data();
         } else {
-            localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout' };
+            localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout', pseudoMyludo: '' };
             await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile);
         }
     };
@@ -1064,6 +1065,11 @@
                 <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Titre (Fun)</label><input type="text" id="prof-titre" class="share-input" value="${localProfile.titre || 'Membre'}" placeholder="Le Stratège"></div>
             </div>
 
+            <div style="text-align:left; margin-bottom:10px; background:rgba(44, 62, 80, 0.1); padding:8px; border-radius:8px; border:1px dashed #2c3e50;">
+                <label style="font-size:0.7rem; font-weight:bold; color:#2c3e50;">🔗 Ton pseudo exact de Ludothèque MyLudo :</label>
+                <input type="text" id="prof-myludo" class="share-input" value="${localProfile.pseudoMyludo || ''}" placeholder="Ex: sebastien, julie..." style="margin-top:4px;">
+            </div>
+
             <div style="text-align:left; margin-bottom:10px;">
                 <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon jeu préféré :</label>
                 <input type="text" id="prof-jeu" class="share-input" value="${localProfile.jeuFavori || ''}" placeholder="Ex: Terraforming Mars">
@@ -1074,7 +1080,7 @@
                 <select id="prof-style" class="share-input">
                     <option value="Touche-à-tout" ${localProfile.styleJoueur==='Touche-à-tout'?'selected':''}>Touche-à-tout</option>
                     <option value="Eurogame (Gestion)" ${localProfile.styleJoueur==='Eurogame (Gestion)'?'selected':''}>Eurogame (Gestion)</option>
-                    <option value="Ameritrash (Dés & Fig.)" ${localProfile.styleJoueur==='Ameritrash (Dés & Fig.)'?'selected':''}>Ameritrash</option>
+                    <option value="Ameritrash (Dés & Fig.)" ${localProfile.styleJoueur==='Ameritrash (Dés & Fig.)'?'selected':''}>Ameritrash (Dés & Fig.)</option>
                     <option value="Jeux d'Ambiance" ${localProfile.styleJoueur==='Jeux d\'Ambiance'?'selected':''}>Jeux d'Ambiance</option>
                     <option value="Coopératif" ${localProfile.styleJoueur==='Coopératif'?'selected':''}>Coopératif</option>
                 </select>
@@ -1090,14 +1096,15 @@
         localProfile.titre = document.getElementById('prof-titre').value || 'Membre';
         localProfile.jeuFavori = document.getElementById('prof-jeu').value || '';
         localProfile.styleJoueur = document.getElementById('prof-style').value || 'Touche-à-tout';
+        localProfile.pseudoMyludo = document.getElementById('prof-myludo') ? document.getElementById('prof-myludo').value.trim() : '';
         localProfile.nom = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
         
         await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile, {merge:true});
-        document.getElementById('user-greeting').innerHTML = `<div style="display:flex; align-items:center; gap:10px;">
-            <div style="font-size:2.5rem; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> 
+        document.getElementById('user-greeting').innerHTML = `
+            <div style="font-size:2.5rem; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2)); margin-right: 10px; display:inline-block;">${localProfile.avatar}</div> 
             <span style="font-size:1.5rem;">Salut ${localProfile.nom} !</span>
-            <i class="fa-solid fa-pen" style="color:var(--wood-brown); font-size:0.9rem; cursor:pointer; padding:5px;" onclick="window.openProfileModal()"></i>
-        </div>`;
+            <i class="fa-solid fa-pen" style="color:var(--wood-brown); font-size:1rem; cursor:pointer; padding:5px 5px 5px 15px;" onclick="window.openProfileModal()"></i>
+        `;
         closeGameModalForce();
     };
 
@@ -1188,15 +1195,15 @@
         const filtered = window.tousLesJeux.filter(j => j.titre.toLowerCase().includes(query)).slice(0, 10);
         
         if(filtered.length === 0) {
-            resDiv.innerHTML = '<div style="font-size:0.75rem; color:gray; text-align:center;">Jeu introuvable dans l\'asso.</div>';
-            return;
+            resDiv.innerHTML = '<div style="font-size:0.75rem; color:gray; text-align:center;">Jeu introuvable dans l\'asso.</div>'; return;
         }
 
         let html = '';
         let myName = (auth.currentUser.displayName || auth.currentUser.email.split('@')[0]).toLowerCase();
+        let checkLudoId = (localProfile.pseudoMyludo || myName).toLowerCase();
 
         filtered.forEach(j => {
-            const isMe = j.proprio.toLowerCase() === myName;
+            const isMe = j.proprio.toLowerCase() === checkLudoId;
             const btn = isMe 
                 ? `<button class="btn-small game-btn-green" style="margin:0;" onclick="window.actionSac('${j.titre.replace(/'/g, "\\'")}', '${j.proprio.replace(/'/g, "\\'")}', 'apporter')">J'amène</button>`
                 : `<button class="btn-small" style="margin:0; background:var(--wood-brown);" onclick="window.actionSac('${j.titre.replace(/'/g, "\\'")}', '${j.proprio.replace(/'/g, "\\'")}', 'demander')">Demander</button>`;
@@ -1215,53 +1222,67 @@
     window.actionSac = async function(titre, proprio, action) {
         let demandeur = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
         let statut = action === 'apporter' ? 'confirmé' : 'demandé';
-        
-        await addDoc(collection(db, "sacs_jeux"), {
-            titre: titre, proprio: proprio, demandeur: demandeur, statut: statut, date_event: window.getNextEventDateStr(), timestamp: new Date()
-        });
-        
+        await addDoc(collection(db, "sacs_jeux"), { titre: titre, proprio: proprio, demandeur: demandeur, statut: statut, date_event: window.getNextEventDateStr(), timestamp: new Date() });
         document.getElementById('ludo-bag-search').value = "";
         document.getElementById('ludo-bag-results').innerHTML = "";
     };
 
     window.supprimerSac = async function(id) {
-        if(confirm("Retirer ce jeu de la liste des sacs ?")) {
-            await deleteDoc(doc(db, "sacs_jeux", id));
+        if(confirm("Retirer ce jeu de la liste des sacs ?")) await deleteDoc(doc(db, "sacs_jeux", id));
+    };
+
+    window.buildSacCard = function(s, myName, myLudoId) {
+        let icon = s.statut === "confirmé" ? "📦" : "🙏";
+        let text = "";
+        if (s.statut === "confirmé") {
+            text = s.proprio.toLowerCase() === myLudoId ? `Je l'amène.` : `<b>${s.proprio}</b> l'amène.`;
+        } else {
+            text = s.demandeur.toLowerCase() === myName.toLowerCase() ? `J'ai demandé à <b>${s.proprio}</b>` : `Demandé à <b>${s.proprio}</b> par ${s.demandeur}`;
         }
+        
+        let canDelete = (s.demandeur.toLowerCase() === myName.toLowerCase() || s.proprio.toLowerCase() === myLudoId);
+        let delBtn = canDelete ? `<span onclick="window.supprimerSac('${s.id}')" style="color:var(--text-brown); opacity:0.5; padding:5px; cursor:pointer; font-size:1.2rem;"><i class="fa-solid fa-xmark"></i></span>` : '';
+
+        return `<div style="background:#fff; padding:8px 12px; border-radius:12px; border:1px solid rgba(0,0,0,0.05); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
+            <div style="flex:1; min-width:0; padding-right:10px;">
+                <div style="font-weight:bold; color:var(--green-deep); font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${icon} ${s.titre}</div>
+                <div style="font-size:0.65rem; color:gray; margin-top:2px;">${text}</div>
+            </div>
+            ${delBtn}
+        </div>`;
     };
 
     window.initFirebaseSacs = function() {
         if(window.unsubscribeSacs) window.unsubscribeSacs();
         window.unsubscribeSacs = onSnapshot(collection(db, "sacs_jeux"), (snap) => {
             const div = document.getElementById('liste-sacs-firebase'); if(!div) return;
-            
-            let sacs = []; 
-            const dateCible = window.getNextEventDateStr();
+            let sacs = []; const dateCible = window.getNextEventDateStr();
             snap.forEach(d => { if(d.data().date_event === dateCible) sacs.push({id: d.id, ...d.data()}) });
-            
             sacs.sort((a, b) => b.timestamp - a.timestamp);
 
-            if(sacs.length === 0) { 
-                div.innerHTML = '<div style="text-align:center; font-size:0.8rem; color:gray;">Aucun jeu n\'est prévu dans les sacs pour l\'instant.</div>'; 
-                return; 
+            let myName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
+            let myLudoId = (localProfile.pseudoMyludo || myName).toLowerCase();
+
+            let mesSacs = sacs.filter(s => s.proprio.toLowerCase() === myLudoId);
+            let autresSacs = sacs.filter(s => s.proprio.toLowerCase() !== myLudoId);
+
+            let html = '';
+            
+            if (mesSacs.length > 0) {
+                html += `<h4 style="font-size:0.85rem; color:var(--green-deep); margin:0 0 5px; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:3px;">🎒 Mon Sac</h4>`;
+                html += mesSacs.map(s => window.buildSacCard(s, myName, myLudoId)).join('');
             }
             
-            div.innerHTML = sacs.map(s => {
-                let icon = s.statut === "confirmé" ? "📦" : "🙏";
-                let text = s.statut === "confirmé" ? `<b>${s.proprio}</b> amène ce jeu.` : `Demandé à <b>${s.proprio}</b> par ${s.demandeur}`;
-                
-                let myName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
-                let canDelete = (s.demandeur.toLowerCase() === myName.toLowerCase() || s.proprio.toLowerCase() === myName.toLowerCase());
-                let delBtn = canDelete ? `<span onclick="window.supprimerSac('${s.id}')" style="color:var(--text-brown); opacity:0.5; padding:5px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></span>` : '';
+            if (autresSacs.length > 0) {
+                html += `<h4 style="font-size:0.85rem; color:var(--wood-brown); margin:10px 0 5px; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:3px;">🎲 Les autres sacs</h4>`;
+                html += autresSacs.map(s => window.buildSacCard(s, myName, myLudoId)).join('');
+            }
 
-                return `<div style="background:#fff; padding:10px 15px; border-radius:12px; border:1px solid rgba(0,0,0,0.05); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
-                    <div style="flex:1; min-width:0; padding-right:10px;">
-                        <div style="font-weight:bold; color:var(--green-deep); font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${icon} ${s.titre}</div>
-                        <div style="font-size:0.65rem; color:gray; margin-top:2px;">${text}</div>
-                    </div>
-                    ${delBtn}
-                </div>`;
-            }).join('');
+            if(sacs.length === 0) { 
+                html = '<div style="text-align:center; font-size:0.8rem; color:gray;">Aucun jeu n\'est prévu dans les sacs pour l\'instant.</div>'; 
+            }
+            
+            div.innerHTML = html;
         });
     };
 
@@ -1290,6 +1311,56 @@
         datalist.innerHTML = options;
     };
 
+    window.openManualCreateModal = function(titrePrefill = "") {
+        document.getElementById('modalContent').innerHTML = `
+            <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
+            <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; margin-bottom: 15px;">Table Manuelle</h3>
+            <input type="text" id="man-nom" class="share-input" placeholder="Nom du jeu *" value="${titrePrefill}" required style="text-align:left;">
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+                <input type="number" id="man-min" class="share-input" placeholder="Min j. (ex: 2)" min="1">
+                <input type="number" id="man-max" class="share-input" placeholder="Max j. (ex: 4)" min="1">
+            </div>
+            
+            <div style="display:grid; grid-template-columns:1fr 1.5fr; gap:10px; margin-bottom:10px;">
+                <input type="number" id="man-duree" class="share-input" placeholder="Durée (min)">
+                <select id="man-style" class="share-input" style="font-size:0.8rem;">
+                    <option value="Ambiance">Ambiance</option>
+                    <option value="Stratégie">Stratégie</option>
+                    <option value="Coopératif">Coopératif</option>
+                    <option value="Autre">Autre</option>
+                </select>
+            </div>
+            
+            <input type="text" id="man-lien" class="share-input" placeholder="Lien MyLudo (Optionnel)" style="text-align:left;">
+            <button class="game-btn game-btn-green" style="width:100%; justify-content:center;" onclick="window.proposerJeuManuel()"><i class="fa-solid fa-check"></i> Créer la table</button>
+        `;
+        document.getElementById('gameModalBackdrop').classList.add('visible');
+    };
+
+    window.proposerJeuManuel = async function() {
+        const titre = document.getElementById('man-nom').value.trim();
+        if(!titre) return window.showCustomAlert("Attention", "Le nom du jeu est obligatoire.");
+        let minJ = parseInt(document.getElementById('man-min').value) || 2;
+        let maxJ = parseInt(document.getElementById('man-max').value) || 4;
+        if(maxJ < minJ) maxJ = minJ;
+        
+        let dureeJeu = document.getElementById('man-duree').value.trim() || "?";
+        let styleJeu = document.getElementById('man-style').value;
+        let lienMyludo = document.getElementById('man-lien').value.trim();
+        
+        const moi = { uid: auth.currentUser.uid, nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar, type: 'main', flex: false, id: Date.now() };
+
+        try {
+            await addDoc(collection(db, "jeux_proposes"), {
+                nom: titre, proposePar: moi.nom, createurUid: auth.currentUser.uid, appartientA: moi.nom, myludoLien: lienMyludo,
+                minJoueurs: minJ, maxJoueurs: maxJ, duree: dureeJeu, style: styleJeu, inscrits: [moi], date_ajout: new Date()
+            });
+            window.showCustomAlert("Table Ouverte !", "Les autres joueurs peuvent maintenant te rejoindre.", "fa-champagne-glasses");
+            closeGameModalForce();
+        } catch(e) { console.error(e); }
+    };
+
     window.proposerJeu = async function() {
         const input = document.getElementById('input-jeu-search');
         const titre = input.value.trim();
@@ -1298,58 +1369,28 @@
 
         const jeuTrouve = window.tousLesJeux.find(j => j.titre.toLowerCase() === titre.toLowerCase());
 
-        let minJ = 2, maxJ = 4, proprioDuJeu = "Moi", lienMyludo = "", dureeJeu = "?", styleJeu = "Classique";
-
-        if (jeuTrouve) {
-            proprioDuJeu = jeuTrouve.proprio;
-            lienMyludo = jeuTrouve.lien || "";
-            
-            dureeJeu = jeuTrouve.duree || "?";
-            if (jeuTrouve.style) styleJeu = jeuTrouve.style;
-            else if (jeuTrouve.categories && jeuTrouve.categories.length > 0) styleJeu = jeuTrouve.categories[0];
-            else if (jeuTrouve.type) styleJeu = jeuTrouve.type;
-
-            const joueursStr = jeuTrouve.joueurs || "2-4";
-            const parts = joueursStr.match(/\d+/g);
-            if (parts && parts.length > 0) minJ = parseInt(parts[0]);
-            if (parts && parts.length > 1) maxJ = parseInt(parts[1]);
-            else maxJ = minJ;
-        } else {
-            proprioDuJeu = auth.currentUser.displayName || "Moi";
-            let maxStr = prompt(`Le jeu "${titre}" n'a pas été trouvé dans la ludothèque de l'asso.\nCombien de joueurs MAXIMUM peuvent jouer à ce jeu ?`, "4");
-            if (maxStr === null) return; 
-            maxJ = parseInt(maxStr) || 4;
-            minJ = 2; 
-
-            let dureeStr = prompt(`Quelle est la durée moyenne de la partie (en minutes) ?`, "60");
-            if (dureeStr !== null) dureeJeu = dureeStr;
-
-            let styleStr = prompt(`Quel est le style de ce jeu (ex: Coopératif, Ambiance, Gestion...) ?`, "Jeu de plateau");
-            if (styleStr !== null) styleJeu = styleStr;
+        // Si le jeu n'est pas dans MyLudo, on bascule vers la création manuelle
+        if (!jeuTrouve) {
+            window.openManualCreateModal(titre);
+            return;
         }
 
-        const moi = { 
-            uid: auth.currentUser.uid, 
-            nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], 
-            avatar: localProfile.avatar, 
-            type: 'main', 
-            flex: false, 
-            id: Date.now() 
-        };
+        let proprioDuJeu = jeuTrouve.proprio; 
+        let lienMyludo = jeuTrouve.lien || ""; 
+        let dureeJeu = jeuTrouve.duree || "?";
+        let styleJeu = jeuTrouve.style || (jeuTrouve.categories && jeuTrouve.categories.length > 0 ? jeuTrouve.categories[0] : "Jeu de plateau");
+
+        let minJ = 2, maxJ = 4;
+        const parts = (jeuTrouve.joueurs || "2-4").match(/\d+/g);
+        if (parts && parts.length > 0) minJ = parseInt(parts[0]);
+        if (parts && parts.length > 1) maxJ = parseInt(parts[1]); else maxJ = minJ;
+
+        const moi = { uid: auth.currentUser.uid, nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar, type: 'main', flex: false, id: Date.now() };
 
         try {
             await addDoc(collection(db, "jeux_proposes"), {
-                nom: titre,
-                proposePar: moi.nom,
-                createurUid: auth.currentUser.uid, 
-                appartientA: proprioDuJeu,
-                myludoLien: lienMyludo,
-                minJoueurs: minJ,
-                maxJoueurs: maxJ,
-                duree: dureeJeu,
-                style: styleJeu,
-                inscrits: [moi],
-                date_ajout: new Date()
+                nom: jeuTrouve.titre, proposePar: moi.nom, createurUid: auth.currentUser.uid, appartientA: proprioDuJeu, myludoLien: lienMyludo,
+                minJoueurs: minJ, maxJoueurs: maxJ, duree: dureeJeu, style: styleJeu, inscrits: [moi], date_ajout: new Date()
             });
             window.showCustomAlert("Table Ouverte !", "Les autres joueurs peuvent maintenant te rejoindre.", "fa-champagne-glasses");
             input.value = ""; 
