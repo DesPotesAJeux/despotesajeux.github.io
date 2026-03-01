@@ -408,7 +408,12 @@
             else if (code >= 80 && code <= 99) newCondition = "_orage";
             else if (code >= 71 && code <= 77) newCondition = "_neige";
 
+            // Sauvegarde de la météo pour le prochain chargement instantané
             localStorage.setItem('plouay_weather', newCondition);
+            
+            // MISE À JOUR OBLIGATOIRE DU FOND (Combine l'heure exacte calculée + la météo actuelle)
+            // C'est ça qui corrige le bug : on met à jour même si la météo n'a pas changé, 
+            // pour garantir que le passage matin -> aprem -> soir se fait !
             document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}${newCondition}.png')`);
             
         } catch (error) {
