@@ -812,7 +812,6 @@
     import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // MOT DE PASSE DE L'ASSOCIATION (A DONNER AUX MEMBRES)
     const CODE_ASSO = "POTES56";
 
     const firebaseConfig = {
@@ -827,8 +826,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
-    
-    // FORCE LE FRANCAIS POUR LES EMAILS
     auth.languageCode = 'fr'; 
     
     window.db = db;
@@ -838,18 +835,18 @@
     let unsubscribeVotes = null;
     let authMode = 'login'; 
 
-    // GESTION DES RETOURS D'ERREUR GOOGLE REDIRECT
-    getRedirectResult(auth).then((result) => {
-        if (result !== null) {
-            console.log("Connecté avec Google !");
-        }
-    }).catch((error) => {
-        console.error("Erreur Google Redirect :", error);
-        window.showCustomAlert(
-            "La connexion a échoué", 
-            "Google a refusé l'accès. Voici l'erreur technique renvoyée par le serveur :<br><br><b style='font-size:0.8rem; color: var(--president-color);'>" + error.code + "</b><br><br><i>(As-tu bien ajouté ton adresse web dans les Domaines Autorisés de Firebase ?)</i>", 
-            "fa-triangle-exclamation"
-        );
+    // GESTION CORRIGÉE DU RÉSULTAT GOOGLE
+    window.addEventListener('load', () => {
+        getRedirectResult(auth).then((result) => {
+            if (result) {
+                console.log("Connexion Google réussie !");
+            }
+        }).catch((error) => {
+            console.error("Erreur Google technique :", error.code, error.message);
+            if (error.code !== "auth/proactive-password-resetting-insufficient-role") {
+                window.showCustomAlert("Erreur de connexion", "Google renvoie l'erreur : " + error.code + ". Vérifie l'écran de consentement dans la console Google Cloud.", "fa-circle-xmark");
+            }
+        });
     });
 
     window.toggleVisibility = function(inputId, iconId) {
@@ -870,14 +867,11 @@
         const viewAuth = document.getElementById('view-auth');
         const viewVotes = document.getElementById('view-votes');
         const userGreeting = document.getElementById('user-greeting');
-        
         if(!viewAuth || !viewVotes) return;
-        
         if(currentUser) {
             viewAuth.style.display = 'none';
             viewVotes.style.display = 'block';
-            let nameToDisplay = currentUser.displayName || currentUser.email.split('@')[0];
-            userGreeting.innerHTML = `Connecté(e) : <b>${nameToDisplay}</b>`;
+            userGreeting.innerHTML = `Connecté(e) : <b>${currentUser.displayName || currentUser.email}</b>`;
             window.initFirebaseVotes();
         } else {
             viewAuth.style.display = 'block';
@@ -894,17 +888,13 @@
             authContainer.innerHTML = `
                 <div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
                     <input type="email" id="auth-email" class="share-input" placeholder="Adresse e-mail">
-                    
                     <div style="position:relative;">
                         <input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe" style="width:100%; padding-right:40px;">
                         <i class="fa-solid fa-eye" id="toggle-pwd" onclick="toggleVisibility('auth-pwd', 'toggle-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); color:var(--wood-brown); cursor:pointer;"></i>
                     </div>
-
                     <button class="game-btn" style="width:100%; justify-content:center;" onclick="loginEmail()"><i class="fa-solid fa-right-to-bracket"></i> Connexion</button>
-                    
                     <div style="text-align:center; margin: 5px 0; color:var(--text-brown); font-size:0.8rem; opacity:0.7;">— ou —</div>
-                    <button class="game-btn" style="width:100%; justify-content:center; background:#4285F4; margin-top:0; font-family: Roboto, Arial, sans-serif; font-weight: 500;" onclick="loginGoogle()"><i class="fa-brands fa-google"></i> Continuer avec Google</button>
-
+                    <button class="game-btn" style="width:100%; justify-content:center; background:#4285F4; margin-top:0;" onclick="loginGoogle()"><i class="fa-brands fa-google"></i> Continuer avec Google</button>
                     <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:10px; font-weight:bold;">
                         <span onclick="setAuthMode('register')" style="color:var(--green-deep); cursor:pointer; text-decoration:underline;">Créer un compte</span>
                         <span onclick="setAuthMode('reset')" style="color:var(--text-brown); cursor:pointer; text-decoration:underline;">Oublié ?</span>
@@ -913,28 +903,20 @@
         } else if (authMode === 'register') {
             authContainer.innerHTML = `
                 <div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
-                    
                     <input type="text" id="auth-secret" class="share-input" placeholder="Code secret de l'asso" style="border-color: var(--president-color); background: rgba(230, 126, 34, 0.05);">
-                    <div style="font-size: 0.65rem; color: gray; text-align: center; margin-top:-5px; margin-bottom: 5px;">Demande ce code lors d'une soirée jeux !</div>
-
-                    <input type="text" id="auth-name" class="share-input" placeholder="Ton pseudo (ex: Julie)">
+                    <input type="text" id="auth-name" class="share-input" placeholder="Ton pseudo">
                     <input type="email" id="auth-email" class="share-input" placeholder="Adresse e-mail">
-                    
                     <div style="position:relative;">
-                        <input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe (6 min.)" style="width:100%; padding-right:40px;">
+                        <input type="password" id="auth-pwd" class="share-input" placeholder="Mot de passe" style="width:100%; padding-right:40px;">
                         <i class="fa-solid fa-eye" id="toggle-pwd" onclick="toggleVisibility('auth-pwd', 'toggle-pwd')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); color:var(--wood-brown); cursor:pointer;"></i>
                     </div>
-
                     <div style="position:relative;">
                         <input type="password" id="auth-pwd-confirm" class="share-input" placeholder="Confirmer mot de passe" style="width:100%; padding-right:40px;">
                         <i class="fa-solid fa-eye" id="toggle-pwd-confirm" onclick="toggleVisibility('auth-pwd-confirm', 'toggle-pwd-confirm')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); color:var(--wood-brown); cursor:pointer;"></i>
                     </div>
-
                     <button class="game-btn" style="width:100%; justify-content:center;" onclick="registerEmail()"><i class="fa-solid fa-user-plus"></i> S'inscrire</button>
-                    
                     <div style="text-align:center; margin: 5px 0; color:var(--text-brown); font-size:0.8rem; opacity:0.7;">— ou —</div>
-                    <button class="game-btn" style="width:100%; justify-content:center; background:#4285F4; margin-top:0; font-family: Roboto, Arial, sans-serif; font-weight: 500;" onclick="registerGoogle()"><i class="fa-brands fa-google"></i> Inscription avec Google</button>
-
+                    <button class="game-btn" style="width:100%; justify-content:center; background:#4285F4; margin-top:0;" onclick="registerGoogle()"><i class="fa-brands fa-google"></i> Inscription avec Google</button>
                     <div style="text-align:center; font-size:0.75rem; margin-top:10px; font-weight:bold;">
                         <span onclick="setAuthMode('login')" style="color:var(--wood-brown); cursor:pointer; text-decoration:underline;">Déjà inscrit ? Se connecter</span>
                     </div>
@@ -952,22 +934,17 @@
         }
     };
 
-    window.setAuthMode = function(mode) {
-        authMode = mode;
-        window.renderAuthUI();
-    };
+    window.setAuthMode = function(mode) { authMode = mode; window.renderAuthUI(); };
 
-    // CONNEXION GOOGLE (Redirection)
     window.loginGoogle = function() {
         const provider = new GoogleAuthProvider();
         signInWithRedirect(auth, provider);
     };
 
-    // INSCRIPTION GOOGLE (Protégée par code)
     window.registerGoogle = function() {
         const secret = document.getElementById('auth-secret').value.trim().toUpperCase();
         if(secret !== CODE_ASSO) {
-            window.showCustomAlert("Accès refusé", "Le code secret est invalide. Demande-le à un membre du bureau !", "fa-user-shield");
+            window.showCustomAlert("Accès refusé", "Code secret invalide !", "fa-user-shield");
             return;
         }
         window.loginGoogle();
@@ -976,16 +953,7 @@
     window.loginEmail = async function() {
         const email = document.getElementById('auth-email').value.trim();
         const pwd = document.getElementById('auth-pwd').value.trim();
-        if(!email || !pwd) {
-            window.showCustomAlert("Attention", "Veuillez remplir tous les champs.", "fa-triangle-exclamation");
-            return;
-        }
-        try {
-            await signInWithEmailAndPassword(auth, email, pwd);
-        } catch (e) {
-            console.error(e);
-            window.showCustomAlert("Erreur de connexion", "Identifiants incorrects. Vérifie ton adresse mail et ton mot de passe.", "fa-circle-xmark");
-        }
+        try { await signInWithEmailAndPassword(auth, email, pwd); } catch (e) { window.showCustomAlert("Erreur", "Identifiants incorrects.", "fa-circle-xmark"); }
     };
 
     window.registerEmail = async function() {
@@ -994,116 +962,44 @@
         const email = document.getElementById('auth-email').value.trim();
         const pwd = document.getElementById('auth-pwd').value.trim();
         const pwdConfirm = document.getElementById('auth-pwd-confirm').value.trim();
-        
-        if(secret !== CODE_ASSO) {
-            window.showCustomAlert("Accès refusé", "Le code secret est invalide. Demande-le à un membre du bureau !", "fa-user-shield");
-            return;
-        }
-
-        if(!name || !email || !pwd || !pwdConfirm) {
-            window.showCustomAlert("Attention", "Veuillez remplir tous les champs pour créer ton compte.", "fa-triangle-exclamation");
-            return;
-        }
-        if(pwd !== pwdConfirm) {
-            window.showCustomAlert("Aïe !", "Les mots de passe ne correspondent pas ! 🎲", "fa-dice-d20");
-            return;
-        }
-        if(pwd.length < 6) {
-            window.showCustomAlert("Mot de passe trop court", "Le mot de passe doit faire au moins 6 caractères pour être sécurisé.", "fa-lock");
-            return;
-        }
-
+        if(secret !== CODE_ASSO) return window.showCustomAlert("Accès refusé", "Code asso invalide.", "fa-user-shield");
+        if(pwd !== pwdConfirm) return window.showCustomAlert("Aïe", "Les mots de passe ne correspondent pas.", "fa-dice-d20");
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, pwd);
             await updateProfile(userCredential.user, { displayName: name });
             await sendEmailVerification(userCredential.user);
-            
-            window.showCustomAlert(
-                "Bienvenue " + name + " ! 🎲", 
-                "Ton compte est créé ! Un e-mail de vérification t'a été envoyé.<br><br><b style='color:var(--president-color);'>⚠️ Pense à vérifier tes spams !</b>", 
-                "fa-champagne-glasses"
-            );
-            
-            currentUser = userCredential.user;
-            window.updateVoteUI(); 
-        } catch (e) {
-            console.error(e);
-            if(e.code === 'auth/email-already-in-use') {
-                window.showCustomAlert("Déjà vu !", "Cet e-mail est déjà utilisé par un autre joueur.", "fa-user-check");
-            } else {
-                window.showCustomAlert("Erreur", "Une erreur est survenue lors de l'inscription.", "fa-bug");
-            }
-        }
+            window.showCustomAlert("Bienvenue !", "Vérifie tes spams pour valider ton mail.", "fa-champagne-glasses");
+        } catch (e) { window.showCustomAlert("Erreur", e.message, "fa-bug"); }
     };
 
     window.resetPwd = async function() {
         const email = document.getElementById('auth-email').value.trim();
-        if(!email) {
-            window.showCustomAlert("Attention", "Veuillez entrer votre adresse e-mail.", "fa-envelope");
-            return;
-        }
-        try {
-            await sendPasswordResetEmail(auth, email);
-            window.showCustomAlert("C'est parti !", "Le lien de réinitialisation a été envoyé.<br><br><b>Vérifie tes spams !</b>", "fa-paper-plane");
-            setAuthMode('login');
-        } catch (e) {
-            console.error(e);
-            window.showCustomAlert("Oups", "Erreur lors de l'envoi. Es-tu sûr que cette adresse est bien enregistrée ?", "fa-circle-question");
-        }
+        try { await sendPasswordResetEmail(auth, email); window.showCustomAlert("Envoyé", "Vérifie tes spams.", "fa-paper-plane"); } catch (e) { console.error(e); }
     };
 
-    window.logoutFirebase = async function() {
-        try { await signOut(auth); } catch (e) { console.error(e); }
-    };
+    window.logoutFirebase = async function() { try { await signOut(auth); } catch (e) { console.error(e); } };
 
-    onAuthStateChanged(auth, (user) => {
-        currentUser = user;
-        window.updateVoteUI();
-    });
+    onAuthStateChanged(auth, (user) => { currentUser = user; window.updateVoteUI(); });
 
-    /* --- GESTION DES VOTES EN TEMPS RÉEL --- */
     window.initFirebaseVotes = function() {
         if(!window.db) return;
         const jeuxRef = collection(window.db, "jeux_proposes");
-        
         if(unsubscribeVotes) unsubscribeVotes(); 
-        
         unsubscribeVotes = onSnapshot(jeuxRef, (snapshot) => {
             const listeDiv = document.getElementById('liste-votes-firebase');
             if(!listeDiv) return;
-
-            let html = '';
-            let jeux = [];
-            
-            snapshot.forEach(doc => {
-                jeux.push({ id: doc.id, ...doc.data() });
-            });
-
+            let html = ''; let jeux = [];
+            snapshot.forEach(doc => { jeux.push({ id: doc.id, ...doc.data() }); });
             jeux.sort((a, b) => ((b.votants || []).length) - ((a.votants || []).length));
-
-            if(jeux.length === 0) {
-                html = '<div style="text-align:center; color:var(--text-brown); font-size:0.8rem; font-style:italic;">Aucun jeu proposé pour le moment.</div>';
-            } else {
+            if(jeux.length === 0) { html = '<div style="text-align:center; color:gray; font-size:0.8rem;">Aucun jeu proposé.</div>'; } 
+            else {
                 jeux.forEach(jeu => {
-                    let votantsArray = jeu.votants || [];
-                    let nbVotes = votantsArray.length;
-                    
-                    let aDejaVote = currentUser ? votantsArray.includes(currentUser.uid) : false;
-                    let btnClass = aDejaVote ? "call-btn fb-btn" : "call-btn ludo-btn"; 
-                    let btnText = aDejaVote ? `✅ ${nbVotes}` : `👍 ${nbVotes}`;
-                    
-                    let clickAction = currentUser ? `onclick="voterPourJeu('${jeu.id}', ${aDejaVote})"` : `onclick="window.showCustomAlert('Action requise', 'Connecte-toi pour pouvoir voter !', 'fa-user-lock'); window.setAuthMode('login');"`;
-                    let proposeur = jeu.proposePar ? `<span style="font-size:0.65rem; color:gray; display:block; margin-top:2px;">Proposé par <b>${jeu.proposePar}</b></span>` : '';
-
+                    let votants = jeu.votants || [];
+                    let aDejaVote = currentUser ? votants.includes(currentUser.uid) : false;
                     html += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:10px 15px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow: 0 2px 5px rgba(0,0,0,0.02); margin-bottom: 8px;">
-                        <div>
-                            <div style="font-weight:700; color:var(--green-deep);">${jeu.nom}</div>
-                            ${proposeur}
-                        </div>
-                        <button class="${btnClass}" ${clickAction} style="width:auto; padding:0 15px; cursor:pointer;">
-                            ${btnText}
-                        </button>
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:10px 15px; border-radius:12px; border:1px solid var(--wood-highlight); margin-bottom: 8px;">
+                        <div><div style="font-weight:700; color:var(--green-deep);">${jeu.nom}</div><span style="font-size:0.65rem; color:gray;">Par <b>${jeu.proposePar}</b></span></div>
+                        <button class="${aDejaVote ? 'call-btn fb-btn' : 'call-btn ludo-btn'}" onclick="voterPourJeu('${jeu.id}', ${aDejaVote})" style="width:auto; padding:0 15px;">${aDejaVote ? '✅' : '👍'} ${votants.length}</button>
                     </div>`;
                 });
             }
@@ -1112,40 +1008,23 @@
     };
 
     window.ajouterJeuFirebase = async function() {
-        if(!currentUser) { 
-            window.showCustomAlert("Halte-là !", "Il faut se connecter avant de proposer un jeu à la table !", "fa-hand");
-            return; 
-        }
         const input = document.getElementById('nomNouveauJeu');
-        const nom = input.value.trim();
-        if(!nom) return;
-
-        input.value = ''; 
+        if(!input.value.trim()) return;
         try {
             await addDoc(collection(window.db, "jeux_proposes"), {
-                nom: nom,
+                nom: input.value.trim(),
                 votants: [currentUser.uid], 
                 proposePar: currentUser.displayName || currentUser.email.split('@')[0], 
                 date_ajout: new Date()
             });
-        } catch (e) {
-            console.error(e); 
-            window.showCustomAlert("Erreur", "Impossible de rajouter ce jeu pour le moment.", "fa-triangle-exclamation");
-        }
+            input.value = '';
+        } catch (e) { console.error(e); }
     };
 
     window.voterPourJeu = async function(id, aDejaVote) {
         if(!currentUser) return;
         const jeuRef = doc(window.db, "jeux_proposes", id);
-        try {
-            if(aDejaVote) {
-                await updateDoc(jeuRef, { votants: arrayRemove(currentUser.uid) });
-            } else {
-                await updateDoc(jeuRef, { votants: arrayUnion(currentUser.uid) });
-            }
-        } catch (e) {
-            console.error(e);
-        }
+        try { await updateDoc(jeuRef, { votants: aDejaVote ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid) }); } catch (e) { console.error(e); }
     };
 </script>
 </body>
