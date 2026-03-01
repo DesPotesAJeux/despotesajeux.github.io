@@ -85,7 +85,6 @@
         .egg:hover { color: var(--wood-brown); transform: scale(1.3); }
         .egg.found { color: #f1c40f; text-shadow: 0 0 15px rgba(241, 196, 15, 1); animation: diceFound 0.6s ease-in-out forwards; pointer-events: none; }
         
-        /* NOUVELLE ANIMATION DU DE : GROSSIT, TOURNE VITE ET DISPARAIT */
         @keyframes diceFound { 
             0% { transform: scale(1) rotate(0deg); opacity: 1; } 
             40% { transform: scale(1.5) rotate(360deg); opacity: 1; } 
@@ -275,18 +274,13 @@
             const day = now.getDate();
             const hour = now.getHours();
 
-            // Priorité absolue aux dates spéciales
             if ((month === 12 && day === 25) || (month === 10 && day === 31)) return;
 
-            // Calcul de base horaire
             let baseName = "hero_soir"; 
             if (hour >= 6 && hour < 12) baseName = "hero_matin";
             else if (hour >= 12 && hour < 18) baseName = "hero_aprem";
 
-            // Récupération instantanée de la météo depuis le cache
             let condition = localStorage.getItem('plouay_weather') || "";
-            
-            // Application du style instantanément
             document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}${condition}.png')`);
         })();
     </script>
@@ -336,7 +330,6 @@
         <div class="hero-container">
             <div class="hero">
                 <div class="hero-hitbox" onclick="askToPlay()"></div>
-                
                 <div class="barn-hitbox" onclick="openBarn()"></div>
                 
                 <div class="rdv-card">
@@ -408,17 +401,10 @@
             else if (code >= 80 && code <= 99) newCondition = "_orage";
             else if (code >= 71 && code <= 77) newCondition = "_neige";
 
-            // Sauvegarde de la météo pour le prochain chargement instantané
             localStorage.setItem('plouay_weather', newCondition);
-            
-            // MISE À JOUR OBLIGATOIRE DU FOND (Combine l'heure exacte calculée + la météo actuelle)
-            // C'est ça qui corrige le bug : on met à jour même si la météo n'a pas changé, 
-            // pour garantir que le passage matin -> aprem -> soir se fait !
             document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}${newCondition}.png')`);
-            
         } catch (error) {
             console.error("Erreur météo:", error);
-            // Sécurité si pas internet : applique la bonne heure au moins
             document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}.png')`);
         }
     }
@@ -432,11 +418,7 @@
 
     function closeGameModal() {
         if (document.getElementById('gameModalBackdrop').classList.contains('visible')) {
-            if (history.state && (history.state.type === 'gamemodal')) {
-                history.back();
-            } else {
-                closeGameModalForce();
-            }
+            if (history.state && (history.state.type === 'gamemodal')) { history.back(); } else { closeGameModalForce(); }
         }
     }
 
@@ -446,9 +428,7 @@
             <div class="modal-close-btn" onclick="closeGameModal()"><i class="fa-solid fa-xmark"></i></div>
             <div class="victory-icon" style="color: var(--wood-brown); font-size: 2.5rem; margin-bottom: 10px;"><i class="fa-solid ${iconClass}"></i></div>
             <h3 class="victory-title" style="font-size: 1.6rem; color: var(--green-deep);">${title}</h3>
-            <div style="font-size: 0.95rem; line-height: 1.4; color: var(--text-brown); margin: 10px 0 20px;">
-                ${message}
-            </div>
+            <div style="font-size: 0.95rem; line-height: 1.4; color: var(--text-brown); margin: 10px 0 20px;">${message}</div>
             <button class="game-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-check"></i> Compris</button>
         `;
         document.getElementById('gameModalBackdrop').classList.add('visible');
@@ -457,15 +437,10 @@
 
     /* --- GESTION DU BOUTON RETOUR ANDROID (HISTORY API) --- */
     window.addEventListener('popstate', (e) => { 
-        if (lb.classList.contains('active')) { 
-            hideLightboxDOM(); 
-        } else if (document.getElementById('barnOverlay').classList.contains('active')) {
-            closeBarnForce();
-        } else if (document.getElementById('gameModalBackdrop').classList.contains('visible')) { 
-            closeGameModalForce(); 
-        } else if (sheet.classList.contains('open')) { 
-            hideSheetDOM(); 
-        } 
+        if (lb.classList.contains('active')) { hideLightboxDOM(); } 
+        else if (document.getElementById('barnOverlay').classList.contains('active')) { closeBarnForce(); } 
+        else if (document.getElementById('gameModalBackdrop').classList.contains('visible')) { closeGameModalForce(); } 
+        else if (sheet.classList.contains('open')) { hideSheetDOM(); } 
     });
 
     /* --- GESTION DE LA GRANGE --- */
@@ -738,7 +713,6 @@
         if (history.state && (history.state.type === 'gamemodal' || history.state.type === 'sheet')) { history.replaceState({ type: 'main' }, ''); }
         resetGameData(); gameStarted = true; startTimer();
         
-        // Cacher le bouton voter pour ne pas gêner
         const btnVoter = document.getElementById('btn-voter-accueil');
         if (btnVoter) btnVoter.style.display = 'none';
 
@@ -753,7 +727,6 @@
         for(let key in gameState) { gameState[key].total = 0; gameState[key].found = 0; }
         document.querySelectorAll('.egg').forEach(el => el.remove());
 
-        // Réafficher le bouton voter
         const btnVoter = document.getElementById('btn-voter-accueil');
         if (btnVoter) btnVoter.style.display = 'flex';
     }
@@ -770,7 +743,6 @@
         if(el.classList.contains('found')) return; if(eggCount >= 10) return;
         gameState[sectionKey].found++; eggCount++; el.style.pointerEvents = 'none'; el.classList.add('found'); 
         
-        // Attend la fin de la nouvelle animation (800ms environ) avant de retirer du DOM
         setTimeout(() => el.remove(), 800); 
 
         let msg = `Bravo ! ${eggCount}/${totalEggs}`;
@@ -785,7 +757,6 @@
         if (seconds < 5) { rankNum=1; rank = "DIEU DU DÉ ⚡"; message = "Inhumain ! T'as triché ?"; } else if (seconds < 10) { rankNum=2; rank = "GRAND MAÎTRE JEDI ⚔️"; message = "La Force est puissante en toi."; } else if (seconds < 15) { rankNum=3; rank = "CHUCK NORRIS 👊"; message = "Chuck Norris ne cherche pas les dés, ils se dénoncent."; } else if (seconds < 20) { rankNum=4; rank = "LUCKY LUKE 🤠"; message = "Tu cliques plus vite que ton ombre."; } else if (seconds < 25) { rankNum=5; rank = "ŒIL DE LYNX 😼"; message = "Une vision perçante."; } else if (seconds < 35) { rankNum=6; rank = "SHERLOCK HOLMES 🕵️‍♂️"; message = "Enquête méthodique."; } else if (seconds < 45) { rankNum=7; rank = "LE TOURISTE 📸"; message = "Tu as pris le temps d'admirer le paysage."; } else if (seconds < 60) { rankNum=8; rank = "LE DIESEL 🚜"; message = "Lent au démarrage, mais tu es arrivé !"; } else { rankNum=9; rank = "L'ESCARGOT 🐌"; message = "L'important c'est de participer... non ?"; }
         finalGameData.time = finalTime; finalGameData.rank = rank; finalGameData.rankNumber = rankNum; finalGameData.message = message; finalGameData.rawMs = rawMs;
         
-        // Réafficher le bouton voter à la fin
         const btnVoter = document.getElementById('btn-voter-accueil');
         if (btnVoter) btnVoter.style.display = 'flex';
 
@@ -841,6 +812,9 @@
     import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, updateProfile, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
+    // MOT DE PASSE DE L'ASSOCIATION (A DONNER AUX MEMBRES)
+    const CODE_ASSO = "POTES56";
+
     const firebaseConfig = {
       apiKey: "AIzaSyBwLFuQcpv_Ml8omuhzEL1mvTEPlxsH1Wo",
       authDomain: "des-potes-a-jeux.firebaseapp.com",
@@ -854,7 +828,7 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
     
-    // FORCER LA LANGUE EN FRANÇAIS POUR LES EMAILS FIREBASE !
+    // FORCE LE FRANCAIS POUR LES EMAILS
     auth.languageCode = 'fr'; 
     
     window.db = db;
@@ -864,7 +838,6 @@
     let unsubscribeVotes = null;
     let authMode = 'login'; 
 
-    // Afficher/masquer les mots de passe
     window.toggleVisibility = function(inputId, iconId) {
         const input = document.getElementById(inputId);
         const icon = document.getElementById(iconId);
@@ -879,7 +852,6 @@
         }
     };
 
-    // Bascule UI Connexion / Votes
     window.updateVoteUI = function() {
         const viewAuth = document.getElementById('view-auth');
         const viewVotes = document.getElementById('view-votes');
@@ -900,7 +872,6 @@
         }
     };
 
-    // Dessiner le formulaire
     window.renderAuthUI = function() {
         const authContainer = document.getElementById('auth-container');
         if (!authContainer) return;
@@ -928,6 +899,10 @@
         } else if (authMode === 'register') {
             authContainer.innerHTML = `
                 <div style="display:flex; flex-direction:column; gap:8px; background:#fff; padding:15px; border-radius:15px; border:1px solid rgba(0,0,0,0.05); margin-top: 15px;">
+                    
+                    <input type="text" id="auth-secret" class="share-input" placeholder="Code secret de l'asso" style="border-color: var(--president-color); background: rgba(230, 126, 34, 0.05);">
+                    <div style="font-size: 0.65rem; color: gray; text-align: center; margin-top:-5px; margin-bottom: 5px;">Demande ce code lors d'une soirée jeux !</div>
+
                     <input type="text" id="auth-name" class="share-input" placeholder="Ton pseudo (ex: Julie)">
                     <input type="email" id="auth-email" class="share-input" placeholder="Adresse e-mail">
                     
@@ -941,10 +916,10 @@
                         <i class="fa-solid fa-eye" id="toggle-pwd-confirm" onclick="toggleVisibility('auth-pwd-confirm', 'toggle-pwd-confirm')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); color:var(--wood-brown); cursor:pointer;"></i>
                     </div>
 
-                    <button class="game-btn" style="width:100%; justify-content:center; background:var(--green-deep);" onclick="registerEmail()"><i class="fa-solid fa-user-plus"></i> S'inscrire</button>
+                    <button class="game-btn" style="width:100%; justify-content:center;" onclick="registerEmail()"><i class="fa-solid fa-user-plus"></i> S'inscrire</button>
                     
                     <div style="text-align:center; margin: 5px 0; color:var(--text-brown); font-size:0.8rem; opacity:0.7;">— ou —</div>
-                    <button class="game-btn" style="width:100%; justify-content:center; background:#4285F4; margin-top:0; font-family: Roboto, Arial, sans-serif; font-weight: 500;" onclick="loginGoogle()"><i class="fa-brands fa-google"></i> Inscription avec Google</button>
+                    <button class="game-btn" style="width:100%; justify-content:center; background:#4285F4; margin-top:0; font-family: Roboto, Arial, sans-serif; font-weight: 500;" onclick="registerGoogle()"><i class="fa-brands fa-google"></i> Inscription avec Google</button>
 
                     <div style="text-align:center; font-size:0.75rem; margin-top:10px; font-weight:bold;">
                         <span onclick="setAuthMode('login')" style="color:var(--wood-brown); cursor:pointer; text-decoration:underline;">Déjà inscrit ? Se connecter</span>
@@ -968,8 +943,7 @@
         window.renderAuthUI();
     };
 
-    // ACTIONS FIREBASE
-    
+    // CONNEXION GOOGLE (Onglet Connexion)
     window.loginGoogle = async function() {
         const provider = new GoogleAuthProvider();
         try { 
@@ -978,6 +952,17 @@
             console.error(e); 
             window.showCustomAlert("Erreur de connexion", "Impossible de se connecter avec Google. Les pop-ups sont peut-être bloquées.", "fa-circle-xmark");
         }
+    };
+
+    // INSCRIPTION GOOGLE (Onglet Créer un compte - Protégé par le code)
+    window.registerGoogle = async function() {
+        const secret = document.getElementById('auth-secret').value.trim().toUpperCase();
+        if(secret !== CODE_ASSO) {
+            window.showCustomAlert("Accès refusé", "Le code secret est invalide. Demande-le à un membre du bureau !", "fa-user-shield");
+            return;
+        }
+        // Si le code est bon, on lance la popup Google
+        window.loginGoogle();
     };
 
     window.loginEmail = async function() {
@@ -996,11 +981,17 @@
     };
 
     window.registerEmail = async function() {
+        const secret = document.getElementById('auth-secret').value.trim().toUpperCase();
         const name = document.getElementById('auth-name').value.trim();
         const email = document.getElementById('auth-email').value.trim();
         const pwd = document.getElementById('auth-pwd').value.trim();
         const pwdConfirm = document.getElementById('auth-pwd-confirm').value.trim();
         
+        if(secret !== CODE_ASSO) {
+            window.showCustomAlert("Accès refusé", "Le code secret est invalide. Demande-le à un membre du bureau !", "fa-user-shield");
+            return;
+        }
+
         if(!name || !email || !pwd || !pwdConfirm) {
             window.showCustomAlert("Attention", "Veuillez remplir tous les champs pour créer ton compte.", "fa-triangle-exclamation");
             return;
