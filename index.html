@@ -145,15 +145,15 @@
         /* =========================================
            ONGLETS DE VOTE (ARENE / PROFIL)
            ========================================= */
-        .vote-tabs { display: flex; background: rgba(188, 143, 99, 0.15); border-radius: 50px; padding: 5px; margin: 0 auto 20px; max-width: 320px; position: relative; }
-        .vote-tab { flex: 1; text-align: center; padding: 10px 15px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--wood-brown); cursor: pointer; transition: background 0.1s, color 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
+        .vote-tabs { display: flex; background: rgba(188, 143, 99, 0.15); border-radius: 50px; padding: 5px; margin: 0 auto 20px; max-width: 380px; position: relative; }
+        .vote-tab { flex: 1; text-align: center; padding: 10px 5px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.8rem; color: var(--wood-brown); cursor: pointer; transition: background 0.1s, color 0.1s; display: flex; align-items: center; justify-content: center; gap: 5px; position: relative; }
         .vote-tab.active { background: var(--wood-brown); color: white; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); }
         .vote-tab-content { display: none; animation: fadeInTab 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); }
         .vote-tab-content.active { display: block; }
         @keyframes fadeInTab { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
         /* =========================================
-           STYLES SPECIFIQUES (RSVP + TABLES)
+           STYLES SPECIFIQUES (RSVP + TABLES + RESERVE)
            ========================================= */
         .rsvp-btn { flex: 1; padding: 8px 5px; font-size: 0.75rem; font-family: 'Quicksand', sans-serif; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: all 0.2s; background: #ecf0f1; color: #7f8c8d; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .rsvp-btn:active { transform: scale(0.95); }
@@ -173,6 +173,10 @@
         
         .rsvp-badge { display:inline-block; padding:4px 8px; background:white; border:1px solid rgba(188,143,99,0.5); border-radius:50px; font-size:0.75rem; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.05); font-weight:bold; color:var(--green-deep); transition:all 0.2s; margin: 2px; }
         .rsvp-badge:active { transform: scale(0.95); background: var(--bg-beige); }
+
+        .ludo-avatar-card { display:flex; flex-direction:column; align-items:center; gap:5px; text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); min-width:65px; box-shadow:0 2px 5px rgba(0,0,0,0.05); transition:transform 0.2s; flex-shrink: 0; }
+        .ludo-avatar-card:active { transform: scale(0.95); }
+        .ludo-avatar-card img { width:24px; height:24px; border-radius:4px; }
 
         /* --- RESTE DU CSS (Menus, Lightbox) --- */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
@@ -584,22 +588,22 @@
                     
                     <div class="vote-tabs">
                         <button class="vote-tab active" onclick="window.switchVoteTab('profil', this)"><i class="fa-solid fa-user"></i> Mon Profil</button>
+                        <button class="vote-tab" onclick="window.switchVoteTab('reserve', this)"><i class="fa-solid fa-box-open"></i> La Réserve</button>
                         <button class="vote-tab" onclick="window.switchVoteTab('arene', this)"><i class="fa-solid fa-chess-board"></i> L'Arène</button>
                     </div>
 
-                    <div id="vote-swipe-area" style="position: relative; width: 100%;">
+                    <div id="vote-swipe-area" style="position: relative; width: 100%; touch-action: pan-y;">
                         
                         <div id="tab-profil" class="vote-tab-content active">
                             
                             <div id="user-greeting" style="display:flex; flex-direction:column; align-items:center; font-weight:bold; color:var(--green-deep); font-size:1.5rem; margin-bottom:15px;"></div>
                             
                             <div style="text-align:center; margin-bottom:20px;">
-                                <button class="game-btn game-btn-green" style="margin:0; padding:8px 15px; font-size:0.85rem;" onclick="window.openProfileModal()"><i class="fa-solid fa-pen"></i> Modifier mon profil</button>
+                                <button class="game-btn" style="margin:0; padding:8px 15px; font-size:0.85rem; background:transparent; border:1px solid var(--wood-brown); color:var(--wood-brown); box-shadow:none;" onclick="window.openProfileModal()">✏️ Modifier mon profil</button>
                             </div>
 
                             <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px solid rgba(58, 99, 81, 0.2); text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
                                 <h4 style="margin: 0 0 10px; color: var(--green-deep); font-size: 1rem;">Présence (Vendredi)</h4>
-                                <div style="font-size:0.75rem; color:var(--text-brown); margin-bottom:10px; font-style:italic;">Dis-nous si tu viens ! (Mais c'est pas grave si tu changes d'avis 😉)</div>
                                 <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 12px;">
                                     <button class="rsvp-btn" id="btn-rsvp-present" onclick="window.setRSVP('present')">✅ Oui</button>
                                     <button class="rsvp-btn" id="btn-rsvp-maybe" onclick="window.setRSVP('maybe')">🤷 P-ê.</button>
@@ -616,6 +620,29 @@
 
                         </div>
 
+                        <div id="tab-reserve" class="vote-tab-content">
+                            <p style="font-size:0.8rem; text-align:center; color:var(--text-brown); margin: 0 0 15px; line-height:1.4;">Accède aux collections des membres pour demander un jeu !</p>
+                            
+                            <div style="display:flex; overflow-x:auto; gap:10px; padding-bottom:10px; margin-bottom:15px; scrollbar-width:none;">
+                                <a href="https://www.myludo.fr/#!/profil/carine-duneuf-jardin-85877" target="_blank" style="text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow:0 2px 5px rgba(0,0,0,0.05); flex-shrink:0; text-align:center;"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; vertical-align:middle; margin-right:4px;"> Carine</a>
+                                <a href="https://www.myludo.fr/#!/profil/ronan-29-67622" target="_blank" style="text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow:0 2px 5px rgba(0,0,0,0.05); flex-shrink:0; text-align:center;"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; vertical-align:middle; margin-right:4px;"> Ronan</a>
+                                <a href="https://www.myludo.fr/#!/profil/sebastien-g-107305" target="_blank" style="text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow:0 2px 5px rgba(0,0,0,0.05); flex-shrink:0; text-align:center;"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; vertical-align:middle; margin-right:4px;"> Séb</a>
+                                <a href="https://www.myludo.fr/#!/profil/stephane-rio-26496" target="_blank" style="text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow:0 2px 5px rgba(0,0,0,0.05); flex-shrink:0; text-align:center;"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; vertical-align:middle; margin-right:4px;"> Stéphane</a>
+                                <a href="https://www.myludo.fr/#!/profil/sylvain-bedouet-64234" target="_blank" style="text-decoration:none; color:var(--text-brown); font-size:0.7rem; font-weight:bold; background:#fff; padding:8px 12px; border-radius:12px; border:1px solid var(--wood-highlight); box-shadow:0 2px 5px rgba(0,0,0,0.05); flex-shrink:0; text-align:center;"><img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; vertical-align:middle; margin-right:4px;"> Sylvain</a>
+                            </div>
+
+                            <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed rgba(188,143,99,0.3);">
+                                <label style="font-weight:bold; font-size:0.8rem; display:block; margin-bottom:5px; color:var(--text-brown);">Qu'est-ce qu'on amène ?</label>
+                                <input type="text" id="ludo-bag-search" class="share-input" style="width:100%; margin-bottom:10px; text-align:left;" placeholder="Rechercher un jeu de l'asso..." onkeyup="window.searchBagLudo(this.value)">
+                                <div id="ludo-bag-results" style="display:flex; flex-direction:column; gap:5px;"></div>
+                            </div>
+
+                            <h3 style="font-family:'Shadows Into Light', cursive; color:var(--green-deep); font-size:1.5rem; text-align:center; margin: 0 0 10px;">Dans les sacs ce soir-là</h3>
+                            <div id="liste-sacs-firebase" style="display:flex; flex-direction:column;">
+                                <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement... <i class="fa-solid fa-spinner fa-spin"></i></div>
+                            </div>
+                        </div>
+
                         <div id="tab-arene" class="vote-tab-content">
                             
                             <div style="background:#fff; padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed rgba(188,143,99,0.3);">
@@ -626,10 +653,7 @@
                             </div>
 
                             <h3 style="font-family:'Shadows Into Light', cursive; color:var(--green-deep); font-size:1.5rem; text-align:center; margin: 0 0 5px;">L'Arène (Les Tables)</h3>
-                            <div style="font-size:0.7rem; color:gray; text-align:center; margin-bottom:15px; line-height:1.4;">
-                                <i class="fa-solid fa-info-circle"></i> <b>Flexible (👼)</b> : Prêt(e) à libérer sa place pour équilibrer les tables.<br>
-                                <span style="font-style:italic;">Pas d'inquiétude, l'Arène est là pour s'organiser, il y aura toujours de la place sur un jeu le jour J !</span>
-                            </div>
+                            <div style="font-size:0.7rem; color:gray; text-align:center; margin-bottom:15px; line-height:1.4;"><i class="fa-solid fa-info-circle"></i> <b>Flexible (👼)</b> : Prêt(e) à libérer sa place pour équilibrer les tables.</div>
                             
                             <div id="liste-votes-firebase" style="display:flex; flex-direction:column;">
                                 <div style="text-align:center; color:gray; font-size:0.9rem;">Chargement des tables... <i class="fa-solid fa-spinner fa-spin"></i></div>
@@ -957,6 +981,7 @@
             window.initFirebaseRSVP();
             window.initFirebaseVotes();
             window.chargerListeCollection(); 
+            window.initFirebaseSacs();
         } else {
             viewAuth.style.display = 'block'; viewVotes.style.display = 'none';
             window.renderAuthUI();
@@ -1029,16 +1054,16 @@
             </div>
 
             <div style="text-align:left; margin-bottom:10px;">
-                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon jeu préféré :</label>
+                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon jeu préféré de tous les temps :</label>
                 <input type="text" id="prof-jeu" class="share-input" value="${localProfile.jeuFavori || ''}" placeholder="Ex: Terraforming Mars">
             </div>
 
             <div style="text-align:left; margin-bottom:15px;">
-                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon style :</label>
+                <label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon style de jeu :</label>
                 <select id="prof-style" class="share-input">
                     <option value="Touche-à-tout" ${localProfile.styleJoueur==='Touche-à-tout'?'selected':''}>Touche-à-tout</option>
                     <option value="Eurogame (Gestion)" ${localProfile.styleJoueur==='Eurogame (Gestion)'?'selected':''}>Eurogame (Gestion)</option>
-                    <option value="Ameritrash (Dés & Fig.)" ${localProfile.styleJoueur==='Ameritrash (Dés & Fig.)'?'selected':''}>Ameritrash</option>
+                    <option value="Ameritrash (Dés & Fig.)" ${localProfile.styleJoueur==='Ameritrash (Dés & Fig.)'?'selected':''}>Ameritrash (Dés & Fig.)</option>
                     <option value="Jeux d'Ambiance" ${localProfile.styleJoueur==='Jeux d\'Ambiance'?'selected':''}>Jeux d'Ambiance</option>
                     <option value="Coopératif" ${localProfile.styleJoueur==='Coopératif'?'selected':''}>Coopératif</option>
                 </select>
@@ -1136,6 +1161,78 @@
             if(absents.length > 0) html += `<div><b>❌ ${absents.length} Absent(s) :</b><br> <span style="opacity:0.8; font-size:0.75rem;">${absents.map(p => p.nom.split(' ')[0]).join(', ')}</span></div>`;
 
             document.getElementById('rsvp-lists').innerHTML = html || '<div style="text-align:center; font-style:italic;">Personne ne s\'est encore prononcé pour la prochaine soirée.</div>';
+        });
+    };
+
+    // --- ONGLET LA RESERVE (SACS DE JEUX) ---
+    window.searchBagLudo = function(q) {
+        const resDiv = document.getElementById('ludo-bag-results');
+        if(!q || q.length < 2) { resDiv.innerHTML = ''; return; }
+        
+        const query = q.toLowerCase();
+        const filtered = window.tousLesJeux.filter(j => j.titre.toLowerCase().includes(query)).slice(0, 10);
+        
+        if(filtered.length === 0) {
+            resDiv.innerHTML = '<div style="font-size:0.75rem; color:gray; text-align:center;">Jeu introuvable dans l\'asso.</div>'; return;
+        }
+
+        let html = '';
+        let myName = (auth.currentUser.displayName || auth.currentUser.email.split('@')[0]).toLowerCase();
+
+        filtered.forEach(j => {
+            const isMe = j.proprio.toLowerCase() === myName;
+            const btn = isMe 
+                ? `<button class="btn-small game-btn-green" style="margin:0;" onclick="window.actionSac('${j.titre.replace(/'/g, "\\'")}', '${j.proprio.replace(/'/g, "\\'")}', 'apporter')">J'amène</button>`
+                : `<button class="btn-small" style="margin:0; background:var(--wood-brown);" onclick="window.actionSac('${j.titre.replace(/'/g, "\\'")}', '${j.proprio.replace(/'/g, "\\'")}', 'demander')">Demander</button>`;
+            
+            html += `<div style="display:flex; justify-content:space-between; align-items:center; background:#f9f9f9; padding:6px 10px; border-radius:8px; border:1px solid #eee; margin-bottom:5px;">
+                <div style="flex:1; min-width:0; padding-right:10px;">
+                    <div style="font-size:0.8rem; font-weight:bold; color:var(--green-deep); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${j.titre}</div>
+                    <div style="font-size:0.6rem; color:gray; display:block;">Boîte de ${j.proprio}</div>
+                </div>
+                ${btn}
+            </div>`;
+        });
+        resDiv.innerHTML = html;
+    };
+
+    window.actionSac = async function(titre, proprio, action) {
+        let demandeur = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
+        let statut = action === 'apporter' ? 'confirmé' : 'demandé';
+        await addDoc(collection(db, "sacs_jeux"), { titre: titre, proprio: proprio, demandeur: demandeur, statut: statut, date_event: window.getNextEventDateStr(), timestamp: new Date() });
+        document.getElementById('ludo-bag-search').value = "";
+        document.getElementById('ludo-bag-results').innerHTML = "";
+    };
+
+    window.supprimerSac = async function(id) {
+        if(confirm("Retirer ce jeu de la liste des sacs ?")) await deleteDoc(doc(db, "sacs_jeux", id));
+    };
+
+    window.initFirebaseSacs = function() {
+        if(window.unsubscribeSacs) window.unsubscribeSacs();
+        window.unsubscribeSacs = onSnapshot(collection(db, "sacs_jeux"), (snap) => {
+            const div = document.getElementById('liste-sacs-firebase'); if(!div) return;
+            let sacs = []; const dateCible = window.getNextEventDateStr();
+            snap.forEach(d => { if(d.data().date_event === dateCible) sacs.push({id: d.id, ...d.data()}) });
+            sacs.sort((a, b) => b.timestamp - a.timestamp);
+
+            if(sacs.length === 0) { div.innerHTML = '<div style="text-align:center; font-size:0.8rem; color:gray;">Aucun jeu n\'est prévu dans les sacs pour l\'instant.</div>'; return; }
+            
+            div.innerHTML = sacs.map(s => {
+                let icon = s.statut === "confirmé" ? "📦" : "🙏";
+                let text = s.statut === "confirmé" ? `<b>${s.proprio}</b> amène ce jeu.` : `Demandé à <b>${s.proprio}</b> par ${s.demandeur}`;
+                let myName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
+                let canDelete = (s.demandeur.toLowerCase() === myName.toLowerCase() || s.proprio.toLowerCase() === myName.toLowerCase());
+                let delBtn = canDelete ? `<span onclick="window.supprimerSac('${s.id}')" style="color:var(--text-brown); opacity:0.5; padding:5px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></span>` : '';
+
+                return `<div style="background:#fff; padding:10px 15px; border-radius:12px; border:1px solid rgba(0,0,0,0.05); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
+                    <div style="flex:1; min-width:0; padding-right:10px;">
+                        <div style="font-weight:bold; color:var(--green-deep); font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${icon} ${s.titre}</div>
+                        <div style="font-size:0.65rem; color:gray; margin-top:2px;">${text}</div>
+                    </div>
+                    ${delBtn}
+                </div>`;
+            }).join('');
         });
     };
 
