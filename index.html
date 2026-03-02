@@ -21,7 +21,7 @@
     <meta name="robots" content="noindex, nofollow">
     <meta property="og:image" content="https://despotesajeux.github.io/hero.png">
 
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&family=Shadows+Into Light&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
@@ -75,13 +75,17 @@
         .quote-text { font-family: 'Shadows Into Light', cursive; font-size: 1.5rem; line-height: 1.2; color: var(--green-deep); margin: 0; }
         .separator { width: 50px; height: 3px; background: var(--wood-highlight); margin: 12px auto; border-radius: 10px; opacity: 0.6; }
 
+        /* Boutons de base */
         .game-btn { background: var(--wood-brown); color: white; border: none; padding: 10px 25px; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); transition: transform 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; }
         .game-btn:active { transform: scale(0.95); }
+        
+        /* Boutons d'action verts */
         .game-btn-green { background: var(--green-deep); box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); }
 
         .btn-ludotheque { background: var(--wood-brown); color: white; border: none; padding: 10px 22px; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); cursor: pointer; transition: transform 0.2s; }
         .btn-ludotheque:active { transform: scale(0.95); }
 
+        /* JEU 1 : CHERCHE LES DÉS */
         .egg { position: absolute; color: rgba(188, 143, 99, 0.8); font-size: 1.6rem; cursor: pointer; z-index: 100; transition: all 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); }
         .egg:hover { color: var(--wood-brown); transform: scale(1.3); }
         .egg.found { color: #f1c40f; text-shadow: 0 0 15px rgba(241, 196, 15, 1); animation: diceFound 0.8s ease-in-out forwards; pointer-events: none; }
@@ -97,6 +101,7 @@
         .game-toast { position: absolute; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--green-deep); color: white; padding: 8px 20px; border-radius: 50px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 5px 15px rgba(58, 99, 81, 0.3); z-index: 300; opacity: 0; pointer-events: none; transition: all 0.3s ease; white-space: nowrap; }
         .game-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+        /* VUE INTÉRIEUR GRANGE */
         .barn-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('images/backgrounds/grange_interieur.png') center center / cover no-repeat; z-index: 250; display: flex; flex-direction: column; justify-content: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
         .barn-overlay::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0)); pointer-events: none; z-index: 1; }
         .barn-overlay.active { opacity: 1; pointer-events: auto; }
@@ -107,6 +112,7 @@
         .barn-message h3 { font-family: 'Shadows Into Light', cursive; color: var(--gold-game); font-size: 2.2rem; margin: 0 0 5px 0; text-shadow: 0 2px 5px rgba(0,0,0,0.9); }
         .barn-message p { font-size: 1.1rem; color: #fff; margin: 0; font-weight: 600; line-height: 1.4; text-shadow: 0 2px 4px rgba(0,0,0,0.9); }
 
+        /* MODALES COMMUNES */
         .game-modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 300; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; backdrop-filter: blur(4px); }
         .game-modal-backdrop.visible { opacity: 1; pointer-events: auto; }
         .game-modal-content { position: relative; width: 85%; max-width: 350px; background: var(--bg-beige); border: 4px solid var(--wood-brown); border-radius: 20px; padding: 15px 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); text-align: center; transform: scale(0.8); opacity: 0; transition: all 0.4s cubic-bezier(0.17, 0.84, 0.44, 1); display: flex; flex-direction: column; align-items: center; }
@@ -129,6 +135,7 @@
         .myludo-link { color: var(--green-deep); text-decoration: none; border-bottom: 1px dashed var(--wood-brown); font-weight: 800; transition: color 0.2s; }
         .myludo-link:hover { color: var(--wood-brown); }
 
+        /* ONGLETS DE VOTE */
         .vote-tabs { display: flex; background: rgba(188, 143, 99, 0.15); border-radius: 50px; padding: 5px; margin: 0 auto 20px; max-width: 320px; position: relative; }
         .vote-tab { flex: 1; text-align: center; padding: 10px 15px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--wood-brown); cursor: pointer; transition: background 0.1s, color 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
         .vote-tab.active { background: var(--wood-brown); color: white; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); }
@@ -136,6 +143,7 @@
         .vote-tab-content.active { display: block; }
         @keyframes fadeInTab { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
+        /* STYLES SPECIFIQUES (RSVP + TABLES) */
         .rsvp-btn { flex: 1; padding: 8px 5px; font-size: 0.75rem; font-family: 'Quicksand', sans-serif; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: all 0.2s; background: #ecf0f1; color: #7f8c8d; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .rsvp-btn:active { transform: scale(0.95); }
         .table-card { background:#fff; padding:12px; border-radius:15px; border:1px solid #dbb38a; margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,0.03); text-align: left; }
@@ -155,6 +163,7 @@
         .rsvp-badge { display:inline-block; padding:4px 8px; background:white; border:1px solid rgba(188,143,99,0.5); border-radius:50px; font-size:0.75rem; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.05); font-weight:bold; color:var(--green-deep); transition:all 0.2s; margin: 2px; }
         .rsvp-badge:active { transform: scale(0.95); background: var(--bg-beige); }
 
+        /* RESTE DU CSS (Menus, Lightbox) */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
         .lightbox-img-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease-out; transform-origin: center center; position: relative; }
         .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; transform: scale(0.9); opacity: 0; transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); will-change: transform; }
@@ -176,7 +185,26 @@
         .sheet-body { padding: 0 25px 40px; overflow-y: auto; flex-grow: 1; -webkit-overflow-scrolling: touch; }
         .sheet-content-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 2.4rem; margin: 0 0 15px; text-align: center; position: relative; }
         .sheet-content-title::after { content: ''; display: block; width: 50px; height: 4px; background: var(--wood-brown); margin: 10px auto 0; border-radius: 5px; }
+        
+        /* MODIFICATIONS SPECIFIQUES DEMANDEES */
         .panel-card { background: var(--bg-beige); padding: 15px; border-radius: 20px; margin: 15px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.03); position: relative; }
+        
+        /* Cadre beige autour de la grille de photos */
+        .photo-grid-wrapper { overflow: visible !important; }
+
+        /* Badge d'année sur les miniatures */
+        .photo-year { position: absolute; bottom: 4px; right: 4px; background: rgba(0, 0, 0, 0.6); color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; pointer-events: none; backdrop-filter: blur(2px); z-index: 5;}
+
+        /* Badge d'année sur l'image agrandie (Lightbox) */
+        .lightbox-year {
+            position: absolute; top: 25px; left: 25px; background: rgba(0, 0, 0, 0.7);
+            color: white; padding: 5px 12px; border-radius: 12px;
+            font-family: 'Quicksand', sans-serif; font-weight: 800; font-size: 1.2rem;
+            pointer-events: none; backdrop-filter: blur(4px); z-index: 110; opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .lightbox.active .lightbox-year { opacity: 1; }
+
         .phase-label { font-size: 0.8rem; font-weight: 700; color: var(--wood-brown); text-transform: uppercase; letter-spacing: 2px; margin: 30px 0 5px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .phase-label.first { margin-top: 5px; }
         .phase-label::before, .phase-label::after { content: ''; flex-grow: 1; height: 1px; background: var(--wood-highlight); opacity: 0.8; max-width: 30px; min-width: 10px; }
@@ -206,7 +234,7 @@
         .photo-tab-content.active .photo-grid-item:nth-child(9) { animation-delay: 0.45s; }
         .photo-tab-content.active .photo-grid-item:nth-child(n+10) { animation-delay: 0.50s; }
         @keyframes gridItemFade { from { opacity: 0; transform: translateY(15px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        .photo-year { position: absolute; bottom: 4px; right: 4px; background: rgba(0, 0, 0, 0.6); color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; pointer-events: none; backdrop-filter: blur(2px); }
+        
         .contact-person { display: flex; flex-direction: column; padding: 10px 12px; width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid var(--wood-brown); border-radius: 12px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
         .contact-person.compact-item { padding: 10px 12px; margin-bottom: 8px; flex-direction: row; align-items: center; }
         .contact-top { display: flex; align-items: center; gap: 12px; width: 100%; }
@@ -334,6 +362,7 @@
         <div class="lightbox-img-container" id="lbContainer">
             <img id="lightboxImg" src="" alt="Aperçu plein écran">
             <div id="lightboxCaption" class="lightbox-caption"></div>
+            <div id="lightboxYear" class="lightbox-year"></div>
         </div>
     </div>
 
@@ -667,10 +696,10 @@
         cal: { title: "Agenda Ludique", text: `<div class="panel-card" id="content-cal"><p style="text-align: center; color: var(--green-deep); margin-top: 0; font-size: 0.95rem;">On se retrouve chaque <b>dernier vendredi du mois</b>. Voici les prochaines sessions :</p>${agendaHTML}<p style="text-align: center; font-size:0.8rem; margin-bottom: 0;">N'oubliez pas d'apporter votre bonne humeur !</p></div>` },
         photos: { 
             title: "Souvenirs", 
-            text: `<div id="content-photos" style="padding-top: 10px; overflow: hidden; position: relative; background: transparent; box-shadow: none;">
+            text: `<div class="panel-card photo-grid-wrapper" id="content-photos" style="padding: 15px 0 0 0; position: relative;">
                 <div class="photo-tabs"><button class="photo-tab active" onclick="switchPhotoTab('jeux', this)"><i class="fa-solid fa-puzzle-piece"></i> Les Jeux</button><button class="photo-tab" onclick="switchPhotoTab('sorties', this)"><i class="fa-solid fa-users"></i> Les Sorties</button></div>
-                <div id="grid-jeux" class="photo-tab-content active">${photosJeuxHTML}</div>
-                <div id="grid-sorties" class="photo-tab-content">${photosSortiesHTML}</div>
+                <div id="grid-jeux" class="photo-tab-content active" style="padding: 0 15px 15px;">${photosJeuxHTML}</div>
+                <div id="grid-sorties" class="photo-tab-content" style="padding: 0 15px 15px;">${photosSortiesHTML}</div>
             </div>` 
         },
         contact: { 
@@ -738,6 +767,7 @@
     sheet.addEventListener('touchend', (e) => { if (!isDragging || window.innerWidth > 768) return; isDragging = false; let diff = e.changedTouches[0].clientY - startY; sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; if (diff > 100) { closeSheet(); } else { sheet.style.transform = ''; } });
 
     const lb = document.getElementById('lightbox'); const lbContainer = document.getElementById('lbContainer'); const lbImg = document.getElementById('lightboxImg'); const lbNavPrev = document.getElementById('lbNavPrev'); const lbNavNext = document.getElementById('lbNavNext');
+    const lbYear = document.getElementById('lightboxYear'); // Badge d'année dans la lightbox
     let currentGallery = []; let currentPhotoIndex = 0;
     let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
     
@@ -745,19 +775,36 @@
         lbImg.src = src; lb.style.display = 'flex'; resetZoom(); setTimeout(() => lb.classList.add('active'), 10); 
         const captionEl = document.getElementById('lightboxCaption');
         if (isSingleImage) { 
-            currentGallery = [{src: src, title: ''}]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; captionEl.innerText = '';
+            currentGallery = [{src: src, title: '', year: ''}]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; captionEl.innerText = '';
+            lbYear.style.display = 'none'; // Pas d'année pour les images simples (presse)
         } else { 
             const activeTab = document.querySelector('.photo-tab-content.active');
             const items = activeTab.querySelectorAll('.photo-grid-item img'); 
             // On récupère le HD src via onclick car le src de l'img est la miniature
             currentGallery = Array.from(items).map(img => {
-                let onclickAttr = img.parentElement.getAttribute('onclick');
+                let parent = img.parentElement;
+                let onclickAttr = parent.getAttribute('onclick');
                 let hdSrc = onclickAttr ? onclickAttr.match(/'([^']+)'/)[1] : img.getAttribute('src');
-                return { src: hdSrc, title: img.getAttribute('alt') || '' };
+                
+                // NOUVEAU : Récupérer l'année si elle existe sur la miniature
+                let yearNode = parent.querySelector('.photo-year');
+                let year = yearNode ? yearNode.innerText : '';
+                
+                return { src: hdSrc, title: img.getAttribute('alt') || '', year: year };
             }); 
             currentPhotoIndex = currentGallery.findIndex(g => g.src === src); 
             if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } 
-            captionEl.innerText = currentGallery[currentPhotoIndex].title;
+            
+            const currentObj = currentGallery[currentPhotoIndex];
+            captionEl.innerText = currentObj.title;
+            
+            // NOUVEAU : Afficher/Cacher l'année dans la lightbox
+            if(currentObj.year) {
+                lbYear.innerText = currentObj.year;
+                lbYear.style.display = 'block';
+            } else {
+                lbYear.style.display = 'none';
+            }
         } 
         if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } 
     }
@@ -777,6 +824,15 @@
         lbImg.style.opacity = 0; document.getElementById('lightboxCaption').style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; 
         setTimeout(() => { 
             let newObj = currentGallery[currentPhotoIndex]; lbImg.src = newObj.src; document.getElementById('lightboxCaption').innerText = newObj.title;
+            
+            // NOUVEAU : Mettre à jour l'année lors de la navigation
+            if(newObj.year) {
+                lbYear.innerText = newObj.year;
+                lbYear.style.display = 'block';
+            } else {
+                lbYear.style.display = 'none';
+            }
+            
             lbImg.style.opacity = 1; document.getElementById('lightboxCaption').style.opacity = 1;
         }, 150); 
     }
