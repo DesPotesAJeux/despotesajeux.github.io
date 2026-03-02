@@ -517,10 +517,10 @@
     document.getElementById('next-rdv-banner').innerHTML = 
         `<span style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase; font-weight:700;">PROCHAIN RDV${dayPart}</span><br>` +
         `<span style="font-size:0.9rem; font-weight:700; color:var(--green-deep);">${dateStr} à 20h30</span>` +
-        `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:3px; gap:5px; overflow:hidden;">
-            <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">📍 <span class="underline">Maison des Associations</span></a>
-            <button id="btn-voter-accueil" class="btn-ludotheque" style="margin:0; padding: 4px 12px; font-size: 0.75rem; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">
-                <i class="fa-solid fa-users" style="margin-right:4px;"></i>J'y vais
+        `<div style="display:flex; align-items:center; width:100%; margin-top:3px; gap:5px; overflow:hidden;">
+            <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="flex: 1; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">📍 <span class="underline">Maison des Associations</span></a>
+            <button id="btn-voter-accueil" class="btn-ludotheque" style="margin:0; padding: 4px 10px; font-size: 0.7rem; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">
+                <i class="fa-solid fa-location-arrow" style="margin-right:3px; font-size: 0.65rem;"></i>J'y vais
             </button>
         </div>`;
 
