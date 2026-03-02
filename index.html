@@ -515,17 +515,13 @@
 
     /* MODIFICATION : Bouton remonté en haut à droite avec affichage flex */
     document.getElementById('next-rdv-banner').innerHTML = 
-        `<div style="display:flex; justify-content:space-between; align-items:flex-start; width:100%; gap: 8px;">` +
-            `<div style="overflow: hidden; padding-top: 3px;">` +
-                `<div style="font-size:0.65rem; color:var(--wood-brown); text-transform:uppercase; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height: 1;">PROCHAIN RDV${dayPart}</div>` +
-                `<div style="font-size:0.85rem; font-weight:700; color:var(--green-deep); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top: 3px;">${dateStr} à 20h30</div>` +
-            `</div>` +
-            `<button id="btn-voter-accueil" class="btn-ludotheque" style="margin:0; padding: 5px 10px; font-size: 0.7rem; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">` +
-                `<i class="fa-solid fa-list-check" style="margin-right:4px;"></i>Ma soirée` +
+        `<div style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase; font-weight:700;">PROCHAIN RDV${dayPart}</div>` +
+        `<div style="font-size:0.9rem; font-weight:700; color:var(--green-deep); margin-top:2px;">${dateStr} à 20h30</div>` +
+        `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:6px; gap:8px; overflow:hidden;">` +
+            `<a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">📍 <span class="underline">Maison des Associations</span></a>` +
+            `<button id="btn-voter-accueil" class="btn-ludotheque" style="margin:0; padding: 5px 12px; font-size: 0.75rem; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">` +
+                `<i class="fa-solid fa-users" style="margin-right:4px;"></i>Rejoindre` +
             `</button>` +
-        `</div>` +
-        `<div style="margin-top:2px; width: 100%;">` +
-            `<a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">📍 <span class="underline">Maison des Associations</span></a>` +
         `</div>`;
 
     let agendaHTML = '<div class="cal-list">' + upcomingDates.map(date => {
