@@ -34,7 +34,7 @@
             --fb-blue: #1877F2;
             --wa-green: #25D366; 
             --myludo-color: #2c3e50; 
-            --gold-game: #f39c12; /* Modifié pour les sièges dorés */
+            --gold-game: #f39c12;
             --president-color: #e67e22;
             --bg-image: url('images/backgrounds/hero_soir.png');
         }
@@ -75,19 +75,13 @@
         .quote-text { font-family: 'Shadows Into Light', cursive; font-size: 1.5rem; line-height: 1.2; color: var(--green-deep); margin: 0; }
         .separator { width: 50px; height: 3px; background: var(--wood-highlight); margin: 12px auto; border-radius: 10px; opacity: 0.6; }
 
-        /* Boutons de base */
         .game-btn { background: var(--wood-brown); color: white; border: none; padding: 10px 25px; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); transition: transform 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; }
         .game-btn:active { transform: scale(0.95); }
-        
-        /* Boutons d'action verts (Validation, Validation, Connexion...) */
         .game-btn-green { background: var(--green-deep); box-shadow: 0 4px 10px rgba(58, 99, 81, 0.3); }
 
         .btn-ludotheque { background: var(--wood-brown); color: white; border: none; padding: 10px 22px; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); cursor: pointer; transition: transform 0.2s; }
         .btn-ludotheque:active { transform: scale(0.95); }
 
-        /* =========================================
-           UI JEU 1 : CHERCHE LES DÉS
-           ========================================= */
         .egg { position: absolute; color: rgba(188, 143, 99, 0.8); font-size: 1.6rem; cursor: pointer; z-index: 100; transition: all 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); }
         .egg:hover { color: var(--wood-brown); transform: scale(1.3); }
         .egg.found { color: #f1c40f; text-shadow: 0 0 15px rgba(241, 196, 15, 1); animation: diceFound 0.8s ease-in-out forwards; pointer-events: none; }
@@ -100,13 +94,9 @@
         
         .game-timer { position: absolute; top: 15px; right: 15px; background: rgba(0, 0, 0, 0.8); color: #f1c40f; padding: 5px 12px; border-radius: 15px; font-family: monospace; font-size: 1.1rem; font-weight: bold; z-index: 200; display: none; box-shadow: 0 2px 10px rgba(0,0,0,0.3); pointer-events: none; min-width: 80px; text-align: center; }
         .game-timer.visible { display: block; }
-        /* Toast en vert profond */
         .game-toast { position: absolute; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--green-deep); color: white; padding: 8px 20px; border-radius: 50px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 5px 15px rgba(58, 99, 81, 0.3); z-index: 300; opacity: 0; pointer-events: none; transition: all 0.3s ease; white-space: nowrap; }
         .game-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* =========================================
-           VUE INTÉRIEUR GRANGE
-           ========================================= */
         .barn-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('images/backgrounds/grange_interieur.png') center center / cover no-repeat; z-index: 250; display: flex; flex-direction: column; justify-content: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
         .barn-overlay::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0)); pointer-events: none; z-index: 1; }
         .barn-overlay.active { opacity: 1; pointer-events: auto; }
@@ -117,9 +107,6 @@
         .barn-message h3 { font-family: 'Shadows Into Light', cursive; color: var(--gold-game); font-size: 2.2rem; margin: 0 0 5px 0; text-shadow: 0 2px 5px rgba(0,0,0,0.9); }
         .barn-message p { font-size: 1.1rem; color: #fff; margin: 0; font-weight: 600; line-height: 1.4; text-shadow: 0 2px 4px rgba(0,0,0,0.9); }
 
-        /* =========================================
-           MODALES COMMUNES
-           ========================================= */
         .game-modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 300; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; backdrop-filter: blur(4px); }
         .game-modal-backdrop.visible { opacity: 1; pointer-events: auto; }
         .game-modal-content { position: relative; width: 85%; max-width: 350px; background: var(--bg-beige); border: 4px solid var(--wood-brown); border-radius: 20px; padding: 15px 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); text-align: center; transform: scale(0.8); opacity: 0; transition: all 0.4s cubic-bezier(0.17, 0.84, 0.44, 1); display: flex; flex-direction: column; align-items: center; }
@@ -142,9 +129,6 @@
         .myludo-link { color: var(--green-deep); text-decoration: none; border-bottom: 1px dashed var(--wood-brown); font-weight: 800; transition: color 0.2s; }
         .myludo-link:hover { color: var(--wood-brown); }
 
-        /* =========================================
-           ONGLETS DE VOTE (ARENE / PROFIL)
-           ========================================= */
         .vote-tabs { display: flex; background: rgba(188, 143, 99, 0.15); border-radius: 50px; padding: 5px; margin: 0 auto 20px; max-width: 320px; position: relative; }
         .vote-tab { flex: 1; text-align: center; padding: 10px 15px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--wood-brown); cursor: pointer; transition: background 0.1s, color 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
         .vote-tab.active { background: var(--wood-brown); color: white; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); }
@@ -152,9 +136,6 @@
         .vote-tab-content.active { display: block; }
         @keyframes fadeInTab { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        /* =========================================
-           STYLES SPECIFIQUES (RSVP + TABLES)
-           ========================================= */
         .rsvp-btn { flex: 1; padding: 8px 5px; font-size: 0.75rem; font-family: 'Quicksand', sans-serif; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: all 0.2s; background: #ecf0f1; color: #7f8c8d; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .rsvp-btn:active { transform: scale(0.95); }
         .table-card { background:#fff; padding:12px; border-radius:15px; border:1px solid #dbb38a; margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,0.03); text-align: left; }
@@ -174,7 +155,6 @@
         .rsvp-badge { display:inline-block; padding:4px 8px; background:white; border:1px solid rgba(188,143,99,0.5); border-radius:50px; font-size:0.75rem; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.05); font-weight:bold; color:var(--green-deep); transition:all 0.2s; margin: 2px; }
         .rsvp-badge:active { transform: scale(0.95); background: var(--bg-beige); }
 
-        /* --- RESTE DU CSS (Menus, Lightbox) --- */
         .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; cursor: pointer; overflow: hidden; }
         .lightbox-img-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease-out; transform-origin: center center; position: relative; }
         .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; transform: scale(0.9); opacity: 0; transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); will-change: transform; }
@@ -264,9 +244,6 @@
         .icon-box { width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; border-radius: 14px; background: var(--wood-brown); margin-bottom: 6px; color: #ffffff; font-size: 1.3rem; box-shadow: 0 4px 8px rgba(0,0,0,0.25); transition: all 0.2s cubic-bezier(0.17, 0.84, 0.44, 1); }
         .menu-item span { font-weight: 700; font-size: 0.5rem; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* =========================================
-           POPUP COOKIES
-           ========================================= */
         .cookie-popup {
             position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%);
             width: 90%; max-width: 350px; background: rgba(255, 252, 240, 0.98);
@@ -300,8 +277,6 @@
             .bottom-sheet.open { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
             .sheet-handle { display: none; }
             .lightbox-nav:hover { color: rgba(255, 255, 255, 1); }
-            .egg-1 { top: 40px; left: 40px; font-size: 1.5rem; color: rgba(255,255,255,0.7); }
-            .egg-2 { bottom: 40px; left: 20px; }
         }
     </style>
 
@@ -415,7 +390,7 @@
     const cheminSorties = "images/sorties/";
     const extensionJeux = ".jpg"; 
 
-    /* --- GESTION DU FOND ASYNCHRONE (Météo Plouay + Heure) --- */
+    /* --- GESTION DU FOND ASYNCHRONE --- */
     async function fetchWeatherUpdate() {
         const now = new Date();
         const month = now.getMonth() + 1; 
@@ -448,7 +423,6 @@
     }
     fetchWeatherUpdate();
 
-    /* --- FONCTIONS MODALES UNIVERSELLES (Alerte / Jeu) --- */
     function closeGameModalForce() {
         document.getElementById('gameModalBackdrop').classList.remove('visible');
         if(typeof confettiInterval !== 'undefined') { clearInterval(confettiInterval); document.querySelectorAll('.confetti').forEach(c => c.remove()); }
@@ -473,7 +447,6 @@
         if (!history.state || history.state.type !== 'gamemodal') { history.pushState({ type: 'gamemodal' }, ''); }
     };
 
-    /* --- GESTION DU BOUTON RETOUR ANDROID (HISTORY API) --- */
     window.addEventListener('popstate', (e) => { 
         if (lb.classList.contains('active')) { hideLightboxDOM(); } 
         else if (document.getElementById('barnOverlay').classList.contains('active')) { closeBarnForce(); } 
@@ -481,7 +454,6 @@
         else if (sheet.classList.contains('open')) { hideSheetDOM(); } 
     });
 
-    /* --- GESTION DE LA GRANGE --- */
     function openBarn() {
         document.getElementById('barnOverlay').classList.add('active');
         document.getElementById('mainWrapper').classList.add('blurred');
@@ -490,14 +462,12 @@
     function closeBarn() { if (history.state && history.state.type === 'barn') { history.back(); } else { closeBarnForce(); } }
     function closeBarnForce() { document.getElementById('barnOverlay').classList.remove('active'); document.getElementById('mainWrapper').classList.remove('blurred'); }
 
-    /* --- GESTION DES ONGLETS PHOTOS --- */
     function switchPhotoTab(tabId, element) {
         document.querySelectorAll('.photo-tab').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.photo-tab-content').forEach(content => content.classList.remove('active'));
         element.classList.add('active'); document.getElementById('grid-' + tabId).classList.add('active');
     }
 
-    /* --- 1. CALCULS DATE & HTML SORTIES --- */
     const sortiesConfig = [ { year: 2025, count: 5 }, { year: 2024, count: 7 }, { year: 2023, count: 7 }, { year: 2022, count: 9 }, { year: 2021, count: 2 }, { year: 2019, count: 1 } ];
 
     function getNextLastFridays() {
@@ -518,12 +488,10 @@
     const diffTime = new Date(nextDate.getFullYear(), nextDate.getMonth(), nextDate.getDate()) - new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    // Fonction globale pour le RSVP
     window.getNextEventDateStr = function() {
         return nextDate.toISOString().split('T')[0];
     };
     
-    // NOUVEAU : Fonction globale pour formater la date pour l'onglet Profil
     window.getFormattedEventDate = function() {
         const months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
         return `${nextDate.getDate()} ${months[nextDate.getMonth()]}`;
@@ -536,10 +504,10 @@
     document.getElementById('next-rdv-banner').innerHTML = 
         `<span style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase; font-weight:700;">PROCHAIN RDV${dayPart}</span><br>` +
         `<span style="font-size:0.9rem; font-weight:700; color:var(--green-deep);">${dateStr} à 20h30</span>` +
-        `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:3px; gap:5px;">
-            <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="flex-shrink:0;">📍 <span class="underline">Maison des Associations</span></a>
-            <button id="btn-voter-accueil" class="btn-ludotheque" style="margin:0; padding: 4px 12px; font-size: 0.75rem; white-space: nowrap; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">
-                <i class="fa-solid fa-check-to-slot" style="margin-right:4px;"></i>Voter
+        `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:3px; gap:5px; overflow:hidden;">
+            <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">📍 <span class="underline">Maison des Associations</span></a>
+            <button id="btn-voter-accueil" class="btn-ludotheque" style="margin:0; padding: 4px 10px; font-size: 0.7rem; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">
+                <i class="fa-solid fa-list-check" style="margin-right:4px;"></i>S'organiser
             </button>
         </div>`;
 
@@ -548,11 +516,13 @@
         return `<div class="cal-item"><i class="fa-regular fa-calendar-check" style="color: var(--wood-brown); font-size: 1.4rem; flex-shrink:0;"></i><div class="cal-content"><div class="date">${formatted.charAt(0).toUpperCase() + formatted.slice(1)}</div><div class="time">20h30 • <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank">Maison des Associations</a></div></div></div>`;
     }).join('') + '</div>';
 
+    /* GESTION DES IMAGES MINIATURES ET HD */
     let photosSortiesHTML = '<div class="photo-grid">';
     sortiesConfig.forEach(cfg => {
         for(let i=1; i<=cfg.count; i++) {
-            let filename = `${cheminSorties}${cfg.year}/sortie_${cfg.year}_${i}.jpg`;
-            photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('${filename}')"><img src="${filename}" loading="lazy" decoding="async" alt="" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"><span class="photo-year">${cfg.year}</span></div>`;
+            let filenameHD = `${cheminSorties}${cfg.year}/sortie_${cfg.year}_${i}.jpg`;
+            let filenameMin = `${cheminSorties}${cfg.year}/miniatures/sortie_${cfg.year}_${i}.jpg`;
+            photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('${filenameHD}')"><img src="${filenameMin}" loading="lazy" decoding="async" width="300" height="300" alt="" onerror="this.src='${filenameHD}'"><span class="photo-year">${cfg.year}</span></div>`;
         }
     });
     photosSortiesHTML += '</div>';
@@ -567,16 +537,21 @@
 
     let photosJeuxHTML = '<div class="photo-grid">';
     jeuxNommes.forEach(jeu => {
-        let nomJeu = jeu.replace('jeu_', '').replace(/_/g, ' '); nomJeu = nomJeu.charAt(0).toUpperCase() + nomJeu.slice(1); let fichierComplet = cheminTries + jeu + extensionJeux;
-        photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')"><img src="${fichierComplet}" loading="lazy" decoding="async" alt="${nomJeu}" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"><div class="photo-game-title">${nomJeu}</div></div>`;
+        let nomJeu = jeu.replace('jeu_', '').replace(/_/g, ' '); nomJeu = nomJeu.charAt(0).toUpperCase() + nomJeu.slice(1); 
+        let nomFichier = jeu + extensionJeux;
+        let fichierHD = cheminTries + nomFichier;
+        let fichierMin = cheminTries + "miniatures/" + nomFichier;
+        photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('${fichierHD}')"><img src="${fichierMin}" loading="lazy" decoding="async" width="300" height="300" alt="${nomJeu}" onerror="this.src='${fichierHD}'"><div class="photo-game-title">${nomJeu}</div></div>`;
     });
     for (let i = 1; i <= nombreDeJeuxNumerotes; i++) {
-        let nomFichier = "jeu" + i; let fichierComplet = cheminNonIdentifies + nomFichier + extensionJeux;
-        photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')"><img src="${fichierComplet}" loading="lazy" decoding="async" alt="" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"></div>`;
+        let nomFichier = "jeu" + i + extensionJeux; 
+        let fichierHD = cheminNonIdentifies + nomFichier;
+        let fichierMin = cheminNonIdentifies + "miniatures/" + nomFichier;
+        photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('${fichierHD}')"><img src="${fichierMin}" loading="lazy" decoding="async" width="300" height="300" alt="" onerror="this.src='${fichierHD}'"></div>`;
     }
     photosJeuxHTML += '</div>';
 
-    /* --- 2. DONNÉES DES PAGES --- */
+    /* --- DONNÉES DES PAGES --- */
     const pagesData = {
         vote: {
             title: "Au programme ?",
@@ -720,7 +695,6 @@
         }
     };
 
-    /* --- 3. DOM & NAVIGATION --- */
     const sheet = document.getElementById('bottomSheet');
     const overlay = document.getElementById('overlay');
     const sheetContent = document.getElementById('sheetContent');
@@ -763,7 +737,6 @@
     sheet.addEventListener('touchmove', (e) => { if (!isDragging || window.innerWidth > 768) return; let diff = e.touches[0].clientY - startY; if (diff > 0) { e.preventDefault(); sheet.style.transform = `translateY(calc(-100% + ${diff}px))`; } }, { passive: false });
     sheet.addEventListener('touchend', (e) => { if (!isDragging || window.innerWidth > 768) return; isDragging = false; let diff = e.changedTouches[0].clientY - startY; sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; if (diff > 100) { closeSheet(); } else { sheet.style.transform = ''; } });
 
-    /* --- LIGHTBOX --- */
     const lb = document.getElementById('lightbox'); const lbContainer = document.getElementById('lbContainer'); const lbImg = document.getElementById('lightboxImg'); const lbNavPrev = document.getElementById('lbNavPrev'); const lbNavNext = document.getElementById('lbNavNext');
     let currentGallery = []; let currentPhotoIndex = 0;
     let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
@@ -776,7 +749,12 @@
         } else { 
             const activeTab = document.querySelector('.photo-tab-content.active');
             const items = activeTab.querySelectorAll('.photo-grid-item img'); 
-            currentGallery = Array.from(items).map(img => ({ src: img.getAttribute('src'), title: img.getAttribute('alt') || '' })); 
+            // On récupère le HD src via onclick car le src de l'img est la miniature
+            currentGallery = Array.from(items).map(img => {
+                let onclickAttr = img.parentElement.getAttribute('onclick');
+                let hdSrc = onclickAttr ? onclickAttr.match(/'([^']+)'/)[1] : img.getAttribute('src');
+                return { src: hdSrc, title: img.getAttribute('alt') || '' };
+            }); 
             currentPhotoIndex = currentGallery.findIndex(g => g.src === src); 
             if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } 
             captionEl.innerText = currentGallery[currentPhotoIndex].title;
@@ -803,7 +781,6 @@
         }, 150); 
     }
 
-    /* --- JEU DES DES --- */
     let gameStarted = false; let eggCount = 0; const totalEggs = 10;
     let timerInterval; let startTime; let finalGameData = { time: "", rankNumber: 0, rank: "", message: "", rawMs: 0 }; 
     let confettiInterval; 
@@ -911,7 +888,6 @@
         if(!document.getElementById('confetti-style')) { const style = document.createElement('style'); style.id = 'confetti-style'; style.innerHTML = `@keyframes fall { 0% { top: -10px; opacity: 1; transform: rotate(0deg); } 100% { top: 100vh; opacity: 0; transform: rotate(720deg); } }`; document.head.appendChild(style); }
     }
 
-    /* --- GESTION DES COOKIES & ANALYTICS --- */
     function loadGoogleAnalytics() {
         const script = document.createElement('script'); script.async = true; script.src = "https://www.googletagmanager.com/gtag/js?id=G-YPHH9PELKY"; document.head.appendChild(script);
         window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-YPHH9PELKY');
@@ -920,9 +896,6 @@
     function handleCookies(choice) { localStorage.setItem('potes_cookie_consent', choice); document.getElementById('cookiePopup').classList.remove('show'); if (choice === 'accepted') { loadGoogleAnalytics(); } }
     checkCookies();
 
-    // ==========================================
-    // LOGIQUE SANS SWIPE DES ONGLETS VOTE
-    // ==========================================
     window.switchVoteTab = function(tabId, element) {
         document.querySelectorAll('.vote-tab').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.vote-tab-content').forEach(content => content.classList.remove('active'));
@@ -971,7 +944,6 @@
         else { input.type = "password"; icon.classList.replace("fa-eye-slash", "fa-eye"); }
     };
 
-    // --- AUTHENTIFICATION ---
     window.updateVoteUI = async function() {
         const viewAuth = document.getElementById('view-auth'), viewVotes = document.getElementById('view-votes'), userGreeting = document.getElementById('user-greeting');
         if(!viewAuth || !viewVotes) return;
@@ -1121,7 +1093,6 @@
         document.getElementById('gameModalBackdrop').classList.add('visible');
     };
 
-    // --- RSVP ---
     window.setRSVP = async function(status) {
         if(!auth.currentUser) return;
         const dateStr = window.getNextEventDateStr();
@@ -1179,7 +1150,6 @@
         });
     };
 
-    // --- ONGLET LA RESERVE (SACS DE JEUX) ---
     window.searchBagLudo = function(q) {
         const resDiv = document.getElementById('ludo-bag-results');
         if(!q || q.length < 2) { resDiv.innerHTML = ''; return; }
@@ -1265,7 +1235,6 @@
         });
     };
 
-    // --- CREATION DE TABLE (ARENE) ---
     window.chargerListeCollection = async function() {
         const datalist = document.getElementById('jeux-datalist');
         if(!datalist) return;
@@ -1443,7 +1412,7 @@
                     : j.nom;
 
                 const infosSup = `<div style="font-size:0.75rem; color:var(--wood-brown); font-weight:bold; margin-top:4px;">
-                    <i class="fa-regular fa-clock"></i> ${j.duree || '?'} min   |   <i class="fa-solid fa-dice-d20"></i> ${j.style || 'Jeu de société'}
+                    <i class="fa-regular fa-clock"></i> ${j.duree || '?'} min   |   <i class="fa-solid fa-dice-d20"></i> ${j.style || 'Jeu de société'}
                 </div>`;
 
                 return `
@@ -1479,10 +1448,10 @@
             }
         } 
         else if (action === 'removeSeat') {
-            inscrits = inscrits.filter(i => i.id !== seatId); // Retire juste le siège cliqué
+            inscrits = inscrits.filter(i => i.id !== seatId);
         }
         else if (action === 'leave') {
-            inscrits = inscrits.filter(i => i.uid !== auth.currentUser.uid); // Retire le joueur ET ses invités
+            inscrits = inscrits.filter(i => i.uid !== auth.currentUser.uid);
         }
         else if (action === 'addGuest') {
             if(inscrits.length < max) {
