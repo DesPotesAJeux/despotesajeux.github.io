@@ -515,16 +515,16 @@
 
     /* MODIFICATION : Bouton remonté en haut à droite avec affichage flex */
     document.getElementById('next-rdv-banner').innerHTML = 
-        `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; gap: 8px;">` +
-            `<div style="overflow: hidden;">` +
-                `<div style="font-size:0.65rem; color:var(--wood-brown); text-transform:uppercase; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">PROCHAIN RDV${dayPart}</div>` +
-                `<div style="font-size:0.85rem; font-weight:700; color:var(--green-deep); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${dateStr} à 20h30</div>` +
+        `<div style="display:flex; justify-content:space-between; align-items:flex-start; width:100%; gap: 8px;">` +
+            `<div style="overflow: hidden; padding-top: 3px;">` +
+                `<div style="font-size:0.65rem; color:var(--wood-brown); text-transform:uppercase; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height: 1;">PROCHAIN RDV${dayPart}</div>` +
+                `<div style="font-size:0.85rem; font-weight:700; color:var(--green-deep); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top: 3px;">${dateStr} à 20h30</div>` +
             `</div>` +
             `<button id="btn-voter-accueil" class="btn-ludotheque" style="margin:0; padding: 5px 10px; font-size: 0.7rem; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">` +
                 `<i class="fa-solid fa-list-check" style="margin-right:4px;"></i>S'organiser` +
             `</button>` +
         `</div>` +
-        `<div style="margin-top:4px; width: 100%;">` +
+        `<div style="margin-top:2px; width: 100%;">` +
             `<a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">📍 <span class="underline">Maison des Associations</span></a>` +
         `</div>`;
 
@@ -685,11 +685,15 @@
         cal: { title: "Agenda Ludique", text: `<div class="panel-card" id="content-cal"><p style="text-align: center; color: var(--green-deep); margin-top: 0; font-size: 0.95rem;">On se retrouve chaque <b>dernier vendredi du mois</b>. Voici les prochaines sessions :</p>${agendaHTML}<p style="text-align: center; font-size:0.8rem; margin-bottom: 0;">N'oubliez pas d'apporter votre bonne humeur !</p></div>` },
         photos: { 
             title: "Souvenirs", 
-            /* MODIFICATION : Ajout du panel-card autour de l'espace photo pour le cadre beige */
-            text: `<div class="panel-card photo-grid-wrapper" id="content-photos" style="padding: 15px 0 0 0; position: relative;">
-                <div class="photo-tabs"><button class="photo-tab active" onclick="switchPhotoTab('jeux', this)"><i class="fa-solid fa-puzzle-piece"></i> Les Jeux</button><button class="photo-tab" onclick="switchPhotoTab('sorties', this)"><i class="fa-solid fa-users"></i> Les Sorties</button></div>
-                <div id="grid-jeux" class="photo-tab-content active" style="padding: 0 15px 15px;">${photosJeuxHTML}</div>
-                <div id="grid-sorties" class="photo-tab-content" style="padding: 0 15px 15px;">${photosSortiesHTML}</div>
+            text: `<div id="content-photos" style="position: relative; width: 100%;">
+                <div class="photo-tabs" style="margin-bottom: 15px;">
+                    <button class="photo-tab active" onclick="switchPhotoTab('jeux', this)"><i class="fa-solid fa-puzzle-piece"></i> Les Jeux</button>
+                    <button class="photo-tab" onclick="switchPhotoTab('sorties', this)"><i class="fa-solid fa-users"></i> Les Sorties</button>
+                </div>
+                <div class="panel-card photo-grid-wrapper" style="padding: 10px; margin: 0;">
+                    <div id="grid-jeux" class="photo-tab-content active">${photosJeuxHTML}</div>
+                    <div id="grid-sorties" class="photo-tab-content">${photosSortiesHTML}</div>
+                </div>
             </div>` 
         },
         contact: { 
