@@ -21,7 +21,7 @@
     <meta name="robots" content="noindex, nofollow">
     <meta property="og:image" content="https://despotesajeux.github.io/hero.png">
 
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&family=Shadows+Into Light&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
@@ -186,24 +186,8 @@
         .sheet-content-title { font-family: 'Shadows Into Light', cursive; color: var(--green-deep); font-size: 2.4rem; margin: 0 0 15px; text-align: center; position: relative; }
         .sheet-content-title::after { content: ''; display: block; width: 50px; height: 4px; background: var(--wood-brown); margin: 10px auto 0; border-radius: 5px; }
         
-        /* MODIFICATIONS SPECIFIQUES DEMANDEES */
         .panel-card { background: var(--bg-beige); padding: 15px; border-radius: 20px; margin: 15px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.03); position: relative; }
-        
-        /* Cadre beige autour de la grille de photos */
         .photo-grid-wrapper { overflow: visible !important; }
-
-        /* Badge d'année sur les miniatures */
-        .photo-year { position: absolute; bottom: 4px; right: 4px; background: rgba(0, 0, 0, 0.6); color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; pointer-events: none; backdrop-filter: blur(2px); z-index: 5;}
-
-        /* Badge d'année sur l'image agrandie (Lightbox) */
-        .lightbox-year {
-            position: absolute; top: 25px; left: 25px; background: rgba(0, 0, 0, 0.7);
-            color: white; padding: 5px 12px; border-radius: 12px;
-            font-family: 'Quicksand', sans-serif; font-weight: 800; font-size: 1.2rem;
-            pointer-events: none; backdrop-filter: blur(4px); z-index: 110; opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .lightbox.active .lightbox-year { opacity: 1; }
 
         .phase-label { font-size: 0.8rem; font-weight: 700; color: var(--wood-brown); text-transform: uppercase; letter-spacing: 2px; margin: 30px 0 5px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .phase-label.first { margin-top: 5px; }
@@ -362,7 +346,6 @@
         <div class="lightbox-img-container" id="lbContainer">
             <img id="lightboxImg" src="" alt="Aperçu plein écran">
             <div id="lightboxCaption" class="lightbox-caption"></div>
-            <div id="lightboxYear" class="lightbox-year"></div>
         </div>
     </div>
 
@@ -530,15 +513,20 @@
     let dateStr = nextDate.toLocaleDateString('fr-FR', dateOptions);
     dateStr = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
 
+    /* MODIFICATION : Bouton remonté en haut à droite avec affichage flex */
     document.getElementById('next-rdv-banner').innerHTML = 
-        `<span style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase; font-weight:700;">PROCHAIN RDV${dayPart}</span><br>` +
-        `<span style="font-size:0.9rem; font-weight:700; color:var(--green-deep);">${dateStr} à 20h30</span>` +
-        `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-top:3px; gap:5px; overflow:hidden;">
-            <a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">📍 <span class="underline">Maison des Associations</span></a>
-            <button id="btn-voter-accueil" class="btn-ludotheque" style="margin:0; padding: 4px 10px; font-size: 0.7rem; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">
-                <i class="fa-solid fa-list-check" style="margin-right:4px;"></i>S'organiser
-            </button>
-        </div>`;
+        `<div style="display:flex; justify-content:space-between; align-items:flex-start; width:100%; gap: 10px;">` +
+            `<div>` +
+                `<span style="font-size:0.7rem; color:var(--wood-brown); text-transform:uppercase; font-weight:700;">PROCHAIN RDV${dayPart}</span><br>` +
+                `<span style="font-size:0.9rem; font-weight:700; color:var(--green-deep);">${dateStr} à 20h30</span>` +
+            `</div>` +
+            `<button id="btn-voter-accueil" class="btn-ludotheque" style="margin:0; padding: 4px 10px; font-size: 0.7rem; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 5px rgba(188, 143, 99, 0.4);" onclick="openSheet('vote')">` +
+                `<i class="fa-solid fa-list-check" style="margin-right:4px;"></i>S'organiser` +
+            `</button>` +
+        `</div>` +
+        `<div style="margin-top:4px;">` +
+            `<a href="https://maps.app.goo.gl/Hoa46TcMkRYJLLJr5?g_st=am" target="_blank" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">📍 <span class="underline">Maison des Associations</span></a>` +
+        `</div>`;
 
     let agendaHTML = '<div class="cal-list">' + upcomingDates.map(date => {
         let formatted = date.toLocaleDateString('fr-FR', dateOptions);
@@ -551,7 +539,8 @@
         for(let i=1; i<=cfg.count; i++) {
             let filenameHD = `${cheminSorties}${cfg.year}/sortie_${cfg.year}_${i}.jpg`;
             let filenameMin = `${cheminSorties}${cfg.year}/miniatures/sortie_${cfg.year}_${i}.jpg`;
-            photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('${filenameHD}')"><img src="${filenameMin}" loading="lazy" decoding="async" width="300" height="300" alt="" onerror="this.src='${filenameHD}'"><span class="photo-year">${cfg.year}</span></div>`;
+            // MODIFICATION : Classe .photo-game-title utilisée pour l'année, et alt="${cfg.year}" pour la Lightbox
+            photosSortiesHTML += `<div class="photo-grid-item" onclick="openLightbox('${filenameHD}')"><img src="${filenameMin}" loading="lazy" decoding="async" width="300" height="300" alt="${cfg.year}" onerror="this.src='${filenameHD}'"><div class="photo-game-title">${cfg.year}</div></div>`;
         }
     });
     photosSortiesHTML += '</div>';
@@ -696,6 +685,7 @@
         cal: { title: "Agenda Ludique", text: `<div class="panel-card" id="content-cal"><p style="text-align: center; color: var(--green-deep); margin-top: 0; font-size: 0.95rem;">On se retrouve chaque <b>dernier vendredi du mois</b>. Voici les prochaines sessions :</p>${agendaHTML}<p style="text-align: center; font-size:0.8rem; margin-bottom: 0;">N'oubliez pas d'apporter votre bonne humeur !</p></div>` },
         photos: { 
             title: "Souvenirs", 
+            /* MODIFICATION : Ajout du panel-card autour de l'espace photo pour le cadre beige */
             text: `<div class="panel-card photo-grid-wrapper" id="content-photos" style="padding: 15px 0 0 0; position: relative;">
                 <div class="photo-tabs"><button class="photo-tab active" onclick="switchPhotoTab('jeux', this)"><i class="fa-solid fa-puzzle-piece"></i> Les Jeux</button><button class="photo-tab" onclick="switchPhotoTab('sorties', this)"><i class="fa-solid fa-users"></i> Les Sorties</button></div>
                 <div id="grid-jeux" class="photo-tab-content active" style="padding: 0 15px 15px;">${photosJeuxHTML}</div>
@@ -767,7 +757,6 @@
     sheet.addEventListener('touchend', (e) => { if (!isDragging || window.innerWidth > 768) return; isDragging = false; let diff = e.changedTouches[0].clientY - startY; sheet.style.transition = "transform 0.3s cubic-bezier(0.17, 0.84, 0.44, 1)"; if (diff > 100) { closeSheet(); } else { sheet.style.transform = ''; } });
 
     const lb = document.getElementById('lightbox'); const lbContainer = document.getElementById('lbContainer'); const lbImg = document.getElementById('lightboxImg'); const lbNavPrev = document.getElementById('lbNavPrev'); const lbNavNext = document.getElementById('lbNavNext');
-    const lbYear = document.getElementById('lightboxYear'); // Badge d'année dans la lightbox
     let currentGallery = []; let currentPhotoIndex = 0;
     let currentScale = 1; let initialDistance = null; let isZooming = false; let posX = 0, posY = 0; let lastPanX = 0, lastPanY = 0; let swipeStartX = 0; let currentSwipeX = 0; 
     
@@ -775,36 +764,22 @@
         lbImg.src = src; lb.style.display = 'flex'; resetZoom(); setTimeout(() => lb.classList.add('active'), 10); 
         const captionEl = document.getElementById('lightboxCaption');
         if (isSingleImage) { 
-            currentGallery = [{src: src, title: '', year: ''}]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; captionEl.innerText = '';
-            lbYear.style.display = 'none'; // Pas d'année pour les images simples (presse)
+            currentGallery = [{src: src, title: ''}]; currentPhotoIndex = 0; lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; captionEl.innerText = '';
         } else { 
             const activeTab = document.querySelector('.photo-tab-content.active');
             const items = activeTab.querySelectorAll('.photo-grid-item img'); 
-            // On récupère le HD src via onclick car le src de l'img est la miniature
             currentGallery = Array.from(items).map(img => {
                 let parent = img.parentElement;
                 let onclickAttr = parent.getAttribute('onclick');
                 let hdSrc = onclickAttr ? onclickAttr.match(/'([^']+)'/)[1] : img.getAttribute('src');
                 
-                // NOUVEAU : Récupérer l'année si elle existe sur la miniature
-                let yearNode = parent.querySelector('.photo-year');
-                let year = yearNode ? yearNode.innerText : '';
-                
-                return { src: hdSrc, title: img.getAttribute('alt') || '', year: year };
+                return { src: hdSrc, title: img.getAttribute('alt') || '' };
             }); 
             currentPhotoIndex = currentGallery.findIndex(g => g.src === src); 
             if (currentGallery.length > 1) { lbNavPrev.style.display = 'flex'; lbNavNext.style.display = 'flex'; } else { lbNavPrev.style.display = 'none'; lbNavNext.style.display = 'none'; } 
             
             const currentObj = currentGallery[currentPhotoIndex];
             captionEl.innerText = currentObj.title;
-            
-            // NOUVEAU : Afficher/Cacher l'année dans la lightbox
-            if(currentObj.year) {
-                lbYear.innerText = currentObj.year;
-                lbYear.style.display = 'block';
-            } else {
-                lbYear.style.display = 'none';
-            }
         } 
         if (!history.state || history.state.type !== 'lightbox') { history.pushState({type: 'lightbox'}, ''); } 
     }
@@ -824,15 +799,6 @@
         lbImg.style.opacity = 0; document.getElementById('lightboxCaption').style.opacity = 0; lbContainer.style.transform = `translateX(0px)`; 
         setTimeout(() => { 
             let newObj = currentGallery[currentPhotoIndex]; lbImg.src = newObj.src; document.getElementById('lightboxCaption').innerText = newObj.title;
-            
-            // NOUVEAU : Mettre à jour l'année lors de la navigation
-            if(newObj.year) {
-                lbYear.innerText = newObj.year;
-                lbYear.style.display = 'block';
-            } else {
-                lbYear.style.display = 'none';
-            }
-            
             lbImg.style.opacity = 1; document.getElementById('lightboxCaption').style.opacity = 1;
         }, 150); 
     }
