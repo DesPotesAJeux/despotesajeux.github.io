@@ -554,14 +554,28 @@
     const nombreDeJeuxNumerotes = 7;
 
     let photosJeuxHTML = '<div class="photo-grid">';
+    
+    // --- JEUX IDENTIFIÉS ---
     jeuxNommes.forEach(jeu => {
-        let nomJeu = jeu.replace('jeu_', '').replace(/_/g, ' '); nomJeu = nomJeu.charAt(0).toUpperCase() + nomJeu.slice(1); let fichierComplet = cheminTries + jeu + extensionJeux;
-        photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')"><img src="${fichierComplet}" loading="lazy" decoding="async" alt="${nomJeu}" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"><div class="photo-game-title">${nomJeu}</div></div>`;
+        let nomJeu = jeu.replace('jeu_', '').replace(/_/g, ' '); 
+        nomJeu = nomJeu.charAt(0).toUpperCase() + nomJeu.slice(1); 
+        
+        let fichierHD = cheminTries + jeu + extensionJeux;
+        let fichierMin = cheminTries + "miniatures/" + jeu + extensionJeux;
+        
+        photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('${fichierHD}')"><img src="${fichierMin}" loading="lazy" decoding="async" alt="${nomJeu}" onerror="this.src='${fichierHD}'"><div class="photo-game-title">${nomJeu}</div></div>`;
     });
+    
+    // --- JEUX NON IDENTIFIÉS ---
     for (let i = 1; i <= nombreDeJeuxNumerotes; i++) {
-        let nomFichier = "jeu" + i; let fichierComplet = cheminNonIdentifies + nomFichier + extensionJeux;
-        photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('${fichierComplet}')"><img src="${fichierComplet}" loading="lazy" decoding="async" alt="" onerror="this.src='https://via.placeholder.com/200?text=Image+introuvable'"></div>`;
+        let nomFichier = "jeu" + i; 
+        
+        let fichierHD = cheminNonIdentifies + nomFichier + extensionJeux;
+        let fichierMin = cheminNonIdentifies + "miniatures/" + nomFichier + extensionJeux;
+        
+        photosJeuxHTML += `<div class="photo-grid-item" onclick="openLightbox('${fichierHD}')"><img src="${fichierMin}" loading="lazy" decoding="async" alt="" onerror="this.src='${fichierHD}'"></div>`;
     }
+    
     photosJeuxHTML += '</div>';
 
     const pagesData = {
