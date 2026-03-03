@@ -692,7 +692,22 @@
             title: "Nous Contacter", 
             text: `<div class="panel-card" id="content-contact">
                 <div class="contact-person"><div class="contact-top"><div class="avatar president-icon"><i class="fa-solid fa-crown"></i></div><div style="display:flex; flex-direction:column; justify-content:center;"><h4 style="margin:0;">Julie</h4><span style="font-size:0.75rem; color:var(--wood-brown); font-weight:bold; margin-top:2px;">Présidente</span></div></div></div>
-                <div class="contact-person"><div class="contact-top"><div class="avatar mail-icon"><i class="fa-solid fa-envelope-open-text"></i></div><h4>Email</h4><a href="mailto:despotesajeux@protonmail.com" class="call-btn mail-btn">Écrire</a></div><div class="contact-bottom"><span>Pour toute question ou demande</span></div></div>
+                
+                <div class="contact-person">
+                    <div class="contact-top">
+                        <div class="avatar mail-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
+                        <h4>Email</h4>
+                        <a href="mailto:despotesajeux@protonmail.com" class="call-btn mail-btn">Écrire</a>
+                    </div>
+                    <div class="contact-bottom">
+                        <span>Pour toute question ou si le bouton "Écrire" ne marche pas :</span>
+                        <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(188,143,99,0.1); padding:8px 12px; border-radius:8px; margin-top:6px;">
+                            <span style="font-size:0.75rem; font-weight:700; color:var(--green-deep); -webkit-user-select:all; user-select:all;">despotesajeux@protonmail.com</span>
+                            <i class="fa-regular fa-copy" style="color:var(--wood-brown); font-size:1.1rem; cursor:pointer;" onclick="navigator.clipboard.writeText('despotesajeux@protonmail.com'); showToast('Adresse copiée ! 📋');"></i>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="contact-person"><div class="contact-top"><div class="avatar fb-icon"><i class="fa-brands fa-facebook-f"></i></div><h4>Facebook</h4><a href="https://www.facebook.com/groups/despotesajeux/" target="_blank" class="call-btn fb-btn">Rejoindre</a></div><div class="contact-bottom"><span>Pour suivre la communauté en ligne</span></div></div>
                 <div class="contact-person"><div class="contact-top"><div class="avatar wa-icon"><i class="fa-brands fa-whatsapp"></i></div><h4>WhatsApp</h4><a href="https://chat.whatsapp.com/GE6whGWavky2alGNskA5yL?mode=gi_t" target="_blank" class="call-btn wa-btn">Papoter</a></div><div class="contact-bottom"><span>Rejoindre le groupe de discussion</span></div></div>
             </div>` 
