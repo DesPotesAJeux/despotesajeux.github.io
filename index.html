@@ -848,7 +848,7 @@
             <div class="game-desc-box" style="margin-bottom: 10px; padding: 10px;">
                 <p style="font-size:0.85rem; margin:0;"><b>10 petits dés</b> <i class="fa-solid fa-dice" style="color:var(--wood-brown);"></i> ont été cachés subtilement dans tout le site.<br>Sauras-tu tous les retrouver ?</p>
             </div>
-            <h4 style="margin: 0 0 5px; color: var(--gold-game); font-family: 'Shadows Into Light', cursive; font-size: 1.4rem;"><i class="fa-solid fa-trophy"></i> Le Panthéon</h4>
+            <h4 style="margin: 0 0 5px; color: var(--gold-game); font-family: 'Shadows Into Light', cursive; font-size: 1.4rem;"><i class="fa-solid fa-trophy"></i> Le Panthéon des héros</h4>
             ${hofHTML}
             <button class="game-btn game-btn-green" style="width:100%; justify-content:center; margin-top: 5px;" onclick="initGame()"><i class="fa-solid fa-play"></i> C'est parti !</button>
         `;
@@ -927,7 +927,7 @@
         let shareButtonsHTML = "";
 
         if (currentRank <= 10) {
-            rankMessage = `<div id="hof-result-msg" style="font-size:0.85rem; font-weight:bold; color:var(--wa-green); margin-top:5px;">🏆 Éligible au Panthéon (Pos. ${currentRank}) !</div>`;
+            rankMessage = `<div id="hof-result-msg" style="font-size:0.85rem; font-weight:bold; color:var(--wa-green); margin-top:5px;">🏆 Éligible au Panthéon des héros (Pos. ${currentRank}) !</div>`;
             saveInputHTML = `
                 <div id="saveContainer" class="share-container" style="flex-direction: row; align-items: center; background: rgba(188,143,99,0.1); padding: 8px; border-radius: 12px; margin-bottom: 15px;">
                     <input type="text" id="playerPseudo" class="share-input" style="flex: 1; border: none; margin: 0;" placeholder="Ton pseudo..." maxlength="15">
