@@ -136,8 +136,8 @@
         .myludo-link:hover { color: var(--wood-brown); }
 
         /* ONGLETS DE VOTE */
-        .vote-tabs { display: flex; background: rgba(188, 143, 99, 0.15); border-radius: 50px; padding: 5px; margin: 0 auto 20px; max-width: 320px; position: relative; }
-        .vote-tab { flex: 1; text-align: center; padding: 10px 15px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--wood-brown); cursor: pointer; transition: background 0.1s, color 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
+        .vote-tabs { display: flex; background: rgba(188, 143, 99, 0.15); border-radius: 50px; padding: 5px; margin: 0 auto 20px; max-width: 100%; position: relative; }
+        .vote-tab { flex: 1; text-align: center; padding: 8px 5px; border: none; background: transparent; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.8rem; color: var(--wood-brown); cursor: pointer; transition: background 0.1s, color 0.1s; display: flex; align-items: center; justify-content: center; gap: 6px; position: relative; white-space: nowrap; }
         .vote-tab.active { background: var(--wood-brown); color: white; box-shadow: 0 4px 10px rgba(188, 143, 99, 0.3); }
         .vote-tab-content { display: none; animation: fadeInTab 0.3s cubic-bezier(0.17, 0.84, 0.44, 1); }
         .vote-tab-content.active { display: block; }
@@ -328,8 +328,6 @@
             }
         })();
     </script>
-</head>
-<body>
 </head>
 <body>
 
@@ -623,7 +621,7 @@
 
     const pagesData = {
         vote: {
-            title: "Au programme ?",
+            title: "Au programme",
             text: `<div class="panel-card" id="content-vote" style="padding: 15px 10px; position: relative;">
                 <div id="view-auth">
                     <p style="text-align: center; margin-top: 0; font-size: 0.9rem; color: var(--text-brown);">Connecte-toi pour proposer et voter pour tes jeux préférés !</p>
@@ -1086,7 +1084,7 @@
     window.auth = auth;
     let unsubscribeVotes = null;
     let unsubscribeRSVP = null;
-    let localProfile = { avatar: '🎲', titre: 'Membre', jeuFavori: '', styleJoueur: 'Touche-à-tout' };
+    let localProfile = { avatar: '🎲', nom: '', jeuFavori: '', myludo: '', bga: '' };
     window.tousLesJeux = []; 
     window.myCurrentRSVP = null; 
 
@@ -1104,7 +1102,7 @@
             await window.loadProfile();
             const rsvpTitle = document.getElementById('rsvp-date-title');
             if(rsvpTitle) rsvpTitle.innerText = "Présence du " + window.getFormattedEventDate();
-            let displayName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
+            let displayName = localProfile.nom || auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
             userGreeting.innerHTML = `<div style="display:flex; align-items:center; gap:10px;">
                 <div style="font-size:2.5rem; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> 
                 <span style="font-size:1.5rem;">Salut ${displayName} !</span>
@@ -1154,7 +1152,7 @@
             let name = document.getElementById('auth-name').value || 'Membre';
             const res = await createUserWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pwd').value);
             await updateProfile(res.user, { displayName: name });
-            await setDoc(doc(db, "utilisateurs", res.user.uid), { avatar: '🎲', titre: 'Novice', nom: name });
+            await setDoc(doc(db, "utilisateurs", res.user.uid), { avatar: '🎲', nom: name, jeuFavori: '', myludo: '', bga: '' });
             window.showCustomAlert("Succès", "Compte créé !", "fa-champagne-glasses");
         } catch (e) { window.showCustomAlert("Erreur", e.message, "fa-bug"); }
     };
@@ -1168,7 +1166,7 @@
     window.loadProfile = async function() {
         const d = await getDoc(doc(db, "utilisateurs", auth.currentUser.uid));
         if(d.exists()) { localProfile = d.data(); } 
-        else { localProfile = { avatar: '🎲', titre: 'Membre', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', styleJoueur: 'Touche-à-tout' }; await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile); }
+        else { localProfile = { avatar: '🎲', nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], jeuFavori: '', myludo: '', bga: '' }; await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile); }
     };
 
     window.openProfileModal = function() {
@@ -1177,29 +1175,30 @@
             <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; font-size:1.8rem; margin:0 0 15px;">Mon Profil</h3>
             <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px; margin-bottom:10px; text-align:left;">
                 <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Avatar</label><input type="text" id="prof-avatar" class="share-input" value="${localProfile.avatar || '🎲'}" maxlength="2" style="font-size:1.2rem;"></div>
-                <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Titre</label><input type="text" id="prof-titre" class="share-input" value="${localProfile.titre || 'Membre'}" placeholder="Le Stratège"></div>
+                <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Prénom</label><input type="text" id="prof-nom" class="share-input" value="${localProfile.nom || auth.currentUser.displayName || ''}" placeholder="Ton prénom"></div>
             </div>
             <div style="text-align:left; margin-bottom:10px;"><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon jeu préféré :</label><input type="text" id="prof-jeu" class="share-input" value="${localProfile.jeuFavori || ''}" placeholder="Ex: Terraforming Mars"></div>
-            <div style="text-align:left; margin-bottom:15px;"><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon style :</label>
-                <select id="prof-style" class="share-input">
-                    <option value="Touche-à-tout" ${localProfile.styleJoueur==='Touche-à-tout'?'selected':''}>Touche-à-tout</option>
-                    <option value="Eurogame (Gestion)" ${localProfile.styleJoueur==='Eurogame (Gestion)'?'selected':''}>Eurogame (Gestion)</option>
-                    <option value="Ameritrash" ${localProfile.styleJoueur==='Ameritrash'?'selected':''}>Ameritrash</option>
-                    <option value="Jeux d'Ambiance" ${localProfile.styleJoueur==='Jeux d\'Ambiance'?'selected':''}>Jeux d'Ambiance</option>
-                    <option value="Coopératif" ${localProfile.styleJoueur==='Coopératif'?'selected':''}>Coopératif</option>
-                </select>
-            </div>
+            <div style="text-align:left; margin-bottom:10px;"><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Lien Myludo :</label><input type="text" id="prof-myludo" class="share-input" value="${localProfile.myludo || ''}" placeholder="URL de ton profil"></div>
+            <div style="text-align:left; margin-bottom:15px;"><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Pseudo BGA :</label><input type="text" id="prof-bga" class="share-input" value="${localProfile.bga || ''}" placeholder="ID Board Game Arena"></div>
             <button class="game-btn game-btn-green" style="width:100%; justify-content:center;" onclick="saveProfile()"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button>`;
         document.getElementById('gameModalBackdrop').classList.add('visible');
     };
 
     window.saveProfile = async function() {
         localProfile.avatar = document.getElementById('prof-avatar').value || '🎲';
-        localProfile.titre = document.getElementById('prof-titre').value || 'Membre';
+        localProfile.nom = document.getElementById('prof-nom').value || auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
         localProfile.jeuFavori = document.getElementById('prof-jeu').value || '';
-        localProfile.styleJoueur = document.getElementById('prof-style').value || 'Touche-à-tout';
-        localProfile.nom = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
-        await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), localProfile, {merge:true});
+        localProfile.myludo = document.getElementById('prof-myludo').value || '';
+        localProfile.bga = document.getElementById('prof-bga').value || '';
+        
+        await setDoc(doc(db, "utilisateurs", auth.currentUser.uid), {
+            avatar: localProfile.avatar,
+            nom: localProfile.nom,
+            jeuFavori: localProfile.jeuFavori,
+            myludo: localProfile.myludo,
+            bga: localProfile.bga
+        }, {merge:true});
+        
         document.getElementById('user-greeting').innerHTML = `<div style="display:flex; align-items:center; gap:10px;">
             <div style="font-size:2.5rem; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${localProfile.avatar}</div> 
             <span style="font-size:1.5rem;">Salut ${localProfile.nom} !</span>
@@ -1211,17 +1210,23 @@
     window.viewProfile = async function(uid) {
         if(!uid) return;
         const d = await getDoc(doc(db, "utilisateurs", uid));
-        let p = d.exists() ? d.data() : { avatar: '👤', titre: 'Joueur Mystère', nom: 'Membre', jeuFavori: 'Non renseigné', styleJoueur: 'Inconnu' };
+        let p = d.exists() ? d.data() : { avatar: '👤', nom: 'Membre', jeuFavori: 'Non renseigné' };
+        
         document.getElementById('modalContent').innerHTML = `
             <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
-            <div style="font-size: 3.5rem; margin-bottom: 5px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${p.avatar || '👤'}</div>
-            <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; font-size:1.8rem; margin:0 0 5px;">${p.nom}</h3>
-            <div style="font-size:0.8rem; color:var(--wood-brown); font-weight:bold; text-transform:uppercase; letter-spacing:1px; margin-bottom:15px;">${p.titre || 'Membre'}</div>
-            <div style="background: rgba(188,143,99,0.1); border-radius: 12px; padding: 15px; text-align:left; font-size:0.85rem; line-height: 1.4; color: var(--text-brown);">
-                <div style="margin-bottom:10px;"><i class="fa-solid fa-heart" style="color:#e74c3c; width:20px; text-align:center;"></i> <b>Jeu favori :</b><br> ${p.jeuFavori || 'Non renseigné'}</div>
-                <div><i class="fa-solid fa-chess-knight" style="color:var(--green-deep); width:20px; text-align:center;"></i> <b>Style :</b><br> ${p.styleJoueur || 'Inconnu'}</div>
+            
+            <div style="background: #ffffff; border-radius: 15px; padding: 20px; width: 100%; box-sizing: border-box; box-shadow: 0 5px 15px rgba(0,0,0,0.05); text-align: center; margin-top: 10px;">
+                <div style="font-size: 3.5rem; margin-bottom: 5px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${p.avatar || '👤'}</div>
+                <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; font-size:1.8rem; margin:0 0 15px;">${p.nom || 'Membre'}</h3>
+                
+                <div style="background: var(--bg-beige); border-radius: 12px; padding: 15px; text-align:left; font-size:0.85rem; line-height: 1.4; color: var(--text-brown);">
+                    <div style="${p.myludo || p.bga ? 'margin-bottom:10px;' : ''}"><i class="fa-solid fa-heart" style="color:#e74c3c; width:20px; text-align:center;"></i> <b>Jeu favori :</b><br> ${p.jeuFavori || 'Non renseigné'}</div>
+                    ${p.myludo ? `<div style="margin-bottom:10px; margin-top: 10px;"><i class="fa-solid fa-dice-d20" style="color:var(--myludo-color); width:20px; text-align:center;"></i> <b>Myludo :</b><br> <a href="${p.myludo.startsWith('http') ? p.myludo : 'https://'+p.myludo}" target="_blank" style="color:var(--green-deep); font-weight:bold; text-decoration: underline;">Voir la ludo</a></div>` : ''}
+                    ${p.bga ? `<div style="margin-top: 10px;"><i class="fa-solid fa-gamepad" style="color:#1877F2; width:20px; text-align:center;"></i> <b>BGA :</b><br> <span style="font-weight:bold; color:var(--text-brown);">${p.bga}</span></div>` : ''}
+                </div>
             </div>
-            <button class="game-btn game-btn-green" style="margin-top:15px;" onclick="closeGameModalForce()">Fermer</button>`;
+            
+            <button class="game-btn game-btn-green" style="margin-top:15px; width: 100%; justify-content: center;" onclick="closeGameModalForce()">Fermer</button>`;
         document.getElementById('gameModalBackdrop').classList.add('visible');
     };
 
@@ -1230,7 +1235,7 @@
         const dateStr = window.getNextEventDateStr();
         const ref = doc(db, "presences", auth.currentUser.uid);
         if (window.myCurrentRSVP === status) { await deleteDoc(ref); } 
-        else { await setDoc(ref, { uid: auth.currentUser.uid, nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar || '🎲', statut: status, date_event: dateStr, timestamp: new Date() }); }
+        else { await setDoc(ref, { uid: auth.currentUser.uid, nom: localProfile.nom || auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar || '🎲', statut: status, date_event: dateStr, timestamp: new Date() }); }
     };
 
     window.initFirebaseRSVP = function() {
@@ -1268,7 +1273,7 @@
         const query = q.toLowerCase();
         const filtered = window.tousLesJeux.filter(j => j.titre.toLowerCase().includes(query)).slice(0, 10);
         if(filtered.length === 0) { resDiv.innerHTML = '<div style="font-size:0.75rem; color:gray; text-align:center;">Jeu introuvable.</div>'; return; }
-        let html = ''; let myName = (auth.currentUser.displayName || auth.currentUser.email.split('@')[0]).toLowerCase();
+        let html = ''; let myName = (localProfile.nom || auth.currentUser.displayName || auth.currentUser.email.split('@')[0]).toLowerCase();
         filtered.forEach(j => {
             const isMe = j.proprio.toLowerCase() === myName;
             const btn = isMe ? `<button class="btn-small game-btn-green" style="margin:0;" onclick="window.actionSac('${j.titre.replace(/'/g, "\\'")}', '${j.proprio.replace(/'/g, "\\'")}', 'apporter')">J'amène</button>` : `<button class="btn-small" style="margin:0; background:var(--wood-brown);" onclick="window.actionSac('${j.titre.replace(/'/g, "\\'")}', '${j.proprio.replace(/'/g, "\\'")}', 'demander')">Demander</button>`;
@@ -1278,7 +1283,7 @@
     };
 
     window.actionSac = async function(titre, proprio, action) {
-        let demandeur = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
+        let demandeur = localProfile.nom || auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
         let statut = action === 'apporter' ? 'confirmé' : 'demandé';
         await addDoc(collection(db, "sacs_jeux"), { titre: titre, proprio: proprio, demandeur: demandeur, statut: statut, date_event: window.getNextEventDateStr(), timestamp: new Date() });
         document.getElementById('ludo-bag-search').value = ""; document.getElementById('ludo-bag-results').innerHTML = "";
@@ -1296,7 +1301,7 @@
             if(sacs.length === 0) { div.innerHTML = '<div style="text-align:center; font-size:0.8rem; color:gray;">Aucun jeu prévu.</div>'; return; }
             div.innerHTML = sacs.map(s => {
                 let icon = s.statut === "confirmé" ? "📦" : "🙏"; let text = s.statut === "confirmé" ? `<b>${s.proprio}</b> amène ce jeu.` : `Demandé à <b>${s.proprio}</b> par ${s.demandeur}`;
-                let myName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
+                let myName = localProfile.nom || auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
                 let canDelete = (s.demandeur.toLowerCase() === myName.toLowerCase() || s.proprio.toLowerCase() === myName.toLowerCase());
                 let delBtn = canDelete ? `<span onclick="window.supprimerSac('${s.id}')" style="color:var(--text-brown); opacity:0.5; padding:5px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></span>` : '';
                 return `<div style="background:#fff; padding:10px 15px; border-radius:12px; border:1px solid rgba(0,0,0,0.05); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.02);"><div style="flex:1; min-width:0; padding-right:10px;"><div style="font-weight:bold; color:var(--green-deep); font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${icon} ${s.titre}</div><div style="font-size:0.65rem; color:gray; margin-top:2px;">${text}</div></div>${delBtn}</div>`;
@@ -1317,8 +1322,8 @@
         const jeuTrouve = window.tousLesJeux.find(j => j.titre.toLowerCase() === titre.toLowerCase());
         let minJ = 2, maxJ = 4, proprioDuJeu = "Moi", lienMyludo = "", dureeJeu = "?", styleJeu = "Classique";
         if (jeuTrouve) { proprioDuJeu = jeuTrouve.proprio; lienMyludo = jeuTrouve.lien || ""; dureeJeu = jeuTrouve.duree || "?"; styleJeu = jeuTrouve.style || "Plateau"; const parts = (jeuTrouve.joueurs || "2-4").match(/\d+/g); if (parts) { minJ = parseInt(parts[0]); maxJ = parts[1] ? parseInt(parts[1]) : minJ; } } 
-        else { proprioDuJeu = auth.currentUser.displayName || "Moi"; let maxStr = prompt(`Joueurs MAX ?`, "4"); if (maxStr === null) return; maxJ = parseInt(maxStr) || 4; }
-        const moi = { uid: auth.currentUser.uid, nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar, type: 'main', flex: false, id: Date.now() };
+        else { proprioDuJeu = localProfile.nom || auth.currentUser.displayName || "Moi"; let maxStr = prompt(`Joueurs MAX ?`, "4"); if (maxStr === null) return; maxJ = parseInt(maxStr) || 4; }
+        const moi = { uid: auth.currentUser.uid, nom: localProfile.nom || auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar, type: 'main', flex: false, id: Date.now() };
         try { await addDoc(collection(db, "jeux_proposes"), { nom: titre, proposePar: moi.nom, createurUid: auth.currentUser.uid, appartientA: proprioDuJeu, myludoLien: lienMyludo, minJoueurs: minJ, maxJoueurs: maxJ, duree: dureeJeu, style: styleJeu, inscrits: [moi], date_ajout: new Date() }); input.value = ""; } catch(e) { console.error(e); }
     };
 
@@ -1361,10 +1366,10 @@
     window.actionTable = async function(idTable, action, seatId) {
         if(!auth.currentUser) return; const ref = doc(db, "jeux_proposes", idTable); const docSnap = await getDoc(ref); if(!docSnap.exists()) return;
         let data = docSnap.data(); let inscrits = data.inscrits || [];
-        if (action === 'join') inscrits.push({ uid: auth.currentUser.uid, nom: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar, type: 'main', flex: false, id: Date.now() });
+        if (action === 'join') inscrits.push({ uid: auth.currentUser.uid, nom: localProfile.nom || auth.currentUser.displayName || auth.currentUser.email.split('@')[0], avatar: localProfile.avatar, type: 'main', flex: false, id: Date.now() });
         else if (action === 'removeSeat') inscrits = inscrits.filter(i => i.id !== seatId);
         else if (action === 'leave') inscrits = inscrits.filter(i => i.uid !== auth.currentUser.uid);
-        else if (action === 'addGuest') { let g = prompt("Prénom ?"); if (g) inscrits.push({ uid: auth.currentUser.uid, nom: g.trim(), avatar: '👤', type: 'guest', flex: false, id: Date.now(), hostName: auth.currentUser.displayName }); }
+        else if (action === 'addGuest') { let g = prompt("Prénom ?"); if (g) inscrits.push({ uid: auth.currentUser.uid, nom: g.trim(), avatar: '👤', type: 'guest', flex: false, id: Date.now(), hostName: localProfile.nom || auth.currentUser.displayName }); }
         else if (action === 'flex') { let m = inscrits.find(i => i.uid === auth.currentUser.uid && i.type === 'main'); if(m) m.flex = true; }
         try { await updateDoc(ref, { inscrits }); } catch(e) { console.error(e); }
     };
