@@ -419,6 +419,7 @@
         const day = now.getDate();
         const hour = now.getHours();
 
+        // Gestion des événements spéciaux (Noël, Halloween)
         if ((month === 12 && day === 25) || (month === 10 && day === 31)) return;
 
         let baseName = "hero_soir"; 
@@ -426,20 +427,37 @@
         else if (hour >= 12 && hour < 18) baseName = "hero_aprem";
 
         try {
+            // Appel à l'API pour Plouay
             const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=47.91&longitude=-3.33&current=weather_code');
             const data = await response.json();
             const code = data.current.weather_code;
 
-            let newCondition = "";
-            if (code >= 1 && code <= 3) newCondition = "_nuage";
-            else if (code >= 51 && code <= 67) newCondition = "_pluie";
-            else if (code >= 80 && code <= 99) newCondition = "_orage";
-            else if (code >= 71 && code <= 77) newCondition = "_neige";
+            let newCondition = ""; // Par défaut (code 0) = ciel dégagé / grand soleil
 
+            // --- NOUVELLE GESTION FINE DE LA MÉTÉO ---
+            if (code === 1 || code === 2) {
+                newCondition = "_mitige"; // Codes 1 et 2 : Principalement dégagé / Partiellement nuageux
+            } 
+            else if (code === 3 || code === 45 || code === 48) {
+                newCondition = "_nuage"; // Code 3 : Couvert. Codes 45/48 : Brouillard
+            } 
+            else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) {
+                newCondition = "_pluie"; // Bruine, pluie continue et averses
+            } 
+            else if (code >= 71 && code <= 77 || code === 85 || code === 86) {
+                newCondition = "_neige"; // Chutes de neige et averses de neige
+            } 
+            else if (code >= 95 && code <= 99) {
+                newCondition = "_orage"; // Orages avec ou sans grêle
+            }
+
+            // Sauvegarde locale pour éviter le clignotement au prochain rechargement
             localStorage.setItem('plouay_weather', newCondition);
             document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}${newCondition}.png')`);
+            
         } catch (error) {
             console.error("Erreur météo:", error);
+            // En cas d'erreur (pas d'internet, API down), on affiche l'image de base (soleil)
             document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}.png')`);
         }
     }
