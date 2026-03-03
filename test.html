@@ -649,8 +649,8 @@
                                     <div style="text-align:center; font-style:italic;">Chargement...</div>
                                 </div>
                             </div>
-                            <div style="text-align:center; margin-top: 25px;">
-                                <span onclick="window.logoutFirebase()" style="font-size:0.8rem; color:#e74c3c; text-decoration:underline; cursor:pointer;"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</span>
+                            <div style="text-align:center; margin-top: 20px;">
+                                <button class="game-btn" style="background:transparent; color:#e74c3c; border:2px solid #e74c3c; box-shadow:none; padding: 8px 20px; margin:0;" onclick="window.logoutFirebase()"><i class="fa-solid fa-right-from-bracket"></i> Me déconnecter</button>
                             </div>
                         </div>
                         <div id="tab-reserve" class="vote-tab-content">
@@ -905,7 +905,7 @@
             </div>
             <h4 style="margin: 0 0 5px; color: var(--gold-game); font-family: 'Shadows Into Light', cursive; font-size: 1.4rem;"><i class="fa-solid fa-trophy"></i> Le Panthéon des héros</h4>
             ${hofHTML}
-            <button class="game-btn game-btn-green" style="width:100%; justify-content:center; margin-top: 5px;" onclick="initGame()"><i class="fa-solid fa-play"></i> C'est parti !</button>
+            <button class="game-btn game-btn-green" style="width:100%; justify-content:center; margin: 5px 0 0 0;" onclick="initGame()"><i class="fa-solid fa-play"></i> C'est parti !</button>
         `;
     }
     
@@ -1173,14 +1173,33 @@
         document.getElementById('modalContent').innerHTML = `
             <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
             <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; font-size:1.8rem; margin:0 0 15px;">Mon Profil</h3>
-            <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px; margin-bottom:10px; text-align:left;">
-                <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Avatar</label><input type="text" id="prof-avatar" class="share-input" value="${localProfile.avatar || '🎲'}" maxlength="2" style="font-size:1.2rem;"></div>
-                <div><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Prénom</label><input type="text" id="prof-nom" class="share-input" value="${localProfile.nom || auth.currentUser.displayName || ''}" placeholder="Ton prénom"></div>
+            
+            <div style="display:flex; flex-direction:column; gap:12px; width:100%; text-align:left; margin-bottom:20px;">
+                <div style="display:flex; gap:10px;">
+                    <div style="flex:0 0 65px;">
+                        <label style="font-size:0.75rem; font-weight:bold; color:var(--text-brown); display:block; margin-bottom:5px;">Avatar</label>
+                        <input type="text" id="prof-avatar" class="share-input" value="${localProfile.avatar || '🎲'}" maxlength="2" style="font-size:1.2rem; text-align:center; padding:8px 4px;">
+                    </div>
+                    <div style="flex:1;">
+                        <label style="font-size:0.75rem; font-weight:bold; color:var(--text-brown); display:block; margin-bottom:5px;">Prénom</label>
+                        <input type="text" id="prof-nom" class="share-input" value="${localProfile.nom || auth.currentUser.displayName || ''}" placeholder="Ton prénom">
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size:0.75rem; font-weight:bold; color:var(--text-brown); display:block; margin-bottom:5px;">Mon jeu préféré</label>
+                    <input type="text" id="prof-jeu" class="share-input" value="${localProfile.jeuFavori || ''}" placeholder="Ex: Terraforming Mars">
+                </div>
+                <div>
+                    <label style="font-size:0.75rem; font-weight:bold; color:var(--text-brown); display:block; margin-bottom:5px;">Lien Myludo</label>
+                    <input type="text" id="prof-myludo" class="share-input" value="${localProfile.myludo || ''}" placeholder="URL de ton profil">
+                </div>
+                <div>
+                    <label style="font-size:0.75rem; font-weight:bold; color:var(--text-brown); display:block; margin-bottom:5px;">Pseudo BGA</label>
+                    <input type="text" id="prof-bga" class="share-input" value="${localProfile.bga || ''}" placeholder="ID Board Game Arena">
+                </div>
             </div>
-            <div style="text-align:left; margin-bottom:10px;"><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Mon jeu préféré :</label><input type="text" id="prof-jeu" class="share-input" value="${localProfile.jeuFavori || ''}" placeholder="Ex: Terraforming Mars"></div>
-            <div style="text-align:left; margin-bottom:10px;"><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Lien Myludo :</label><input type="text" id="prof-myludo" class="share-input" value="${localProfile.myludo || ''}" placeholder="URL de ton profil"></div>
-            <div style="text-align:left; margin-bottom:15px;"><label style="font-size:0.7rem; font-weight:bold; color:var(--text-brown);">Pseudo BGA :</label><input type="text" id="prof-bga" class="share-input" value="${localProfile.bga || ''}" placeholder="ID Board Game Arena"></div>
-            <button class="game-btn game-btn-green" style="width:100%; justify-content:center;" onclick="saveProfile()"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button>`;
+            
+            <button class="game-btn game-btn-green" style="width:100%; justify-content:center; margin:0;" onclick="saveProfile()"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button>`;
         document.getElementById('gameModalBackdrop').classList.add('visible');
     };
 
@@ -1215,18 +1234,48 @@
         document.getElementById('modalContent').innerHTML = `
             <div class="modal-close-btn" onclick="closeGameModalForce()"><i class="fa-solid fa-xmark"></i></div>
             
-            <div style="background: #ffffff; border-radius: 15px; padding: 20px; width: 100%; box-sizing: border-box; box-shadow: 0 5px 15px rgba(0,0,0,0.05); text-align: center; margin-top: 10px;">
-                <div style="font-size: 3.5rem; margin-bottom: 5px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${p.avatar || '👤'}</div>
-                <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; font-size:1.8rem; margin:0 0 15px;">${p.nom || 'Membre'}</h3>
-                
-                <div style="background: var(--bg-beige); border-radius: 12px; padding: 15px; text-align:left; font-size:0.85rem; line-height: 1.4; color: var(--text-brown);">
-                    <div style="${p.myludo || p.bga ? 'margin-bottom:10px;' : ''}"><i class="fa-solid fa-heart" style="color:#e74c3c; width:20px; text-align:center;"></i> <b>Jeu favori :</b><br> ${p.jeuFavori || 'Non renseigné'}</div>
-                    ${p.myludo ? `<div style="margin-bottom:10px; margin-top: 10px;"><i class="fa-solid fa-dice-d20" style="color:var(--myludo-color); width:20px; text-align:center;"></i> <b>Myludo :</b><br> <a href="${p.myludo.startsWith('http') ? p.myludo : 'https://'+p.myludo}" target="_blank" style="color:var(--green-deep); font-weight:bold; text-decoration: underline;">Voir la ludo</a></div>` : ''}
-                    ${p.bga ? `<div style="margin-top: 10px;"><i class="fa-solid fa-gamepad" style="color:#1877F2; width:20px; text-align:center;"></i> <b>BGA :</b><br> <span style="font-weight:bold; color:var(--text-brown);">${p.bga}</span></div>` : ''}
+            <div style="font-size: 3.5rem; margin-bottom: 5px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));">${p.avatar || '👤'}</div>
+            <h3 style="color:var(--green-deep); font-family:'Shadows Into Light', cursive; font-size:1.8rem; margin:0 0 15px;">${p.nom || 'Membre'}</h3>
+            
+            <div style="width:100%; display:flex; flex-direction:column; gap:8px;">
+                <div style="background:#ffffff; border: 2px solid var(--wood-brown); border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:12px; text-align:left; box-shadow: 0 4px 10px rgba(0,0,0,0.04);">
+                    <div style="width:38px; height:38px; background:var(--president-color); color:white; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:1.1rem; flex-shrink:0;">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <div>
+                        <div style="font-size:0.7rem; color:var(--text-brown); font-weight:bold;">Jeu favori</div>
+                        <div style="font-size:0.85rem; color:var(--green-deep); font-weight:700;">${p.jeuFavori || 'Non renseigné'}</div>
+                    </div>
                 </div>
+                
+                ${p.myludo ? `
+                <div style="background:#ffffff; border: 2px solid var(--wood-brown); border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:12px; text-align:left; box-shadow: 0 4px 10px rgba(0,0,0,0.04);">
+                    <div style="width:38px; height:38px; background:#fff; border:1px solid rgba(0,0,0,0.1); border-radius:50%; display:flex; justify-content:center; align-items:center; flex-shrink:0; overflow:hidden;">
+                        <img src="https://www.google.com/s2/favicons?domain=myludo.fr&sz=64" style="width:20px; height:20px; object-fit:contain;">
+                    </div>
+                    <div style="flex-grow:1; min-width:0;">
+                        <div style="font-size:0.7rem; color:var(--text-brown); font-weight:bold;">Myludo</div>
+                        <div style="font-size:0.85rem; color:var(--green-deep); font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Ludothèque</div>
+                    </div>
+                    <a href="${p.myludo.startsWith('http') ? p.myludo : 'https://'+p.myludo}" target="_blank" class="call-btn game-btn-green" style="width:auto; height:28px; padding:0 12px; font-size:0.7rem;">Voir</a>
+                </div>
+                ` : ''}
+
+                ${p.bga ? `
+                <div style="background:#ffffff; border: 2px solid var(--wood-brown); border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:12px; text-align:left; box-shadow: 0 4px 10px rgba(0,0,0,0.04);">
+                    <div style="width:38px; height:38px; background:var(--fb-blue); color:white; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:1.1rem; flex-shrink:0;">
+                        <i class="fa-solid fa-gamepad"></i>
+                    </div>
+                    <div style="flex-grow:1; min-width:0;">
+                        <div style="font-size:0.7rem; color:var(--text-brown); font-weight:bold;">Board Game Arena</div>
+                        <div style="font-size:0.85rem; color:var(--green-deep); font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.bga}</div>
+                    </div>
+                </div>
+                ` : ''}
             </div>
             
-            <button class="game-btn game-btn-green" style="margin-top:15px; width: 100%; justify-content: center;" onclick="closeGameModalForce()">Fermer</button>`;
+            <button class="game-btn" style="background:var(--wood-brown); margin-top:20px; width: 100%; justify-content: center;" onclick="closeGameModalForce()">Fermer</button>
+        `;
         document.getElementById('gameModalBackdrop').classList.add('visible');
     };
 
