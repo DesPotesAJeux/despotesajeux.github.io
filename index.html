@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-	<meta name="google-site-verification" content="9iQ5csnN7SZFAoDFKpoIuSJUwFtFl8VjTJawQ2FHwYY" />
+    <meta name="google-site-verification" content="9iQ5csnN7SZFAoDFKpoIuSJUwFtFl8VjTJawQ2FHwYY" />
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
         script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com https://apis.google.com;
@@ -14,7 +14,7 @@
         form-action 'self' https://*.firebaseapp.com;
         frame-src 'self' https://des-potes-a-jeux.firebaseapp.com;
     ">
-	<meta name="description" content="Rejoignez Des Potes à Jeux, votre association de jeux de société à Plouay (Bretagne). Soirées jeux, rencontres et convivialité chaque dernier vendredi du mois !">
+    <meta name="description" content="Rejoignez Des Potes à Jeux, votre association de jeux de société à Plouay (Bretagne). Soirées jeux, rencontres et convivialité chaque dernier vendredi du mois !">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
@@ -307,10 +307,28 @@
     <script>
         (function() {
             const now = new Date();
+            const year = now.getFullYear();
             const month = now.getMonth() + 1; 
             const day = now.getDate();
 
+            // Calcul de Pâques automatique (Algorithme de Butcher-Meeus)
+            const a = year % 19, b = Math.floor(year / 100), c = year % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451), n = h + l - 7 * m + 114;
+            const easterMonth = Math.floor(n / 31);
+            const easterDay = 1 + (n % 31);
+            const isEaster = (month === easterMonth && day === easterDay);
+
             if ((month === 12 && day === 25) || (month === 10 && day === 31)) return;
+
+            // Remplacement direct pour Pâques
+            if (isEaster) {
+                const hour = now.getHours();
+                let baseName = "hero_paque_soir";
+                if (hour >= 6 && hour < 12) baseName = "hero_paque_matin";
+                else if (hour >= 12 && hour < 18) baseName = "hero_paque_aprem";
+                
+                document.documentElement.style.setProperty('--bg-image', `url('images/backgrounds/${baseName}.png')`);
+                return; // On arrête là, on affiche l'oeuf de Pâques !
+            }
 
             // On regarde si on a l'image complète sauvegardée (ex: "hero_aprem_mitige")
             let cachedBg = localStorage.getItem('plouay_bg_image');
@@ -329,8 +347,6 @@
             }
         })();
     </script>
-</head>
-<body>
 </head>
 <body>
 
@@ -426,11 +442,18 @@
 
     async function fetchWeatherUpdate() {
         const now = new Date();
+        const year = now.getFullYear();
         const month = now.getMonth() + 1; 
         const day = now.getDate();
 
-        // Gestion des événements spéciaux (Noël, Halloween)
-        if ((month === 12 && day === 25) || (month === 10 && day === 31)) return;
+        // Calcul de Pâques automatique (Algorithme de Butcher-Meeus)
+        const a = year % 19, b = Math.floor(year / 100), c = year % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451), n = h + l - 7 * m + 114;
+        const easterMonth = Math.floor(n / 31);
+        const easterDay = 1 + (n % 31);
+        const isEaster = (month === easterMonth && day === easterDay);
+
+        // Gestion des événements spéciaux (Noël, Halloween et maintenant Pâques)
+        if ((month === 12 && day === 25) || (month === 10 && day === 31) || isEaster) return;
 
         try {
             // Appel à l'API pour Plouay : on demande la météo actuelle + lever/coucher du soleil
